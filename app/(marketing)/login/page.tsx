@@ -35,7 +35,7 @@ export default function LoginPage() {
   return (
     <div style={{
       minHeight: "100vh",
-      background: "linear-gradient(160deg, #1AEF22 0%, #06B517 45%, #000000 45%)",
+      background: "#0a0a0a",
       display: "flex", alignItems: "center", justifyContent: "center",
       padding: "24px 16px",
     }}>
@@ -43,12 +43,12 @@ export default function LoginPage() {
       <div style={{
         position: "fixed", top: -80, right: -80,
         width: 320, height: 320, borderRadius: "50%",
-        background: "rgba(245,166,35,0.1)", pointerEvents: "none",
+        background: "rgba(26,239,34,0.03)", pointerEvents: "none",
       }} />
       <div style={{
         position: "fixed", top: 60, left: -60,
         width: 200, height: 200, borderRadius: "50%",
-        background: "rgba(255,255,255,0.06)", pointerEvents: "none",
+        background: "rgba(245,166,35,0.03)", pointerEvents: "none",
       }} />
 
       <div style={{ width: "100%", maxWidth: 440 }}>

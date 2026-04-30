@@ -54,29 +54,29 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      <section style={{ background: "linear-gradient(160deg, #1AEF22 0%, #06B517 55%, #058f12 100%)", padding: "80px 5vw 100px", position: "relative", overflow: "hidden", textAlign: "center" }}>
-        <div style={{ position: "absolute", top: -80, right: -80, width: 400, height: 400, borderRadius: "50%", background: "rgba(0,0,0,0.08)" }} />
-        <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(0,0,0,0.12)", border: "1px solid rgba(0,0,0,0.15)", borderRadius: 20, padding: "6px 16px", marginBottom: 28 }}>
+      <section style={{ background: "linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%)", padding: "80px 5vw 100px", position: "relative", overflow: "hidden", textAlign: "center", borderBottom: "1px solid #222222" }}>
+        <div style={{ position: "absolute", top: -80, right: -80, width: 400, height: 400, borderRadius: "50%", background: "rgba(26,239,34,0.03)" }} />
+        <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(26,239,34,0.08)", border: "1px solid rgba(26,239,34,0.2)", borderRadius: 20, padding: "6px 16px", marginBottom: 28 }}>
           <span>🔥</span>
-          <span style={{ color: "#000", fontSize: 13, fontWeight: 700 }}>50,000+ Nigerians already earning</span>
+          <span style={{ color: "#1AEF22", fontSize: 13, fontWeight: 700 }}>50,000+ Nigerians already earning</span>
         </div>
-        <h1 style={{ color: "#000", fontSize: "clamp(32px, 6vw, 64px)", fontWeight: 900, lineHeight: 1.1, letterSpacing: -2, maxWidth: 760, margin: "0 auto 20px" }}>
+        <h1 style={{ color: "#F5F5F5", fontSize: "clamp(32px, 6vw, 64px)", fontWeight: 900, lineHeight: 1.1, letterSpacing: -2, maxWidth: 760, margin: "0 auto 20px" }}>
           Complete Tasks. Earn Points.<br />
-          <span style={{ color: "#fff" }}>Convert to Real Cash.</span>
+          <span style={{ background: "linear-gradient(135deg, #1AEF22, #06B517)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Convert to Real Cash.</span>
         </h1>
-        <p style={{ color: "rgba(0,0,0,0.65)", fontSize: "clamp(15px, 2vw, 19px)", maxWidth: 560, margin: "0 auto 16px", lineHeight: 1.6 }}>
-          Qeixova rewards you with <strong style={{ color: "#000" }}>QLT Points</strong> for completing simple online tasks. Accumulate QLT and convert to Naira whenever you want.
+        <p style={{ color: "#888888", fontSize: "clamp(15px, 2vw, 19px)", maxWidth: 560, margin: "0 auto 16px", lineHeight: 1.6 }}>
+          Qeixova rewards you with <strong style={{ color: "#F5A623" }}>QLT Points</strong> for completing simple online tasks. Accumulate QLT and convert to Naira whenever you want.
         </p>
-        <div style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "rgba(0,0,0,0.1)", border: "1px solid rgba(0,0,0,0.15)", borderRadius: 14, padding: "10px 20px", marginBottom: 36 }}>
+        <div style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "#111111", border: "1px solid #333333", borderRadius: 14, padding: "10px 20px", marginBottom: 36 }}>
           <span style={{ fontSize: 20 }}>⭐</span>
-          <span style={{ color: "#000", fontSize: 14, fontWeight: 700 }}>100 QLT = 1 Naira</span>
-          <span style={{ color: "rgba(0,0,0,0.4)", fontSize: 12 }}>Instant conversion</span>
+          <span style={{ color: "#F5A623", fontSize: 14, fontWeight: 700 }}>100 QLT = 1 Naira</span>
+          <span style={{ color: "#555555", fontSize: 12 }}>Instant conversion</span>
         </div>
         <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
           <Link href="/register" style={{ background: "linear-gradient(135deg, #F5A623, #d89420)", color: "#000", textDecoration: "none", padding: "16px 36px", borderRadius: 14, fontWeight: 800, fontSize: 16, boxShadow: "0 8px 28px rgba(245,166,35,0.4)" }}>
             Start Earning Free
           </Link>
-          <a href="#how-it-works" style={{ background: "rgba(0,0,0,0.1)", border: "1.5px solid rgba(0,0,0,0.2)", color: "#000", textDecoration: "none", padding: "16px 32px", borderRadius: 14, fontWeight: 600, fontSize: 16 }}>
+          <a href="#how-it-works" style={{ background: "#1a1a1a", border: "1.5px solid #333333", color: "#F5F5F5", textDecoration: "none", padding: "16px 32px", borderRadius: 14, fontWeight: 600, fontSize: 16 }}>
             See How It Works
           </a>
         </div>
@@ -137,7 +137,7 @@ export default function LandingPage() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 32 }}>
             {steps.map(step => (
               <div key={step.num} style={{ textAlign: "center" }}>
-                <div style={{ width: 68, height: 68, borderRadius: "50%", background: "linear-gradient(135deg, #1AEF22, #06B517)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px", boxShadow: "0 6px 20px rgba(26,239,34,0.3)", flexDirection: "column" }}>
+                <div style={{ width: 68, height: 68, borderRadius: "50%", background: "#1a1a1a", border: "2px solid #1AEF22", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px", boxShadow: "0 6px 20px rgba(26,239,34,0.2)", flexDirection: "column" }}>
                   <span style={{ fontSize: 22 }}>{step.icon}</span>
                 </div>
                 <p style={{ fontSize: 11, fontWeight: 700, color: "#F5A623", letterSpacing: 1, marginBottom: 6 }}>STEP {step.num}</p>
@@ -197,16 +197,16 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section style={{ background: "linear-gradient(135deg, #1AEF22 0%, #06B517 60%, #058f12 100%)", padding: "80px 5vw", textAlign: "center", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", top: -60, right: -60, width: 280, height: 280, borderRadius: "50%", background: "rgba(0,0,0,0.08)" }} />
-        <h2 style={{ color: "#000", fontSize: "clamp(26px, 5vw, 48px)", fontWeight: 900, letterSpacing: -1.5, marginBottom: 16, position: "relative" }}>Ready to start earning points?</h2>
-        <p style={{ color: "rgba(0,0,0,0.6)", fontSize: 16, maxWidth: 440, margin: "0 auto 36px", lineHeight: 1.6, position: "relative" }}>
+      <section style={{ background: "#0a0a0a", borderBottom: "1px solid #222222", padding: "80px 5vw", textAlign: "center", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: -60, right: -60, width: 280, height: 280, borderRadius: "50%", background: "rgba(26,239,34,0.03)" }} />
+        <h2 style={{ color: "#F5F5F5", fontSize: "clamp(26px, 5vw, 48px)", fontWeight: 900, letterSpacing: -1.5, marginBottom: 16, position: "relative" }}>Ready to start earning points?</h2>
+        <p style={{ color: "#888888", fontSize: 16, maxWidth: 440, margin: "0 auto 36px", lineHeight: 1.6, position: "relative" }}>
           Join thousands of Nigerians earning QLT daily and converting them to real cash.
         </p>
         <Link href="/register" style={{ background: "linear-gradient(135deg, #F5A623, #d89420)", color: "#000", textDecoration: "none", padding: "18px 44px", borderRadius: 14, fontWeight: 800, fontSize: 17, boxShadow: "0 8px 28px rgba(245,166,35,0.4)", display: "inline-block", position: "relative" }}>
           Create Free Account
         </Link>
-        <p style={{ color: "rgba(0,0,0,0.4)", fontSize: 12, marginTop: 16 }}>Referral code required. Free forever.</p>
+        <p style={{ color: "#555555", fontSize: 12, marginTop: 16 }}>Referral code required. Free forever.</p>
       </section>
 
       <footer style={{ background: "#000000", borderTop: "1px solid #222222", padding: "48px 5vw 32px", color: "#555555" }}>
