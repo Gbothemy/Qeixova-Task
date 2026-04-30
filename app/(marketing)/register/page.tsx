@@ -9,7 +9,8 @@ export default function RegisterPage() {
     fullName: "", 
     email: "", 
     password: "", 
-    confirmPassword: "" 
+    confirmPassword: "",
+    referralCode: "" 
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -18,8 +19,8 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!form.fullName || !form.email || !form.password || !form.confirmPassword) {
-      setError("Please fill in all fields.");
+    if (!form.fullName || !form.email || !form.password || !form.confirmPassword || !form.referralCode) {
+      setError("Please fill in all fields including referral code.");
       return;
     }
     if (form.password !== form.confirmPassword) {
@@ -34,7 +35,8 @@ export default function RegisterPage() {
       body: JSON.stringify({ 
         fullName: form.fullName, 
         email: form.email, 
-        password: form.password 
+        password: form.password,
+        referralCode: form.referralCode 
       }),
     });
     const data = await res.json();
@@ -113,127 +115,188 @@ export default function RegisterPage() {
           )}
 
           <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-            <div>
-              <label style={{ fontSize: 12, fontWeight: 700, color: "#555555", letterSpacing: 0.5 }}>
-                FULL NAME
-              </label>
-              <div style={{ position: "relative", marginTop: 8 }}>
-                <span style={{
-                  position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)",
-                  fontSize: 16, pointerEvents: "none",
-                }}>👤</span>
-                <input
-                  type="text"
-                  placeholder="John Doe"
-                  value={form.fullName}
-                  onChange={(e) => setForm({ ...form, fullName: e.target.value })}
-                  style={{
-                    width: "100%", padding: "13px 14px 13px 42px",
-                    borderRadius: 12, border: "1.5px solid #333333",
-                    fontSize: 14, outline: "none", color: "#F5F5F5",
-                    background: "#1a1a1a", transition: "border-color 0.2s",
-                  }}
-                  onFocus={(e) => (e.target.style.borderColor = "#1AEF22")}
-                  onBlur={(e) => (e.target.style.borderColor = "#333333")}
-                />
+            
+            {/* Personal Information Section */}
+            <div style={{ marginBottom: 8 }}>
+              <h3 style={{ fontSize: 14, fontWeight: 700, color: "#1AEF22", marginBottom: 16, letterSpacing: 0.5 }}>
+                📋 PERSONAL INFORMATION
+              </h3>
+              
+              <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+                <div>
+                  <label style={{ fontSize: 12, fontWeight: 700, color: "#555555", letterSpacing: 0.5 }}>
+                    FULL NAME *
+                  </label>
+                  <div style={{ position: "relative", marginTop: 8 }}>
+                    <span style={{
+                      position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)",
+                      fontSize: 16, pointerEvents: "none",
+                    }}>👤</span>
+                    <input
+                      type="text"
+                      placeholder="John Doe"
+                      value={form.fullName}
+                      onChange={(e) => setForm({ ...form, fullName: e.target.value })}
+                      required
+                      style={{
+                        width: "100%", padding: "13px 14px 13px 42px",
+                        borderRadius: 12, border: "1.5px solid #333333",
+                        fontSize: 14, outline: "none", color: "#F5F5F5",
+                        background: "#1a1a1a", transition: "border-color 0.2s",
+                      }}
+                      onFocus={(e) => (e.target.style.borderColor = "#1AEF22")}
+                      onBlur={(e) => (e.target.style.borderColor = "#333333")}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label style={{ fontSize: 12, fontWeight: 700, color: "#555555", letterSpacing: 0.5 }}>
+                    EMAIL ADDRESS *
+                  </label>
+                  <div style={{ position: "relative", marginTop: 8 }}>
+                    <span style={{
+                      position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)",
+                      fontSize: 16, pointerEvents: "none",
+                    }}>📧</span>
+                    <input
+                      type="email"
+                      placeholder="you@example.com"
+                      value={form.email}
+                      onChange={(e) => setForm({ ...form, email: e.target.value })}
+                      required
+                      style={{
+                        width: "100%", padding: "13px 14px 13px 42px",
+                        borderRadius: 12, border: "1.5px solid #333333",
+                        fontSize: 14, outline: "none", color: "#F5F5F5",
+                        background: "#1a1a1a", transition: "border-color 0.2s",
+                      }}
+                      onFocus={(e) => (e.target.style.borderColor = "#1AEF22")}
+                      onBlur={(e) => (e.target.style.borderColor = "#333333")}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div>
-              <label style={{ fontSize: 12, fontWeight: 700, color: "#555555", letterSpacing: 0.5 }}>
-                EMAIL ADDRESS
-              </label>
-              <div style={{ position: "relative", marginTop: 8 }}>
-                <span style={{
-                  position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)",
-                  fontSize: 16, pointerEvents: "none",
-                }}>📧</span>
-                <input
-                  type="email"
-                  placeholder="you@example.com"
-                  value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  style={{
-                    width: "100%", padding: "13px 14px 13px 42px",
-                    borderRadius: 12, border: "1.5px solid #333333",
-                    fontSize: 14, outline: "none", color: "#F5F5F5",
-                    background: "#1a1a1a", transition: "border-color 0.2s",
-                  }}
-                  onFocus={(e) => (e.target.style.borderColor = "#1AEF22")}
-                  onBlur={(e) => (e.target.style.borderColor = "#333333")}
-                />
+            {/* Security Section */}
+            <div style={{ marginBottom: 8 }}>
+              <h3 style={{ fontSize: 14, fontWeight: 700, color: "#1AEF22", marginBottom: 16, letterSpacing: 0.5 }}>
+                🔐 SECURITY
+              </h3>
+              
+              <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+                <div>
+                  <label style={{ fontSize: 12, fontWeight: 700, color: "#555555", letterSpacing: 0.5 }}>
+                    PASSWORD *
+                  </label>
+                  <div style={{ position: "relative", marginTop: 8 }}>
+                    <span style={{
+                      position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)",
+                      fontSize: 16, pointerEvents: "none",
+                    }}>🔒</span>
+                    <input
+                      type={showPass ? "text" : "password"}
+                      placeholder="Create a strong password"
+                      value={form.password}
+                      onChange={(e) => setForm({ ...form, password: e.target.value })}
+                      required
+                      style={{
+                        width: "100%", padding: "13px 44px 13px 42px",
+                        borderRadius: 12, border: "1.5px solid #333333",
+                        fontSize: 14, outline: "none", color: "#F5F5F5",
+                        background: "#1a1a1a", transition: "border-color 0.2s",
+                      }}
+                      onFocus={(e) => (e.target.style.borderColor = "#1AEF22")}
+                      onBlur={(e) => (e.target.style.borderColor = "#333333")}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPass(!showPass)}
+                      style={{
+                        position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)",
+                        background: "none", border: "none", cursor: "pointer", fontSize: 16, padding: 0,
+                      }}
+                    >
+                      {showPass ? "🙈" : "👁️"}
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <label style={{ fontSize: 12, fontWeight: 700, color: "#555555", letterSpacing: 0.5 }}>
+                    CONFIRM PASSWORD *
+                  </label>
+                  <div style={{ position: "relative", marginTop: 8 }}>
+                    <span style={{
+                      position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)",
+                      fontSize: 16, pointerEvents: "none",
+                    }}>🔒</span>
+                    <input
+                      type={showConfirmPass ? "text" : "password"}
+                      placeholder="Confirm your password"
+                      value={form.confirmPassword}
+                      onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })}
+                      required
+                      style={{
+                        width: "100%", padding: "13px 44px 13px 42px",
+                        borderRadius: 12, border: "1.5px solid #333333",
+                        fontSize: 14, outline: "none", color: "#F5F5F5",
+                        background: "#1a1a1a", transition: "border-color 0.2s",
+                      }}
+                      onFocus={(e) => (e.target.style.borderColor = "#1AEF22")}
+                      onBlur={(e) => (e.target.style.borderColor = "#333333")}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPass(!showConfirmPass)}
+                      style={{
+                        position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)",
+                        background: "none", border: "none", cursor: "pointer", fontSize: 16, padding: 0,
+                      }}
+                    >
+                      {showConfirmPass ? "🙈" : "👁️"}
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div>
-              <label style={{ fontSize: 12, fontWeight: 700, color: "#555555", letterSpacing: 0.5 }}>
-                PASSWORD
-              </label>
-              <div style={{ position: "relative", marginTop: 8 }}>
-                <span style={{
-                  position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)",
-                  fontSize: 16, pointerEvents: "none",
-                }}>🔒</span>
-                <input
-                  type={showPass ? "text" : "password"}
-                  placeholder="Create a strong password"
-                  value={form.password}
-                  onChange={(e) => setForm({ ...form, password: e.target.value })}
-                  style={{
-                    width: "100%", padding: "13px 44px 13px 42px",
-                    borderRadius: 12, border: "1.5px solid #333333",
-                    fontSize: 14, outline: "none", color: "#F5F5F5",
-                    background: "#1a1a1a", transition: "border-color 0.2s",
-                  }}
-                  onFocus={(e) => (e.target.style.borderColor = "#1AEF22")}
-                  onBlur={(e) => (e.target.style.borderColor = "#333333")}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPass(!showPass)}
-                  style={{
-                    position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)",
-                    background: "none", border: "none", cursor: "pointer", fontSize: 16, padding: 0,
-                  }}
-                >
-                  {showPass ? "🙈" : "👁️"}
-                </button>
-              </div>
-            </div>
-
-            <div>
-              <label style={{ fontSize: 12, fontWeight: 700, color: "#555555", letterSpacing: 0.5 }}>
-                CONFIRM PASSWORD
-              </label>
-              <div style={{ position: "relative", marginTop: 8 }}>
-                <span style={{
-                  position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)",
-                  fontSize: 16, pointerEvents: "none",
-                }}>🔒</span>
-                <input
-                  type={showConfirmPass ? "text" : "password"}
-                  placeholder="Confirm your password"
-                  value={form.confirmPassword}
-                  onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })}
-                  style={{
-                    width: "100%", padding: "13px 44px 13px 42px",
-                    borderRadius: 12, border: "1.5px solid #333333",
-                    fontSize: 14, outline: "none", color: "#F5F5F5",
-                    background: "#1a1a1a", transition: "border-color 0.2s",
-                  }}
-                  onFocus={(e) => (e.target.style.borderColor = "#1AEF22")}
-                  onBlur={(e) => (e.target.style.borderColor = "#333333")}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowConfirmPass(!showConfirmPass)}
-                  style={{
-                    position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)",
-                    background: "none", border: "none", cursor: "pointer", fontSize: 16, padding: 0,
-                  }}
-                >
-                  {showConfirmPass ? "🙈" : "👁️"}
-                </button>
+            {/* Referral Section */}
+            <div style={{ marginBottom: 8 }}>
+              <h3 style={{ fontSize: 14, fontWeight: 700, color: "#1AEF22", marginBottom: 16, letterSpacing: 0.5 }}>
+                🎁 REFERRAL CODE
+              </h3>
+              
+              <div>
+                <label style={{ fontSize: 12, fontWeight: 700, color: "#555555", letterSpacing: 0.5 }}>
+                  REFERRAL CODE *
+                </label>
+                <div style={{ position: "relative", marginTop: 8 }}>
+                  <span style={{
+                    position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)",
+                    fontSize: 16, pointerEvents: "none",
+                  }}>🎟️</span>
+                  <input
+                    type="text"
+                    placeholder="Enter referral code"
+                    value={form.referralCode}
+                    onChange={(e) => setForm({ ...form, referralCode: e.target.value.toUpperCase() })}
+                    required
+                    style={{
+                      width: "100%", padding: "13px 14px 13px 42px",
+                      borderRadius: 12, border: "1.5px solid #333333",
+                      fontSize: 14, outline: "none", color: "#F5F5F5",
+                      background: "#1a1a1a", transition: "border-color 0.2s",
+                      textTransform: "uppercase",
+                    }}
+                    onFocus={(e) => (e.target.style.borderColor = "#1AEF22")}
+                    onBlur={(e) => (e.target.style.borderColor = "#333333")}
+                  />
+                </div>
+                <p style={{ fontSize: 11, color: "#666666", marginTop: 6, fontStyle: "italic" }}>
+                  Required to create an account. Ask your referrer for their code.
+                </p>
               </div>
             </div>
 
