@@ -306,27 +306,27 @@ export default function ProfilePage() {
   return (
     <div className="page-body" style={{ background: "#000000", minHeight: "100vh" }}>
       {/* Header */}
-      <div className="page-header" style={{ background: "linear-gradient(160deg, #1AEF22 0%, #06B517 100%)", padding: "52px 20px 40px", textAlign: "center", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", top: -60, right: -60, width: 200, height: 200, borderRadius: "50%", background: "rgba(0,0,0,0.08)" }} />
+      <div className="page-header" style={{ background: "#0a0a0a", borderBottom: "1px solid #222222", padding: "52px 20px 40px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: -60, right: -60, width: 200, height: 200, borderRadius: "50%", background: "rgba(26,239,34,0.03)" }} />
         <div style={{ position: "relative", display: "inline-block", marginBottom: 14 }}>
-          <div style={{ width: 80, height: 80, borderRadius: "50%", background: "linear-gradient(135deg, #F5A623, #d89420)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 34, boxShadow: "0 6px 20px rgba(245,166,35,0.4)", border: "3px solid rgba(0,0,0,0.15)" }}>
+          <div style={{ width: 80, height: 80, borderRadius: "50%", background: "linear-gradient(135deg, #F5A623, #d89420)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 34, boxShadow: "0 6px 20px rgba(245,166,35,0.4)", border: "3px solid #1a1a1a" }}>
             {profile?.full_name ? profile.full_name.charAt(0).toUpperCase() : "👤"}
           </div>
-          <div style={{ position: "absolute", bottom: 0, right: 0, width: 14, height: 14, borderRadius: "50%", background: "#4ade80", border: "2px solid #06B517" }} />
+          <div style={{ position: "absolute", bottom: 0, right: 0, width: 14, height: 14, borderRadius: "50%", background: "#1AEF22", border: "2px solid #0a0a0a" }} />
         </div>
-        <p style={{ color: "#000", fontSize: 22, fontWeight: 800, letterSpacing: -0.5 }}>{profile?.full_name ?? "Loading..."}</p>
-        <p style={{ color: "rgba(0,0,0,0.55)", fontSize: 13, marginTop: 3 }}>{profile?.email}</p>
-        {profile?.phone && <p style={{ color: "rgba(0,0,0,0.45)", fontSize: 12, marginTop: 2 }}>{profile.phone}</p>}
-        {profile?.created_at && <p style={{ color: "rgba(0,0,0,0.35)", fontSize: 11, marginTop: 4 }}>Member since {timeAgo(profile.created_at)}</p>}
+        <p style={{ color: "#F5F5F5", fontSize: 22, fontWeight: 800, letterSpacing: -0.5 }}>{profile?.full_name ?? "Loading..."}</p>
+        <p style={{ color: "#888888", fontSize: 13, marginTop: 3 }}>{profile?.email}</p>
+        {profile?.phone && <p style={{ color: "#666666", fontSize: 12, marginTop: 2 }}>{profile.phone}</p>}
+        {profile?.created_at && <p style={{ color: "#555555", fontSize: 11, marginTop: 4 }}>Member since {timeAgo(profile.created_at)}</p>}
         <div style={{ display: "flex", justifyContent: "center", gap: 8, marginTop: 12, flexWrap: "wrap" }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(0,0,0,0.12)", border: "1px solid rgba(0,0,0,0.15)", borderRadius: 20, padding: "6px 16px" }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(26,239,34,0.08)", border: "1px solid rgba(26,239,34,0.2)", borderRadius: 20, padding: "6px 16px" }}>
             <span style={{ fontSize: 14 }}>⭐</span>
-            <span style={{ color: "#000", fontSize: 12, fontWeight: 700 }}>Level {profile?.level ?? 1} — {levelLabel(profile?.level ?? 1)}</span>
+            <span style={{ color: "#1AEF22", fontSize: 12, fontWeight: 700 }}>Level {profile?.level ?? 1} — {levelLabel(profile?.level ?? 1)}</span>
           </div>
           {profile && profile.streak > 0 && (
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(0,0,0,0.12)", border: "1px solid rgba(0,0,0,0.15)", borderRadius: 20, padding: "5px 14px" }}>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(245,166,35,0.08)", border: "1px solid rgba(245,166,35,0.2)", borderRadius: 20, padding: "5px 14px" }}>
               <span style={{ fontSize: 14 }}>🔥</span>
-              <span style={{ color: "#000", fontSize: 12, fontWeight: 600 }}>{profile.streak}-day streak</span>
+              <span style={{ color: "#F5A623", fontSize: 12, fontWeight: 600 }}>{profile.streak}-day streak</span>
             </div>
           )}
         </div>

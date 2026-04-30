@@ -51,24 +51,24 @@ export default function Home() {
   return (
     <div className="page-body" style={{ background: "#000000", minHeight: "100vh" }}>
       {/* Header */}
-      <div className="page-header" style={{ background: "linear-gradient(160deg, #1AEF22 0%, #06B517 100%)", padding: "52px 20px 90px", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", top: -60, right: -60, width: 220, height: 220, borderRadius: "50%", background: "rgba(245,166,35,0.1)" }} />
+      <div className="page-header" style={{ background: "#0a0a0a", borderBottom: "1px solid #222222", padding: "52px 20px 90px", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: -60, right: -60, width: 220, height: 220, borderRadius: "50%", background: "rgba(26,239,34,0.03)" }} />
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", position: "relative" }}>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-              <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#000", boxShadow: "0 0 8px #F5A623" }} />
-              <p style={{ color: "rgba(0,0,0,0.65)", fontSize: 13 }}>{greeting()} 👋</p>
+              <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#1AEF22", boxShadow: "0 0 8px #1AEF22" }} />
+              <p style={{ color: "#555555", fontSize: 13 }}>{greeting()} 👋</p>
             </div>
-            <p style={{ color: "#000", fontSize: 22, fontWeight: 800, letterSpacing: -0.5 }}>
+            <p style={{ color: "#F5F5F5", fontSize: 22, fontWeight: 800, letterSpacing: -0.5 }}>
               {user?.fullName?.split(" ")[0] ?? "Welcome back"}!
             </p>
           </div>
-          <div style={{ width: 42, height: 42, borderRadius: 13, background: "rgba(0,0,0,0.12)", border: "1px solid rgba(0,0,0,0.15)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>🔔</div>
+          <div style={{ width: 42, height: 42, borderRadius: 13, background: "#111111", border: "1px solid #222222", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>🔔</div>
         </div>
         {user && user.streak > 0 && (
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(0,0,0,0.12)", border: "1px solid rgba(0,0,0,0.15)", borderRadius: 20, padding: "5px 14px", marginTop: 14 }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(26,239,34,0.08)", border: "1px solid rgba(26,239,34,0.2)", borderRadius: 20, padding: "5px 14px", marginTop: 14 }}>
             <span style={{ fontSize: 14 }}>🔥</span>
-            <span style={{ color: "#000", fontSize: 12, fontWeight: 700 }}>{user.streak}-day streak — Keep it up!</span>
+            <span style={{ color: "#1AEF22", fontSize: 12, fontWeight: 700 }}>{user.streak}-day streak — Keep it up!</span>
           </div>
         )}
       </div>

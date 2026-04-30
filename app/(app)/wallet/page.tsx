@@ -62,20 +62,20 @@ export default function WalletPage() {
   return (
     <div className="page-body" style={{ background: "#000000", minHeight: "100vh" }}>
       {/* Header */}
-      <div className="page-header" style={{ background: "linear-gradient(160deg, #1AEF22 0%, #06B517 100%)", padding: "52px 20px 32px", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", top: -50, right: -50, width: 180, height: 180, borderRadius: "50%", background: "rgba(0,0,0,0.08)" }} />
-        <p style={{ color: "rgba(0,0,0,0.6)", fontSize: 13, marginBottom: 4 }}>Points Balance</p>
+      <div className="page-header" style={{ background: "#0a0a0a", borderBottom: "1px solid #222222", padding: "52px 20px 32px", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: -50, right: -50, width: 180, height: 180, borderRadius: "50%", background: "rgba(26,239,34,0.03)" }} />
+        <p style={{ color: "#555555", fontSize: 13, marginBottom: 4 }}>Points Balance</p>
         <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
-          <span style={{ color: "#000", fontSize: 20 }}>⭐</span>
-          <p style={{ color: "#000", fontSize: 38, fontWeight: 800, letterSpacing: -2, lineHeight: 1 }}>{balance.toLocaleString()}</p>
-          <span style={{ color: "rgba(0,0,0,0.5)", fontSize: 14 }}>QLT</span>
+          <span style={{ color: "#F5A623", fontSize: 20 }}>⭐</span>
+          <p style={{ color: "#F5F5F5", fontSize: 38, fontWeight: 800, letterSpacing: -2, lineHeight: 1 }}>{balance.toLocaleString()}</p>
+          <span style={{ color: "#555555", fontSize: 14 }}>QLT</span>
         </div>
-        <p style={{ color: "#000", fontSize: 14, fontWeight: 600, marginTop: 6, opacity: 0.7 }}>≈ ₦{(balance / 100).toLocaleString()} cash value</p>
+        <p style={{ color: "#888888", fontSize: 14, fontWeight: 600, marginTop: 6 }}>≈ ₦{(balance / 100).toLocaleString()} cash value</p>
         <div style={{ display: "flex", gap: 10, marginTop: 18 }}>
           {[{ label: "Min. Withdrawal", value: "100,000 QLT" }, { label: "Rate", value: "100 QLT = ₦1" }, { label: "Fee", value: "Free" }].map(item => (
-            <div key={item.label} style={{ flex: 1, background: "rgba(0,0,0,0.12)", border: "1px solid rgba(0,0,0,0.15)", borderRadius: 12, padding: "10px 8px", textAlign: "center" }}>
-              <p style={{ color: "rgba(0,0,0,0.55)", fontSize: 10, marginBottom: 3 }}>{item.label}</p>
-              <p style={{ color: "#000", fontWeight: 700, fontSize: 13 }}>{item.value}</p>
+            <div key={item.label} style={{ flex: 1, background: "#111111", border: "1px solid #222222", borderRadius: 12, padding: "10px 8px", textAlign: "center" }}>
+              <p style={{ color: "#555555", fontSize: 10, marginBottom: 3 }}>{item.label}</p>
+              <p style={{ color: "#F5F5F5", fontWeight: 700, fontSize: 13 }}>{item.value}</p>
             </div>
           ))}
         </div>

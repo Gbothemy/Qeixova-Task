@@ -64,13 +64,13 @@ export default function TasksPage() {
   return (
     <div className="page-body" style={{ background: "#000000", minHeight: "100vh" }}>
       {/* Header */}
-      <div className="page-header" style={{ background: "linear-gradient(160deg, #1AEF22 0%, #06B517 100%)", padding: "52px 20px 28px", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", top: -50, right: -50, width: 180, height: 180, borderRadius: "50%", background: "rgba(0,0,0,0.1)" }} />
-        <p style={{ color: "rgba(0,0,0,0.6)", fontSize: 13, marginBottom: 4 }}>Available to earn</p>
-        <p style={{ color: "#000", fontSize: 26, fontWeight: 800, letterSpacing: -0.5 }}>Browse Tasks</p>
-        <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(0,0,0,0.12)", border: "1px solid rgba(0,0,0,0.15)", borderRadius: 20, padding: "6px 16px", marginTop: 12 }}>
+      <div className="page-header" style={{ background: "#0a0a0a", borderBottom: "1px solid #222222", padding: "52px 20px 28px", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: -50, right: -50, width: 180, height: 180, borderRadius: "50%", background: "rgba(26,239,34,0.03)" }} />
+        <p style={{ color: "#555555", fontSize: 13, marginBottom: 4 }}>Available to earn</p>
+        <p style={{ color: "#F5F5F5", fontSize: 26, fontWeight: 800, letterSpacing: -0.5 }}>Browse Tasks</p>
+        <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(245,166,35,0.08)", border: "1px solid rgba(245,166,35,0.2)", borderRadius: 20, padding: "6px 16px", marginTop: 12 }}>
           <span style={{ fontSize: 14 }}>💰</span>
-          <span style={{ color: "#000", fontSize: 13, fontWeight: 700 }}>Earn up to {remainingReward.toLocaleString()} QLT today</span>
+          <span style={{ color: "#F5A623", fontSize: 13, fontWeight: 700 }}>Earn up to {remainingReward.toLocaleString()} QLT today</span>
         </div>
       </div>
 
