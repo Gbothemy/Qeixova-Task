@@ -64,6 +64,19 @@ export async function POST(req: NextRequest) {
     // Credit balance
     await sql`UPDATE users SET balance = balance + ${task.reward} WHERE id = ${session.userId}`;
 
+    // Credit 10% to referrer if exists
+    const referrerRows = await sql`SELECT referred_by FROM users WHERE id = ${session.userId}`;
+    if (referrerRows.length > 0 && referrerRows[0].referred_by) {
+      const referrerId = referrerRows[0].referred_by;
+      const referralBonus = Math.floor(task.reward * 0.1); // 10% of earnings
+      
+      await sql`UPDATE users SET balance = balance + ${referralBonus} WHERE id = ${referrerId}`;
+      await sql`
+        INSERT INTO transactions (user_id, type, amount, label)
+        VALUES (${referrerId}, 'credit', ${referralBonus}, 'Referral Earnings (10%)')
+      `;
+    }
+
     // Increment budget_used and auto-deactivate if exhausted
     if (budget > 0) {
       await sql`UPDATE tasks SET budget_used = budget_used + ${task.reward} WHERE id = ${taskId}`;

@@ -48,10 +48,10 @@ export async function POST(req: NextRequest) {
 
     // Credit referrer bonus
     if (referrerId) {
-      await sql`UPDATE users SET balance = balance + 5000 WHERE id = ${referrerId}`;
+      await sql`UPDATE users SET balance = balance + 2500 WHERE id = ${referrerId}`;
       await sql`
         INSERT INTO transactions (user_id, type, amount, label)
-        VALUES (${referrerId}, 'credit', 5000, 'Referral Bonus')
+        VALUES (${referrerId}, 'credit', 2500, 'Referral Bonus')
       `;
     }
 

@@ -228,7 +228,7 @@ function SupportModal({ onClose }: { onClose: () => void }) {
 function TermsModal({ onClose }: { onClose: () => void }) {
   const [view, setView] = useState<"menu" | "terms" | "privacy" | "refund">("menu");
   const content: Record<string, { title: string; body: string }> = {
-    terms: { title: "Terms of Service", body: `Welcome to Qeixova. By using our platform you agree to these terms.\n\n1. ELIGIBILITY\nYou must be at least 18 years old and a resident of Nigeria.\n\n2. EARNING & REWARDS\n100 QLT = ₦1. Points have no cash value until converted via withdrawal.\n\n3. TASK COMPLETION\nComplete tasks honestly. Fraudulent submissions result in account suspension.\n\n4. WITHDRAWALS\nMinimum withdrawal is 100,000 QLT (₦1,000). Processed within 24 hours.\n\n5. REFERRALS\nYou earn 5,000 QLT per referral. Referral abuse results in termination.\n\n6. CHANGES\nWe may update these terms at any time.` },
+    terms: { title: "Terms of Service", body: `Welcome to Qeixova. By using our platform you agree to these terms.\n\n1. ELIGIBILITY\nYou must be at least 18 years old and a resident of Nigeria.\n\n2. EARNING & REWARDS\n100 QLT = ₦1. Points have no cash value until converted via withdrawal.\n\n3. TASK COMPLETION\nComplete tasks honestly. Fraudulent submissions result in account suspension.\n\n4. WITHDRAWALS\nMinimum withdrawal is 100,000 QLT (₦1,000). Processed within 24 hours.\n\n5. REFERRALS\nYou earn 2,500 QLT per referral signup plus 10% of their task earnings. Referral abuse results in termination.\n\n6. CHANGES\nWe may update these terms at any time.` },
     privacy: { title: "Privacy Policy", body: `Qeixova is committed to protecting your personal information.\n\n1. DATA WE COLLECT\nName, email, phone number, and task completion data.\n\n2. HOW WE USE YOUR DATA\nTo manage your account and process withdrawals. We do not sell your data.\n\n3. DATA SECURITY\nAll data is encrypted. Passwords are hashed using bcrypt.\n\n4. YOUR RIGHTS\nRequest deletion by contacting qeixova@gmail.com.` },
     refund: { title: "Refund Policy", body: `Qeixova does not charge users any fees.\n\n1. NO DEPOSITS\nQeixova does not require any deposits or payments.\n\n2. WITHDRAWAL DISPUTES\nIf a withdrawal is not received within 48 hours, contact support.\n\n3. POINT DISPUTES\nContact support within 7 days of the transaction.` },
   };
@@ -351,9 +351,9 @@ export default function ProfilePage() {
           <div style={{ background: "linear-gradient(135deg, #F5A623 0%, #d89420 100%)", borderRadius: 18, padding: "18px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", boxShadow: "0 6px 20px rgba(245,166,35,0.3)", position: "relative", overflow: "hidden" }}>
             <div style={{ position: "absolute", top: -30, right: -30, width: 100, height: 100, borderRadius: "50%", background: "rgba(0,0,0,0.08)" }} />
             <div>
-              <p style={{ color: "#000", fontWeight: 800, fontSize: 16 }}>Refer & Earn 5,000 QLT</p>
+              <p style={{ color: "#000", fontWeight: 800, fontSize: 16 }}>Refer & Earn 2,500 QLT + 10%</p>
               <p style={{ color: "rgba(0,0,0,0.65)", fontSize: 12, marginTop: 3 }}>Your code: <span style={{ fontWeight: 800, letterSpacing: 1 }}>{profile.referral_code}</span></p>
-              <p style={{ color: "rgba(0,0,0,0.5)", fontSize: 11, marginTop: 2 }}>{profile.referral_count} {profile.referral_count === 1 ? "person" : "people"} joined</p>
+              <p style={{ color: "rgba(0,0,0,0.5)", fontSize: 11, marginTop: 2 }}>{profile.referral_count} {profile.referral_count === 1 ? "person" : "people"} joined • Earn 10% of their earnings</p>
             </div>
             <button onClick={copyCode} style={{ background: "#000", color: "#F5A623", border: "none", borderRadius: 12, padding: "10px 18px", fontWeight: 800, fontSize: 13, cursor: "pointer" }}>
               {copied ? "Copied! ✅" : "Copy 📋"}
