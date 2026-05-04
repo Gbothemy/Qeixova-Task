@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import BottomNav from "@/components/BottomNav";
 import BankAccountsModal from "@/components/BankAccountsModal";
 import { useAuth } from "@/lib/useAuth";
@@ -286,21 +287,21 @@ export default function ProfilePage() {
   const patchProfile = (updates: Partial<Profile>) => setProfile(p => p ? { ...p, ...updates } : p);
 
   const stats = profile ? [
-    { label: "Tasks Today", value: String(profile.tasks_today), icon: "📅" },
-    { label: "Total Tasks", value: String(profile.tasks_completed), icon: "✅" },
-    { label: "Total Earned", value: profile.total_earned >= 1000 ? `${(profile.total_earned / 1000).toFixed(0)}k QLT` : `${profile.total_earned} QLT`, icon: "⭐" },
-    { label: "Withdrawn", value: profile.total_withdrawn >= 1000 ? `${(profile.total_withdrawn / 1000).toFixed(0)}k QLT` : `${profile.total_withdrawn} QLT`, icon: "💸" },
-    { label: "Balance", value: `${profile.balance.toLocaleString()} QLT`, icon: "💰" },
-    { label: "Referrals", value: String(profile.referral_count), icon: "👥" },
+    { label: "Tasks Today",    value: String(profile.tasks_today),    icon: "/icon-task.png" },
+    { label: "Total Tasks",    value: String(profile.tasks_completed), icon: "/icon-task.png" },
+    { label: "Total Earned",   value: profile.total_earned >= 1000 ? `${(profile.total_earned / 1000).toFixed(0)}k QLT` : `${profile.total_earned} QLT`, icon: "/icon-wallet.png" },
+    { label: "Withdrawn",      value: profile.total_withdrawn >= 1000 ? `${(profile.total_withdrawn / 1000).toFixed(0)}k QLT` : `${profile.total_withdrawn} QLT`, icon: "/icon-wallet.png" },
+    { label: "Balance",        value: `${profile.balance.toLocaleString()} QLT`, icon: "/icon-wallet.png" },
+    { label: "Referrals",      value: String(profile.referral_count), icon: "/icon-profile.png" },
   ] : [];
 
   const menuItems = [
-    { icon: "🏦", label: "Bank Accounts", sub: "Add & manage withdrawal accounts", action: () => setShowBankModal(true) },
-    { icon: "✏️", label: "Edit Profile", sub: "Update your name & phone", action: () => setModal("edit") },
-    { icon: "🔒", label: "Change Password", sub: "Update your account password", action: () => setModal("password") },
-    { icon: "🔔", label: "Notifications", sub: "Task alerts & updates", action: () => setModal("notifications") },
-    { icon: "💬", label: "Support", sub: "Get help anytime", action: () => setModal("support") },
-    { icon: "📄", label: "Terms & Privacy", sub: "Legal information", action: () => setModal("terms") },
+    { icon: "/icon-wallet.png",  label: "Bank Accounts",   sub: "Add & manage withdrawal accounts",  action: () => setShowBankModal(true) },
+    { icon: "/icon-profile.png", label: "Edit Profile",    sub: "Update your name & phone",           action: () => setModal("edit") },
+    { icon: "/icon-profile.png", label: "Change Password", sub: "Update your account password",       action: () => setModal("password") },
+    { icon: "/icon-home.png",    label: "Notifications",   sub: "Task alerts & updates",              action: () => setModal("notifications") },
+    { icon: "/icon-content.png", label: "Support",         sub: "Get help anytime",                   action: () => setModal("support") },
+    { icon: "/icon-survey.png",  label: "Terms & Privacy", sub: "Legal information",                  action: () => setModal("terms") },
   ];
 
   return (
@@ -337,7 +338,9 @@ export default function ProfilePage() {
         <div style={{ background: "#111111", borderRadius: 20, padding: "20px", border: "1px solid #222222", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 0 }}>
           {stats.map((s, i) => (
             <div key={i} style={{ textAlign: "center", padding: "12px 8px", borderRight: i % 2 === 0 ? "1px solid #222222" : "none", borderBottom: i < stats.length - 2 ? "1px solid #222222" : "none" }}>
-              <p style={{ fontSize: 18, marginBottom: 4 }}>{s.icon}</p>
+              <div style={{ display: "flex", justifyContent: "center", marginBottom: 4 }}>
+                <Image src={s.icon} alt={s.label} width={20} height={20} style={{ objectFit: "contain", opacity: 0.7 }} />
+              </div>
               <p style={{ fontWeight: 800, fontSize: 15, color: "#1AEF22" }}>{s.value}</p>
               <p style={{ fontSize: 10, color: "#555555", marginTop: 2 }}>{s.label}</p>
             </div>
@@ -367,7 +370,9 @@ export default function ProfilePage() {
         <div style={{ background: "#111111", borderRadius: 20, overflow: "hidden", border: "1px solid #222222" }}>
           {menuItems.map((item, i) => (
             <div key={i} onClick={item.action} style={{ display: "flex", alignItems: "center", gap: 14, padding: "15px 18px", borderBottom: i < menuItems.length - 1 ? "1px solid #1a1a1a" : "none", cursor: "pointer" }}>
-              <div style={{ width: 40, height: 40, borderRadius: 12, background: "rgba(26,239,34,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>{item.icon}</div>
+              <div style={{ width: 40, height: 40, borderRadius: 12, background: "rgba(26,239,34,0.08)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <Image src={item.icon} alt={item.label} width={22} height={22} style={{ objectFit: "contain" }} />
+              </div>
               <div style={{ flex: 1 }}>
                 <p style={{ fontSize: 14, fontWeight: 600, color: "#F5F5F5" }}>{item.label}</p>
                 <p style={{ fontSize: 12, color: "#555555", marginTop: 1 }}>{item.sub}</p>

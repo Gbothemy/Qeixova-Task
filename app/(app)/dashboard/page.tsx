@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import BalanceCard from "@/components/BalanceCard";
 import BottomNav from "@/components/BottomNav";
 import { useAuth } from "@/lib/useAuth";
@@ -12,10 +13,10 @@ interface WalletData {
 }
 
 const categories = [
-  { icon: "📱", label: "Social Media", color: "rgba(26,239,34,0.1)", earn: "10k–15k QLT" },
-  { icon: "📋", label: "Surveys",      color: "rgba(245,166,35,0.1)", earn: "35k–50k QLT" },
-  { icon: "📲", label: "App Testing",  color: "rgba(26,239,34,0.1)", earn: "80k–120k QLT" },
-  { icon: "🎬", label: "Content",      color: "rgba(245,166,35,0.1)", earn: "18k–20k QLT" },
+  { icon: "/icon-task.png",        label: "Social Media", color: "rgba(26,239,34,0.1)",  earn: "10k–15k QLT" },
+  { icon: "/icon-survey.png",      label: "Surveys",      color: "rgba(245,166,35,0.1)", earn: "35k–50k QLT" },
+  { icon: "/icon-app-testing.png", label: "App Testing",  color: "rgba(26,239,34,0.1)",  earn: "80k–120k QLT" },
+  { icon: "/icon-content.png",     label: "Content",      color: "rgba(245,166,35,0.1)", earn: "18k–20k QLT" },
 ];
 
 function timeAgo(dateStr: string) {
@@ -63,7 +64,9 @@ export default function Home() {
               {user?.fullName?.split(" ")[0] ?? "Welcome back"}!
             </p>
           </div>
-          <div style={{ width: 42, height: 42, borderRadius: 13, background: "#111111", border: "1px solid #222222", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>🔔</div>
+          <div style={{ width: 42, height: 42, borderRadius: 13, background: "#111111", border: "1px solid #222222", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <Image src="/icon-home.png" alt="notifications" width={22} height={22} style={{ objectFit: "contain", opacity: 0.7 }} />
+          </div>
         </div>
         {user && user.streak > 0 && (
           <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(26,239,34,0.08)", border: "1px solid rgba(26,239,34,0.2)", borderRadius: 20, padding: "5px 14px", marginTop: 14 }}>
@@ -107,8 +110,8 @@ export default function Home() {
           {categories.map((cat) => (
             <Link key={cat.label} href="/tasks" style={{ textDecoration: "none" }}>
               <div style={{ background: "#111111", borderRadius: 18, padding: "18px 16px", border: "1px solid #222222" }}>
-                <div style={{ width: 48, height: 48, borderRadius: 14, background: cat.color, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24, marginBottom: 12 }}>
-                  {cat.icon}
+                <div style={{ width: 48, height: 48, borderRadius: 14, background: cat.color, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 12 }}>
+                  <Image src={cat.icon} alt={cat.label} width={28} height={28} style={{ objectFit: "contain" }} />
                 </div>
                 <p style={{ fontWeight: 700, fontSize: 13, color: "#F5F5F5", marginBottom: 3 }}>{cat.label}</p>
                 <p style={{ fontSize: 11, fontWeight: 700, color: "#F5A623", background: "rgba(245,166,35,0.1)", borderRadius: 6, padding: "2px 8px", display: "inline-block" }}>{cat.earn}</p>
@@ -126,8 +129,8 @@ export default function Home() {
             {wallet.transactions.slice(0, 5).map((tx, i) => (
               <div key={i} style={{ background: "#111111", borderRadius: 16, padding: "14px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", border: "1px solid #222222" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                  <div style={{ width: 40, height: 40, borderRadius: 12, background: tx.type === "credit" ? "rgba(26,239,34,0.12)" : "rgba(229,62,62,0.12)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>
-                    {tx.type === "credit" ? "✅" : "💸"}
+                  <div style={{ width: 40, height: 40, borderRadius: 12, background: tx.type === "credit" ? "rgba(26,239,34,0.12)" : "rgba(229,62,62,0.12)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <Image src={tx.type === "credit" ? "/icon-task.png" : "/icon-wallet.png"} alt="tx" width={20} height={20} style={{ objectFit: "contain" }} />
                   </div>
                   <div>
                     <p style={{ fontSize: 13, fontWeight: 600, color: "#F5F5F5" }}>{tx.label}</p>

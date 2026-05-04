@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import BottomNav from "@/components/BottomNav";
 import { useAuth } from "@/lib/useAuth";
 
@@ -66,7 +67,7 @@ export default function WalletPage() {
         <div style={{ position: "absolute", top: -50, right: -50, width: 180, height: 180, borderRadius: "50%", background: "rgba(26,239,34,0.03)" }} />
         <p style={{ color: "#555555", fontSize: 13, marginBottom: 4 }}>Points Balance</p>
         <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
-          <span style={{ color: "#F5A623", fontSize: 20 }}>⭐</span>
+          <Image src="/icon-wallet.png" alt="wallet" width={24} height={24} style={{ objectFit: "contain", marginBottom: -4 }} />
           <p style={{ color: "#F5F5F5", fontSize: 38, fontWeight: 800, letterSpacing: -2, lineHeight: 1 }}>{balance.toLocaleString()}</p>
           <span style={{ color: "#555555", fontSize: 14 }}>QLT</span>
         </div>
@@ -86,7 +87,9 @@ export default function WalletPage() {
         <div style={{ padding: "20px 16px 0" }}>
           <div style={{ background: "#111111", borderRadius: 20, padding: "22px 20px", border: "1px solid #222222" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
-              <div style={{ width: 36, height: 36, borderRadius: 10, background: "linear-gradient(135deg, #1AEF22, #06B517)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>💸</div>
+              <div style={{ width: 36, height: 36, borderRadius: 10, background: "#1a1a1a", border: "1px solid #222222", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <Image src="/icon-wallet.png" alt="withdraw" width={20} height={20} style={{ objectFit: "contain" }} />
+              </div>
               <p style={{ fontWeight: 800, fontSize: 16, color: "#F5F5F5" }}>Withdraw Funds</p>
             </div>
 
@@ -157,8 +160,8 @@ export default function WalletPage() {
               {transactions.map((tx, i) => (
                 <div key={i} style={{ background: "#111111", borderRadius: 16, padding: "14px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", border: "1px solid #222222" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                    <div style={{ width: 42, height: 42, borderRadius: 13, background: tx.type === "credit" ? "rgba(26,239,34,0.12)" : "rgba(229,62,62,0.12)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>
-                      {txIcon(tx.label)}
+                    <div style={{ width: 42, height: 42, borderRadius: 13, background: tx.type === "credit" ? "rgba(26,239,34,0.12)" : "rgba(229,62,62,0.12)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <Image src={tx.label.startsWith("Withdrawal") ? "/icon-wallet.png" : "/icon-task.png"} alt="tx" width={22} height={22} style={{ objectFit: "contain" }} />
                     </div>
                     <div>
                       <p style={{ fontSize: 13, fontWeight: 600, color: "#F5F5F5" }}>{tx.label}</p>
