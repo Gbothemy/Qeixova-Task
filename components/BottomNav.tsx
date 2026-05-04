@@ -1,12 +1,13 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 const nav = [
-  { href: "/dashboard", label: "Home", icon: "🏠" },
-  { href: "/tasks",     label: "Tasks", icon: "✅" },
-  { href: "/wallet",    label: "Wallet", icon: "💰" },
-  { href: "/profile",   label: "Profile", icon: "👤" },
+  { href: "/dashboard", label: "Home",    icon: "/icon-home.png" },
+  { href: "/tasks",     label: "Tasks",   icon: "/icon-task.png" },
+  { href: "/wallet",    label: "Wallet",  icon: "/icon-wallet.png" },
+  { href: "/profile",   label: "Profile", icon: "/icon-profile.png" },
 ];
 
 export default function BottomNav() {
@@ -49,7 +50,13 @@ export default function BottomNav() {
                 borderRadius: "0 0 4px 4px",
               }} />
             )}
-            <span style={{ fontSize: 22 }}>{item.icon}</span>
+            <Image
+              src={item.icon}
+              alt={item.label}
+              width={24}
+              height={24}
+              style={{ opacity: active ? 1 : 0.4, filter: active ? "none" : "grayscale(100%)" }}
+            />
             {item.label}
           </Link>
         );

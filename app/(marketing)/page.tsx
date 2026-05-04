@@ -1,12 +1,13 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 
 const features = [
-  { icon: "S", title: "Social Media Tasks", desc: "Follow, like, share and engage with content across Instagram, TikTok, X and more.", earn: "10,000 - 15,000 QLT", color: "rgba(26,239,34,0.1)" },
-  { icon: "P", title: "Surveys & Polls", desc: "Share your opinion on products, services and lifestyle topics that matter.", earn: "35,000 - 50,000 QLT", color: "rgba(245,166,35,0.1)" },
-  { icon: "A", title: "App Testing", desc: "Test new mobile apps and websites before they launch. Your feedback shapes products.", earn: "80,000 - 120,000 QLT", color: "rgba(26,239,34,0.1)" },
-  { icon: "C", title: "Content Interactions", desc: "Watch videos, read articles and interact with digital content to earn rewards.", earn: "18,000 - 20,000 QLT", color: "rgba(245,166,35,0.1)" },
+  { icon: "/icon-task.png",         title: "Social Media Tasks",    desc: "Follow, like, share and engage with content across Instagram, TikTok, X and more.",    color: "rgba(26,239,34,0.1)" },
+  { icon: "/icon-survey.png",       title: "Surveys & Polls",       desc: "Share your opinion on products, services and lifestyle topics that matter.",            color: "rgba(245,166,35,0.1)" },
+  { icon: "/icon-app-testing.png",  title: "App Testing",           desc: "Test new mobile apps and websites before they launch. Your feedback shapes products.",  color: "rgba(26,239,34,0.1)" },
+  { icon: "/icon-content.png",      title: "Content Interactions",  desc: "Watch videos, read articles and interact with digital content to earn rewards.",        color: "rgba(245,166,35,0.1)" },
 ];
 
 const steps = [
@@ -73,7 +74,9 @@ export default function LandingPage() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 20 }}>
             {features.map(f => (
               <div key={f.title} style={{ background: "#111111", borderRadius: 20, padding: "28px 24px", border: "1px solid #222222", textAlign: "center" }}>
-                <div style={{ width: 56, height: 56, borderRadius: 16, background: f.color, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 28, fontWeight: 800, color: "#F5F5F5", marginBottom: 18, margin: "0 auto 18px" }}>{f.icon}</div>
+                <div style={{ width: 56, height: 56, borderRadius: 16, background: f.color, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 18px" }}>
+                  <Image src={f.icon} alt={f.title} width={32} height={32} style={{ objectFit: "contain" }} />
+                </div>
                 <h3 style={{ fontWeight: 800, fontSize: 16, color: "#F5F5F5", marginBottom: 8 }}>{f.title}</h3>
                 <p style={{ fontSize: 13, color: "#b0b0b0", lineHeight: 1.6 }}>{f.desc}</p>
               </div>
