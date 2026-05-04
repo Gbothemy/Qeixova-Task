@@ -55,7 +55,12 @@ export default function BottomNav() {
               alt={item.label}
               width={24}
               height={24}
-              style={{ opacity: active ? 1 : 0.4, filter: active ? "none" : "grayscale(100%)" }}
+              style={{
+                objectFit: "contain",
+                filter: active
+                  ? "invert(58%) sepia(98%) saturate(400%) hue-rotate(83deg) brightness(110%)"
+                  : "invert(40%) sepia(0%) saturate(0%) brightness(60%)",
+              }}
             />
             {item.label}
           </Link>
