@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 
 const features = [
-  { icon: "/icon-task.png",         title: "Social Media Tasks",    desc: "Follow, like, share and engage with content across Instagram, TikTok, X and more.",    color: "rgba(26,239,34,0.1)" },
+  { icon: "/icon-social-media.jpg",   title: "Social Media Tasks",    desc: "Follow, like, share and engage with content across Instagram, TikTok, X and more.",    color: "rgba(26,239,34,0.1)" },
   { icon: "/icon-survey.png",       title: "Surveys & Polls",       desc: "Share your opinion on products, services and lifestyle topics that matter.",            color: "rgba(245,166,35,0.1)" },
   { icon: "/icon-app-testing.png",  title: "App Testing",           desc: "Test new mobile apps and websites before they launch. Your feedback shapes products.",  color: "rgba(26,239,34,0.1)" },
   { icon: "/icon-content.png",      title: "Content Interactions",  desc: "Watch videos, read articles and interact with digital content to earn rewards.",        color: "rgba(245,166,35,0.1)" },
