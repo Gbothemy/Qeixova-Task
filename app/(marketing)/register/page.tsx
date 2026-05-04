@@ -321,26 +321,6 @@ export default function RegisterPage() {
               ) : "Create Account →"}
             </button>
           </form>
-
-          <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "24px 0" }}>
-            <div style={{ flex: 1, height: 1, background: "#222222" }} />
-            <span style={{ fontSize: 12, color: "#555555", fontWeight: 500 }}>or continue with</span>
-            <div style={{ flex: 1, height: 1, background: "#222222" }} />
-          </div>
-
-          <div style={{ display: "flex", gap: 10 }}>
-            {[{ icon: "🇬", label: "Google" }, { icon: "📘", label: "Facebook" }].map((s) => (
-              <button key={s.label} style={{
-                flex: 1, padding: "11px",
-                background: "#1a1a1a", border: "1.5px solid #333333",
-                borderRadius: 12, cursor: "pointer", fontWeight: 600,
-                fontSize: 13, color: "#F5F5F5",
-                display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-              }}>
-                <span style={{ fontSize: 16 }}>{s.icon}</span> {s.label}
-              </button>
-            ))}
-          </div>
         </div>
 
         <p style={{ textAlign: "center", fontSize: 12, color: "rgba(255,255,255,0.5)", marginTop: 20 }}>
