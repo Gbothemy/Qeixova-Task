@@ -1,13 +1,14 @@
 ﻿"use client";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const nav = [
-  { href: "/dashboard", label: "Home", icon: "🏠", desc: "Dashboard" },
-  { href: "/tasks",     label: "Tasks", icon: "✅", desc: "Browse & earn" },
-  { href: "/wallet",    label: "Wallet", icon: "💰", desc: "Balance & withdraw" },
-  { href: "/profile",   label: "Profile", icon: "👤", desc: "Account settings" },
+  { href: "/dashboard", label: "Home",    icon: "/icon-home.png",    desc: "Dashboard" },
+  { href: "/tasks",     label: "Tasks",   icon: "/icon-task.png",    desc: "Browse & earn" },
+  { href: "/wallet",    label: "Wallet",  icon: "/icon-wallet.png",  desc: "Balance & withdraw" },
+  { href: "/profile",   label: "Profile", icon: "/icon-profile.png", desc: "Account settings" },
 ];
 
 export default function Sidebar() {
@@ -73,11 +74,10 @@ export default function Sidebar() {
                 width: 36, height: 36, borderRadius: 10,
                 background: active ? "linear-gradient(135deg, #1AEF22, #06B517)" : "#1a1a1a",
                 display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: 17,
                 boxShadow: active ? "0 3px 10px rgba(26,239,34,0.3)" : "none",
                 flexShrink: 0,
               }}>
-                {item.icon}
+                <Image src={item.icon} alt={item.label} width={20} height={20} style={{ objectFit: "contain", filter: active ? "brightness(0)" : "none", opacity: active ? 1 : 0.6 }} />
               </div>
               <div>
                 <p style={{ fontSize: 14, fontWeight: active ? 700 : 500, color: active ? "#1AEF22" : "#cccccc" }}>
