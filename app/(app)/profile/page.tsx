@@ -300,8 +300,8 @@ export default function ProfilePage() {
     { icon: "/icon-profile.png", label: "Edit Profile",    sub: "Update your name & phone",           action: () => setModal("edit") },
     { icon: "/icon-profile.png", label: "Change Password", sub: "Update your account password",       action: () => setModal("password") },
     { icon: "/icon-home.png",    label: "Notifications",   sub: "Task alerts & updates",              action: () => setModal("notifications") },
-    { icon: "/icon-content.png", label: "Support",         sub: "Get help anytime",                   action: () => setModal("support") },
-    { icon: "/icon-survey.png",  label: "Terms & Privacy", sub: "Legal information",                  action: () => setModal("terms") },
+    { icon: "/icon-support.svg", label: "Support",         sub: "Get help anytime",                   action: () => setModal("support") },
+    { icon: "/icon-terms.svg",   label: "Terms & Privacy", sub: "Legal information",                  action: () => setModal("terms") },
   ];
 
   return (
