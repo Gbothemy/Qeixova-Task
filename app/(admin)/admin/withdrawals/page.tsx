@@ -10,14 +10,15 @@ interface Withdrawal {
   status: string;
 }
 
-type StatusFilter = "all" | "pending" | "completed" | "failed";
+type StatusFilter = "all" | "pending" | "processing" | "completed" | "failed";
 
 const TH: React.CSSProperties = { padding: "12px 16px", textAlign: "left", fontSize: 12, fontWeight: 600, color: "#888", textTransform: "uppercase", letterSpacing: 0.5, borderBottom: "1px solid #eee", whiteSpace: "nowrap" };
 const TD: React.CSSProperties = { padding: "14px 16px", fontSize: 14, color: "#333", borderBottom: "1px solid #f5f5f5", verticalAlign: "middle" };
 const STATUS_COLORS: Record<string, { bg: string; color: string }> = {
-  pending:   { bg: "#fff8e1", color: "#e67e22" },
-  completed: { bg: "#e8f5e9", color: "#2e7d32" },
-  failed:    { bg: "#ffebeb", color: "#cc0000" },
+  pending:    { bg: "#fff8e1", color: "#e67e22" },
+  processing: { bg: "#e3f2fd", color: "#1565c0" },
+  completed:  { bg: "#e8f5e9", color: "#2e7d32" },
+  failed:     { bg: "#ffebeb", color: "#cc0000" },
 };
 
 function QLTToNaira(QLT: number) {
@@ -27,6 +28,8 @@ function QLTToNaira(QLT: number) {
 export default function WithdrawalsPage() {
   const [withdrawals, setWithdrawals] = useState<Withdrawal[]>([]);
   const [filter, setFilter] = useState<StatusFilter>("all");
+
+  type StatusFilter = "all" | "pending" | "processing" | "completed" | "failed";
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<number | null>(null);
 
@@ -44,7 +47,7 @@ export default function WithdrawalsPage() {
 
   useEffect(() => { fetchWithdrawals(); }, [fetchWithdrawals]);
 
-  async function handleAction(id: number, action: "approve" | "reject") {
+  async function handleAction(id: number, action: "approve" | "processing" | "reject") {
     setActionLoading(id);
     try {
       await fetch("/api/admin/withdrawals", {
@@ -64,7 +67,7 @@ export default function WithdrawalsPage() {
       <p style={{ margin: "0 0 24px", color: "#888", fontSize: 14 }}>Manage withdrawal requests</p>
 
       <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
-        {(["all", "pending", "completed", "failed"] as StatusFilter[]).map((f) => (
+        {(["all", "pending", "processing", "completed", "failed"] as StatusFilter[]).map((f) => (
           <button key={f} onClick={() => setFilter(f)} style={{ padding: "8px 18px", borderRadius: 20, border: "1.5px solid", borderColor: filter === f ? "#1AEF22" : "#e0e0e0", background: filter === f ? "#1AEF22" : "#fff", color: filter === f ? "#fff" : "#666", cursor: "pointer", fontSize: 13, fontWeight: 500, textTransform: "capitalize" }}>
             {f}
           </button>
@@ -122,18 +125,31 @@ export default function WithdrawalsPage() {
                     </span>
                   </td>
                   <td style={TD}>
-                    {w.status === "pending" ? (
-                      <div style={{ display: "flex", gap: 8 }}>
-                        <button onClick={() => handleAction(w.id, "approve")} disabled={actionLoading === w.id}
-                          style={{ padding: "5px 12px", borderRadius: 6, border: "none", background: "#1AEF22", color: "#fff", cursor: "pointer", fontSize: 12, fontWeight: 600, opacity: actionLoading === w.id ? 0.6 : 1 }}>
-                          Approve
+                    {w.status === "pending" && (
+                      <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                        <button onClick={() => handleAction(w.id, "processing")} disabled={actionLoading === w.id}
+                          style={{ padding: "5px 12px", borderRadius: 6, border: "none", background: "#1565c0", color: "#fff", cursor: "pointer", fontSize: 12, fontWeight: 600 }}>
+                          Processing
                         </button>
                         <button onClick={() => handleAction(w.id, "reject")} disabled={actionLoading === w.id}
-                          style={{ padding: "5px 12px", borderRadius: 6, border: "none", background: "#cc0000", color: "#fff", cursor: "pointer", fontSize: 12, fontWeight: 600, opacity: actionLoading === w.id ? 0.6 : 1 }}>
+                          style={{ padding: "5px 12px", borderRadius: 6, border: "none", background: "#cc0000", color: "#fff", cursor: "pointer", fontSize: 12, fontWeight: 600 }}>
                           Reject
                         </button>
                       </div>
-                    ) : (
+                    )}
+                    {w.status === "processing" && (
+                      <div style={{ display: "flex", gap: 6 }}>
+                        <button onClick={() => handleAction(w.id, "approve")} disabled={actionLoading === w.id}
+                          style={{ padding: "5px 12px", borderRadius: 6, border: "none", background: "#1AEF22", color: "#000", cursor: "pointer", fontSize: 12, fontWeight: 700 }}>
+                          Mark Paid
+                        </button>
+                        <button onClick={() => handleAction(w.id, "reject")} disabled={actionLoading === w.id}
+                          style={{ padding: "5px 12px", borderRadius: 6, border: "none", background: "#cc0000", color: "#fff", cursor: "pointer", fontSize: 12, fontWeight: 600 }}>
+                          Reject
+                        </button>
+                      </div>
+                    )}
+                    {(w.status === "completed" || w.status === "failed") && (
                       <span style={{ color: "#aaa", fontSize: 12 }}>—</span>
                     )}
                   </td>

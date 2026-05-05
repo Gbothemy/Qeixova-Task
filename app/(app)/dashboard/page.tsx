@@ -99,6 +99,24 @@ export default function Home() {
         />
       </div>
 
+      {/* First Task Banner */}
+      {wallet && wallet.stats.tasks_total === 0 && (
+        <div style={{ padding: "20px 16px 0" }}>
+          <Link href="/tasks" style={{ textDecoration: "none" }}>
+            <div style={{ background: "linear-gradient(135deg, #1AEF22 0%, #06B517 100%)", borderRadius: 18, padding: "18px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", boxShadow: "0 6px 20px rgba(26,239,34,0.25)", position: "relative", overflow: "hidden" }}>
+              <div style={{ position: "absolute", top: -30, right: -30, width: 100, height: 100, borderRadius: "50%", background: "rgba(0,0,0,0.08)" }} />
+              <div>
+                <p style={{ color: "#000", fontWeight: 800, fontSize: 16, marginBottom: 4 }}>Complete your first task</p>
+                <p style={{ color: "rgba(0,0,0,0.65)", fontSize: 13 }}>Start earning QLT — tasks take 1–10 minutes</p>
+              </div>
+              <div style={{ background: "#000", borderRadius: 12, padding: "10px 16px", flexShrink: 0 }}>
+                <span style={{ color: "#1AEF22", fontWeight: 800, fontSize: 14 }}>Start →</span>
+              </div>
+            </div>
+          </Link>
+        </div>
+      )}
+
       {/* Quick actions */}
       <div style={{ padding: "20px 16px 0" }}>
         <div style={{ display: "flex", gap: 12 }}>

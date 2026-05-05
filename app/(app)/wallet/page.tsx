@@ -208,6 +208,9 @@ export default function WalletPage() {
                         {tx.status === "pending" && (
                           <span style={{ fontSize: 10, background: "rgba(245,166,35,0.12)", color: "#F5A623", borderRadius: 4, padding: "1px 6px", fontWeight: 600 }}>Pending</span>
                         )}
+                        {tx.status === "processing" && (
+                          <span style={{ fontSize: 10, background: "rgba(26,115,232,0.12)", color: "#4a9eff", borderRadius: 4, padding: "1px 6px", fontWeight: 600 }}>Processing</span>
+                        )}
                       </div>
                     </div>
                   </div>
