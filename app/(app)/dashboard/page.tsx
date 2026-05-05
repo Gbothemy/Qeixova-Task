@@ -122,11 +122,11 @@ export default function Home() {
       {/* Quick actions */}
       <div style={{ padding: "20px 16px 0" }}>
         <div style={{ display: "flex", gap: 12 }}>
-          <Link href="/wallet" style={{ flex: 1, background: "#ffffff", border: "1.5px solid #e0e0e0", color: "#000000", borderRadius: 14, padding: "14px 0", textAlign: "center", fontWeight: 700, fontSize: 14, textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
-            Withdraw
+          <Link href="/wallet" style={{ flex: 1, background: "#111111", border: "1.5px solid #222222", color: "#1AEF22", borderRadius: 14, padding: "14px 0", textAlign: "center", fontWeight: 700, fontSize: 14, textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+            💸 Withdraw
           </Link>
-          <Link href="/tasks" style={{ flex: 1, background: "#ffffff", border: "1.5px solid #e0e0e0", color: "#000000", borderRadius: 14, padding: "14px 0", textAlign: "center", fontWeight: 800, fontSize: 14, textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
-            Earn Now
+          <Link href="/tasks" style={{ flex: 1, background: "linear-gradient(135deg, #F5A623, #d89420)", color: "#000", borderRadius: 14, padding: "14px 0", textAlign: "center", fontWeight: 800, fontSize: 14, textDecoration: "none", boxShadow: "0 4px 16px rgba(245,166,35,0.35)", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+            ⚡ Earn Now
           </Link>
         </div>
       </div>
