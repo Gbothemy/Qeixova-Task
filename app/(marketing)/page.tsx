@@ -238,7 +238,7 @@ export default function LandingPage() {
           </div>
 
           <div style={{ borderTop: "1px solid #1a1a1a", paddingTop: 24, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
-            <p style={{ fontSize: 12, color: "#555555" }}>© 2025 Qeixova. All rights reserved.</p>
+            <p style={{ fontSize: 12, color: "#555555" }}>© 2026 Qeixova. All rights reserved.</p>
             <p style={{ fontSize: 12, color: "#555555" }}>Transparent. Simple. Built for earners.</p>
           </div>
         </div>
