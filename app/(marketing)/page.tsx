@@ -4,25 +4,33 @@ import Image from "next/image";
 import { useState } from "react";
 
 const features = [
-  { icon: "/icon-social-media.jpg",   title: "Social Media Tasks",    desc: "Follow, like, share and engage with content across Instagram, TikTok, X and more.",    color: "rgba(26,239,34,0.1)" },
-  { icon: "/icon-survey.png",       title: "Surveys & Polls",       desc: "Share your opinion on products, services and lifestyle topics that matter.",            color: "rgba(245,166,35,0.1)" },
-  { icon: "/icon-app-testing.png",  title: "App Testing",           desc: "Test new mobile apps and websites before they launch. Your feedback shapes products.",  color: "rgba(26,239,34,0.1)" },
-  { icon: "/icon-content.png",      title: "Content Interactions",  desc: "Watch videos, read articles and interact with digital content to earn rewards.",        color: "rgba(245,166,35,0.1)" },
+  { icon: "/icon-social-media.jpg", title: "Social Media Tasks",   desc: "Complete social actions like follows, likes, shares, and engagement across Instagram, TikTok, X, and more.", color: "rgba(26,239,34,0.1)" },
+  { icon: "/icon-survey.png",       title: "Surveys & Polls",      desc: "Share your opinion on products, services, and lifestyle topics. Your feedback has real value.",               color: "rgba(245,166,35,0.1)" },
+  { icon: "/icon-app-testing.png",  title: "App Testing",          desc: "Test new mobile apps and websites before they launch. Your feedback directly shapes real products.",          color: "rgba(26,239,34,0.1)" },
+  { icon: "/icon-content.png",      title: "AI & Content Tasks",   desc: "Evaluate AI responses, watch videos, read articles, and interact with digital content to earn rewards.",      color: "rgba(245,166,35,0.1)" },
 ];
 
 const steps = [
-  { num: "01", icon: "1", title: "Create your account", desc: "Sign up with a referral code in under 60 seconds. No credit card needed." },
-  { num: "02", icon: "2", title: "Complete tasks", desc: "Browse tasks by category, follow the steps and submit proof of completion." },
-  { num: "03", icon: "3", title: "Earn points", desc: "Every completed task credits points to your balance instantly." },
-  { num: "04", icon: "4", title: "Convert & withdraw", desc: "Convert your points to Naira and cash out to your bank or mobile wallet." },
+  { num: "01", icon: "1", title: "Create Your Account",   desc: "Sign up in seconds and access available tasks immediately. No experience needed." },
+  { num: "02", icon: "2", title: "Browse & Pick Tasks",   desc: "Choose from social tasks, surveys, app testing, and AI evaluations. Each task is simple and guided." },
+  { num: "03", icon: "3", title: "Complete & Submit",     desc: "Follow the task steps and submit proof of completion. Every completed task credits QLT instantly." },
+  { num: "04", icon: "4", title: "Convert & Withdraw",    desc: "Convert your QLT to Naira anytime. Cash out directly to your bank or mobile wallet." },
+];
+
+const trustItems = [
+  "Transparent reward system",
+  "Simple, guided tasks",
+  "Fast completion process",
+  "Built for real users",
 ];
 
 const faqs = [
-  { q: "What are QLT Points?", a: "QLT (Qeixova Loyalty Token) points are the reward currency on Qeixova. Every task you complete earns you QLT. 100 QLT = 1 Naira. You can convert and withdraw anytime." },
-  { q: "Is Qeixova free to join?", a: "Yes, completely free. You need a referral code from an existing member to register. No registration fee, no hidden charges." },
-  { q: "How do I convert points to cash?", a: "Go to your Wallet, enter the amount of QLT you want to convert, select your bank account and tap Withdraw. Minimum is 100,000 QLT." },
-  { q: "How quickly are withdrawals processed?", a: "Withdrawals are processed instantly to your bank account or mobile wallet (Opay, Palmpay, GTBank, etc.)." },
-  { q: "How many tasks can I do per day?", a: "There is no daily limit. New tasks are added every 24 hours so there is always something to earn from." },
+  { q: "What are QLT Points?", a: "QLT (Qeixova Loyalty Token) is the reward currency on Qeixova Tasks. Every task you complete earns you QLT. 100 QLT = ₦1. You can convert and withdraw anytime with no hidden conditions." },
+  { q: "Is Qeixova Tasks free to join?", a: "Yes, completely free. You need a referral code from an existing member to register. No registration fee, no hidden charges, no deposits." },
+  { q: "How do I convert points to cash?", a: "Go to your Wallet, enter the amount of QLT you want to convert, select your bank account and tap Withdraw. Minimum withdrawal is 100,000 QLT (₦1,000)." },
+  { q: "How quickly are withdrawals processed?", a: "Withdrawals are processed within 24 hours to your bank account or mobile wallet (Opay, Palmpay, GTBank, etc.)." },
+  { q: "How many tasks can I do per day?", a: "There is no daily limit. New tasks are added regularly so there is always something to earn from." },
+  { q: "Are the tasks verified?", a: "Yes. All tasks are verified before listing. Your earnings are tracked transparently and the conversion rate is fixed at 100 QLT = ₦1." },
 ];
 
 export default function LandingPage() {
@@ -45,31 +53,45 @@ export default function LandingPage() {
       <section style={{ background: "linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%)", padding: "80px 5vw 100px", position: "relative", overflow: "hidden", textAlign: "center", borderBottom: "1px solid #222222" }}>
         <div style={{ position: "absolute", top: -80, right: -80, width: 400, height: 400, borderRadius: "50%", background: "rgba(26,239,34,0.03)" }} />
         <h1 style={{ color: "#F5F5F5", fontSize: "clamp(32px, 6vw, 64px)", fontWeight: 900, lineHeight: 1.1, letterSpacing: -2, maxWidth: 760, margin: "0 auto 20px" }}>
-          Complete Tasks. Earn Points.<br />
-          <span style={{ background: "linear-gradient(135deg, #1AEF22, #06B517)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Convert to Real Cash.</span>
+          Complete Simple Tasks.<br />
+          <span style={{ background: "linear-gradient(135deg, #1AEF22, #06B517)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Earn QLT.</span>
         </h1>
         <p style={{ color: "#b0b0b0", fontSize: "clamp(15px, 2vw, 19px)", maxWidth: 560, margin: "0 auto 16px", lineHeight: 1.6 }}>
-          Qeixova rewards you with <strong style={{ color: "#F5A623" }}>QLT Points</strong> for completing simple online tasks. Accumulate QLT and convert to Naira whenever you want.
+          Turn your time into rewards by completing social tasks, app testing, surveys, and AI evaluations. Convert your <strong style={{ color: "#F5A623" }}>QLT</strong> to Naira anytime.
         </p>
         <div style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "#111111", border: "1px solid #333333", borderRadius: 14, padding: "10px 20px", marginBottom: 36 }}>
-          <span style={{ color: "#F5A623", fontSize: 14, fontWeight: 700 }}>100 QLT = 1 Naira</span>
-          <span style={{ color: "#999999", fontSize: 12 }}>• Instant conversion</span>
+          <span style={{ color: "#F5A623", fontSize: 14, fontWeight: 700 }}>100 QLT = ₦1</span>
+          <span style={{ color: "#999999", fontSize: 12 }}>• Transparent conversion • No hidden conditions</span>
         </div>
         <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
           <Link href="/register" style={{ background: "linear-gradient(135deg, #F5A623, #d89420)", color: "#000", textDecoration: "none", padding: "16px 36px", borderRadius: 14, fontWeight: 800, fontSize: 16, boxShadow: "0 8px 28px rgba(245,166,35,0.4)" }}>
-            Start Earning Free
+            Start Earning
           </Link>
           <a href="#how-it-works" style={{ background: "#1a1a1a", border: "1.5px solid #333333", color: "#F5F5F5", textDecoration: "none", padding: "16px 32px", borderRadius: 14, fontWeight: 600, fontSize: 16 }}>
             See How It Works
           </a>
         </div>
+        <p style={{ color: "#666666", fontSize: 13, marginTop: 16 }}>No experience needed. Get started in minutes.</p>
+      </section>
+
+      {/* Trust Strip */}
+      <section style={{ background: "#111111", borderBottom: "1px solid #222222", padding: "20px 5vw" }}>
+        <div style={{ maxWidth: 900, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "center", gap: 32, flexWrap: "wrap" }}>
+          {trustItems.map(item => (
+            <div key={item} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#1AEF22", flexShrink: 0 }} />
+              <span style={{ fontSize: 13, color: "#b0b0b0", fontWeight: 500 }}>{item}</span>
+            </div>
+          ))}
+        </div>
+        <p style={{ textAlign: "center", fontSize: 12, color: "#555555", marginTop: 12 }}>Early users are already completing tasks daily.</p>
       </section>
 
       <section style={{ padding: "80px 5vw", background: "#0a0a0a" }}>
         <div style={{ maxWidth: 960, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 52 }}>
             <span style={{ fontSize: 12, fontWeight: 700, color: "#1AEF22", letterSpacing: 2, textTransform: "uppercase", background: "rgba(26,239,34,0.1)", borderRadius: 20, padding: "4px 14px" }}>What you can do</span>
-            <h2 style={{ fontSize: "clamp(26px, 4vw, 42px)", fontWeight: 900, color: "#F5F5F5", marginTop: 14, letterSpacing: -1 }}>Four ways to earn points every day</h2>
+            <h2 style={{ fontSize: "clamp(26px, 4vw, 42px)", fontWeight: 900, color: "#F5F5F5", marginTop: 14, letterSpacing: -1 }}>Four task types. One platform.</h2>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 20 }}>
             {features.map(f => (
@@ -89,7 +111,7 @@ export default function LandingPage() {
         <div style={{ maxWidth: 900, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 52 }}>
             <span style={{ fontSize: 12, fontWeight: 700, color: "#1AEF22", letterSpacing: 2, textTransform: "uppercase", background: "rgba(26,239,34,0.1)", borderRadius: 20, padding: "4px 14px" }}>Simple process</span>
-            <h2 style={{ fontSize: "clamp(26px, 4vw, 42px)", fontWeight: 900, color: "#F5F5F5", marginTop: 14, letterSpacing: -1 }}>Up and earning in 4 steps</h2>
+            <h2 style={{ fontSize: "clamp(26px, 4vw, 42px)", fontWeight: 900, color: "#F5F5F5", marginTop: 14, letterSpacing: -1 }}>How Qeixova Tasks Works</h2>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 32 }}>
             {steps.map(step => (
@@ -130,14 +152,14 @@ export default function LandingPage() {
 
       <section style={{ background: "#0a0a0a", borderBottom: "1px solid #222222", padding: "80px 5vw", textAlign: "center", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", top: -60, right: -60, width: 280, height: 280, borderRadius: "50%", background: "rgba(26,239,34,0.03)" }} />
-        <h2 style={{ color: "#F5F5F5", fontSize: "clamp(26px, 5vw, 48px)", fontWeight: 900, letterSpacing: -1.5, marginBottom: 16, position: "relative" }}>Ready to start earning points?</h2>
+        <h2 style={{ color: "#F5F5F5", fontSize: "clamp(26px, 5vw, 48px)", fontWeight: 900, letterSpacing: -1.5, marginBottom: 16, position: "relative" }}>Ready to start earning?</h2>
         <p style={{ color: "#b0b0b0", fontSize: 16, maxWidth: 440, margin: "0 auto 36px", lineHeight: 1.6, position: "relative" }}>
-          Join thousands of Nigerians earning QLT daily and converting them to real cash.
+          Join users already completing tasks and converting QLT to real Naira daily.
         </p>
         <Link href="/register" style={{ background: "linear-gradient(135deg, #F5A623, #d89420)", color: "#000", textDecoration: "none", padding: "18px 44px", borderRadius: 14, fontWeight: 800, fontSize: 17, boxShadow: "0 8px 28px rgba(245,166,35,0.4)", display: "inline-block", position: "relative" }}>
-          Create Free Account
+          Start Earning
         </Link>
-        <p style={{ color: "#999999", fontSize: 12, marginTop: 16 }}>Referral code required. Free forever.</p>
+        <p style={{ color: "#999999", fontSize: 12, marginTop: 16 }}>Referral code required. Free forever. No experience needed.</p>
       </section>
 
       <footer style={{ background: "#000000", borderTop: "1px solid #222222", padding: "48px 5vw 32px", color: "#999999" }}>
