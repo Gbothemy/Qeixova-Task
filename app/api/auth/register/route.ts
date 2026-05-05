@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
 
     const result = await sql`
       INSERT INTO users (email, phone, full_name, password, referral_code, referred_by, balance)
-      VALUES (${email}, ${phone || null}, ${fullName}, ${hashed}, ${myCode}, ${referrerId}, 2000)
+      VALUES (${email}, ${phone || null}, ${fullName}, ${hashed}, ${myCode}, ${referrerId}, 1000)
       RETURNING id, email, full_name
     `;
 
