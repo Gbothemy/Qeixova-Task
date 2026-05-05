@@ -26,7 +26,7 @@ const trustItems = [
 
 const faqs = [
   { q: "What are QLT Points?", a: "QLT (Qeixova Loyalty Token) is the reward currency on Qeixova Tasks. Every task you complete earns you QLT. 100 QLT = ₦1. You can convert and withdraw anytime with no hidden conditions." },
-  { q: "Is Qeixova Tasks free to join?", a: "Yes, completely free. You need a referral code from an existing member to register. No registration fee, no hidden charges, no deposits." },
+  { q: "Is Qeixova Tasks free to join?", a: "Yes, completely free. No registration fee, no hidden charges, no deposits. You can optionally enter a referral code during setup to earn bonus QLT." },
   { q: "How do I convert points to cash?", a: "Go to your Wallet, enter the amount of QLT you want to convert, select your bank account and tap Withdraw. Minimum withdrawal is 100,000 QLT (₦1,000)." },
   { q: "How quickly are withdrawals processed?", a: "Withdrawals are processed within 24 hours to your bank account or mobile wallet (Opay, Palmpay, GTBank, etc.)." },
   { q: "How many tasks can I do per day?", a: "There is no daily limit. New tasks are added regularly so there is always something to earn from." },
@@ -159,7 +159,7 @@ export default function LandingPage() {
         <Link href="/register" style={{ background: "linear-gradient(135deg, #F5A623, #d89420)", color: "#000", textDecoration: "none", padding: "18px 44px", borderRadius: 14, fontWeight: 800, fontSize: 17, boxShadow: "0 8px 28px rgba(245,166,35,0.4)", display: "inline-block", position: "relative" }}>
           Start Earning
         </Link>
-        <p style={{ color: "#999999", fontSize: 12, marginTop: 16 }}>Referral code required. Free forever. No experience needed.</p>
+        <p style={{ color: "#999999", fontSize: 12, marginTop: 16 }}>Free forever. No experience needed.</p>
       </section>
 
       <footer style={{ background: "#000000", borderTop: "1px solid #222222", padding: "48px 5vw 32px", color: "#999999" }}>
