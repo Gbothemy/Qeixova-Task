@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import BalanceCard from "@/components/BalanceCard";
 import BottomNav from "@/components/BottomNav";
+import OnboardingFlow from "@/components/OnboardingFlow";
 import { useAuth } from "@/lib/useAuth";
 
 interface WalletData {
@@ -31,12 +32,19 @@ function timeAgo(dateStr: string) {
 export default function Home() {
   const { user, loading } = useAuth();
   const [wallet, setWallet] = useState<WalletData | null>(null);
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   useEffect(() => {
     if (!user) return;
     const load = () => fetch("/api/wallet").then(r => r.ok ? r.json() : null).then(d => { if (d) setWallet(d); }).catch(() => {});
     load();
     window.addEventListener("balanceUpdated", load);
+
+    // Check onboarding status
+    fetch("/api/onboarding").then(r => r.ok ? r.json() : null).then(d => {
+      if (d && d.onboarding_completed === false) setShowOnboarding(true);
+    }).catch(() => {});
+
     return () => window.removeEventListener("balanceUpdated", load);
   }, [user]);
 
@@ -51,6 +59,9 @@ export default function Home() {
 
   return (
     <div className="page-body" style={{ background: "#000000", minHeight: "100vh" }}>
+      {showOnboarding && user && (
+        <OnboardingFlow userName={user.fullName} onComplete={() => setShowOnboarding(false)} />
+      )}
       {/* Header */}
       <div className="page-header" style={{ background: "#0a0a0a", borderBottom: "1px solid #222222", padding: "52px 20px 90px", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", top: -60, right: -60, width: 220, height: 220, borderRadius: "50%", background: "rgba(26,239,34,0.03)" }} />

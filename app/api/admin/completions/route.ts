@@ -81,6 +81,20 @@ export async function PATCH(req: NextRequest) {
           VALUES (${completion.referred_by}, 'credit', ${bonus}, 'Referral Earnings (10%)')
         `;
       }
+
+      // Update approved count and trust level
+      await sql`UPDATE users SET approved_count = approved_count + 1 WHERE id = ${completion.user_id}`;
+      // Trust tier: new → trusted after 5 approvals with low rejection rate
+      const userStats = await sql`SELECT approved_count, rejected_count FROM users WHERE id = ${completion.user_id}`;
+      const { approved_count, rejected_count } = userStats[0];
+      const total = approved_count + rejected_count;
+      const rejectionRate = total > 0 ? rejected_count / total : 0;
+      if (approved_count >= 5 && rejectionRate < 0.3) {
+        await sql`UPDATE users SET trust_level = 'trusted' WHERE id = ${completion.user_id}`;
+      }
+      if (approved_count >= 20 && rejectionRate < 0.1) {
+        await sql`UPDATE users SET trust_level = 'verified' WHERE id = ${completion.user_id}`;
+      }
     }
 
     return NextResponse.json({ ok: true, message: "Approved and QLT credited" });
@@ -89,6 +103,16 @@ export async function PATCH(req: NextRequest) {
   if (action === "reject") {
     const reason = rejectionReason?.trim() || "Task not completed correctly";
     await sql`UPDATE completions SET status = 'rejected', rejection_reason = ${reason} WHERE id = ${completionId}`;
+    // Update rejected count and trust level
+    await sql`UPDATE users SET rejected_count = rejected_count + 1 WHERE id = ${completion.user_id}`;
+    // Downgrade trust if rejection rate is too high
+    const userStats = await sql`SELECT approved_count, rejected_count FROM users WHERE id = ${completion.user_id}`;
+    const { approved_count, rejected_count } = userStats[0];
+    const total = approved_count + rejected_count;
+    const rejectionRate = total > 0 ? rejected_count / total : 0;
+    if (rejectionRate >= 0.5 && total >= 4) {
+      await sql`UPDATE users SET trust_level = 'flagged' WHERE id = ${completion.user_id}`;
+    }
     return NextResponse.json({ ok: true, message: "Rejected" });
   }
 }

@@ -11,7 +11,8 @@ interface Profile {
   referral_code: string; tasks_completed: number;
   tasks_today: number; total_earned: number;
   total_withdrawn: number; referral_count: number;
-  created_at: string;
+  created_at: string; trust_level: string;
+  approved_count: number; rejected_count: number;
 }
 
 type ModalType = "edit" | "password" | "notifications" | "support" | "terms" | null;
@@ -330,6 +331,13 @@ export default function ProfilePage() {
               <span style={{ color: "#F5A623", fontSize: 12, fontWeight: 600 }}>{profile.streak}-day streak</span>
             </div>
           )}
+          {profile && (
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: profile.trust_level === "verified" ? "rgba(26,239,34,0.08)" : profile.trust_level === "trusted" ? "rgba(26,115,232,0.08)" : profile.trust_level === "flagged" ? "rgba(229,62,62,0.08)" : "rgba(255,255,255,0.05)", border: `1px solid ${profile.trust_level === "verified" ? "rgba(26,239,34,0.2)" : profile.trust_level === "trusted" ? "rgba(26,115,232,0.2)" : profile.trust_level === "flagged" ? "rgba(229,62,62,0.2)" : "#333333"}`, borderRadius: 20, padding: "5px 14px" }}>
+              <span style={{ fontSize: 12, fontWeight: 700, color: profile.trust_level === "verified" ? "#1AEF22" : profile.trust_level === "trusted" ? "#4a9eff" : profile.trust_level === "flagged" ? "#e53e3e" : "#888888" }}>
+                {profile.trust_level === "verified" ? "✓ Verified User" : profile.trust_level === "trusted" ? "Trusted User" : profile.trust_level === "flagged" ? "⚠ Flagged" : "New User"}
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
@@ -347,6 +355,43 @@ export default function ProfilePage() {
           ))}
         </div>
       </div>
+
+      {/* Approval Feedback */}
+      {profile && (profile.approved_count > 0 || profile.rejected_count > 0) && (
+        <div style={{ padding: "16px 16px 0" }}>
+          <div style={{ background: "#111111", borderRadius: 16, padding: "16px 18px", border: "1px solid #222222" }}>
+            <p style={{ fontSize: 13, fontWeight: 700, color: "#F5F5F5", marginBottom: 12 }}>Task Review Summary</p>
+            <div style={{ display: "flex", gap: 12 }}>
+              <div style={{ flex: 1, background: "rgba(26,239,34,0.06)", borderRadius: 12, padding: "12px", textAlign: "center", border: "1px solid rgba(26,239,34,0.15)" }}>
+                <p style={{ fontSize: 22, fontWeight: 800, color: "#1AEF22" }}>{profile.approved_count}</p>
+                <p style={{ fontSize: 11, color: "#999999", marginTop: 2 }}>Approved</p>
+              </div>
+              <div style={{ flex: 1, background: "rgba(229,62,62,0.06)", borderRadius: 12, padding: "12px", textAlign: "center", border: "1px solid rgba(229,62,62,0.15)" }}>
+                <p style={{ fontSize: 22, fontWeight: 800, color: "#e53e3e" }}>{profile.rejected_count}</p>
+                <p style={{ fontSize: 11, color: "#999999", marginTop: 2 }}>Rejected</p>
+              </div>
+              <div style={{ flex: 1, background: "rgba(245,166,35,0.06)", borderRadius: 12, padding: "12px", textAlign: "center", border: "1px solid rgba(245,166,35,0.15)" }}>
+                <p style={{ fontSize: 22, fontWeight: 800, color: "#F5A623" }}>
+                  {profile.approved_count + profile.rejected_count > 0
+                    ? Math.round((profile.approved_count / (profile.approved_count + profile.rejected_count)) * 100)
+                    : 0}%
+                </p>
+                <p style={{ fontSize: 11, color: "#999999", marginTop: 2 }}>Success Rate</p>
+              </div>
+            </div>
+            {profile.trust_level === "new" && profile.approved_count < 5 && (
+              <p style={{ fontSize: 11, color: "#666666", marginTop: 10, textAlign: "center" }}>
+                Complete {5 - profile.approved_count} more approved task{5 - profile.approved_count !== 1 ? "s" : ""} to become a Trusted User
+              </p>
+            )}
+            {profile.trust_level === "flagged" && (
+              <p style={{ fontSize: 11, color: "#e53e3e", marginTop: 10, textAlign: "center" }}>
+                Your account has been flagged due to high rejection rate. Please review task requirements carefully.
+              </p>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Referral banner */}
       {profile && (
