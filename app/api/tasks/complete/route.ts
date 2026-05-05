@@ -57,25 +57,12 @@ export async function POST(req: NextRequest) {
       : (proofValue ?? null);
 
     await sql`
-      INSERT INTO completions (user_id, task_id, proof_value)
-      VALUES (${session.userId}, ${taskId}, ${storedProof})
+      INSERT INTO completions (user_id, task_id, proof_value, status)
+      VALUES (${session.userId}, ${taskId}, ${storedProof}, 'pending')
     `;
 
-    // Credit balance
-    await sql`UPDATE users SET balance = balance + ${task.reward} WHERE id = ${session.userId}`;
-
-    // Credit 10% to referrer if exists
-    const referrerRows = await sql`SELECT referred_by FROM users WHERE id = ${session.userId}`;
-    if (referrerRows.length > 0 && referrerRows[0].referred_by) {
-      const referrerId = referrerRows[0].referred_by;
-      const referralBonus = Math.floor(task.reward * 0.1); // 10% of earnings
-      
-      await sql`UPDATE users SET balance = balance + ${referralBonus} WHERE id = ${referrerId}`;
-      await sql`
-        INSERT INTO transactions (user_id, type, amount, label)
-        VALUES (${referrerId}, 'credit', ${referralBonus}, 'Referral Earnings (10%)')
-      `;
-    }
+    // DO NOT credit balance yet — wait for admin approval
+    // Referral bonus also credited on approval
 
     // Increment budget_used and auto-deactivate if exhausted
     if (budget > 0) {
@@ -114,8 +101,9 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       ok: true,
+      pending: true,
       reward: task.reward,
-      newBalance: user.balance + task.reward,
+      message: "Submission received. Your QLT will be credited after review.",
       newStreak,
       newLevel,
     });

@@ -8,36 +8,87 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const page      = Math.max(1, Number(searchParams.get("page") ?? 1));
   const proofType = searchParams.get("proof_type") ?? "";
+  const status    = searchParams.get("status") ?? "";
   const limit     = 30;
   const offset    = (page - 1) * limit;
 
   const [completions, countRows] = await Promise.all([
-    proofType
-      ? sql`
-          SELECT c.id, c.proof_value, c.completed_at,
-            u.full_name AS user_name, u.email,
-            t.title AS task_title, t.proof_type, t.category
-          FROM completions c
-          JOIN users u ON u.id = c.user_id
-          JOIN tasks t ON t.id = c.task_id
-          WHERE t.proof_type = ${proofType}
-          ORDER BY c.completed_at DESC
-          LIMIT ${limit} OFFSET ${offset}
-        `
-      : sql`
-          SELECT c.id, c.proof_value, c.completed_at,
-            u.full_name AS user_name, u.email,
-            t.title AS task_title, t.proof_type, t.category
-          FROM completions c
-          JOIN users u ON u.id = c.user_id
-          JOIN tasks t ON t.id = c.task_id
-          ORDER BY c.completed_at DESC
-          LIMIT ${limit} OFFSET ${offset}
-        `,
-    proofType
-      ? sql`SELECT COUNT(*)::int AS total FROM completions c JOIN tasks t ON t.id = c.task_id WHERE t.proof_type = ${proofType}`
-      : sql`SELECT COUNT(*)::int AS total FROM completions`,
+    sql`
+      SELECT c.id, c.proof_value, c.completed_at, c.status, c.rejection_reason,
+        u.id AS user_id, u.full_name AS user_name, u.email,
+        t.title AS task_title, t.proof_type, t.category, t.reward
+      FROM completions c
+      JOIN users u ON u.id = c.user_id
+      JOIN tasks t ON t.id = c.task_id
+      WHERE (${proofType} = '' OR t.proof_type = ${proofType})
+        AND (${status} = '' OR c.status = ${status})
+      ORDER BY c.completed_at DESC
+      LIMIT ${limit} OFFSET ${offset}
+    `,
+    sql`
+      SELECT COUNT(*)::int AS total FROM completions c
+      JOIN tasks t ON t.id = c.task_id
+      WHERE (${proofType} = '' OR t.proof_type = ${proofType})
+        AND (${status} = '' OR c.status = ${status})
+    `,
   ]);
 
   return NextResponse.json({ completions, total: countRows[0].total });
+}
+
+export async function PATCH(req: NextRequest) {
+  if (!await checkAdminAuth(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { completionId, action, rejectionReason } = await req.json();
+  if (!completionId || !["approve", "reject"].includes(action)) {
+    return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+  }
+
+  // Get completion details
+  const rows = await sql`
+    SELECT c.*, t.reward, u.referred_by
+    FROM completions c
+    JOIN tasks t ON t.id = c.task_id
+    JOIN users u ON u.id = c.user_id
+    WHERE c.id = ${completionId}
+  `;
+  if (rows.length === 0) return NextResponse.json({ error: "Completion not found" }, { status: 404 });
+
+  const completion = rows[0];
+
+  if (action === "approve") {
+    if (completion.status === "approved") {
+      return NextResponse.json({ error: "Already approved" }, { status: 409 });
+    }
+
+    // Update status
+    await sql`UPDATE completions SET status = 'approved', rejection_reason = NULL WHERE id = ${completionId}`;
+
+    // If was pending (not yet credited), credit the user now
+    if (completion.status === "pending") {
+      await sql`UPDATE users SET balance = balance + ${completion.reward} WHERE id = ${completion.user_id}`;
+      await sql`
+        INSERT INTO transactions (user_id, type, amount, label)
+        VALUES (${completion.user_id}, 'credit', ${completion.reward}, ${"Task Approved: " + completion.task_title})
+      `;
+
+      // Credit 10% referral bonus
+      if (completion.referred_by) {
+        const bonus = Math.floor(completion.reward * 0.1);
+        await sql`UPDATE users SET balance = balance + ${bonus} WHERE id = ${completion.referred_by}`;
+        await sql`
+          INSERT INTO transactions (user_id, type, amount, label)
+          VALUES (${completion.referred_by}, 'credit', ${bonus}, 'Referral Earnings (10%)')
+        `;
+      }
+    }
+
+    return NextResponse.json({ ok: true, message: "Approved and QLT credited" });
+  }
+
+  if (action === "reject") {
+    const reason = rejectionReason?.trim() || "Task not completed correctly";
+    await sql`UPDATE completions SET status = 'rejected', rejection_reason = ${reason} WHERE id = ${completionId}`;
+    return NextResponse.json({ ok: true, message: "Rejected" });
+  }
 }
