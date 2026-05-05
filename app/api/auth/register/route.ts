@@ -17,17 +17,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    // Referral code is mandatory
-    if (!referralCode || !referralCode.trim()) {
-      return NextResponse.json({ error: "A referral code is required to register" }, { status: 400 });
+    // Referral code is optional
+    let referrerId: number | null = null;
+    if (referralCode && referralCode.trim()) {
+      const refRows = await sql`SELECT id FROM users WHERE referral_code = ${referralCode.trim().toUpperCase()}`;
+      if (refRows.length === 0) {
+        return NextResponse.json({ error: "Invalid referral code. Please check and try again." }, { status: 400 });
+      }
+      referrerId = refRows[0].id;
     }
-
-    // Validate referral code exists
-    const refRows = await sql`SELECT id FROM users WHERE referral_code = ${referralCode.trim().toUpperCase()}`;
-    if (refRows.length === 0) {
-      return NextResponse.json({ error: "Invalid referral code. Please check and try again." }, { status: 400 });
-    }
-    const referrerId: number = refRows[0].id;
 
     // Check existing user
     const existing = await sql`SELECT id FROM users WHERE email = ${email}`;

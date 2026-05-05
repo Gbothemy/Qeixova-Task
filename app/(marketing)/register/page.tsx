@@ -9,8 +9,7 @@ export default function RegisterPage() {
     fullName: "", 
     email: "", 
     password: "", 
-    confirmPassword: "",
-    referralCode: "" 
+    confirmPassword: ""
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -19,8 +18,8 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!form.fullName || !form.email || !form.password || !form.confirmPassword || !form.referralCode) {
-      setError("Please fill in all fields including referral code.");
+    if (!form.fullName || !form.email || !form.password || !form.confirmPassword) {
+      setError("Please fill in all fields.");
       return;
     }
     if (form.password !== form.confirmPassword) {
@@ -35,8 +34,7 @@ export default function RegisterPage() {
       body: JSON.stringify({ 
         fullName: form.fullName, 
         email: form.email, 
-        password: form.password,
-        referralCode: form.referralCode 
+        password: form.password
       }),
     });
     const data = await res.json();
@@ -259,44 +257,6 @@ export default function RegisterPage() {
                     </button>
                   </div>
                 </div>
-              </div>
-            </div>
-
-            {/* Referral Section */}
-            <div style={{ marginBottom: 8 }}>
-              <h3 style={{ fontSize: 14, fontWeight: 700, color: "#1AEF22", marginBottom: 16, letterSpacing: 0.5 }}>
-                🎁 REFERRAL CODE
-              </h3>
-              
-              <div>
-                <label style={{ fontSize: 12, fontWeight: 700, color: "#555555", letterSpacing: 0.5 }}>
-                  REFERRAL CODE *
-                </label>
-                <div style={{ position: "relative", marginTop: 8 }}>
-                  <span style={{
-                    position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)",
-                    fontSize: 16, pointerEvents: "none",
-                  }}>🎟️</span>
-                  <input
-                    type="text"
-                    placeholder="Enter referral code"
-                    value={form.referralCode}
-                    onChange={(e) => setForm({ ...form, referralCode: e.target.value.toUpperCase() })}
-                    required
-                    style={{
-                      width: "100%", padding: "13px 14px 13px 42px",
-                      borderRadius: 12, border: "1.5px solid #333333",
-                      fontSize: 14, outline: "none", color: "#F5F5F5",
-                      background: "#1a1a1a", transition: "border-color 0.2s",
-                      textTransform: "uppercase",
-                    }}
-                    onFocus={(e) => (e.target.style.borderColor = "#1AEF22")}
-                    onBlur={(e) => (e.target.style.borderColor = "#333333")}
-                  />
-                </div>
-                <p style={{ fontSize: 11, color: "#666666", marginTop: 6, fontStyle: "italic" }}>
-                  Required to create an account. Ask your referrer for their code.
-                </p>
               </div>
             </div>
 
