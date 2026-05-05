@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
     `;
 
     // DO NOT credit balance yet — wait for admin approval
-    // Referral bonus also credited on approval
+    // Referral bonus and transaction also recorded on approval
 
     // Increment budget_used and auto-deactivate if exhausted
     if (budget > 0) {
@@ -73,13 +73,7 @@ export async function POST(req: NextRequest) {
       `;
     }
 
-    // Record transaction
-    await sql`
-      INSERT INTO transactions (user_id, type, amount, label)
-      VALUES (${session.userId}, 'credit', ${task.reward}, ${"Task: " + task.title})
-    `;
-
-    // Update streak — if last_active was yesterday increment, if today keep, else reset to 1
+    // Update streak and level — tracked on submission, not approval
     const today = new Date().toISOString().split("T")[0];
     const yesterday = new Date(Date.now() - 86400000).toISOString().split("T")[0];
     const userRows = await sql`SELECT balance, streak, last_active, level FROM users WHERE id = ${session.userId}`;

@@ -24,6 +24,9 @@ function txIcon(label: string) {
 export default function WalletPage() {
   const { loading } = useAuth();
   const [balance, setBalance] = useState(0);
+  const [pendingQlt, setPendingQlt] = useState(0);
+  const [pendingCount, setPendingCount] = useState(0);
+  const [rejected, setRejected] = useState<{ title: string; rejection_reason: string; completed_at: string }[]>([]);
   const [transactions, setTransactions] = useState<Tx[]>([]);
   const [amount, setAmount] = useState("");
   const [bank, setBank] = useState("");
@@ -37,6 +40,9 @@ export default function WalletPage() {
       const d = await r.json();
       if (d.balance !== undefined) setBalance(d.balance);
       if (d.transactions) setTransactions(d.transactions);
+      if (d.pending_qlt !== undefined) setPendingQlt(d.pending_qlt);
+      if (d.pending_count !== undefined) setPendingCount(d.pending_count);
+      if (d.rejected) setRejected(d.rejected);
     } catch { /* ignore */ }
   };
 
@@ -83,6 +89,38 @@ export default function WalletPage() {
       </div>
 
       <div className="wallet-layout" style={{ display: "block" }}>
+        {/* Pending QLT Banner */}
+        {pendingQlt > 0 && (
+          <div style={{ padding: "16px 16px 0" }}>
+            <div style={{ background: "rgba(245,166,35,0.08)", border: "1px solid rgba(245,166,35,0.25)", borderRadius: 16, padding: "14px 16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div>
+                <p style={{ fontSize: 12, color: "#F5A623", fontWeight: 700, marginBottom: 2 }}>Pending QLT</p>
+                <p style={{ fontSize: 20, fontWeight: 800, color: "#F5A623" }}>+{pendingQlt.toLocaleString()} QLT</p>
+                <p style={{ fontSize: 11, color: "#999999", marginTop: 2 }}>{pendingCount} submission{pendingCount !== 1 ? "s" : ""} under review</p>
+              </div>
+              <div style={{ textAlign: "right" }}>
+                <div style={{ background: "rgba(245,166,35,0.15)", borderRadius: 10, padding: "6px 12px" }}>
+                  <p style={{ fontSize: 11, color: "#F5A623", fontWeight: 600 }}>Under Review</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Rejected Tasks */}
+        {rejected.length > 0 && (
+          <div style={{ padding: "16px 16px 0" }}>
+            <p style={{ fontWeight: 700, fontSize: 14, color: "#F5F5F5", marginBottom: 10 }}>Rejected Submissions</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {rejected.map((r, i) => (
+                <div key={i} style={{ background: "rgba(229,62,62,0.06)", border: "1px solid rgba(229,62,62,0.2)", borderRadius: 12, padding: "12px 14px" }}>
+                  <p style={{ fontSize: 13, fontWeight: 600, color: "#F5F5F5", marginBottom: 4 }}>{r.title}</p>
+                  <p style={{ fontSize: 12, color: "#e53e3e" }}>Reason: {r.rejection_reason}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
         {/* Withdraw form */}
         <div style={{ padding: "20px 16px 0" }}>
           <div style={{ background: "#111111", borderRadius: 20, padding: "22px 20px", border: "1px solid #222222" }}>
