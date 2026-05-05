@@ -162,43 +162,84 @@ export default function LandingPage() {
         <p style={{ color: "#999999", fontSize: 12, marginTop: 16 }}>Free forever. No experience needed.</p>
       </section>
 
-      <footer style={{ background: "#000000", borderTop: "1px solid #222222", padding: "48px 5vw 32px", color: "#999999" }}>
+      <footer style={{ background: "#000000", borderTop: "1px solid #222222", padding: "56px 5vw 32px", color: "#999999" }}>
         <div style={{ maxWidth: 960, margin: "0 auto" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 32, marginBottom: 40 }}>
-            <div>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
-                <img src="/qeixova-icon.png" alt="Qeixova" style={{ width: 32, height: 32, borderRadius: 8, objectFit: "contain" }} />
-                <span style={{ fontWeight: 800, fontSize: 16, color: "#F5F5F5" }}>Qeixova</span>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 40, marginBottom: 48 }}>
+
+            {/* Brand */}
+            <div style={{ gridColumn: "span 1" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+                <img src="/qeixova-icon.png" alt="Qeixova" style={{ width: 36, height: 36, borderRadius: 10, objectFit: "contain" }} />
+                <span style={{ fontWeight: 800, fontSize: 18, color: "#F5F5F5", letterSpacing: -0.5 }}>Qeixova</span>
               </div>
-              <p style={{ fontSize: 13, lineHeight: 1.7 }}>Nigeria&apos;s most trusted micro-task platform. Earn QLT doing simple online tasks and convert to real cash.</p>
-              <div style={{ marginTop: 14, display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(245,166,35,0.1)", border: "1px solid rgba(245,166,35,0.2)", borderRadius: 8, padding: "6px 12px" }}>
-                <span style={{ fontSize: 12, color: "#F5A623", fontWeight: 700 }}>★ 100 QLT = 1 Naira</span>
+              <p style={{ fontSize: 13, lineHeight: 1.8, color: "#888888", maxWidth: 220 }}>
+                Building systems that simplify execution.
+              </p>
+              <div style={{ marginTop: 16, display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(245,166,35,0.08)", border: "1px solid rgba(245,166,35,0.2)", borderRadius: 8, padding: "6px 12px" }}>
+                <span style={{ fontSize: 12, color: "#F5A623", fontWeight: 700 }}>100 QLT = ₦1</span>
               </div>
             </div>
+
+            {/* Quick Links */}
             <div>
-              <p style={{ color: "#F5F5F5", fontWeight: 700, fontSize: 13, marginBottom: 14 }}>Platform</p>
-              {["How it works", "Task categories", "Points and rewards", "Referral program"].map(l => (
-                <p key={l} style={{ fontSize: 13, marginBottom: 10, cursor: "pointer" }}>{l}</p>
+              <p style={{ color: "#F5F5F5", fontWeight: 700, fontSize: 13, marginBottom: 16, letterSpacing: 0.3 }}>Quick Links</p>
+              {[
+                { label: "How it works", href: "#how-it-works" },
+                { label: "Task categories", href: "#" },
+                { label: "Points & rewards", href: "#" },
+                { label: "Referral program", href: "#" },
+              ].map(l => (
+                <a key={l.label} href={l.href} style={{ display: "block", fontSize: 13, marginBottom: 10, color: "#888888", textDecoration: "none" }}
+                  onMouseEnter={e => (e.currentTarget.style.color = "#F5F5F5")}
+                  onMouseLeave={e => (e.currentTarget.style.color = "#888888")}>
+                  {l.label}
+                </a>
               ))}
             </div>
+
+            {/* Support */}
             <div>
-              <p style={{ color: "#F5F5F5", fontWeight: 700, fontSize: 13, marginBottom: 14 }}>Support</p>
-              {[{ label: "Help center", href: "#" }, { label: "Contact us", href: "mailto:qeixova@gmail.com" }, { label: "Privacy policy", href: "#" }, { label: "Terms of service", href: "#" }].map(l => (
-                <a key={l.label} href={l.href} style={{ display: "block", fontSize: 13, marginBottom: 10, color: "#999999", textDecoration: "none" }}>{l.label}</a>
+              <p style={{ color: "#F5F5F5", fontWeight: 700, fontSize: 13, marginBottom: 16, letterSpacing: 0.3 }}>Support</p>
+              {[
+                { label: "Help center", href: "#" },
+                { label: "Contact", href: "mailto:qeixova@gmail.com" },
+                { label: "Privacy policy", href: "#" },
+                { label: "Terms", href: "#" },
+              ].map(l => (
+                <a key={l.label} href={l.href} style={{ display: "block", fontSize: 13, marginBottom: 10, color: "#888888", textDecoration: "none" }}
+                  onMouseEnter={e => (e.currentTarget.style.color = "#F5F5F5")}
+                  onMouseLeave={e => (e.currentTarget.style.color = "#888888")}>
+                  {l.label}
+                </a>
               ))}
             </div>
+
+            {/* Social */}
             <div>
-              <p style={{ color: "#F5F5F5", fontWeight: 700, fontSize: 13, marginBottom: 14 }}>Follow us</p>
-              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                <a href="https://www.facebook.com/profile.php?id=61568026449468" target="_blank" rel="noopener noreferrer" style={{ fontSize: 12, background: "#111111", borderRadius: 8, padding: "6px 12px", border: "1px solid #333333", color: "#b0b0b0", textDecoration: "none" }}>Facebook</a>
-                <a href="https://x.com/QeixovaTech" target="_blank" rel="noopener noreferrer" style={{ fontSize: 12, background: "#111111", borderRadius: 8, padding: "6px 12px", border: "1px solid #333333", color: "#b0b0b0", textDecoration: "none" }}>@QeixovaTech</a>
-                <a href="mailto:qeixova@gmail.com" style={{ fontSize: 12, background: "#111111", borderRadius: 8, padding: "6px 12px", border: "1px solid #333333", color: "#b0b0b0", textDecoration: "none" }}>Email us</a>
+              <p style={{ color: "#F5F5F5", fontWeight: 700, fontSize: 13, marginBottom: 16, letterSpacing: 0.3 }}>Social</p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                <a href="https://x.com/QeixovaTech" target="_blank" rel="noopener noreferrer" style={{ fontSize: 13, color: "#888888", textDecoration: "none" }}
+                  onMouseEnter={e => (e.currentTarget.style.color = "#F5F5F5")}
+                  onMouseLeave={e => (e.currentTarget.style.color = "#888888")}>
+                  @QeixovaTech
+                </a>
+                <a href="https://www.facebook.com/profile.php?id=61568026449468" target="_blank" rel="noopener noreferrer" style={{ fontSize: 13, color: "#888888", textDecoration: "none" }}
+                  onMouseEnter={e => (e.currentTarget.style.color = "#F5F5F5")}
+                  onMouseLeave={e => (e.currentTarget.style.color = "#888888")}>
+                  Facebook
+                </a>
+                <a href="mailto:qeixova@gmail.com" style={{ fontSize: 13, color: "#888888", textDecoration: "none" }}
+                  onMouseEnter={e => (e.currentTarget.style.color = "#F5F5F5")}
+                  onMouseLeave={e => (e.currentTarget.style.color = "#888888")}>
+                  qeixova@gmail.com
+                </a>
               </div>
             </div>
           </div>
-          <div style={{ borderTop: "1px solid #222222", paddingTop: 24, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
-            <p style={{ fontSize: 12 }}>2025 Qeixova. All rights reserved.</p>
-            <p style={{ fontSize: 12 }}>Made with love for Nigerian earners</p>
+
+          <div style={{ borderTop: "1px solid #1a1a1a", paddingTop: 24, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
+            <p style={{ fontSize: 12, color: "#555555" }}>© 2025 Qeixova. All rights reserved.</p>
+            <p style={{ fontSize: 12, color: "#555555" }}>Transparent. Simple. Built for earners.</p>
           </div>
         </div>
       </footer>
