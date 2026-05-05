@@ -105,14 +105,14 @@ export default function Home() {
       {wallet && wallet.stats.tasks_total === 0 && (
         <div style={{ padding: "20px 16px 0" }}>
           <Link href="/tasks" style={{ textDecoration: "none" }}>
-            <div style={{ background: "linear-gradient(135deg, #1AEF22 0%, #06B517 100%)", borderRadius: 18, padding: "18px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", boxShadow: "0 6px 20px rgba(26,239,34,0.25)", position: "relative", overflow: "hidden" }}>
-              <div style={{ position: "absolute", top: -30, right: -30, width: 100, height: 100, borderRadius: "50%", background: "rgba(0,0,0,0.08)" }} />
+            <div style={{ background: "#111111", borderRadius: 18, padding: "18px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", border: "1px solid #1AEF22", position: "relative", overflow: "hidden" }}>
+              <div style={{ position: "absolute", top: -30, right: -30, width: 100, height: 100, borderRadius: "50%", background: "rgba(26,239,34,0.05)" }} />
               <div>
-                <p style={{ color: "#000", fontWeight: 800, fontSize: 16, marginBottom: 4 }}>Complete your first task</p>
-                <p style={{ color: "rgba(0,0,0,0.65)", fontSize: 13 }}>Start earning QLT — tasks take 1–10 minutes</p>
+                <p style={{ color: "#F5F5F5", fontWeight: 800, fontSize: 16, marginBottom: 4 }}>Complete your first task</p>
+                <p style={{ color: "#888888", fontSize: 13 }}>Start earning QLT — tasks take 1–10 minutes</p>
               </div>
-              <div style={{ background: "#000", borderRadius: 12, padding: "10px 16px", flexShrink: 0 }}>
-                <span style={{ color: "#1AEF22", fontWeight: 800, fontSize: 14 }}>Start →</span>
+              <div style={{ background: "#ffffff", borderRadius: 12, padding: "10px 16px", flexShrink: 0 }}>
+                <span style={{ color: "#000000", fontWeight: 800, fontSize: 14 }}>Start →</span>
               </div>
             </div>
           </Link>
@@ -122,11 +122,11 @@ export default function Home() {
       {/* Quick actions */}
       <div style={{ padding: "20px 16px 0" }}>
         <div style={{ display: "flex", gap: 12 }}>
-          <Link href="/wallet" style={{ flex: 1, background: "#111111", border: "1.5px solid #222222", color: "#1AEF22", borderRadius: 14, padding: "14px 0", textAlign: "center", fontWeight: 700, fontSize: 14, textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
-            💸 Withdraw
+          <Link href="/wallet" style={{ flex: 1, background: "#ffffff", border: "none", color: "#000000", borderRadius: 14, padding: "14px 0", textAlign: "center", fontWeight: 700, fontSize: 14, textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+            Withdraw
           </Link>
-          <Link href="/tasks" style={{ flex: 1, background: "linear-gradient(135deg, #F5A623, #d89420)", color: "#000", borderRadius: 14, padding: "14px 0", textAlign: "center", fontWeight: 800, fontSize: 14, textDecoration: "none", boxShadow: "0 4px 16px rgba(245,166,35,0.35)", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
-            ⚡ Earn Now
+          <Link href="/tasks" style={{ flex: 1, background: "#ffffff", border: "none", color: "#000000", borderRadius: 14, padding: "14px 0", textAlign: "center", fontWeight: 800, fontSize: 14, textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+            Earn Now
           </Link>
         </div>
       </div>
