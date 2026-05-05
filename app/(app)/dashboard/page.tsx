@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import BalanceCard from "@/components/BalanceCard";
 import BottomNav from "@/components/BottomNav";
 import OnboardingFlow from "@/components/OnboardingFlow";
@@ -33,6 +34,7 @@ export default function Home() {
   const { user, loading } = useAuth();
   const [wallet, setWallet] = useState<WalletData | null>(null);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (!user) return;
@@ -60,7 +62,7 @@ export default function Home() {
   return (
     <div className="page-body" style={{ background: "#000000", minHeight: "100vh" }}>
       {showOnboarding && user && (
-        <OnboardingFlow userName={user.fullName} onComplete={() => setShowOnboarding(false)} />
+        <OnboardingFlow userName={user.fullName} onComplete={() => { setShowOnboarding(false); router.push("/tasks"); }} />
       )}
       {/* Header */}
       <div className="page-header" style={{ background: "#0a0a0a", borderBottom: "1px solid #222222", padding: "52px 20px 90px", position: "relative", overflow: "hidden" }}>
@@ -180,6 +182,29 @@ export default function Home() {
             <p style={{ color: "#555555", fontSize: 14 }}>No activity yet — complete your first task!</p>
           </div>
         )}
+      </div>
+
+      {/* Step 6 — Daily Progress Bar */}
+      {wallet && wallet.stats.tasks_today > 0 && (
+        <div style={{ padding: "20px 16px 0" }}>
+          <div style={{ background: "#111111", borderRadius: 16, padding: "16px 18px", border: "1px solid #222222" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
+              <p style={{ fontSize: 13, fontWeight: 600, color: "#F5F5F5" }}>Complete 3 tasks today</p>
+              <p style={{ fontSize: 13, fontWeight: 700, color: "#1AEF22" }}>{Math.min(wallet.stats.tasks_today, 3)}/3</p>
+            </div>
+            <div style={{ height: 6, background: "#222222", borderRadius: 10, overflow: "hidden" }}>
+              <div style={{ height: "100%", width: `${Math.min((wallet.stats.tasks_today / 3) * 100, 100)}%`, background: "linear-gradient(90deg, #1AEF22, #F5A623)", borderRadius: 10, transition: "width 0.4s ease" }} />
+            </div>
+            <p style={{ fontSize: 11, color: "#666666", marginTop: 8 }}>Stay active and earn more consistently.</p>
+          </div>
+        </div>
+      )}
+
+      {/* Step 10 — Exit Hook */}
+      <div style={{ padding: "20px 16px 0" }}>
+        <div style={{ background: "#0a0a0a", borderRadius: 14, padding: "14px 16px", border: "1px solid #1a1a1a", textAlign: "center" }}>
+          <p style={{ fontSize: 13, color: "#888888" }}>New tasks are added daily. Come back to earn more.</p>
+        </div>
       </div>
 
       <BottomNav />

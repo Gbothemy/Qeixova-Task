@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
   const session = await getSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { bank_name, account_number, account_name } = await req.json();
+  const { bank_name, account_number, account_name, referralCode } = await req.json();
 
   // Save bank account if provided
   if (bank_name && account_number && account_name) {
@@ -23,6 +23,24 @@ export async function POST(req: NextRequest) {
       VALUES (${session.userId}, ${bank_name}, ${account_number}, ${account_name}, TRUE)
       ON CONFLICT (user_id, account_number) DO NOTHING
     `;
+  }
+
+  // Apply referral code if provided and user has no referrer yet
+  if (referralCode && referralCode.trim()) {
+    const refRows = await sql`SELECT id FROM users WHERE referral_code = ${referralCode.trim().toUpperCase()}`;
+    if (refRows.length > 0) {
+      const referrerId = refRows[0].id;
+      // Only apply if user doesn't already have a referrer
+      const userRows = await sql`SELECT referred_by FROM users WHERE id = ${session.userId}`;
+      if (!userRows[0]?.referred_by) {
+        await sql`UPDATE users SET referred_by = ${referrerId} WHERE id = ${session.userId}`;
+        await sql`UPDATE users SET balance = balance + 2500 WHERE id = ${referrerId}`;
+        await sql`
+          INSERT INTO transactions (user_id, type, amount, label)
+          VALUES (${referrerId}, 'credit', 2500, 'Referral Bonus')
+        `;
+      }
+    }
   }
 
   // Mark onboarding complete
