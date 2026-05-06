@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Person circle -->
+  <circle cx="50" cy="36" r="16" fill="none" stroke="white" stroke-width="6"/>
+  <!-- Body -->
+  <path d="M18 82c0-17.7 14.3-32 32-32s32 14.3 32 32" fill="none" stroke="white" stroke-width="6" stroke-linecap="round"/>
+  <!-- Edit pencil -->
+  <path d="M68 20l12 12-20 20-14 2 2-14z" fill="white"/>
+</svg>

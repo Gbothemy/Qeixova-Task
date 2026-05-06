@@ -297,12 +297,12 @@ export default function ProfilePage() {
   ] : [];
 
   const menuItems = [
-    { icon: "/icon-wallet.png",  label: "Bank Accounts",   sub: "Add & manage withdrawal accounts",  action: () => setShowBankModal(true) },
-    { icon: "/icon-profile.png", label: "Edit Profile",    sub: "Update your name & phone",           action: () => setModal("edit") },
-    { icon: "/icon-profile.png", label: "Change Password", sub: "Update your account password",       action: () => setModal("password") },
-    { icon: "/icon-home.png",    label: "Notifications",   sub: "Task alerts & updates",              action: () => setModal("notifications") },
-    { icon: "/icon-support.svg", label: "Support",         sub: "Get help anytime",                   action: () => setModal("support") },
-    { icon: "/icon-terms.svg",   label: "Terms & Privacy", sub: "Legal information",                  action: () => setModal("terms") },
+    { icon: "/icon-bank.svg",          label: "Bank Accounts",   sub: "Add & manage withdrawal accounts",  action: () => setShowBankModal(true) },
+    { icon: "/icon-edit-profile.svg",  label: "Edit Profile",    sub: "Update your name & phone",           action: () => setModal("edit") },
+    { icon: "/icon-password.svg",      label: "Change Password", sub: "Update your account password",       action: () => setModal("password") },
+    { icon: "/icon-notifications.svg", label: "Notifications",   sub: "Task alerts & updates",              action: () => setModal("notifications") },
+    { icon: "/icon-support.svg",       label: "Support",         sub: "Get help anytime",                   action: () => setModal("support") },
+    { icon: "/icon-terms.svg",         label: "Terms & Privacy", sub: "Legal information",                  action: () => setModal("terms") },
   ];
 
   return (
