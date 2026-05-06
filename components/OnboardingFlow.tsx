@@ -54,7 +54,7 @@ export default function OnboardingFlow({ userName, onComplete }: Props) {
       body: JSON.stringify({ ...bank, referralCode }),
     });
     setSaving(false);
-    setStep(5); // go to guided overlay
+    setShowTutorial(true); // go straight to tutorial
   };
 
   const handleDone = () => setShowTutorial(true);
@@ -237,7 +237,7 @@ export default function OnboardingFlow({ userName, onComplete }: Props) {
             )}
             <button onClick={() => {
               if (cardIndex < INTRO_CARDS.length - 1) setCardIndex(c => c + 1);
-              else setStep(5);
+              else setShowTutorial(true);
             }} style={{
               flex: 1, padding: "14px", borderRadius: 12, border: "none",
               background: "linear-gradient(135deg, #1AEF22, #06B517)",
@@ -249,58 +249,6 @@ export default function OnboardingFlow({ userName, onComplete }: Props) {
         </div>
       )}
 
-      {/* ── STEP 5: Guided Overlay ── */}
-      {step === 5 && (
-        <div style={{ maxWidth: 420, width: "100%" }}>
-          <div style={{ textAlign: "center", marginBottom: 28 }}>
-            <div style={{ width: 56, height: 56, borderRadius: "50%", background: "linear-gradient(135deg, #1AEF22, #06B517)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px", fontSize: 28 }}>
-              🎉
-            </div>
-            <h2 style={{ fontSize: 22, fontWeight: 800, color: "#F5F5F5", marginBottom: 8 }}>You&apos;re all set, {firstName}!</h2>
-            <p style={{ fontSize: 14, color: "#888888" }}>Here&apos;s a quick guide to get you started.</p>
-          </div>
-
-          <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 28 }}>
-            {HIGHLIGHTS.map((h, i) => (
-              <div key={i} style={{ background: "#111111", borderRadius: 16, padding: "16px 18px", border: "1px solid #222222", display: "flex", alignItems: "center", gap: 14 }}>
-                <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(26,239,34,0.08)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <Image src={h.icon} alt={h.label} width={24} height={24} style={{ objectFit: "contain" }} />
-                </div>
-                <div>
-                  <p style={{ fontSize: 14, fontWeight: 700, color: "#F5F5F5" }}>{h.label}</p>
-                  <p style={{ fontSize: 12, color: "#888888", marginTop: 2 }}>{h.hint}</p>
-                </div>
-                <div style={{ marginLeft: "auto", background: "rgba(26,239,34,0.1)", borderRadius: 8, padding: "4px 10px" }}>
-                  <span style={{ fontSize: 11, color: "#1AEF22", fontWeight: 700 }}>→</span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Trust reinforcement */}
-          <div style={{ background: "#0a0a0a", borderRadius: 14, padding: "14px 16px", border: "1px solid #222222", marginBottom: 20 }}>
-            {[
-              "All tasks are verified before listing",
-              "Your earnings are tracked transparently",
-              "Conversion rate is fixed: 100 QLT = ₦1",
-            ].map((t, i) => (
-              <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: i < 2 ? 8 : 0 }}>
-                <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#1AEF22", flexShrink: 0 }} />
-                <p style={{ fontSize: 12, color: "#b0b0b0" }}>{t}</p>
-              </div>
-            ))}
-          </div>
-
-          <button onClick={handleDone} style={{
-            width: "100%", background: "linear-gradient(135deg, #F5A623, #d89420)",
-            color: "#000", border: "none", borderRadius: 14, padding: "16px",
-            fontWeight: 800, fontSize: 16, cursor: "pointer",
-            boxShadow: "0 6px 20px rgba(245,166,35,0.35)",
-          }}>
-            Take me to tasks →
-          </button>
-        </div>
-      )}
     </div>
   );
 }

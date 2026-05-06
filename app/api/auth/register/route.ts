@@ -38,18 +38,24 @@ export async function POST(req: NextRequest) {
 
     const result = await sql`
       INSERT INTO users (email, phone, full_name, password, referral_code, referred_by, balance)
-      VALUES (${email}, ${phone || null}, ${fullName}, ${hashed}, ${myCode}, ${referrerId}, 1000)
+      VALUES (${email}, ${phone || null}, ${fullName}, ${hashed}, ${myCode}, ${referrerId}, 0)
       RETURNING id, email, full_name
     `;
 
     const user = result[0];
 
-    // Credit referrer bonus
+    // Credit referrer bonus + signup bonus only if referred
     if (referrerId) {
       await sql`UPDATE users SET balance = balance + 2500 WHERE id = ${referrerId}`;
       await sql`
         INSERT INTO transactions (user_id, type, amount, label)
         VALUES (${referrerId}, 'credit', 2500, 'Referral Bonus')
+      `;
+      // New user gets 1000 QLT welcome bonus only if they used a referral code
+      await sql`UPDATE users SET balance = 1000 WHERE id = ${user.id}`;
+      await sql`
+        INSERT INTO transactions (user_id, type, amount, label)
+        VALUES (${user.id}, 'credit', 1000, 'Welcome Bonus')
       `;
     }
 

@@ -139,7 +139,13 @@ export default function TutorialFlow({ onComplete }: Props) {
           ))}
         </div>
 
-        {/* Tag */}
+        {/* Intro notice — only on first step */}
+        {step === 0 && (
+          <div style={{ background: "rgba(26,239,34,0.06)", border: "1px solid rgba(26,239,34,0.15)", borderRadius: 12, padding: "10px 14px", marginBottom: 20, display: "flex", gap: 10, alignItems: "center" }}>
+            <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#1AEF22", flexShrink: 0 }} />
+            <p style={{ fontSize: 12, color: "#1AEF22", fontWeight: 600 }}>Quick tutorial — 5 steps, takes under a minute</p>
+          </div>
+        )}
         <p style={{ fontSize: 11, fontWeight: 700, color: "#1AEF22", letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 20 }}>
           {current.tag}
         </p>
