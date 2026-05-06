@@ -18,7 +18,7 @@ const categories = [
   { icon: "/icon-social-media.jpg", label: "Social Media", color: "rgba(26,239,34,0.1)",  earn: "10k–15k QLT" },
   { icon: "/icon-survey.png",      label: "Surveys",      color: "rgba(245,166,35,0.1)", earn: "35k–50k QLT" },
   { icon: "/icon-app-testing.png", label: "App Testing",  color: "rgba(26,239,34,0.1)",  earn: "80k–120k QLT" },
-  { icon: "/icon-content.png",     label: "Content",      color: "rgba(245,166,35,0.1)", earn: "18k–20k QLT" },
+  { icon: "/icon-content.png",     label: "AI Testing",   color: "rgba(245,166,35,0.1)", earn: "18k–20k QLT" },
 ];
 
 function timeAgo(dateStr: string) {

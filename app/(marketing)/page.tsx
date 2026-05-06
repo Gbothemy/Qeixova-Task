@@ -7,7 +7,7 @@ const features = [
   { icon: "/icon-social-media.jpg", title: "Social Media Tasks",   desc: "Complete social actions like follows, likes, shares, and engagement across Instagram, TikTok, X, and more.", color: "rgba(26,239,34,0.1)" },
   { icon: "/icon-survey.png",       title: "Surveys & Polls",      desc: "Share your opinion on products, services, and lifestyle topics. Your feedback has real value.",               color: "rgba(245,166,35,0.1)" },
   { icon: "/icon-app-testing.png",  title: "App Testing",          desc: "Test new mobile apps and websites before they launch. Your feedback directly shapes real products.",          color: "rgba(26,239,34,0.1)" },
-  { icon: "/icon-content.png",      title: "AI & Content Tasks",   desc: "Evaluate AI responses, watch videos, read articles, and interact with digital content to earn rewards.",      color: "rgba(245,166,35,0.1)" },
+  { icon: "/icon-content.png",      title: "AI Testing",          desc: "Evaluate AI responses, watch videos, read articles, and interact with digital content to earn rewards.",      color: "rgba(245,166,35,0.1)" },
 ];
 
 const steps = [
@@ -59,9 +59,9 @@ export default function LandingPage() {
         <p style={{ color: "#b0b0b0", fontSize: "clamp(15px, 2vw, 19px)", maxWidth: 560, margin: "0 auto 16px", lineHeight: 1.6 }}>
           Turn your time into rewards by completing social tasks, app testing, surveys, and AI evaluations. Convert your <strong style={{ color: "#F5A623" }}>QLT</strong> to Naira anytime.
         </p>
-        <div style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "#111111", border: "1px solid #333333", borderRadius: 14, padding: "10px 20px", marginBottom: 36 }}>
-          <span style={{ color: "#F5A623", fontSize: 14, fontWeight: 700 }}>100 QLT = ₦1</span>
-          <span style={{ color: "#999999", fontSize: 12 }}>• Transparent conversion • No hidden conditions</span>
+        <div style={{ display: "inline-flex", flexDirection: "column", alignItems: "center", gap: 6, background: "#111111", border: "1px solid #333333", borderRadius: 14, padding: "12px 20px", marginBottom: 36 }}>
+          <span style={{ color: "#F5A623", fontSize: 15, fontWeight: 800 }}>100 QLT = ₦1</span>
+          <span style={{ color: "#999999", fontSize: 12 }}>Transparent conversion • No hidden conditions</span>
         </div>
         <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
           <Link href="/register" style={{ background: "linear-gradient(135deg, #F5A623, #d89420)", color: "#000", textDecoration: "none", padding: "16px 36px", borderRadius: 14, fontWeight: 800, fontSize: 16, boxShadow: "0 8px 28px rgba(245,166,35,0.4)" }}>
