@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import TutorialFlow from "@/components/TutorialFlow";
 
 interface Props {
   userName: string;
@@ -37,6 +37,7 @@ const HIGHLIGHTS = [
 export default function OnboardingFlow({ userName, onComplete }: Props) {
   // Steps: 0=welcome, 1=profile, 2=bank, 3=referral, 4=intro cards, 5=guided overlay
   const [step, setStep] = useState(0);
+  const [showTutorial, setShowTutorial] = useState(false);
   const [cardIndex, setCardIndex] = useState(0);
   const [profile, setProfile] = useState({ username: "", country: "Nigeria" });
   const [bank, setBank] = useState({ bank_name: "", account_number: "", account_name: "" });
@@ -56,7 +57,7 @@ export default function OnboardingFlow({ userName, onComplete }: Props) {
     setStep(5); // go to guided overlay
   };
 
-  const handleDone = () => onComplete();
+  const handleDone = () => setShowTutorial(true);
 
   const inputStyle = {
     width: "100%", padding: "13px 14px",
@@ -72,6 +73,9 @@ export default function OnboardingFlow({ userName, onComplete }: Props) {
       display: "flex", alignItems: "center", justifyContent: "center",
       padding: 24, overflowY: "auto",
     }}>
+
+      {/* Show tutorial after onboarding */}
+      {showTutorial && <TutorialFlow onComplete={onComplete} />}
 
       {/* ── STEP 0: Welcome ── */}
       {step === 0 && (
