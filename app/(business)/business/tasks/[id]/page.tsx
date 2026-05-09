@@ -46,9 +46,9 @@ export default function TaskDetailPage() {
   const progress = task.target_completion_count > 0 ? Math.min((task.approved_completions / task.target_completion_count) * 100, 100) : 0;
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: "#000000" }}>
+    <>
       <BusinessSidebar name={business.name} />
-      <main style={{ flex: 1, padding: "40px 32px", overflowY: "auto" }}>
+      <main className="page-body" style={{ padding: "24px 20px" }}>
         {/* Header */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 28, flexWrap: "wrap", gap: 16 }}>
           <div>
@@ -124,6 +124,6 @@ export default function TaskDetailPage() {
           )}
         </div>
       </main>
-    </div>
+    </>
   );
 }

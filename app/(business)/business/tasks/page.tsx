@@ -27,9 +27,9 @@ export default function BusinessTasksPage() {
   if (!business) return <div style={{ minHeight: "100vh", background: "#0a0a0a", display: "flex", alignItems: "center", justifyContent: "center" }}><p style={{ color: "#888" }}>Loading...</p></div>;
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: "#000000" }}>
+    <>
       <BusinessSidebar name={business.name} />
-      <main style={{ flex: 1, padding: "40px 32px", overflowY: "auto" }}>
+      <main className="page-body" style={{ padding: "24px 20px" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 28 }}>
           <div>
             <h1 style={{ fontSize: 26, fontWeight: 800, color: "#F5F5F5", marginBottom: 4 }}>My Tasks</h1>
@@ -84,6 +84,6 @@ export default function BusinessTasksPage() {
           </div>
         )}
       </main>
-    </div>
+    </>
   );
 }

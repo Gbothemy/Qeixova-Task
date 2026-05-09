@@ -152,3 +152,10 @@ input[type="number"] {
     max-width: 720px !important;
   }
 }
+
+/* ── Business portal desktop layout ── */
+@media (min-width: 1024px) {
+  .business-main {
+    padding: 40px 40px !important;
+  }
+}

@@ -76,9 +76,9 @@ export default function CreateTaskPage() {
   if (!business) return <div style={{ minHeight: "100vh", background: "#0a0a0a", display: "flex", alignItems: "center", justifyContent: "center" }}><p style={{ color: "#888" }}>Loading...</p></div>;
 
   if (success) return (
-    <div style={{ display: "flex", minHeight: "100vh", background: "#000000" }}>
+    <>
       <BusinessSidebar name={business.name} />
-      <main style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: 32 }}>
+      <main className="page-body" style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "24px 20px" }}>
         <div style={{ textAlign: "center", maxWidth: 400 }}>
           <div style={{ fontSize: 64, marginBottom: 20 }}>✅</div>
           <h2 style={{ fontSize: 24, fontWeight: 800, color: "#F5F5F5", marginBottom: 12 }}>Task Submitted!</h2>
@@ -95,15 +95,15 @@ export default function CreateTaskPage() {
           </div>
         </div>
       </main>
-    </div>
+    </>
   );
 
   const inputStyle = { width: "100%", padding: "12px 14px", borderRadius: 10, border: "1.5px solid #333333", fontSize: 14, outline: "none", color: "#F5F5F5", background: "#1a1a1a" };
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: "#000000" }}>
+    <>
       <BusinessSidebar name={business.name} />
-      <main style={{ flex: 1, padding: "40px 32px", overflowY: "auto", maxWidth: 800 }}>
+      <main className="page-body" style={{ padding: "24px 20px", maxWidth: 800 }}>
         <h1 style={{ fontSize: 26, fontWeight: 800, color: "#F5F5F5", marginBottom: 4 }}>Create a Task</h1>
         <p style={{ fontSize: 14, color: "#888888", marginBottom: 32 }}>Tasks are reviewed by our team before going live.</p>
 
@@ -232,6 +232,6 @@ export default function CreateTaskPage() {
           </button>
         </form>
       </main>
-    </div>
+    </>
   );
 }
