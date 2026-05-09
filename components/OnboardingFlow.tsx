@@ -8,6 +8,32 @@ interface Props {
   onComplete: () => void;
 }
 
+const PROFESSIONS = [
+  "Student", "Employed (Full-time)", "Employed (Part-time)", "Self-employed / Freelancer",
+  "Business Owner", "Job Seeker", "Stay-at-home Parent", "Creative (Designer/Writer/Artist)",
+  "Tech Professional", "Healthcare Worker", "Educator / Teacher",
+  "Finance / Banking", "Government / Civil Service", "Other",
+];
+
+const INTERESTS = [
+  "Technology & Gadgets", "Fashion & Beauty", "Food & Restaurants",
+  "Finance & Investment", "Gaming", "Health & Fitness", "Travel",
+  "Entertainment & Movies", "Sports", "Education & Learning",
+  "Real Estate", "Business & Entrepreneurship", "Parenting & Family", "Politics & News",
+];
+
+const PLATFORMS = ["Instagram", "TikTok", "X (Twitter)", "YouTube", "Facebook", "LinkedIn", "WhatsApp"];
+
+const AGE_RANGES = ["18–24", "25–34", "35–44", "45+"];
+
+const NIGERIAN_STATES = [
+  "Abia", "Adamawa", "Akwa Ibom", "Anambra", "Bauchi", "Bayelsa", "Benue", "Borno",
+  "Cross River", "Delta", "Ebonyi", "Edo", "Ekiti", "Enugu", "FCT (Abuja)", "Gombe",
+  "Imo", "Jigawa", "Kaduna", "Kano", "Katsina", "Kebbi", "Kogi", "Kwara",
+  "Lagos", "Nasarawa", "Niger", "Ogun", "Ondo", "Osun", "Oyo", "Plateau",
+  "Rivers", "Sokoto", "Taraba", "Yobe", "Zamfara",
+];
+
 // Step 2 — Intro cards
 const INTRO_CARDS = [
   {
@@ -35,12 +61,20 @@ const HIGHLIGHTS = [
 ];
 
 export default function OnboardingFlow({ userName, onComplete }: Props) {
-  // Steps: 0=welcome, 1=profile, 2=bank, 3=referral, 4=intro cards, 5=guided overlay
+  // Steps: 0=welcome, 1=profile, 2=bank, 3=targeting, 4=referral, 5=intro cards
   const [step, setStep] = useState(0);
   const [showTutorial, setShowTutorial] = useState(false);
   const [cardIndex, setCardIndex] = useState(0);
   const [profile, setProfile] = useState({ username: "", country: "Nigeria" });
   const [bank, setBank] = useState({ bank_name: "", account_number: "", account_name: "" });
+  const [targeting, setTargeting] = useState({
+    profession: "",
+    interests: [] as string[],
+    platforms: [] as string[],
+    age_range: "",
+    gender: "",
+    state: "",
+  });
   const [referralCode, setReferralCode] = useState("");
   const [saving, setSaving] = useState(false);
 
@@ -51,10 +85,10 @@ export default function OnboardingFlow({ userName, onComplete }: Props) {
     await fetch("/api/onboarding", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...bank, referralCode }),
+      body: JSON.stringify({ ...bank, ...targeting, referralCode }),
     });
     setSaving(false);
-    setShowTutorial(true); // go straight to tutorial
+    setShowTutorial(true);
   };
 
   const handleDone = () => setShowTutorial(true);
@@ -146,7 +180,7 @@ export default function OnboardingFlow({ userName, onComplete }: Props) {
       {/* ── STEP 2: Payment Readiness ── */}
       {step === 2 && (
         <div style={{ maxWidth: 420, width: "100%" }}>
-          <StepHeader current={2} total={3} />
+          <StepHeader current={2} total={4} />
           <h2 style={{ fontSize: 22, fontWeight: 800, color: "#F5F5F5", marginBottom: 6 }}>Set Up Your Earnings</h2>
           <p style={{ fontSize: 13, color: "#888888", marginBottom: 24 }}>This ensures your earnings can be converted when needed.</p>
 
@@ -184,7 +218,7 @@ export default function OnboardingFlow({ userName, onComplete }: Props) {
       {/* ── STEP 3: Optional Referral ── */}
       {step === 3 && (
         <div style={{ maxWidth: 420, width: "100%" }}>
-          <StepHeader current={3} total={3} />
+          <StepHeader current={3} total={4} />
           <h2 style={{ fontSize: 22, fontWeight: 800, color: "#F5F5F5", marginBottom: 6 }}>Have a referral code?</h2>
           <p style={{ fontSize: 13, color: "#888888", marginBottom: 24 }}>Optional — you can skip this step.</p>
 
@@ -210,7 +244,139 @@ export default function OnboardingFlow({ userName, onComplete }: Props) {
         </div>
       )}
 
-      {/* ── STEP 4: Intro Cards ── */}
+      {/* ── STEP 3: Targeting Profile ── */}
+      {step === 3 && (
+        <div style={{ maxWidth: 440, width: "100%", maxHeight: "85vh", overflowY: "auto" }}>
+          <StepHeader current={3} total={4} />
+          <h2 style={{ fontSize: 22, fontWeight: 800, color: "#F5F5F5", marginBottom: 6 }}>Your Profile</h2>
+          <p style={{ fontSize: 13, color: "#888888", marginBottom: 20 }}>Helps us show you tasks that match your background. Takes 30 seconds.</p>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+            {/* Profession */}
+            <div>
+              <label style={{ fontSize: 11, fontWeight: 700, color: "#666666", letterSpacing: 0.5 }}>PROFESSION</label>
+              <select value={targeting.profession} onChange={e => setTargeting(t => ({ ...t, profession: e.target.value }))}
+                style={{ ...inputStyle, marginTop: 8, cursor: "pointer" }}>
+                <option value="">Select your profession</option>
+                {PROFESSIONS.map(p => <option key={p} value={p}>{p}</option>)}
+              </select>
+            </div>
+
+            {/* Age Range */}
+            <div>
+              <label style={{ fontSize: 11, fontWeight: 700, color: "#666666", letterSpacing: 0.5 }}>AGE RANGE</label>
+              <div style={{ display: "flex", gap: 8, marginTop: 8, flexWrap: "wrap" }}>
+                {AGE_RANGES.map(a => (
+                  <button key={a} type="button" onClick={() => setTargeting(t => ({ ...t, age_range: a }))}
+                    style={{ padding: "8px 16px", borderRadius: 20, border: `1.5px solid ${targeting.age_range === a ? "#1AEF22" : "#333333"}`, background: targeting.age_range === a ? "rgba(26,239,34,0.1)" : "transparent", color: targeting.age_range === a ? "#1AEF22" : "#888888", fontSize: 13, cursor: "pointer", fontWeight: targeting.age_range === a ? 700 : 400 }}>
+                    {a}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Gender */}
+            <div>
+              <label style={{ fontSize: 11, fontWeight: 700, color: "#666666", letterSpacing: 0.5 }}>GENDER</label>
+              <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+                {["Male", "Female", "Prefer not to say"].map(g => (
+                  <button key={g} type="button" onClick={() => setTargeting(t => ({ ...t, gender: g }))}
+                    style={{ flex: 1, padding: "8px 12px", borderRadius: 20, border: `1.5px solid ${targeting.gender === g ? "#1AEF22" : "#333333"}`, background: targeting.gender === g ? "rgba(26,239,34,0.1)" : "transparent", color: targeting.gender === g ? "#1AEF22" : "#888888", fontSize: 12, cursor: "pointer", fontWeight: targeting.gender === g ? 700 : 400 }}>
+                    {g}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* State */}
+            <div>
+              <label style={{ fontSize: 11, fontWeight: 700, color: "#666666", letterSpacing: 0.5 }}>STATE</label>
+              <select value={targeting.state} onChange={e => setTargeting(t => ({ ...t, state: e.target.value }))}
+                style={{ ...inputStyle, marginTop: 8, cursor: "pointer" }}>
+                <option value="">Select your state</option>
+                {NIGERIAN_STATES.map(s => <option key={s} value={s}>{s}</option>)}
+              </select>
+            </div>
+
+            {/* Interests */}
+            <div>
+              <label style={{ fontSize: 11, fontWeight: 700, color: "#666666", letterSpacing: 0.5 }}>INTERESTS (select all that apply)</label>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 8 }}>
+                {INTERESTS.map(interest => {
+                  const selected = targeting.interests.includes(interest);
+                  return (
+                    <button key={interest} type="button" onClick={() => setTargeting(t => ({
+                      ...t,
+                      interests: selected ? t.interests.filter(i => i !== interest) : [...t.interests, interest]
+                    }))}
+                      style={{ padding: "7px 14px", borderRadius: 20, border: `1.5px solid ${selected ? "#1AEF22" : "#333333"}`, background: selected ? "rgba(26,239,34,0.1)" : "transparent", color: selected ? "#1AEF22" : "#888888", fontSize: 12, cursor: "pointer", fontWeight: selected ? 700 : 400 }}>
+                      {interest}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Platforms */}
+            <div>
+              <label style={{ fontSize: 11, fontWeight: 700, color: "#666666", letterSpacing: 0.5 }}>PLATFORMS YOU USE</label>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 8 }}>
+                {PLATFORMS.map(platform => {
+                  const selected = targeting.platforms.includes(platform);
+                  return (
+                    <button key={platform} type="button" onClick={() => setTargeting(t => ({
+                      ...t,
+                      platforms: selected ? t.platforms.filter(p => p !== platform) : [...t.platforms, platform]
+                    }))}
+                      style={{ padding: "7px 14px", borderRadius: 20, border: `1.5px solid ${selected ? "#F5A623" : "#333333"}`, background: selected ? "rgba(245,166,35,0.1)" : "transparent", color: selected ? "#F5A623" : "#888888", fontSize: 12, cursor: "pointer", fontWeight: selected ? 700 : 400 }}>
+                      {platform}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          <div style={{ display: "flex", gap: 12, marginTop: 24 }}>
+            <button onClick={() => setStep(2)} style={{ flex: 1, padding: "14px", borderRadius: 12, border: "1.5px solid #333333", background: "transparent", color: "#888888", fontWeight: 600, fontSize: 14, cursor: "pointer" }}>← Back</button>
+            <button onClick={() => setStep(4)} style={{ flex: 2, padding: "14px", borderRadius: 12, border: "none", background: "linear-gradient(135deg, #1AEF22, #06B517)", color: "#000", fontWeight: 800, fontSize: 15, cursor: "pointer" }}>
+              Continue →
+            </button>
+          </div>
+          <button onClick={() => setStep(4)} style={{ width: "100%", marginTop: 10, padding: "10px", borderRadius: 12, border: "none", background: "transparent", color: "#555555", fontSize: 12, cursor: "pointer" }}>
+            Skip for now
+          </button>
+        </div>
+      )}
+
+      {/* ── STEP 4: Optional Referral ── */}
+      {step === 4 && (
+        <div style={{ maxWidth: 420, width: "100%" }}>
+          <StepHeader current={4} total={4} />
+          <h2 style={{ fontSize: 22, fontWeight: 800, color: "#F5F5F5", marginBottom: 6 }}>Have a referral code?</h2>
+          <p style={{ fontSize: 13, color: "#888888", marginBottom: 24 }}>Optional — you can skip this step.</p>
+
+          <input
+            type="text"
+            placeholder="Enter referral code (optional)"
+            value={referralCode}
+            onChange={e => setReferralCode(e.target.value.toUpperCase())}
+            style={{ ...inputStyle, textTransform: "uppercase" }}
+            onFocus={e => (e.target.style.borderColor = "#1AEF22")}
+            onBlur={e => (e.target.style.borderColor = "#333333")}
+          />
+
+          <div style={{ display: "flex", gap: 12, marginTop: 24 }}>
+            <button onClick={() => setStep(3)} style={{ flex: 1, padding: "14px", borderRadius: 12, border: "1.5px solid #333333", background: "transparent", color: "#888888", fontWeight: 600, fontSize: 14, cursor: "pointer" }}>← Back</button>
+            <button onClick={handleFinish} disabled={saving} style={{ flex: 2, padding: "14px", borderRadius: 12, border: "none", background: "linear-gradient(135deg, #F5A623, #d89420)", color: "#000", fontWeight: 800, fontSize: 15, cursor: "pointer", boxShadow: "0 6px 20px rgba(245,166,35,0.35)" }}>
+              {saving ? "Saving..." : "Finish Setup →"}
+            </button>
+          </div>
+          <button onClick={handleFinish} disabled={saving} style={{ width: "100%", marginTop: 12, padding: "12px", borderRadius: 12, border: "none", background: "transparent", color: "#555555", fontSize: 13, cursor: "pointer" }}>
+            Skip for now
+          </button>
+        </div>
+      )}
       {step === 4 && (
         <div style={{ maxWidth: 400, width: "100%" }}>
           <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 32 }}>
