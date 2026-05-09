@@ -105,7 +105,7 @@ export default function OnboardingFlow({ userName, onComplete }: Props) {
       position: "fixed", inset: 0, zIndex: 9999,
       background: "#000000",
       display: "flex", alignItems: "center", justifyContent: "center",
-      padding: 24, overflowY: "auto",
+      padding: 24,
     }}>
 
       {/* Show tutorial after onboarding */}
@@ -246,7 +246,8 @@ export default function OnboardingFlow({ userName, onComplete }: Props) {
 
       {/* ── STEP 3: Targeting Profile ── */}
       {step === 3 && (
-        <div style={{ maxWidth: 440, width: "100%", maxHeight: "85vh", overflowY: "auto" }}>
+        <div style={{ maxWidth: 440, width: "100%", position: "absolute", inset: 0, overflowY: "auto", padding: 24, display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <div style={{ width: "100%", maxWidth: 440, paddingBottom: 40 }}>
           <StepHeader current={3} total={4} />
           <h2 style={{ fontSize: 22, fontWeight: 800, color: "#F5F5F5", marginBottom: 6 }}>Your Profile</h2>
           <p style={{ fontSize: 13, color: "#888888", marginBottom: 20 }}>Helps us show you tasks that match your background. Takes 30 seconds.</p>
@@ -346,6 +347,7 @@ export default function OnboardingFlow({ userName, onComplete }: Props) {
           <button onClick={() => setStep(4)} style={{ width: "100%", marginTop: 10, padding: "10px", borderRadius: 12, border: "none", background: "transparent", color: "#555555", fontSize: 12, cursor: "pointer" }}>
             Skip for now
           </button>
+        </div>
         </div>
       )}
 
