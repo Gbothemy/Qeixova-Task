@@ -215,35 +215,6 @@ export default function OnboardingFlow({ userName, onComplete }: Props) {
         </div>
       )}
 
-      {/* ── STEP 3: Optional Referral ── */}
-      {step === 3 && (
-        <div style={{ maxWidth: 420, width: "100%" }}>
-          <StepHeader current={3} total={4} />
-          <h2 style={{ fontSize: 22, fontWeight: 800, color: "#F5F5F5", marginBottom: 6 }}>Have a referral code?</h2>
-          <p style={{ fontSize: 13, color: "#888888", marginBottom: 24 }}>Optional — you can skip this step.</p>
-
-          <input
-            type="text"
-            placeholder="Enter referral code (optional)"
-            value={referralCode}
-            onChange={e => setReferralCode(e.target.value.toUpperCase())}
-            style={{ ...inputStyle, textTransform: "uppercase" }}
-            onFocus={e => (e.target.style.borderColor = "#1AEF22")}
-            onBlur={e => (e.target.style.borderColor = "#333333")}
-          />
-
-          <div style={{ display: "flex", gap: 12, marginTop: 24 }}>
-            <button onClick={() => setStep(2)} style={{ flex: 1, padding: "14px", borderRadius: 12, border: "1.5px solid #333333", background: "transparent", color: "#888888", fontWeight: 600, fontSize: 14, cursor: "pointer" }}>← Back</button>
-            <button onClick={handleFinish} disabled={saving} style={{ flex: 2, padding: "14px", borderRadius: 12, border: "none", background: "linear-gradient(135deg, #F5A623, #d89420)", color: "#000", fontWeight: 800, fontSize: 15, cursor: "pointer", boxShadow: "0 6px 20px rgba(245,166,35,0.35)" }}>
-              {saving ? "Saving..." : "Continue →"}
-            </button>
-          </div>
-          <button onClick={handleFinish} disabled={saving} style={{ width: "100%", marginTop: 12, padding: "12px", borderRadius: 12, border: "none", background: "transparent", color: "#555555", fontSize: 13, cursor: "pointer" }}>
-            Skip for now
-          </button>
-        </div>
-      )}
-
       {/* ── STEP 3: Targeting Profile ── */}
       {step === 3 && (
         <div style={{ maxWidth: 440, width: "100%", position: "absolute", inset: 0, overflowY: "auto", padding: 24, display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -379,44 +350,6 @@ export default function OnboardingFlow({ userName, onComplete }: Props) {
           </button>
         </div>
       )}
-      {step === 4 && (
-        <div style={{ maxWidth: 400, width: "100%" }}>
-          <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 32 }}>
-            {INTRO_CARDS.map((_, i) => (
-              <div key={i} style={{ width: i === cardIndex ? 28 : 8, height: 8, borderRadius: 4, background: i === cardIndex ? "#1AEF22" : "#333333", transition: "all 0.3s" }} />
-            ))}
-          </div>
-
-          <div style={{ background: "#111111", borderRadius: 24, padding: "44px 32px", border: "1px solid #222222", textAlign: "center", minHeight: 280 }}>
-            <div style={{ width: 68, height: 68, borderRadius: 20, background: "rgba(26,239,34,0.08)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px" }}>
-              <Image src={INTRO_CARDS[cardIndex].icon} alt="" width={38} height={38} style={{ objectFit: "contain" }} />
-            </div>
-            <h2 style={{ fontSize: 24, fontWeight: 800, color: "#F5F5F5", marginBottom: 14 }}>
-              {INTRO_CARDS[cardIndex].title}
-            </h2>
-            <p style={{ fontSize: 15, color: "#b0b0b0", lineHeight: 1.7 }}>
-              {INTRO_CARDS[cardIndex].body}
-            </p>
-          </div>
-
-          <div style={{ display: "flex", gap: 12, marginTop: 20 }}>
-            {cardIndex > 0 && (
-              <button onClick={() => setCardIndex(c => c - 1)} style={{ flex: 1, padding: "14px", borderRadius: 12, border: "1.5px solid #333333", background: "transparent", color: "#F5F5F5", fontWeight: 600, fontSize: 15, cursor: "pointer" }}>← Back</button>
-            )}
-            <button onClick={() => {
-              if (cardIndex < INTRO_CARDS.length - 1) setCardIndex(c => c + 1);
-              else setShowTutorial(true);
-            }} style={{
-              flex: 1, padding: "14px", borderRadius: 12, border: "none",
-              background: "linear-gradient(135deg, #1AEF22, #06B517)",
-              color: "#000", fontWeight: 800, fontSize: 15, cursor: "pointer",
-            }}>
-              {cardIndex < INTRO_CARDS.length - 1 ? "Next →" : "Got it, take me to tasks →"}
-            </button>
-          </div>
-        </div>
-      )}
-
     </div>
   );
 }
