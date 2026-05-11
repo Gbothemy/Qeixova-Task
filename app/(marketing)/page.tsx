@@ -87,9 +87,7 @@ export default function LandingPage() {
         <div style={{ display: "inline-flex", gap: 20, background: "#0d0d0d", border: "1px solid #222", borderRadius: 14, padding: "12px 24px", marginBottom: 36, flexWrap: "wrap", justifyContent: "center" }}>
           <span style={{ fontSize: 13, color: "#F5A623", fontWeight: 700 }}>100 QLT = ₦1</span>
           <span style={{ color: "#333" }}>|</span>
-          <span style={{ fontSize: 13, color: "#888" }}>5 levels · daily earning caps</span>
-          <span style={{ color: "#333" }}>|</span>
-          <span style={{ fontSize: 13, color: "#888" }}>XP-based progression</span>
+          <span style={{ fontSize: 13, color: "#888" }}>100 QLT = ₦1 · Transparent · No hidden fees</span>
         </div>
         <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
           <Link href="/register" style={{ background: "linear-gradient(135deg, #F5A623, #d89420)", color: "#000", textDecoration: "none", padding: "16px 36px", borderRadius: 14, fontWeight: 800, fontSize: 16, boxShadow: "0 8px 28px rgba(245,166,35,0.4)" }}>
@@ -105,7 +103,7 @@ export default function LandingPage() {
       {/* Trust strip */}
       <section style={{ background: "#0a0a0a", borderBottom: "1px solid #1a1a1a", padding: "18px 5vw" }}>
         <div style={{ maxWidth: 900, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "center", gap: 32, flexWrap: "wrap" }}>
-          {["Verified missions only", "Pay-per-completion model", "XP-based level system", "Transparent QLT conversion", "24h withdrawal processing"].map(t => (
+          {["Verified missions only", "Pay-per-completion model", "Transparent QLT conversion", "24h withdrawal processing"].map(t => (
             <div key={t} style={{ display: "flex", alignItems: "center", gap: 7 }}>
               <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#1AEF22", flexShrink: 0 }} />
               <span style={{ fontSize: 12, color: "#888", fontWeight: 500 }}>{t}</span>
