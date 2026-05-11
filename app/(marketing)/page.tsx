@@ -5,28 +5,28 @@ import { useState } from "react";
 
 const missionTypes = [
   {
-    icon: "/icon-social-media.jpg", type: "Engagement", color: "rgba(74,158,255,0.1)", badge: "#4a9eff",
+    icon: "/icon-social-media.jpg", type: "Engagement",
     title: "Social & Community Actions",
     desc: "Follow, join, engage. Simple actions that build real audience presence for brands.",
     examples: ["Follow on Instagram", "Join Telegram group", "Like & comment on post"],
     reward: "10k–15k QLT",
   },
   {
-    icon: "/icon-survey.png", type: "Participation", color: "rgba(245,166,35,0.1)", badge: "#F5A623",
+    icon: "/icon-survey.png", type: "Participation",
     title: "Surveys & Feedback Missions",
     desc: "Share your opinions on products, services, and ideas. Your insight has real market value.",
     examples: ["Answer 5-question survey", "Rate product experience", "Vote on design options"],
     reward: "35k–50k QLT",
   },
   {
-    icon: "/icon-app-testing.png", type: "Premium", color: "rgba(192,132,252,0.1)", badge: "#c084fc",
+    icon: "/icon-app-testing.png", type: "Premium",
     title: "Testing & Validation Tasks",
     desc: "Test apps, report bugs, validate UX. Businesses pay premium for structured human feedback.",
     examples: ["Test mobile app & report 3 issues", "Complete onboarding flow", "Validate checkout process"],
     reward: "80k–120k QLT",
   },
   {
-    icon: "/icon-content.png", type: "AI Testing", color: "rgba(26,239,34,0.1)", badge: "#1AEF22",
+    icon: "/icon-content.png", type: "AI Testing",
     title: "AI & Content Evaluation",
     desc: "Evaluate AI responses, watch content, and provide structured feedback that trains better systems.",
     examples: ["Rate AI response quality", "Watch video & summarize", "Compare two AI outputs"],
@@ -124,25 +124,25 @@ export default function LandingPage() {
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 20 }}>
             {missionTypes.map(m => (
-              <div key={m.type} style={{ background: "#0d0d0d", borderRadius: 20, padding: "26px 22px", border: "1px solid #1a1a1a", borderTop: `3px solid ${m.badge}` }}>
+              <div key={m.type} style={{ background: "#0d0d0d", borderRadius: 20, padding: "26px 22px", border: "1px solid #1a1a1a" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
-                  <div style={{ width: 44, height: 44, borderRadius: 12, background: m.color, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(26,239,34,0.08)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                     <Image src={m.icon} alt={m.type} width={26} height={26} style={{ objectFit: "contain" }} />
                   </div>
-                  <span style={{ fontSize: 11, fontWeight: 700, color: m.badge, background: m.color, borderRadius: 8, padding: "3px 10px" }}>{m.type}</span>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: "#1AEF22", background: "rgba(26,239,34,0.08)", borderRadius: 8, padding: "3px 10px" }}>{m.type}</span>
                 </div>
                 <h3 style={{ fontWeight: 800, fontSize: 15, color: "#F5F5F5", marginBottom: 8, lineHeight: 1.3 }}>{m.title}</h3>
-                <p style={{ fontSize: 13, color: "#666", lineHeight: 1.6, marginBottom: 14 }}>{m.desc}</p>
+                <p style={{ fontSize: 13, color: "#555", lineHeight: 1.6, marginBottom: 14 }}>{m.desc}</p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 5, marginBottom: 14 }}>
                   {m.examples.map(ex => (
                     <div key={ex} style={{ display: "flex", alignItems: "center", gap: 7 }}>
-                      <span style={{ color: m.badge, fontSize: 11 }}>→</span>
-                      <span style={{ fontSize: 12, color: "#888" }}>{ex}</span>
+                      <span style={{ color: "#333", fontSize: 11 }}>→</span>
+                      <span style={{ fontSize: 12, color: "#666" }}>{ex}</span>
                     </div>
                   ))}
                 </div>
-                <div style={{ background: m.color, borderRadius: 8, padding: "6px 12px", display: "inline-block" }}>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: m.badge }}>{m.reward} per mission</span>
+                <div style={{ background: "rgba(26,239,34,0.06)", border: "1px solid rgba(26,239,34,0.12)", borderRadius: 8, padding: "6px 12px", display: "inline-block" }}>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: "#1AEF22" }}>{m.reward} per mission</span>
                 </div>
               </div>
             ))}
@@ -185,15 +185,15 @@ export default function LandingPage() {
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, marginBottom: 40 }}>
             {[
-              { icon: "📋", title: "Create a Mission", desc: "Define what you need. Set reward per completion. Submit for review.", color: "rgba(245,166,35,0.08)" },
-              { icon: "🎯", title: "Target Your Audience", desc: "Filter by age, gender, state, interests, and platforms.", color: "rgba(26,239,34,0.08)" },
-              { icon: "✅", title: "Get Verified Results", desc: "Every submission is reviewed. Pay only for approved completions.", color: "rgba(245,166,35,0.08)" },
-              { icon: "📊", title: "Track in Real Time", desc: "Monitor submissions, approvals, and campaign progress live.", color: "rgba(26,239,34,0.08)" },
+              { icon: "📋", title: "Create a Mission", desc: "Define what you need. Set reward per completion. Submit for review." },
+              { icon: "🎯", title: "Target Your Audience", desc: "Filter by age, gender, state, interests, and platforms." },
+              { icon: "✅", title: "Get Verified Results", desc: "Every submission is reviewed. Pay only for approved completions." },
+              { icon: "📊", title: "Track in Real Time", desc: "Monitor submissions, approvals, and campaign progress live." },
             ].map(item => (
               <div key={item.title} style={{ background: "#0d0d0d", borderRadius: 18, padding: "24px 20px", border: "1px solid #1a1a1a" }}>
-                <div style={{ width: 48, height: 48, borderRadius: 13, background: item.color, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24, marginBottom: 14 }}>{item.icon}</div>
+                <div style={{ width: 48, height: 48, borderRadius: 13, background: "rgba(26,239,34,0.06)", border: "1px solid rgba(26,239,34,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, marginBottom: 14 }}>{item.icon}</div>
                 <h3 style={{ fontWeight: 800, fontSize: 14, color: "#F5F5F5", marginBottom: 6 }}>{item.title}</h3>
-                <p style={{ fontSize: 13, color: "#666", lineHeight: 1.6 }}>{item.desc}</p>
+                <p style={{ fontSize: 13, color: "#555", lineHeight: 1.6 }}>{item.desc}</p>
               </div>
             ))}
           </div>
