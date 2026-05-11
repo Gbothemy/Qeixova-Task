@@ -185,13 +185,15 @@ export default function LandingPage() {
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, marginBottom: 40 }}>
             {[
-              { icon: "📋", title: "Create a Mission", desc: "Define what you need. Set reward per completion. Submit for review." },
-              { icon: "🎯", title: "Target Your Audience", desc: "Filter by age, gender, state, interests, and platforms." },
-              { icon: "✅", title: "Get Verified Results", desc: "Every submission is reviewed. Pay only for approved completions." },
-              { icon: "📊", title: "Track in Real Time", desc: "Monitor submissions, approvals, and campaign progress live." },
+              { icon: "/icon-create-mission.svg", title: "Create a Mission", desc: "Define what you need. Set reward per completion. Submit for review." },
+              { icon: "/icon-target-audience.svg", title: "Target Your Audience", desc: "Filter by age, gender, state, interests, and platforms." },
+              { icon: "/icon-verified.svg", title: "Get Verified Results", desc: "Every submission is reviewed. Pay only for approved completions." },
+              { icon: "/icon-analytics.svg", title: "Track in Real Time", desc: "Monitor submissions, approvals, and campaign progress live." },
             ].map(item => (
               <div key={item.title} style={{ background: "#0d0d0d", borderRadius: 18, padding: "24px 20px", border: "1px solid #1a1a1a" }}>
-                <div style={{ width: 48, height: 48, borderRadius: 13, background: "rgba(26,239,34,0.06)", border: "1px solid rgba(26,239,34,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, marginBottom: 14 }}>{item.icon}</div>
+                <div style={{ width: 48, height: 48, borderRadius: 13, background: "rgba(26,239,34,0.06)", border: "1px solid rgba(26,239,34,0.1)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14 }}>
+                  <Image src={item.icon} alt={item.title} width={22} height={22} style={{ objectFit: "contain", filter: "invert(58%) sepia(98%) saturate(400%) hue-rotate(83deg) brightness(110%)" }} />
+                </div>
                 <h3 style={{ fontWeight: 800, fontSize: 14, color: "#F5F5F5", marginBottom: 6 }}>{item.title}</h3>
                 <p style={{ fontSize: 13, color: "#555", lineHeight: 1.6 }}>{item.desc}</p>
               </div>
