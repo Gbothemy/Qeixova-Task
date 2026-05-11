@@ -34,13 +34,6 @@ const missionTypes = [
   },
 ];
 
-const levels = [
-  { num: 1, name: "Starter",   color: "#888888", xp: "0 XP",     cap: "₦50/day",   unlock: "Engagement missions" },
-  { num: 2, name: "Explorer",  color: "#4a9eff", xp: "500 XP",   cap: "₦150/day",  unlock: "+ Participation missions" },
-  { num: 3, name: "Achiever",  color: "#1AEF22", xp: "1,500 XP", cap: "₦350/day",  unlock: "+ Premium missions" },
-  { num: 4, name: "Expert",    color: "#F5A623", xp: "4,000 XP", cap: "₦750/day",  unlock: "+ Leaderboard bonuses" },
-  { num: 5, name: "Elite",     color: "#e53e3e", xp: "10,000 XP",cap: "₦1,500/day",unlock: "+ UGC missions" },
-];
 
 const steps = [
   { num: "01", title: "Create Your Account",    desc: "Sign up free. No experience needed. Access missions immediately." },
@@ -179,39 +172,6 @@ export default function LandingPage() {
       </section>
 
       {/* Levels system */}
-      <section style={{ padding: "80px 5vw", background: "#000" }}>
-        <div style={{ maxWidth: 900, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 48 }}>
-            <span style={{ fontSize: 11, fontWeight: 700, color: "#F5A623", letterSpacing: 2, textTransform: "uppercase", background: "rgba(245,166,35,0.08)", borderRadius: 20, padding: "4px 14px" }}>Level System</span>
-            <h2 style={{ fontSize: "clamp(24px, 4vw, 40px)", fontWeight: 900, color: "#F5F5F5", marginTop: 14, letterSpacing: -1 }}>The more you do, the more you earn.</h2>
-            <p style={{ fontSize: 15, color: "#666", maxWidth: 480, margin: "12px auto 0", lineHeight: 1.7 }}>Complete missions to earn XP. XP unlocks higher-value missions and bigger daily earning caps.</p>
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            {levels.map((l, i) => (
-              <div key={l.num} style={{ background: "#0d0d0d", borderRadius: 14, padding: "16px 20px", border: "1px solid #1a1a1a", display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
-                <div style={{ width: 40, height: 40, borderRadius: "50%", background: l.color + "22", border: `2px solid ${l.color}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <span style={{ fontSize: 14, fontWeight: 800, color: l.color }}>{l.num}</span>
-                </div>
-                <div style={{ flex: 1, minWidth: 120 }}>
-                  <p style={{ fontSize: 15, fontWeight: 800, color: l.color, marginBottom: 2 }}>{l.name}</p>
-                  <p style={{ fontSize: 12, color: "#555" }}>{l.unlock}</p>
-                </div>
-                <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
-                  <div style={{ textAlign: "center" }}>
-                    <p style={{ fontSize: 10, color: "#444", textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 2 }}>Required</p>
-                    <p style={{ fontSize: 13, fontWeight: 700, color: "#F5A623" }}>{l.xp}</p>
-                  </div>
-                  <div style={{ textAlign: "center" }}>
-                    <p style={{ fontSize: 10, color: "#444", textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 2 }}>Daily Cap</p>
-                    <p style={{ fontSize: 13, fontWeight: 700, color: "#1AEF22" }}>{l.cap}</p>
-                  </div>
-                </div>
-                {i === 0 && <span style={{ fontSize: 11, fontWeight: 700, color: "#1AEF22", background: "rgba(26,239,34,0.1)", borderRadius: 8, padding: "3px 10px" }}>Start here</span>}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* For Businesses */}
       <section id="for-businesses" style={{ padding: "80px 5vw", background: "#050505", borderTop: "1px solid #1a1a1a" }}>
