@@ -1,12 +1,14 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 const nav = [
-  { href: "/dashboard", label: "Home", icon: "🏠" },
-  { href: "/tasks",     label: "Tasks", icon: "✅" },
-  { href: "/wallet",    label: "Wallet", icon: "💰" },
-  { href: "/profile",   label: "Profile", icon: "👤" },
+  { href: "/dashboard",   label: "Home",     icon: "/icon-home.png" },
+  { href: "/tasks",       label: "Missions", icon: "/icon-task.png" },
+  { href: "/leaderboard", label: "Ranks",    icon: "/icon-survey.png" },
+  { href: "/wallet",      label: "Wallet",   icon: "/icon-wallet.png" },
+  { href: "/profile",     label: "Profile",  icon: "/icon-profile.png" },
 ];
 
 export default function BottomNav() {
@@ -49,7 +51,18 @@ export default function BottomNav() {
                 borderRadius: "0 0 4px 4px",
               }} />
             )}
-            <span style={{ fontSize: 22 }}>{item.icon}</span>
+            <Image
+              src={item.icon}
+              alt={item.label}
+              width={24}
+              height={24}
+              style={{
+                objectFit: "contain",
+                filter: active
+                  ? "invert(58%) sepia(98%) saturate(400%) hue-rotate(83deg) brightness(110%)"
+                  : "invert(40%) sepia(0%) saturate(0%) brightness(60%)",
+              }}
+            />
             {item.label}
           </Link>
         );

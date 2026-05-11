@@ -39,6 +39,8 @@ export async function PATCH(req: NextRequest) {
 
   if (action === "approve") {
     await sql`UPDATE transactions SET status = 'completed' WHERE id = ${id} AND type = 'debit'`;
+  } else if (action === "processing") {
+    await sql`UPDATE transactions SET status = 'processing' WHERE id = ${id} AND type = 'debit'`;
   } else if (action === "reject") {
     // Refund QLT to user
     const rows = await sql`SELECT user_id, amount FROM transactions WHERE id = ${id} AND type = 'debit'`;

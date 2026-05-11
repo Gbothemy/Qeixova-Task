@@ -18,7 +18,12 @@ function checkAuth(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
   if (!checkAuth(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  const tasks = await sql`SELECT * FROM tasks ORDER BY category, reward DESC`;
+  const tasks = await sql`
+    SELECT *, COALESCE(mission_type, 'engagement') AS mission_type,
+      COALESCE(xp_reward, 10) AS xp_reward,
+      COALESCE(min_level, 1) AS min_level
+    FROM tasks ORDER BY category, reward DESC
+  `;
   return NextResponse.json({ tasks });
 }
 
@@ -33,15 +38,16 @@ export async function POST(req: NextRequest) {
   }
 
   const result = await sql`
-    INSERT INTO tasks (title, category, reward, duration, icon, color, instructions, steps, proof_type, proof_label, max_screenshots, total_budget, task_link)
+    INSERT INTO tasks (title, category, reward, duration, icon, color, instructions, steps, proof_type, proof_label, max_screenshots, total_budget, task_link, mission_type, xp_reward, min_level)
     VALUES (
       ${title}, ${category}, ${reward},
       ${duration ?? "5 min"}, ${icon ?? "📋"}, ${color ?? "#e8f5e9"},
       ${instructions ?? ""}, ${steps ?? []}, ${proof_type ?? "screenshot"},
       ${proof_label ?? "Upload screenshot as proof"}, ${max_screenshots ?? 1},
-      ${body.total_budget ?? 0}, ${body.task_link ?? ""}
+      ${body.total_budget ?? 0}, ${body.task_link ?? ""},
+      ${body.mission_type ?? "engagement"}, ${body.xp_reward ?? 10}, ${body.min_level ?? 1}
     )
-    RETURNING id, title, category, reward
+    RETURNING id, title, category, reward, mission_type
   `;
 
   return NextResponse.json({ ok: true, task: result[0] });
@@ -54,10 +60,9 @@ export async function PATCH(req: NextRequest) {
   if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });
 
   // Build dynamic update — only update provided fields
-  const allowed = ["title", "category", "reward", "duration", "icon", "color", "instructions", "steps", "proof_type", "proof_label", "max_screenshots", "is_active"];
+  const allowed = ["title", "category", "reward", "duration", "icon", "color", "instructions", "steps", "proof_type", "proof_label", "max_screenshots", "is_active", "total_budget", "task_link", "mission_type", "xp_reward", "min_level"];
   for (const key of allowed) {
     if (fields[key] !== undefined) {
-      // Use parameterized updates per field
       if (key === "title")          await sql`UPDATE tasks SET title = ${fields[key]} WHERE id = ${id}`;
       else if (key === "category")  await sql`UPDATE tasks SET category = ${fields[key]} WHERE id = ${id}`;
       else if (key === "reward")    await sql`UPDATE tasks SET reward = ${fields[key]} WHERE id = ${id}`;
@@ -72,6 +77,9 @@ export async function PATCH(req: NextRequest) {
       else if (key === "total_budget")   await sql`UPDATE tasks SET total_budget = ${fields[key]} WHERE id = ${id}`;
       else if (key === "task_link")      await sql`UPDATE tasks SET task_link = ${fields[key]} WHERE id = ${id}`;
       else if (key === "is_active")      await sql`UPDATE tasks SET is_active = ${fields[key]} WHERE id = ${id}`;
+      else if (key === "mission_type")   await sql`UPDATE tasks SET mission_type = ${fields[key]} WHERE id = ${id}`;
+      else if (key === "xp_reward")      await sql`UPDATE tasks SET xp_reward = ${fields[key]} WHERE id = ${id}`;
+      else if (key === "min_level")      await sql`UPDATE tasks SET min_level = ${fields[key]} WHERE id = ${id}`;
     }
   }
 

@@ -63,9 +63,12 @@ input[type="number"] {
   min-width: 0;
 }
 
-/* Mobile: content has bottom padding for bottom nav */
+/* page-body — used by both user and business pages */
 .page-body {
-  padding-bottom: 80px;
+  flex: 1;
+  min-width: 0;
+  padding: 20px 16px 80px;
+  overflow-y: auto;
 }
 
 /* ── Desktop (≥1024px) ── */
@@ -101,8 +104,10 @@ input[type="number"] {
 
   /* Desktop pages have no bottom padding */
   .page-body {
-    padding-bottom: 32px;
-    padding-top: 0;
+    padding-bottom: 40px;
+    padding-top: 40px;
+    padding-left: 40px;
+    padding-right: 40px;
   }
 
   /* Desktop header is shorter */
@@ -150,5 +155,12 @@ input[type="number"] {
 
   .bottom-nav {
     max-width: 720px !important;
+  }
+}
+
+/* ── Business portal desktop layout ── */
+@media (min-width: 1024px) {
+  .business-main {
+    padding: 40px 40px !important;
   }
 }

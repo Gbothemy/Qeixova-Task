@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import BottomNav from "@/components/BottomNav";
 import { useAuth } from "@/lib/useAuth";
 
@@ -23,6 +24,9 @@ function txIcon(label: string) {
 export default function WalletPage() {
   const { loading } = useAuth();
   const [balance, setBalance] = useState(0);
+  const [pendingQlt, setPendingQlt] = useState(0);
+  const [pendingCount, setPendingCount] = useState(0);
+  const [rejected, setRejected] = useState<{ title: string; rejection_reason: string; completed_at: string }[]>([]);
   const [transactions, setTransactions] = useState<Tx[]>([]);
   const [amount, setAmount] = useState("");
   const [bank, setBank] = useState("");
@@ -36,6 +40,9 @@ export default function WalletPage() {
       const d = await r.json();
       if (d.balance !== undefined) setBalance(d.balance);
       if (d.transactions) setTransactions(d.transactions);
+      if (d.pending_qlt !== undefined) setPendingQlt(d.pending_qlt);
+      if (d.pending_count !== undefined) setPendingCount(d.pending_count);
+      if (d.rejected) setRejected(d.rejected);
     } catch { /* ignore */ }
   };
 
@@ -62,31 +69,65 @@ export default function WalletPage() {
   return (
     <div className="page-body" style={{ background: "#000000", minHeight: "100vh" }}>
       {/* Header */}
-      <div className="page-header" style={{ background: "linear-gradient(160deg, #1AEF22 0%, #06B517 100%)", padding: "52px 20px 32px", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", top: -50, right: -50, width: 180, height: 180, borderRadius: "50%", background: "rgba(0,0,0,0.08)" }} />
-        <p style={{ color: "rgba(0,0,0,0.6)", fontSize: 13, marginBottom: 4 }}>Points Balance</p>
+      <div className="page-header" style={{ background: "#0a0a0a", borderBottom: "1px solid #222222", padding: "52px 20px 32px", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: -50, right: -50, width: 180, height: 180, borderRadius: "50%", background: "rgba(26,239,34,0.03)" }} />
+        <p style={{ color: "#555555", fontSize: 13, marginBottom: 4 }}>Points Balance</p>
         <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
-          <span style={{ color: "#000", fontSize: 20 }}>⭐</span>
-          <p style={{ color: "#000", fontSize: 38, fontWeight: 800, letterSpacing: -2, lineHeight: 1 }}>{balance.toLocaleString()}</p>
-          <span style={{ color: "rgba(0,0,0,0.5)", fontSize: 14 }}>QLT</span>
+          <Image src="/icon-wallet.png" alt="wallet" width={24} height={24} style={{ objectFit: "contain", marginBottom: -4 }} />
+          <p style={{ color: "#F5F5F5", fontSize: 38, fontWeight: 800, letterSpacing: -2, lineHeight: 1 }}>{balance.toLocaleString()}</p>
+          <span style={{ color: "#555555", fontSize: 14 }}>QLT</span>
         </div>
-        <p style={{ color: "#000", fontSize: 14, fontWeight: 600, marginTop: 6, opacity: 0.7 }}>≈ ₦{(balance / 100).toLocaleString()} cash value</p>
+        <p style={{ color: "#888888", fontSize: 14, fontWeight: 600, marginTop: 6 }}>≈ ₦{(balance / 100).toLocaleString()} cash value</p>
         <div style={{ display: "flex", gap: 10, marginTop: 18 }}>
           {[{ label: "Min. Withdrawal", value: "100,000 QLT" }, { label: "Rate", value: "100 QLT = ₦1" }, { label: "Fee", value: "Free" }].map(item => (
-            <div key={item.label} style={{ flex: 1, background: "rgba(0,0,0,0.12)", border: "1px solid rgba(0,0,0,0.15)", borderRadius: 12, padding: "10px 8px", textAlign: "center" }}>
-              <p style={{ color: "rgba(0,0,0,0.55)", fontSize: 10, marginBottom: 3 }}>{item.label}</p>
-              <p style={{ color: "#000", fontWeight: 700, fontSize: 13 }}>{item.value}</p>
+            <div key={item.label} style={{ flex: 1, background: "#111111", border: "1px solid #222222", borderRadius: 12, padding: "10px 8px", textAlign: "center" }}>
+              <p style={{ color: "#555555", fontSize: 10, marginBottom: 3 }}>{item.label}</p>
+              <p style={{ color: "#F5F5F5", fontWeight: 700, fontSize: 13 }}>{item.value}</p>
             </div>
           ))}
         </div>
       </div>
 
       <div className="wallet-layout" style={{ display: "block" }}>
+        {/* Pending QLT Banner */}
+        {pendingQlt > 0 && (
+          <div style={{ padding: "16px 16px 0" }}>
+            <div style={{ background: "rgba(245,166,35,0.08)", border: "1px solid rgba(245,166,35,0.25)", borderRadius: 16, padding: "14px 16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div>
+                <p style={{ fontSize: 12, color: "#F5A623", fontWeight: 700, marginBottom: 2 }}>Pending QLT</p>
+                <p style={{ fontSize: 20, fontWeight: 800, color: "#F5A623" }}>+{pendingQlt.toLocaleString()} QLT</p>
+                <p style={{ fontSize: 11, color: "#999999", marginTop: 2 }}>{pendingCount} submission{pendingCount !== 1 ? "s" : ""} under review</p>
+              </div>
+              <div style={{ textAlign: "right" }}>
+                <div style={{ background: "rgba(245,166,35,0.15)", borderRadius: 10, padding: "6px 12px" }}>
+                  <p style={{ fontSize: 11, color: "#F5A623", fontWeight: 600 }}>Under Review</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Rejected Tasks */}
+        {rejected.length > 0 && (
+          <div style={{ padding: "16px 16px 0" }}>
+            <p style={{ fontWeight: 700, fontSize: 14, color: "#F5F5F5", marginBottom: 10 }}>Rejected Submissions</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {rejected.map((r, i) => (
+                <div key={i} style={{ background: "rgba(229,62,62,0.06)", border: "1px solid rgba(229,62,62,0.2)", borderRadius: 12, padding: "12px 14px" }}>
+                  <p style={{ fontSize: 13, fontWeight: 600, color: "#F5F5F5", marginBottom: 4 }}>{r.title}</p>
+                  <p style={{ fontSize: 12, color: "#e53e3e" }}>Reason: {r.rejection_reason}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
         {/* Withdraw form */}
         <div style={{ padding: "20px 16px 0" }}>
           <div style={{ background: "#111111", borderRadius: 20, padding: "22px 20px", border: "1px solid #222222" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
-              <div style={{ width: 36, height: 36, borderRadius: 10, background: "linear-gradient(135deg, #1AEF22, #06B517)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>💸</div>
+              <div style={{ width: 36, height: 36, borderRadius: 10, background: "#1a1a1a", border: "1px solid #222222", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <Image src="/icon-wallet.png" alt="withdraw" width={20} height={20} style={{ objectFit: "contain" }} />
+              </div>
               <p style={{ fontWeight: 800, fontSize: 16, color: "#F5F5F5" }}>Withdraw Funds</p>
             </div>
 
@@ -157,8 +198,8 @@ export default function WalletPage() {
               {transactions.map((tx, i) => (
                 <div key={i} style={{ background: "#111111", borderRadius: 16, padding: "14px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", border: "1px solid #222222" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                    <div style={{ width: 42, height: 42, borderRadius: 13, background: tx.type === "credit" ? "rgba(26,239,34,0.12)" : "rgba(229,62,62,0.12)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>
-                      {txIcon(tx.label)}
+                    <div style={{ width: 42, height: 42, borderRadius: 13, background: tx.type === "credit" ? "rgba(26,239,34,0.12)" : "rgba(229,62,62,0.12)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <Image src={tx.label.startsWith("Withdrawal") ? "/icon-wallet.png" : "/icon-task.png"} alt="tx" width={22} height={22} style={{ objectFit: "contain" }} />
                     </div>
                     <div>
                       <p style={{ fontSize: 13, fontWeight: 600, color: "#F5F5F5" }}>{tx.label}</p>
@@ -166,6 +207,9 @@ export default function WalletPage() {
                         <p style={{ fontSize: 11, color: "#555555" }}>{timeAgo(tx.created_at)}</p>
                         {tx.status === "pending" && (
                           <span style={{ fontSize: 10, background: "rgba(245,166,35,0.12)", color: "#F5A623", borderRadius: 4, padding: "1px 6px", fontWeight: 600 }}>Pending</span>
+                        )}
+                        {tx.status === "processing" && (
+                          <span style={{ fontSize: 10, background: "rgba(26,115,232,0.12)", color: "#4a9eff", borderRadius: 4, padding: "1px 6px", fontWeight: 600 }}>Processing</span>
                         )}
                       </div>
                     </div>

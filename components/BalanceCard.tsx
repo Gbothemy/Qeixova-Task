@@ -27,20 +27,21 @@ export default function BalanceCard({
 }: BalanceCardProps) {
   return (
     <div style={{
-      background: "linear-gradient(145deg, #1AEF22 0%, #06B517 60%, #058f12 100%)",
+      background: "#0a0a0a",
+      border: "1px solid #222222",
       borderRadius: 24, padding: "24px 20px 20px", color: "#fff",
       margin: "0 16px", position: "relative", overflow: "hidden",
-      boxShadow: "0 12px 40px rgba(26,239,34,0.35)",
+      boxShadow: "0 12px 40px rgba(0,0,0,0.5)",
     }}>
       {/* Gold top bar */}
       <div style={{ position: "absolute", top: 0, left: 24, right: 24, height: 3, background: "linear-gradient(90deg, #F5A623, #ffc04d, #F5A623)", borderRadius: "0 0 4px 4px" }} />
-      <div style={{ position: "absolute", top: -40, right: -40, width: 160, height: 160, borderRadius: "50%", background: "rgba(245,166,35,0.08)" }} />
-      <div style={{ position: "absolute", bottom: -30, left: -20, width: 120, height: 120, borderRadius: "50%", background: "rgba(255,255,255,0.04)" }} />
+      <div style={{ position: "absolute", top: -40, right: -40, width: 160, height: 160, borderRadius: "50%", background: "rgba(245,166,35,0.03)" }} />
+      <div style={{ position: "absolute", bottom: -30, left: -20, width: 120, height: 120, borderRadius: "50%", background: "rgba(26,239,34,0.02)" }} />
 
       {/* Balance row */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 4 }}>
         <div>
-          <p style={{ fontSize: 11, opacity: 0.7, letterSpacing: 1, textTransform: "uppercase", marginBottom: 4 }}>
+          <p style={{ fontSize: 11, color: "#999999", letterSpacing: 1, textTransform: "uppercase", marginBottom: 4 }}>
             Available Balance
           </p>
           <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
@@ -48,57 +49,57 @@ export default function BalanceCard({
             <p style={{ fontSize: 32, fontWeight: 900, letterSpacing: -1.5, lineHeight: 1 }}>
               {balance.toLocaleString()}
             </p>
-            <span style={{ fontSize: 12, opacity: 0.6 }}>QLT</span>
+            <span style={{ fontSize: 12, color: "#666666" }}>QLT</span>
           </div>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 5, background: "rgba(245,166,35,0.15)", border: "1px solid rgba(245,166,35,0.25)", borderRadius: 8, padding: "4px 10px", marginTop: 6 }}>
-            <span style={{ fontSize: 11, opacity: 0.7 }}>≈</span>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 5, background: "rgba(245,166,35,0.08)", border: "1px solid rgba(245,166,35,0.15)", borderRadius: 8, padding: "4px 10px", marginTop: 6 }}>
+            <span style={{ fontSize: 11, color: "#999999" }}>≈</span>
             <span style={{ fontSize: 13, fontWeight: 700, color: "#F5A623" }}>₦{toNaira(balance)}</span>
           </div>
         </div>
-        <div style={{ width: 42, height: 42, borderRadius: 12, background: "rgba(245,166,35,0.2)", border: "1.5px solid rgba(245,166,35,0.4)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20 }}>
+        <div style={{ width: 42, height: 42, borderRadius: 12, background: "rgba(245,166,35,0.1)", border: "1.5px solid rgba(245,166,35,0.2)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20 }}>
           💳
         </div>
       </div>
 
       {/* Divider */}
-      <div style={{ height: 1, background: "rgba(255,255,255,0.12)", margin: "14px 0" }} />
+      <div style={{ height: 1, background: "#222222", margin: "14px 0" }} />
 
       {/* Stats grid — 2x2 */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px 0" }}>
 
-        <div style={{ borderRight: "1px solid rgba(255,255,255,0.12)", paddingRight: 12 }}>
-          <p style={{ fontSize: 10, opacity: 0.6, marginBottom: 3, letterSpacing: 0.4 }}>Today&apos;s QLT</p>
+        <div style={{ borderRight: "1px solid #222222", paddingRight: 12 }}>
+          <p style={{ fontSize: 10, color: "#999999", marginBottom: 3, letterSpacing: 0.4 }}>Today&apos;s QLT</p>
           <p style={{ fontSize: 16, fontWeight: 700, color: "#F5A623" }}>
             +{todayEarned.toLocaleString()}
           </p>
         </div>
 
         <div style={{ paddingLeft: 12 }}>
-          <p style={{ fontSize: 10, opacity: 0.6, marginBottom: 3, letterSpacing: 0.4 }}>Tasks Today</p>
+          <p style={{ fontSize: 10, color: "#999999", marginBottom: 3, letterSpacing: 0.4 }}>Tasks Today</p>
           <p style={{ fontSize: 16, fontWeight: 700 }}>
-            {tasksToday} <span style={{ fontSize: 11, opacity: 0.6 }}>done</span>
+            {tasksToday} <span style={{ fontSize: 11, color: "#666666" }}>done</span>
           </p>
         </div>
 
-        <div style={{ borderRight: "1px solid rgba(255,255,255,0.12)", paddingRight: 12, paddingTop: 8, borderTop: "1px solid rgba(255,255,255,0.08)" }}>
-          <p style={{ fontSize: 10, opacity: 0.6, marginBottom: 3, letterSpacing: 0.4 }}>Total Accumulated</p>
+        <div style={{ borderRight: "1px solid #222222", paddingRight: 12, paddingTop: 8, borderTop: "1px solid #1a1a1a" }}>
+          <p style={{ fontSize: 10, color: "#999999", marginBottom: 3, letterSpacing: 0.4 }}>Total Accumulated</p>
           <p style={{ fontSize: 16, fontWeight: 700 }}>
-            {fmt(totalAccumulated)} <span style={{ fontSize: 11, opacity: 0.6 }}>QLT</span>
+            {fmt(totalAccumulated)} <span style={{ fontSize: 11, color: "#666666" }}>QLT</span>
           </p>
         </div>
 
-        <div style={{ paddingLeft: 12, paddingTop: 8, borderTop: "1px solid rgba(255,255,255,0.08)" }}>
-          <p style={{ fontSize: 10, opacity: 0.6, marginBottom: 3, letterSpacing: 0.4 }}>Total Withdrawn</p>
+        <div style={{ paddingLeft: 12, paddingTop: 8, borderTop: "1px solid #1a1a1a" }}>
+          <p style={{ fontSize: 10, color: "#999999", marginBottom: 3, letterSpacing: 0.4 }}>Total Withdrawn</p>
           <p style={{ fontSize: 16, fontWeight: 700 }}>
-            {fmt(totalWithdrawn)} <span style={{ fontSize: 11, opacity: 0.6 }}>QLT</span>
+            {fmt(totalWithdrawn)} <span style={{ fontSize: 11, color: "#666666" }}>QLT</span>
           </p>
         </div>
 
       </div>
 
       {/* Total tasks footer */}
-      <div style={{ marginTop: 12, paddingTop: 10, borderTop: "1px solid rgba(255,255,255,0.1)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <p style={{ fontSize: 11, opacity: 0.6 }}>Total tasks completed</p>
+      <div style={{ marginTop: 12, paddingTop: 10, borderTop: "1px solid #222222", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <p style={{ fontSize: 11, color: "#999999" }}>Total tasks completed</p>
         <p style={{ fontSize: 13, fontWeight: 700, color: "#F5A623" }}>{tasksTotal.toLocaleString()} tasks</p>
       </div>
     </div>

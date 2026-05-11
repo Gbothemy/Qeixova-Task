@@ -1,0 +1,10 @@
+import BusinessBottomNav from "@/components/BusinessBottomNav";
+
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="app-shell" style={{ minHeight: "100vh", background: "#000" }}>
+      {children}
+      <BusinessBottomNav />
+    </div>
+  );
+}

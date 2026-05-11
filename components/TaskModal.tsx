@@ -148,28 +148,33 @@ export default function TaskModal({ task, onClose, onComplete }: Props) {
           <div style={{ padding: "32px 24px 40px", textAlign: "center" }}>
             <div style={{
               width: 80, height: 80, borderRadius: "50%",
-              background: "linear-gradient(135deg, #1AEF22, #06B517)",
+              background: "linear-gradient(135deg, #F5A623, #d89420)",
               display: "flex", alignItems: "center", justifyContent: "center",
               fontSize: 36, margin: "0 auto 20px",
-              boxShadow: "0 8px 24px rgba(26,239,34,0.35)",
-            }}>✅</div>
+              boxShadow: "0 8px 24px rgba(245,166,35,0.35)",
+            }}>⏳</div>
             <h2 style={{ fontWeight: 900, fontSize: 22, color: "#1A1A1A", marginBottom: 8 }}>
-              Task Completed!
+              Submission Received!
             </h2>
             <p style={{ color: "#6b6b6b", fontSize: 14, marginBottom: 24, lineHeight: 1.6 }}>
-              Your proof has been submitted for review. Your reward will be credited once verified.
+              Your proof has been submitted for review. QLT will be credited to your balance once verified.
             </p>
             <div style={{
-              background: "linear-gradient(135deg, #e8ffe9, #d4ffd6)",
-              border: "1px solid #b3f5b6",
+              background: "#fff8e1",
+              border: "1px solid rgba(245,166,35,0.3)",
               borderRadius: 16, padding: "20px",
-              marginBottom: 28,
+              marginBottom: 16,
             }}>
-              <p style={{ fontSize: 13, color: "#1AEF22", marginBottom: 4 }}>Points earned</p>
-              <p style={{ fontSize: 36, fontWeight: 900, color: "#1AEF22", letterSpacing: -1 }}>
+              <p style={{ fontSize: 13, color: "#e67e22", marginBottom: 4, fontWeight: 600 }}>Pending QLT</p>
+              <p style={{ fontSize: 36, fontWeight: 900, color: "#F5A623", letterSpacing: -1 }}>
                 +{task.reward.toLocaleString()} QLT
               </p>
-              <p style={{ fontSize: 12, color: "#6b6b6b", marginTop: 4 }}>≈ ₦{(task.reward / 100).toFixed(2)} cash value</p>
+              <p style={{ fontSize: 12, color: "#6b6b6b", marginTop: 4 }}>≈ ₦{(task.reward / 100).toFixed(2)} • Awaiting review</p>
+            </div>
+            <div style={{ background: "#f5f5f5", borderRadius: 12, padding: "12px 16px", marginBottom: 24, textAlign: "left" }}>
+              <p style={{ fontSize: 12, color: "#555", lineHeight: 1.7 }}>
+                All tasks are verified before listing. Your earnings are tracked transparently and the conversion rate is fixed at <strong>100 QLT = ₦1</strong>.
+              </p>
             </div>
             <button onClick={onClose} style={{
               width: "100%", background: "linear-gradient(135deg, #1AEF22, #06B517)",
@@ -177,7 +182,7 @@ export default function TaskModal({ task, onClose, onComplete }: Props) {
               fontWeight: 800, fontSize: 15, cursor: "pointer",
               boxShadow: "0 6px 20px rgba(26,239,34,0.3)",
             }}>
-              Back to Tasks
+              Complete Another Task
             </button>
           </div>
         )}

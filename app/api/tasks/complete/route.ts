@@ -2,15 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { sql } from "@/lib/db";
 import { verifyProof } from "@/lib/verifyProof";
-
-// Level thresholds by total tasks completed
-function calcLevel(totalTasks: number): number {
-  if (totalTasks >= 50) return 5;
-  if (totalTasks >= 30) return 4;
-  if (totalTasks >= 15) return 3;
-  if (totalTasks >= 5)  return 2;
-  return 1;
-}
+import { checkDailyCap, updateStreak, XP_REWARDS } from "@/lib/missionEngine";
 
 export async function POST(req: NextRequest) {
   try {
@@ -31,13 +23,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Proof of completion is required" }, { status: 400 });
     }
 
-    // Auto-verify proof
+    // Verify proof
     const verification = await verifyProof(proofType, proofValue ?? "", task.title);
     if (!verification.valid) {
       return NextResponse.json({ error: verification.reason }, { status: 422 });
     }
 
-    // Permanent check
+    // Duplicate check
     const already = await sql`
       SELECT id FROM completions WHERE user_id = ${session.userId} AND task_id = ${taskId}
     `;
@@ -45,26 +37,47 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "You have already completed this task." }, { status: 409 });
     }
 
-    // Check budget — if total_budget > 0 and budget_used >= total_budget, task is exhausted
+    // Budget check
     const budget = Number(task.total_budget ?? 0);
     const budgetUsed = Number(task.budget_used ?? 0);
     if (budget > 0 && budgetUsed >= budget) {
-      return NextResponse.json({ error: "This task has reached its completion limit and is no longer available." }, { status: 410 });
+      return NextResponse.json({ error: "This mission has reached its completion limit." }, { status: 410 });
+    }
+
+    // Daily cap check
+    const { allowed, remaining } = await checkDailyCap(session.userId, task.reward);
+    if (!allowed) {
+      return NextResponse.json({
+        error: `Daily earning limit reached. You can earn up to ${remaining} more QLT today. Complete more missions tomorrow or level up to increase your cap.`,
+      }, { status: 429 });
+    }
+
+    // Min level check
+    const minLevel = Number(task.min_level ?? 1);
+    if (minLevel > 1) {
+      const userRows = await sql`SELECT level_id FROM users WHERE id = ${session.userId}`;
+      const userLevelId = Number(userRows[0]?.level_id ?? 1);
+      const levelRows = await sql`SELECT level_number FROM levels WHERE id = ${userLevelId}`;
+      const userLevelNum = Number(levelRows[0]?.level_number ?? 1);
+      if (userLevelNum < minLevel) {
+        return NextResponse.json({ error: `This mission requires Level ${minLevel}. Keep completing missions to level up.` }, { status: 403 });
+      }
     }
 
     const storedProof = proofValue?.startsWith("data:image")
       ? "[screenshot uploaded]"
       : (proofValue ?? null);
 
+    const missionType = task.mission_type ?? "engagement";
+    const xpReward = task.xp_reward ?? XP_REWARDS[missionType] ?? 10;
+
+    // Insert completion (pending admin approval)
     await sql`
-      INSERT INTO completions (user_id, task_id, proof_value)
-      VALUES (${session.userId}, ${taskId}, ${storedProof})
+      INSERT INTO completions (user_id, task_id, proof_value, status, xp_awarded, qlt_awarded)
+      VALUES (${session.userId}, ${taskId}, ${storedProof}, 'pending', ${xpReward}, ${task.reward})
     `;
 
-    // Credit balance
-    await sql`UPDATE users SET balance = balance + ${task.reward} WHERE id = ${session.userId}`;
-
-    // Increment budget_used and auto-deactivate if exhausted
+    // Increment budget_used
     if (budget > 0) {
       await sql`UPDATE tasks SET budget_used = budget_used + ${task.reward} WHERE id = ${taskId}`;
       await sql`
@@ -73,42 +86,21 @@ export async function POST(req: NextRequest) {
       `;
     }
 
-    // Record transaction
-    await sql`
-      INSERT INTO transactions (user_id, type, amount, label)
-      VALUES (${session.userId}, 'credit', ${task.reward}, ${"Task: " + task.title})
-    `;
-
-    // Update streak — if last_active was yesterday increment, if today keep, else reset to 1
-    const today = new Date().toISOString().split("T")[0];
-    const yesterday = new Date(Date.now() - 86400000).toISOString().split("T")[0];
-    const userRows = await sql`SELECT balance, streak, last_active, level FROM users WHERE id = ${session.userId}`;
-    const user = userRows[0];
-    const lastActive = user.last_active ? new Date(user.last_active).toISOString().split("T")[0] : null;
-    const newStreak = lastActive === yesterday ? user.streak + 1
-      : lastActive === today ? user.streak
-      : 1;
-
-    // Update level based on total tasks completed
-    const countRows = await sql`SELECT COUNT(*)::int AS total FROM completions WHERE user_id = ${session.userId}`;
-    const newLevel = calcLevel(countRows[0].total);
-
-    await sql`
-      UPDATE users
-      SET streak = ${newStreak}, last_active = ${today}, level = ${newLevel}
-      WHERE id = ${session.userId}
-    `;
+    // Update streak on submission
+    const { newStreak } = await updateStreak(session.userId);
 
     return NextResponse.json({
       ok: true,
+      pending: true,
       reward: task.reward,
-      newBalance: user.balance + task.reward,
+      xpReward,
+      missionType,
       newStreak,
-      newLevel,
+      message: "Submission received. Your QLT and XP will be credited after review.",
     });
 
   } catch (err) {
-    console.error("Task complete error:", err);
+    console.error("Mission complete error:", err);
     return NextResponse.json({ error: "Server error. Please try again." }, { status: 500 });
   }
 }

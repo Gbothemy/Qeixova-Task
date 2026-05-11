@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import BottomNav from "@/components/BottomNav";
 import BankAccountsModal from "@/components/BankAccountsModal";
 import { useAuth } from "@/lib/useAuth";
@@ -10,7 +11,10 @@ interface Profile {
   referral_code: string; tasks_completed: number;
   tasks_today: number; total_earned: number;
   total_withdrawn: number; referral_count: number;
-  created_at: string;
+  created_at: string; trust_level: string;
+  approved_count: number; rejected_count: number;
+  xp?: number; trust_score?: number; level_name?: string;
+  badge_color?: string; milestones_claimed?: number;
 }
 
 type ModalType = "edit" | "password" | "notifications" | "support" | "terms" | null;
@@ -228,7 +232,7 @@ function SupportModal({ onClose }: { onClose: () => void }) {
 function TermsModal({ onClose }: { onClose: () => void }) {
   const [view, setView] = useState<"menu" | "terms" | "privacy" | "refund">("menu");
   const content: Record<string, { title: string; body: string }> = {
-    terms: { title: "Terms of Service", body: `Welcome to Qeixova. By using our platform you agree to these terms.\n\n1. ELIGIBILITY\nYou must be at least 18 years old and a resident of Nigeria.\n\n2. EARNING & REWARDS\n100 QLT = ₦1. Points have no cash value until converted via withdrawal.\n\n3. TASK COMPLETION\nComplete tasks honestly. Fraudulent submissions result in account suspension.\n\n4. WITHDRAWALS\nMinimum withdrawal is 100,000 QLT (₦1,000). Processed within 24 hours.\n\n5. REFERRALS\nYou earn 5,000 QLT per referral. Referral abuse results in termination.\n\n6. CHANGES\nWe may update these terms at any time.` },
+    terms: { title: "Terms of Service", body: `Welcome to Qeixova. By using our platform you agree to these terms.\n\n1. ELIGIBILITY\nYou must be at least 18 years old and a resident of Nigeria.\n\n2. EARNING & REWARDS\n100 QLT = ₦1. Points have no cash value until converted via withdrawal.\n\n3. TASK COMPLETION\nComplete tasks honestly. Fraudulent submissions result in account suspension.\n\n4. WITHDRAWALS\nMinimum withdrawal is 100,000 QLT (₦1,000). Processed within 24 hours.\n\n5. REFERRALS\nYou earn 2,500 QLT per referral signup plus 10% of their task earnings. Referral abuse results in termination.\n\n6. CHANGES\nWe may update these terms at any time.` },
     privacy: { title: "Privacy Policy", body: `Qeixova is committed to protecting your personal information.\n\n1. DATA WE COLLECT\nName, email, phone number, and task completion data.\n\n2. HOW WE USE YOUR DATA\nTo manage your account and process withdrawals. We do not sell your data.\n\n3. DATA SECURITY\nAll data is encrypted. Passwords are hashed using bcrypt.\n\n4. YOUR RIGHTS\nRequest deletion by contacting qeixova@gmail.com.` },
     refund: { title: "Refund Policy", body: `Qeixova does not charge users any fees.\n\n1. NO DEPOSITS\nQeixova does not require any deposits or payments.\n\n2. WITHDRAWAL DISPUTES\nIf a withdrawal is not received within 48 hours, contact support.\n\n3. POINT DISPUTES\nContact support within 7 days of the transaction.` },
   };
@@ -286,47 +290,57 @@ export default function ProfilePage() {
   const patchProfile = (updates: Partial<Profile>) => setProfile(p => p ? { ...p, ...updates } : p);
 
   const stats = profile ? [
-    { label: "Tasks Today", value: String(profile.tasks_today), icon: "📅" },
-    { label: "Total Tasks", value: String(profile.tasks_completed), icon: "✅" },
-    { label: "Total Earned", value: profile.total_earned >= 1000 ? `${(profile.total_earned / 1000).toFixed(0)}k QLT` : `${profile.total_earned} QLT`, icon: "⭐" },
-    { label: "Withdrawn", value: profile.total_withdrawn >= 1000 ? `${(profile.total_withdrawn / 1000).toFixed(0)}k QLT` : `${profile.total_withdrawn} QLT`, icon: "💸" },
-    { label: "Balance", value: `${profile.balance.toLocaleString()} QLT`, icon: "💰" },
-    { label: "Referrals", value: String(profile.referral_count), icon: "👥" },
+    { label: "Tasks Today",    value: String(profile.tasks_today),    icon: "/icon-task.png" },
+    { label: "Total Tasks",    value: String(profile.tasks_completed), icon: "/icon-task.png" },
+    { label: "Total Earned",   value: profile.total_earned >= 1000 ? `${(profile.total_earned / 1000).toFixed(0)}k QLT` : `${profile.total_earned} QLT`, icon: "/icon-wallet.png" },
+    { label: "Withdrawn",      value: profile.total_withdrawn >= 1000 ? `${(profile.total_withdrawn / 1000).toFixed(0)}k QLT` : `${profile.total_withdrawn} QLT`, icon: "/icon-wallet.png" },
+    { label: "Balance",        value: `${profile.balance.toLocaleString()} QLT`, icon: "/icon-wallet.png" },
+    { label: "Referrals",      value: String(profile.referral_count), icon: "/icon-profile.png" },
   ] : [];
 
   const menuItems = [
-    { icon: "🏦", label: "Bank Accounts", sub: "Add & manage withdrawal accounts", action: () => setShowBankModal(true) },
-    { icon: "✏️", label: "Edit Profile", sub: "Update your name & phone", action: () => setModal("edit") },
-    { icon: "🔒", label: "Change Password", sub: "Update your account password", action: () => setModal("password") },
-    { icon: "🔔", label: "Notifications", sub: "Task alerts & updates", action: () => setModal("notifications") },
-    { icon: "💬", label: "Support", sub: "Get help anytime", action: () => setModal("support") },
-    { icon: "📄", label: "Terms & Privacy", sub: "Legal information", action: () => setModal("terms") },
+    { icon: "/icon-bank.svg",          label: "Bank Accounts",   sub: "Add & manage withdrawal accounts",  action: () => setShowBankModal(true) },
+    { icon: "/icon-edit-profile.svg",  label: "Edit Profile",    sub: "Update your name & phone",           action: () => setModal("edit") },
+    { icon: "/icon-password.svg",      label: "Change Password", sub: "Update your account password",       action: () => setModal("password") },
+    { icon: "/icon-notifications.svg", label: "Notifications",   sub: "Task alerts & updates",              action: () => setModal("notifications") },
+    { icon: "/icon-support.svg",       label: "Support",         sub: "Get help anytime",                   action: () => setModal("support") },
+    { icon: "/icon-terms.svg",         label: "Terms & Privacy", sub: "Legal information",                  action: () => setModal("terms") },
   ];
 
   return (
     <div className="page-body" style={{ background: "#000000", minHeight: "100vh" }}>
       {/* Header */}
-      <div className="page-header" style={{ background: "linear-gradient(160deg, #1AEF22 0%, #06B517 100%)", padding: "52px 20px 40px", textAlign: "center", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", top: -60, right: -60, width: 200, height: 200, borderRadius: "50%", background: "rgba(0,0,0,0.08)" }} />
+      <div className="page-header" style={{ background: "#0a0a0a", borderBottom: "1px solid #222222", padding: "52px 20px 40px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: -60, right: -60, width: 200, height: 200, borderRadius: "50%", background: "rgba(26,239,34,0.03)" }} />
         <div style={{ position: "relative", display: "inline-block", marginBottom: 14 }}>
-          <div style={{ width: 80, height: 80, borderRadius: "50%", background: "linear-gradient(135deg, #F5A623, #d89420)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 34, boxShadow: "0 6px 20px rgba(245,166,35,0.4)", border: "3px solid rgba(0,0,0,0.15)" }}>
+          <div style={{ width: 80, height: 80, borderRadius: "50%", background: "linear-gradient(135deg, #F5A623, #d89420)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 34, boxShadow: "0 6px 20px rgba(245,166,35,0.4)", border: "3px solid #1a1a1a" }}>
             {profile?.full_name ? profile.full_name.charAt(0).toUpperCase() : "👤"}
           </div>
-          <div style={{ position: "absolute", bottom: 0, right: 0, width: 14, height: 14, borderRadius: "50%", background: "#4ade80", border: "2px solid #06B517" }} />
+          <div style={{ position: "absolute", bottom: 0, right: 0, width: 14, height: 14, borderRadius: "50%", background: "#1AEF22", border: "2px solid #0a0a0a" }} />
         </div>
-        <p style={{ color: "#000", fontSize: 22, fontWeight: 800, letterSpacing: -0.5 }}>{profile?.full_name ?? "Loading..."}</p>
-        <p style={{ color: "rgba(0,0,0,0.55)", fontSize: 13, marginTop: 3 }}>{profile?.email}</p>
-        {profile?.phone && <p style={{ color: "rgba(0,0,0,0.45)", fontSize: 12, marginTop: 2 }}>{profile.phone}</p>}
-        {profile?.created_at && <p style={{ color: "rgba(0,0,0,0.35)", fontSize: 11, marginTop: 4 }}>Member since {timeAgo(profile.created_at)}</p>}
+        <p style={{ color: "#F5F5F5", fontSize: 22, fontWeight: 800, letterSpacing: -0.5 }}>{profile?.full_name ?? "Loading..."}</p>
+        <p style={{ color: "#888888", fontSize: 13, marginTop: 3 }}>{profile?.email}</p>
+        {profile?.phone && <p style={{ color: "#666666", fontSize: 12, marginTop: 2 }}>{profile.phone}</p>}
+        {profile?.created_at && <p style={{ color: "#555555", fontSize: 11, marginTop: 4 }}>Member since {timeAgo(profile.created_at)}</p>}
         <div style={{ display: "flex", justifyContent: "center", gap: 8, marginTop: 12, flexWrap: "wrap" }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(0,0,0,0.12)", border: "1px solid rgba(0,0,0,0.15)", borderRadius: 20, padding: "6px 16px" }}>
-            <span style={{ fontSize: 14 }}>⭐</span>
-            <span style={{ color: "#000", fontSize: 12, fontWeight: 700 }}>Level {profile?.level ?? 1} — {levelLabel(profile?.level ?? 1)}</span>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: (profile?.badge_color ?? "#888") + "22", border: `1px solid ${profile?.badge_color ?? "#888"}44`, borderRadius: 20, padding: "6px 16px" }}>
+            <span style={{ color: profile?.badge_color ?? "#888", fontSize: 12, fontWeight: 700 }}>L{profile?.level ?? 1} {profile?.level_name ?? "Starter"}</span>
           </div>
+          {profile?.xp !== undefined && (
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(245,166,35,0.08)", border: "1px solid rgba(245,166,35,0.2)", borderRadius: 20, padding: "5px 14px" }}>
+              <span style={{ color: "#F5A623", fontSize: 12, fontWeight: 700 }}>⭐ {profile.xp.toLocaleString()} XP</span>
+            </div>
+          )}
           {profile && profile.streak > 0 && (
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(0,0,0,0.12)", border: "1px solid rgba(0,0,0,0.15)", borderRadius: 20, padding: "5px 14px" }}>
-              <span style={{ fontSize: 14 }}>🔥</span>
-              <span style={{ color: "#000", fontSize: 12, fontWeight: 600 }}>{profile.streak}-day streak</span>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(26,239,34,0.08)", border: "1px solid rgba(26,239,34,0.2)", borderRadius: 20, padding: "5px 14px" }}>
+              <span style={{ color: "#1AEF22", fontSize: 12, fontWeight: 600 }}>🔥 {profile.streak}-day streak</span>
+            </div>
+          )}
+          {profile?.trust_score !== undefined && (
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: profile.trust_score >= 80 ? "rgba(26,239,34,0.08)" : profile.trust_score >= 50 ? "rgba(245,166,35,0.08)" : "rgba(229,62,62,0.08)", border: `1px solid ${profile.trust_score >= 80 ? "rgba(26,239,34,0.2)" : profile.trust_score >= 50 ? "rgba(245,166,35,0.2)" : "rgba(229,62,62,0.2)"}`, borderRadius: 20, padding: "5px 14px" }}>
+              <span style={{ fontSize: 12, fontWeight: 700, color: profile.trust_score >= 80 ? "#1AEF22" : profile.trust_score >= 50 ? "#F5A623" : "#e53e3e" }}>
+                Trust: {profile.trust_score}%
+              </span>
             </div>
           )}
         </div>
@@ -337,7 +351,9 @@ export default function ProfilePage() {
         <div style={{ background: "#111111", borderRadius: 20, padding: "20px", border: "1px solid #222222", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 0 }}>
           {stats.map((s, i) => (
             <div key={i} style={{ textAlign: "center", padding: "12px 8px", borderRight: i % 2 === 0 ? "1px solid #222222" : "none", borderBottom: i < stats.length - 2 ? "1px solid #222222" : "none" }}>
-              <p style={{ fontSize: 18, marginBottom: 4 }}>{s.icon}</p>
+              <div style={{ display: "flex", justifyContent: "center", marginBottom: 4 }}>
+                <Image src={s.icon} alt={s.label} width={20} height={20} style={{ objectFit: "contain", opacity: 0.7 }} />
+              </div>
               <p style={{ fontWeight: 800, fontSize: 15, color: "#1AEF22" }}>{s.value}</p>
               <p style={{ fontSize: 10, color: "#555555", marginTop: 2 }}>{s.label}</p>
             </div>
@@ -345,15 +361,52 @@ export default function ProfilePage() {
         </div>
       </div>
 
+      {/* Approval Feedback */}
+      {profile && (profile.approved_count > 0 || profile.rejected_count > 0) && (
+        <div style={{ padding: "16px 16px 0" }}>
+          <div style={{ background: "#111111", borderRadius: 16, padding: "16px 18px", border: "1px solid #222222" }}>
+            <p style={{ fontSize: 13, fontWeight: 700, color: "#F5F5F5", marginBottom: 12 }}>Task Review Summary</p>
+            <div style={{ display: "flex", gap: 12 }}>
+              <div style={{ flex: 1, background: "rgba(26,239,34,0.06)", borderRadius: 12, padding: "12px", textAlign: "center", border: "1px solid rgba(26,239,34,0.15)" }}>
+                <p style={{ fontSize: 22, fontWeight: 800, color: "#1AEF22" }}>{profile.approved_count}</p>
+                <p style={{ fontSize: 11, color: "#999999", marginTop: 2 }}>Approved</p>
+              </div>
+              <div style={{ flex: 1, background: "rgba(229,62,62,0.06)", borderRadius: 12, padding: "12px", textAlign: "center", border: "1px solid rgba(229,62,62,0.15)" }}>
+                <p style={{ fontSize: 22, fontWeight: 800, color: "#e53e3e" }}>{profile.rejected_count}</p>
+                <p style={{ fontSize: 11, color: "#999999", marginTop: 2 }}>Rejected</p>
+              </div>
+              <div style={{ flex: 1, background: "rgba(245,166,35,0.06)", borderRadius: 12, padding: "12px", textAlign: "center", border: "1px solid rgba(245,166,35,0.15)" }}>
+                <p style={{ fontSize: 22, fontWeight: 800, color: "#F5A623" }}>
+                  {profile.approved_count + profile.rejected_count > 0
+                    ? Math.round((profile.approved_count / (profile.approved_count + profile.rejected_count)) * 100)
+                    : 0}%
+                </p>
+                <p style={{ fontSize: 11, color: "#999999", marginTop: 2 }}>Success Rate</p>
+              </div>
+            </div>
+            {profile.trust_level === "new" && profile.approved_count < 5 && (
+              <p style={{ fontSize: 11, color: "#666666", marginTop: 10, textAlign: "center" }}>
+                Complete {5 - profile.approved_count} more approved task{5 - profile.approved_count !== 1 ? "s" : ""} to become a Trusted User
+              </p>
+            )}
+            {profile.trust_level === "flagged" && (
+              <p style={{ fontSize: 11, color: "#e53e3e", marginTop: 10, textAlign: "center" }}>
+                Your account has been flagged due to high rejection rate. Please review task requirements carefully.
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Referral banner */}
       {profile && (
         <div style={{ padding: "20px 16px 0" }}>
           <div style={{ background: "linear-gradient(135deg, #F5A623 0%, #d89420 100%)", borderRadius: 18, padding: "18px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", boxShadow: "0 6px 20px rgba(245,166,35,0.3)", position: "relative", overflow: "hidden" }}>
             <div style={{ position: "absolute", top: -30, right: -30, width: 100, height: 100, borderRadius: "50%", background: "rgba(0,0,0,0.08)" }} />
             <div>
-              <p style={{ color: "#000", fontWeight: 800, fontSize: 16 }}>Refer & Earn 5,000 QLT</p>
+              <p style={{ color: "#000", fontWeight: 800, fontSize: 16 }}>Refer & Earn 2,500 QLT + 10%</p>
               <p style={{ color: "rgba(0,0,0,0.65)", fontSize: 12, marginTop: 3 }}>Your code: <span style={{ fontWeight: 800, letterSpacing: 1 }}>{profile.referral_code}</span></p>
-              <p style={{ color: "rgba(0,0,0,0.5)", fontSize: 11, marginTop: 2 }}>{profile.referral_count} {profile.referral_count === 1 ? "person" : "people"} joined</p>
+              <p style={{ color: "rgba(0,0,0,0.5)", fontSize: 11, marginTop: 2 }}>{profile.referral_count} {profile.referral_count === 1 ? "person" : "people"} joined • Earn 10% of their earnings</p>
             </div>
             <button onClick={copyCode} style={{ background: "#000", color: "#F5A623", border: "none", borderRadius: 12, padding: "10px 18px", fontWeight: 800, fontSize: 13, cursor: "pointer" }}>
               {copied ? "Copied! ✅" : "Copy 📋"}
@@ -367,7 +420,9 @@ export default function ProfilePage() {
         <div style={{ background: "#111111", borderRadius: 20, overflow: "hidden", border: "1px solid #222222" }}>
           {menuItems.map((item, i) => (
             <div key={i} onClick={item.action} style={{ display: "flex", alignItems: "center", gap: 14, padding: "15px 18px", borderBottom: i < menuItems.length - 1 ? "1px solid #1a1a1a" : "none", cursor: "pointer" }}>
-              <div style={{ width: 40, height: 40, borderRadius: 12, background: "rgba(26,239,34,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>{item.icon}</div>
+              <div style={{ width: 40, height: 40, borderRadius: 12, background: "rgba(26,239,34,0.08)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <Image src={item.icon} alt={item.label} width={22} height={22} style={{ objectFit: "contain" }} />
+              </div>
               <div style={{ flex: 1 }}>
                 <p style={{ fontSize: 14, fontWeight: 600, color: "#F5F5F5" }}>{item.label}</p>
                 <p style={{ fontSize: 12, color: "#555555", marginTop: 1 }}>{item.sub}</p>

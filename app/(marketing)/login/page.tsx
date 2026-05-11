@@ -35,7 +35,7 @@ export default function LoginPage() {
   return (
     <div style={{
       minHeight: "100vh",
-      background: "linear-gradient(160deg, #1AEF22 0%, #06B517 45%, #000000 45%)",
+      background: "#0a0a0a",
       display: "flex", alignItems: "center", justifyContent: "center",
       padding: "24px 16px",
     }}>
@@ -43,19 +43,19 @@ export default function LoginPage() {
       <div style={{
         position: "fixed", top: -80, right: -80,
         width: 320, height: 320, borderRadius: "50%",
-        background: "rgba(245,166,35,0.1)", pointerEvents: "none",
+        background: "rgba(26,239,34,0.03)", pointerEvents: "none",
       }} />
       <div style={{
         position: "fixed", top: 60, left: -60,
         width: 200, height: 200, borderRadius: "50%",
-        background: "rgba(255,255,255,0.06)", pointerEvents: "none",
+        background: "rgba(245,166,35,0.03)", pointerEvents: "none",
       }} />
 
       <div style={{ width: "100%", maxWidth: 440 }}>
 
         {/* Logo */}
         <div style={{ textAlign: "center", marginBottom: 32 }}>
-          <Link href="/landing" style={{ textDecoration: "none", display: "inline-flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
+          <Link href="/" style={{ textDecoration: "none", display: "inline-flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
             <img 
               src="/qeixova-icon.png" 
               alt="Qeixova" 
@@ -195,28 +195,6 @@ export default function LoginPage() {
               ) : "Sign In →"}
             </button>
           </form>
-
-          {/* Divider */}
-          <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "24px 0" }}>
-            <div style={{ flex: 1, height: 1, background: "#222222" }} />
-            <span style={{ fontSize: 12, color: "#555555", fontWeight: 500 }}>or continue with</span>
-            <div style={{ flex: 1, height: 1, background: "#222222" }} />
-          </div>
-
-          {/* Social buttons */}
-          <div style={{ display: "flex", gap: 10 }}>
-            {[{ icon: "🇬", label: "Google" }, { icon: "📘", label: "Facebook" }].map((s) => (
-              <button key={s.label} style={{
-                flex: 1, padding: "11px",
-                background: "#1a1a1a", border: "1.5px solid #333333",
-                borderRadius: 12, cursor: "pointer", fontWeight: 600,
-                fontSize: 13, color: "#F5F5F5",
-                display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-              }}>
-                <span style={{ fontSize: 16 }}>{s.icon}</span> {s.label}
-              </button>
-            ))}
-          </div>
         </div>
 
         {/* Footer note */}

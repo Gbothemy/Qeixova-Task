@@ -15,6 +15,8 @@ export async function GET() {
       totalTaskRows,
       totalEarnRows,
       withdrawnRows,
+      pendingRows,
+      rejectedRows,
     ] = await Promise.all([
 
       // Current balance
@@ -69,11 +71,34 @@ export async function GET() {
         WHERE user_id = ${session.userId}
           AND type = 'debit'
       `,
+
+      // Pending QLT (submitted but not yet approved)
+      sql`
+        SELECT COALESCE(SUM(t.reward), 0)::int AS total, COUNT(*)::int AS count
+        FROM completions c
+        JOIN tasks t ON t.id = c.task_id
+        WHERE c.user_id = ${session.userId}
+          AND c.status = 'pending'
+      `,
+
+      // Rejected completions (to show user)
+      sql`
+        SELECT c.rejection_reason, t.title, c.completed_at
+        FROM completions c
+        JOIN tasks t ON t.id = c.task_id
+        WHERE c.user_id = ${session.userId}
+          AND c.status = 'rejected'
+        ORDER BY c.completed_at DESC
+        LIMIT 5
+      `,
     ]);
 
     return NextResponse.json({
       balance:           userRows[0]?.balance ?? 0,
       transactions:      txRows,
+      pending_qlt:       pendingRows[0]?.total ?? 0,
+      pending_count:     pendingRows[0]?.count ?? 0,
+      rejected:          rejectedRows,
       stats: {
         tasks_today:       todayTaskRows[0]?.count ?? 0,
         today_earned:      todayEarnRows[0]?.total ?? 0,
