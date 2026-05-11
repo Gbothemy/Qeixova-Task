@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { sql } from "@/lib/db";
 import { signBusinessToken } from "@/lib/businessAuth";
+import { sendBusinessWelcomeEmail } from "@/lib/email";
 
 export async function POST(req: NextRequest) {
   try {
@@ -20,6 +21,9 @@ export async function POST(req: NextRequest) {
 
     const business = result[0];
     const token = signBusinessToken({ businessId: business.id, email: business.email, name: business.name });
+
+    // Send welcome email (non-blocking)
+    sendBusinessWelcomeEmail(business.email, business.name).catch(() => {});
 
     const res = NextResponse.json({ ok: true, business: { id: business.id, name: business.name, email: business.email } });
     res.cookies.set("business_token", token, {

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { sql } from "@/lib/db";
 import { signToken } from "@/lib/auth";
+import { sendWelcomeEmail } from "@/lib/email";
 
 function makeReferralCode(name: string): string {
   const prefix = name.slice(0, 4).toUpperCase().replace(/\s/g, "");
@@ -60,6 +61,9 @@ export async function POST(req: NextRequest) {
     }
 
     const token = signToken({ userId: user.id, email: user.email, fullName: user.full_name });
+
+    // Send welcome email (non-blocking)
+    sendWelcomeEmail(user.email, user.full_name).catch(() => {});
 
     const res = NextResponse.json({ ok: true, user: { id: user.id, email: user.email, fullName: user.full_name } });
     res.cookies.set("auth_token", token, {

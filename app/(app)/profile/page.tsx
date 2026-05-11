@@ -408,9 +408,22 @@ export default function ProfilePage() {
               <p style={{ color: "rgba(0,0,0,0.65)", fontSize: 12, marginTop: 3 }}>Your code: <span style={{ fontWeight: 800, letterSpacing: 1 }}>{profile.referral_code}</span></p>
               <p style={{ color: "rgba(0,0,0,0.5)", fontSize: 11, marginTop: 2 }}>{profile.referral_count} {profile.referral_count === 1 ? "person" : "people"} joined • Earn 10% of their earnings</p>
             </div>
-            <button onClick={copyCode} style={{ background: "#000", color: "#F5A623", border: "none", borderRadius: 12, padding: "10px 18px", fontWeight: 800, fontSize: 13, cursor: "pointer" }}>
-              {copied ? "Copied! ✅" : "Copy 📋"}
-            </button>
+            <div style={{ display: "flex", gap: 8 }}>
+              <button onClick={copyCode} style={{ background: "#000", color: "#F5A623", border: "none", borderRadius: 12, padding: "10px 18px", fontWeight: 800, fontSize: 13, cursor: "pointer" }}>
+                {copied ? "Copied! ✅" : "Copy 📋"}
+              </button>
+              <button onClick={() => {
+                const url = `${window.location.origin}/register?ref=${profile.referral_code}`;
+                if (navigator.share) {
+                  navigator.share({ title: "Join Qeixova", text: "Earn QLT by completing missions!", url });
+                } else {
+                  navigator.clipboard.writeText(url);
+                  setCopied(true); setTimeout(() => setCopied(false), 2000);
+                }
+              }} style={{ background: "rgba(0,0,0,0.15)", color: "#000", border: "none", borderRadius: 12, padding: "10px 14px", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
+                Share 🔗
+              </button>
+            </div>
           </div>
         </div>
       )}

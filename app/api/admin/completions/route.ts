@@ -3,6 +3,7 @@ import { checkAdminAuth } from "@/lib/adminAuth";
 import { sql } from "@/lib/db";
 import { awardXP, checkMilestones, updateTrustScore } from "@/lib/missionEngine";
 import { log } from "@/lib/auditLog";
+import { sendMissionApprovedEmail, sendMissionRejectedEmail } from "@/lib/email";
 
 export async function GET(req: NextRequest) {
   if (!await checkAdminAuth(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -124,6 +125,12 @@ export async function PATCH(req: NextRequest) {
         await log(completion.user_id, "level_up", { newLevel, newXP }, "user", completion.user_id);
       }
 
+      // 8. Email notification (non-blocking)
+      const userEmail = await sql`SELECT email, full_name FROM users WHERE id = ${completion.user_id}`;
+      if (userEmail.length > 0) {
+        sendMissionApprovedEmail(userEmail[0].email, userEmail[0].full_name, completion.task_title, reward).catch(() => {});
+      }
+
       return NextResponse.json({
         ok: true,
         message: "Approved — QLT and XP credited",
@@ -154,6 +161,12 @@ export async function PATCH(req: NextRequest) {
     await log(completion.user_id, "mission_rejected", {
       completionId, reason, trustScore,
     }, "completion", completionId);
+
+    // Email notification (non-blocking)
+    const userEmail = await sql`SELECT email, full_name FROM users WHERE id = ${completion.user_id}`;
+    if (userEmail.length > 0) {
+      sendMissionRejectedEmail(userEmail[0].email, userEmail[0].full_name, completion.task_title, reason).catch(() => {});
+    }
 
     return NextResponse.json({ ok: true, message: "Rejected", trustScore });
   }

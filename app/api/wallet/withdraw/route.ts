@@ -1,6 +1,7 @@
 ﻿import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { sql } from "@/lib/db";
+import { sendWithdrawalRequestedEmail } from "@/lib/email";
 
 export async function POST(req: NextRequest) {
   const session = await getSession();
@@ -43,7 +44,9 @@ export async function POST(req: NextRequest) {
     VALUES (${session.userId}, 'debit', ${amt}, ${"Withdrawal to " + bankLabel}, 'pending')
   `;
 
-  const updated = await sql`SELECT balance FROM users WHERE id = ${session.userId}`;
+  const updated = await sql`SELECT balance, email, full_name FROM users WHERE id = ${session.userId}`;
+  // Send withdrawal confirmation email (non-blocking)
+  sendWithdrawalRequestedEmail(updated[0].email, updated[0].full_name, amt, bankLabel).catch(() => {});
   return NextResponse.json({ ok: true, newBalance: updated[0].balance });
 }
 

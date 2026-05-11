@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sql } from "@/lib/db";
 import jwt from "jsonwebtoken";
+import { sendPasswordResetEmail } from "@/lib/email";
 
 const SECRET = process.env.JWT_SECRET || "fallback-secret";
 
@@ -20,17 +21,15 @@ export async function POST(req: NextRequest) {
     // Generate a short-lived reset token (15 min)
     const token = jwt.sign({ userId: user.id, purpose: "reset" }, SECRET, { expiresIn: "15m" });
 
-    // In production you'd send an email here via SendGrid/Resend/etc.
-    // For now, log the reset link so it can be used during development
-    const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/reset-password?token=${token}`;
-    console.log(`[Password Reset] ${user.email} → ${resetUrl}`);
-
-    // Store token in DB so it can be validated
+    // Store token in DB
     await sql`
       INSERT INTO password_resets (user_id, token, expires_at)
       VALUES (${user.id}, ${token}, NOW() + INTERVAL '15 minutes')
       ON CONFLICT (user_id) DO UPDATE SET token = ${token}, expires_at = NOW() + INTERVAL '15 minutes'
     `;
+
+    // Send reset email
+    await sendPasswordResetEmail(user.email, user.full_name, token);
 
     return NextResponse.json({ ok: true });
   } catch (err) {

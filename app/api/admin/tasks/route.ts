@@ -8,6 +8,7 @@
  */
 import { NextRequest, NextResponse } from "next/server";
 import { sql } from "@/lib/db";
+import { sendCampaignLiveEmail } from "@/lib/email";
 
 const ADMIN_SECRET = process.env.ADMIN_SECRET ?? "qeixova-admin-2025";
 
@@ -76,7 +77,20 @@ export async function PATCH(req: NextRequest) {
       else if (key === "max_screenshots") await sql`UPDATE tasks SET max_screenshots = ${fields[key]} WHERE id = ${id}`;
       else if (key === "total_budget")   await sql`UPDATE tasks SET total_budget = ${fields[key]} WHERE id = ${id}`;
       else if (key === "task_link")      await sql`UPDATE tasks SET task_link = ${fields[key]} WHERE id = ${id}`;
-      else if (key === "is_active")      await sql`UPDATE tasks SET is_active = ${fields[key]} WHERE id = ${id}`;
+      else if (key === "is_active") {
+        await sql`UPDATE tasks SET is_active = ${fields[key]} WHERE id = ${id}`;
+        // If activating a business task, notify the business
+        if (fields[key] === true) {
+          const taskInfo = await sql`
+            SELECT t.title, b.email, b.name FROM tasks t
+            LEFT JOIN businesses b ON b.id = t.business_id
+            WHERE t.id = ${id}
+          `;
+          if (taskInfo.length > 0 && taskInfo[0].email) {
+            sendCampaignLiveEmail(taskInfo[0].email, taskInfo[0].name, taskInfo[0].title).catch(() => {});
+          }
+        }
+      }
       else if (key === "mission_type")   await sql`UPDATE tasks SET mission_type = ${fields[key]} WHERE id = ${id}`;
       else if (key === "xp_reward")      await sql`UPDATE tasks SET xp_reward = ${fields[key]} WHERE id = ${id}`;
       else if (key === "min_level")      await sql`UPDATE tasks SET min_level = ${fields[key]} WHERE id = ${id}`;

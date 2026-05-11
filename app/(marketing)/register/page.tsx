@@ -16,6 +16,8 @@ export default function RegisterPage() {
   const [showPass, setShowPass] = useState(false);
   const [showConfirmPass, setShowConfirmPass] = useState(false);
 
+  const [termsAccepted, setTermsAccepted] = useState(false);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!form.fullName || !form.email || !form.password || !form.confirmPassword) {
@@ -24,6 +26,10 @@ export default function RegisterPage() {
     }
     if (form.password !== form.confirmPassword) {
       setError("Passwords do not match.");
+      return;
+    }
+    if (!termsAccepted) {
+      setError("Please accept the Terms of Service to continue.");
       return;
     }
     setError("");
@@ -262,13 +268,13 @@ export default function RegisterPage() {
 
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || !termsAccepted}
               style={{
-                background: loading ? "#a0a0a0" : "linear-gradient(135deg, #1AEF22, #06B517)",
-                color: "#fff", border: "none",
+                background: loading ? "#a0a0a0" : !termsAccepted ? "#333" : "linear-gradient(135deg, #1AEF22, #06B517)",
+                color: !termsAccepted ? "#666" : "#fff", border: "none",
                 borderRadius: 14, padding: "15px",
-                fontWeight: 800, fontSize: 15, cursor: loading ? "not-allowed" : "pointer",
-                boxShadow: loading ? "none" : "0 6px 20px rgba(26,239,34,0.35)",
+                fontWeight: 800, fontSize: 15, cursor: (loading || !termsAccepted) ? "not-allowed" : "pointer",
+                boxShadow: (loading || !termsAccepted) ? "none" : "0 6px 20px rgba(26,239,34,0.35)",
                 transition: "all 0.2s", marginTop: 4,
                 display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
               }}
@@ -280,6 +286,18 @@ export default function RegisterPage() {
                 </>
               ) : "Create Account →"}
             </button>
+
+            {/* Terms checkbox */}
+            <div style={{ display: "flex", alignItems: "flex-start", gap: 10, marginTop: 12 }}>
+              <input type="checkbox" id="terms" checked={termsAccepted} onChange={e => setTermsAccepted(e.target.checked)}
+                style={{ marginTop: 2, accentColor: "#1AEF22", width: 16, height: 16, cursor: "pointer", flexShrink: 0 }} />
+              <label htmlFor="terms" style={{ fontSize: 12, color: "#555", lineHeight: 1.5, cursor: "pointer" }}>
+                I agree to the{" "}
+                <Link href="/#" style={{ color: "#1AEF22", textDecoration: "none", fontWeight: 600 }}>Terms of Service</Link>
+                {" "}and{" "}
+                <Link href="/#" style={{ color: "#1AEF22", textDecoration: "none", fontWeight: 600 }}>Privacy Policy</Link>
+              </label>
+            </div>
           </form>
         </div>
 
