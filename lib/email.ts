@@ -1,25 +1,37 @@
 /**
- * Email service — uses Resend when RESEND_API_KEY is set,
- * falls back to console logging in development.
- * To enable: add RESEND_API_KEY to your .env
+ * Email service — uses Gmail SMTP via nodemailer.
+ * Requires GMAIL_USER and GMAIL_APP_PASSWORD env vars.
  */
+import nodemailer from "nodemailer";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://qeixov.vercel.app";
-const FROM_EMAIL = process.env.EMAIL_FROM ?? "noreply@qeixova.com";
-const RESEND_KEY = process.env.RESEND_API_KEY;
+const GMAIL_USER = process.env.GMAIL_USER;
+const GMAIL_PASS = process.env.GMAIL_APP_PASSWORD;
+
+function getTransporter() {
+  if (!GMAIL_USER || !GMAIL_PASS) return null;
+  return nodemailer.createTransport({
+    service: "gmail",
+    auth: { user: GMAIL_USER, pass: GMAIL_PASS },
+  });
+}
 
 async function sendEmail(to: string, subject: string, html: string): Promise<void> {
-  if (!RESEND_KEY) {
-    // Dev fallback — log to console
-    console.log(`\n📧 [EMAIL] To: ${to}\nSubject: ${subject}\n${html.replace(/<[^>]+>/g, "").trim().slice(0, 300)}\n`);
+  const transporter = getTransporter();
+  if (!transporter) {
+    console.log(`\n📧 [EMAIL - no credentials] To: ${to} | Subject: ${subject}\n`);
     return;
   }
-
-  await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { "Authorization": `Bearer ${RESEND_KEY}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ from: `Qeixova <${FROM_EMAIL}>`, to, subject, html }),
-  });
+  try {
+    await transporter.sendMail({
+      from: `"Qeixova" <${GMAIL_USER}>`,
+      to,
+      subject,
+      html,
+    });
+  } catch (err) {
+    console.error("[EMAIL ERROR]", err);
+  }
 }
 
 // ── Templates ────────────────────────────────────────────────────────────────
