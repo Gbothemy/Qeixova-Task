@@ -58,15 +58,15 @@ export default function LandingPage() {
     <div style={{ background: "#000000", color: "#F5F5F5", overflowX: "hidden" }}>
 
       {/* Nav */}
-      <nav style={{ position: "sticky", top: 0, zIndex: 100, background: "rgba(0,0,0,0.95)", backdropFilter: "blur(12px)", borderBottom: "1px solid #1a1a1a", padding: "0 5vw", display: "flex", alignItems: "center", justifyContent: "space-between", height: 64 }}>
+      <nav style={{ position: "sticky", top: 0, zIndex: 100, background: "rgba(0,0,0,0.95)", backdropFilter: "blur(12px)", borderBottom: "1px solid #1a1a1a", padding: "0 5vw", display: "flex", alignItems: "center", justifyContent: "space-between", height: 60 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <Image src="/qeixova-icon.png" alt="Qeixova" width={36} height={36} style={{ borderRadius: 10, objectFit: "contain" }} />
-          <span style={{ fontWeight: 800, fontSize: 18, letterSpacing: -0.5 }}>Qeixova</span>
+          <Image src="/qeixova-icon.png" alt="Qeixova" width={32} height={32} style={{ borderRadius: 9, objectFit: "contain" }} />
+          <span style={{ fontWeight: 800, fontSize: 17, letterSpacing: -0.5 }}>Qeixova</span>
         </div>
-        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-          <Link href="/login" style={{ fontSize: 13, fontWeight: 600, color: "#1AEF22", textDecoration: "none", padding: "8px 14px" }}>Log in</Link>
-          <Link href="/business/login" style={{ fontSize: 13, fontWeight: 600, color: "#888", textDecoration: "none", padding: "8px 14px" }}>Business</Link>
-          <Link href="/register" style={{ fontSize: 13, fontWeight: 700, color: "#000", textDecoration: "none", padding: "9px 18px", background: "linear-gradient(135deg, #1AEF22, #06B517)", borderRadius: 10, boxShadow: "0 4px 14px rgba(26,239,34,0.3)" }}>Get Started</Link>
+        <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
+          <Link href="/login" style={{ fontSize: 13, fontWeight: 600, color: "#1AEF22", textDecoration: "none", padding: "8px 12px", whiteSpace: "nowrap" }}>Log in</Link>
+          <Link href="/business/login" style={{ fontSize: 13, fontWeight: 600, color: "#666", textDecoration: "none", padding: "8px 12px", whiteSpace: "nowrap" }}>Business</Link>
+          <Link href="/register" style={{ fontSize: 13, fontWeight: 700, color: "#000", textDecoration: "none", padding: "9px 16px", background: "linear-gradient(135deg, #1AEF22, #06B517)", borderRadius: 9, boxShadow: "0 4px 14px rgba(26,239,34,0.3)", whiteSpace: "nowrap" }}>Get Started</Link>
         </div>
       </nav>
 
