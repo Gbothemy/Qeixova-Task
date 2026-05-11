@@ -6,7 +6,7 @@ import Image from "next/image";
 const nav = [
   { href: "/dashboard",   label: "Home",     icon: "/icon-home.png" },
   { href: "/tasks",       label: "Missions", icon: "/icon-task.png" },
-  { href: "/leaderboard", label: "Ranks",    icon: "/icon-survey.png" },
+  { href: "/leaderboard", label: "Ranks",    icon: "/icon-leaderboard.svg" },
   { href: "/wallet",      label: "Wallet",   icon: "/icon-wallet.png" },
   { href: "/profile",     label: "Profile",  icon: "/icon-profile.png" },
 ];
