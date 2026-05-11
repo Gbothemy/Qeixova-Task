@@ -2,53 +2,29 @@
 import { useEffect, useState, useCallback } from "react";
 
 interface Task {
-  id: number;
-  title: string;
-  category: string;
-  reward: number;
-  duration: string;
-  proof_type: string;
-  max_screenshots: number;
-  is_active: boolean;
-  total_budget: number;
-  budget_used: number;
+  id: number; title: string; category: string; reward: number;
+  duration: string; proof_type: string; max_screenshots: number;
+  is_active: boolean; total_budget: number; budget_used: number;
+  mission_type: string; xp_reward: number; min_level: number;
+  task_link?: string;
 }
 
 const EMPTY_FORM = {
-  title: "",
-  category: "",
-  reward: "",
-  duration: "5 min",
-  icon: "📋",
-  color: "#e8f5e9",
-  instructions: "",
-  steps: "",
-  proof_type: "screenshot",
-  proof_label: "Upload screenshot as proof",
-  max_screenshots: "1",
-  total_budget: "0",
-  task_link: "",
+  title: "", category: "", reward: "", duration: "5 min",
+  icon: "📋", color: "#e8f5e9", instructions: "", steps: "",
+  proof_type: "screenshot", proof_label: "Upload screenshot as proof",
+  max_screenshots: "1", total_budget: "0", task_link: "",
+  mission_type: "engagement", xp_reward: "10", min_level: "1",
 };
 
-const TH: React.CSSProperties = {
-  padding: "12px 16px",
-  textAlign: "left",
-  fontSize: 12,
-  fontWeight: 600,
-  color: "#888",
-  textTransform: "uppercase",
-  letterSpacing: 0.5,
-  borderBottom: "1px solid #eee",
-  whiteSpace: "nowrap",
+const MISSION_COLORS: Record<string, { bg: string; color: string }> = {
+  engagement:    { bg: "#e3f2fd", color: "#1565c0" },
+  participation: { bg: "#fff8e1", color: "#e67e22" },
+  premium:       { bg: "#f3e5f5", color: "#7b1fa2" },
 };
 
-const TD: React.CSSProperties = {
-  padding: "14px 16px",
-  fontSize: 14,
-  color: "#333",
-  borderBottom: "1px solid #f5f5f5",
-  verticalAlign: "middle",
-};
+const TH: React.CSSProperties = { padding: "10px 14px", textAlign: "left", fontSize: 11, fontWeight: 700, color: "#888", textTransform: "uppercase", letterSpacing: 0.5, borderBottom: "1px solid #eee", whiteSpace: "nowrap" };
+const TD: React.CSSProperties = { padding: "12px 14px", fontSize: 13, color: "#333", borderBottom: "1px solid #f5f5f5", verticalAlign: "middle" };
 
 export default function TasksPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -62,40 +38,27 @@ export default function TasksPage() {
   const fetchTasks = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/admin/tasks", {
-        headers: { "x-admin-key": "qeixova-admin-2025" },
-      });
+      const res = await fetch("/api/admin/tasks", { headers: { "x-admin-key": "qeixova-admin-2025" } });
       const data = await res.json();
       setTasks(data.tasks ?? []);
-    } finally {
-      setLoading(false);
-    }
+    } finally { setLoading(false); }
   }, []);
 
   useEffect(() => { fetchTasks(); }, [fetchTasks]);
 
-  function openAdd() {
-    setEditTask(null);
-    setForm(EMPTY_FORM);
-    setShowModal(true);
-  }
+  function openAdd() { setEditTask(null); setForm(EMPTY_FORM); setShowModal(true); }
 
   function openEdit(t: Task) {
     setEditTask(t);
     setForm({
-      title: t.title,
-      category: t.category,
-      reward: String(t.reward),
-      duration: t.duration,
-      icon: "📋",
-      color: "#e8f5e9",
-      instructions: "",
-      steps: "",
-      proof_type: t.proof_type,
-      proof_label: "Upload screenshot as proof",
-      max_screenshots: String(t.max_screenshots),
-      total_budget: String(t.total_budget ?? 0),
-      task_link: (t as Task & { task_link?: string }).task_link ?? "",
+      title: t.title, category: t.category, reward: String(t.reward),
+      duration: t.duration, icon: "📋", color: "#e8f5e9", instructions: "", steps: "",
+      proof_type: t.proof_type, proof_label: "Upload screenshot as proof",
+      max_screenshots: String(t.max_screenshots), total_budget: String(t.total_budget ?? 0),
+      task_link: t.task_link ?? "",
+      mission_type: t.mission_type ?? "engagement",
+      xp_reward: String(t.xp_reward ?? 10),
+      min_level: String(t.min_level ?? 1),
     });
     setShowModal(true);
   }
@@ -105,253 +68,155 @@ export default function TasksPage() {
     try {
       const payload = {
         ...form,
-        reward: Number(form.reward),
-        max_screenshots: Number(form.max_screenshots),
-        total_budget: Number(form.total_budget),
-        task_link: form.task_link.trim(),
+        reward: Number(form.reward), max_screenshots: Number(form.max_screenshots),
+        total_budget: Number(form.total_budget), task_link: form.task_link.trim(),
+        xp_reward: Number(form.xp_reward), min_level: Number(form.min_level),
         steps: form.steps ? form.steps.split("\n").filter(Boolean) : [],
       };
       if (editTask) {
-        await fetch("/api/admin/tasks", {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json", "x-admin-key": "qeixova-admin-2025" },
-          body: JSON.stringify({ id: editTask.id, ...payload }),
-        });
+        await fetch("/api/admin/tasks", { method: "PATCH", headers: { "Content-Type": "application/json", "x-admin-key": "qeixova-admin-2025" }, body: JSON.stringify({ id: editTask.id, ...payload }) });
       } else {
-        await fetch("/api/admin/tasks", {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "x-admin-key": "qeixova-admin-2025" },
-          body: JSON.stringify(payload),
-        });
+        await fetch("/api/admin/tasks", { method: "POST", headers: { "Content-Type": "application/json", "x-admin-key": "qeixova-admin-2025" }, body: JSON.stringify(payload) });
       }
       setShowModal(false);
       fetchTasks();
-    } finally {
-      setSaving(false);
-    }
+    } finally { setSaving(false); }
   }
 
   async function toggleActive(t: Task) {
     setActionLoading(t.id);
     try {
-      await fetch("/api/admin/tasks", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json", "x-admin-key": "qeixova-admin-2025" },
-        body: JSON.stringify({ id: t.id, is_active: !t.is_active }),
-      });
+      await fetch("/api/admin/tasks", { method: "PATCH", headers: { "Content-Type": "application/json", "x-admin-key": "qeixova-admin-2025" }, body: JSON.stringify({ id: t.id, is_active: !t.is_active }) });
       fetchTasks();
-    } finally {
-      setActionLoading(null);
-    }
+    } finally { setActionLoading(null); }
   }
 
-  const inputStyle: React.CSSProperties = {
-    width: "100%",
-    padding: "9px 12px",
-    border: "1.5px solid #e0e0e0",
-    borderRadius: 7,
-    fontSize: 13,
-    outline: "none",
-    boxSizing: "border-box",
-  };
-
-  const labelStyle: React.CSSProperties = {
-    display: "block",
-    fontSize: 12,
-    fontWeight: 600,
-    color: "#555",
-    marginBottom: 5,
-  };
+  const inp: React.CSSProperties = { width: "100%", padding: "9px 12px", border: "1.5px solid #e0e0e0", borderRadius: 7, fontSize: 13, outline: "none", boxSizing: "border-box" };
+  const lbl: React.CSSProperties = { display: "block", fontSize: 11, fontWeight: 700, color: "#555", marginBottom: 5, textTransform: "uppercase", letterSpacing: 0.4 };
 
   return (
     <div>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
         <div>
-          <h1 style={{ margin: "0 0 4px", fontSize: 26, fontWeight: 700, color: "#1A1A1A" }}>Tasks</h1>
-          <p style={{ margin: 0, color: "#888", fontSize: 14 }}>{tasks.length} tasks total</p>
+          <h1 style={{ margin: "0 0 4px", fontSize: 24, fontWeight: 700, color: "#1A1A1A" }}>Missions</h1>
+          <p style={{ margin: 0, color: "#888", fontSize: 13 }}>{tasks.length} missions total</p>
         </div>
-        <button
-          onClick={openAdd}
-          style={{
-            padding: "10px 20px",
-            background: "#1AEF22",
-            color: "#fff",
-            border: "none",
-            borderRadius: 8,
-            fontSize: 14,
-            fontWeight: 600,
-            cursor: "pointer",
-          }}
-        >
-          + Add New Task
+        <button onClick={openAdd} style={{ padding: "9px 18px", background: "#1AEF22", color: "#000", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
+          + Add Mission
         </button>
       </div>
 
-      <div className="admin-table-wrap" style={{ background: "#fff", borderRadius: 12, boxShadow: "0 2px 8px rgba(0,0,0,0.06)", overflow: "auto" }}>
-        <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 800 }}>
+      <div style={{ background: "#fff", borderRadius: 12, boxShadow: "0 2px 8px rgba(0,0,0,0.06)", overflow: "auto" }}>
+        <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 900 }}>
           <thead>
             <tr style={{ background: "#fafafa" }}>
               <th style={TH}>ID</th>
               <th style={TH}>Title</th>
+              <th style={TH}>Type</th>
               <th style={TH}>Category</th>
-              <th style={TH}>Reward (QLT)</th>
-              <th style={TH}>Duration</th>
-              <th style={TH}>Proof Type</th>
-              <th style={TH}>Budget (QLT)</th>
-              <th style={TH}>Budget Used</th>
+              <th style={TH}>Reward</th>
+              <th style={TH}>XP</th>
+              <th style={TH}>Min Lvl</th>
+              <th style={TH}>Budget</th>
               <th style={TH}>Status</th>
               <th style={TH}>Actions</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
-              <tr>
-                <td colSpan={9} style={{ ...TD, textAlign: "center", color: "#aaa", padding: 40 }}>Loading...</td>
-              </tr>
+              <tr><td colSpan={10} style={{ ...TD, textAlign: "center", color: "#aaa", padding: 40 }}>Loading…</td></tr>
             ) : tasks.length === 0 ? (
-              <tr>
-                <td colSpan={9} style={{ ...TD, textAlign: "center", color: "#aaa", padding: 40 }}>No tasks found</td>
-              </tr>
-            ) : (
-              tasks.map((t) => (
+              <tr><td colSpan={10} style={{ ...TD, textAlign: "center", color: "#aaa", padding: 40 }}>No missions found</td></tr>
+            ) : tasks.map(t => {
+              const mt = MISSION_COLORS[t.mission_type ?? "engagement"] ?? MISSION_COLORS.engagement;
+              return (
                 <tr key={t.id}>
-                  <td style={TD}>{t.id}</td>
-                  <td style={{ ...TD, fontWeight: 500, maxWidth: 200 }}>{t.title}</td>
+                  <td style={{ ...TD, color: "#aaa" }}>{t.id}</td>
+                  <td style={{ ...TD, fontWeight: 500, maxWidth: 180 }}>{t.title}</td>
+                  <td style={TD}><span style={{ display: "inline-block", padding: "2px 8px", borderRadius: 10, fontSize: 11, fontWeight: 700, background: mt.bg, color: mt.color }}>{t.mission_type ?? "engagement"}</span></td>
                   <td style={TD}>{t.category}</td>
-                  <td style={TD}>{Number(t.reward).toLocaleString()}</td>
-                  <td style={TD}>{t.duration}</td>
-                  <td style={TD}>{t.proof_type}</td>
+                  <td style={{ ...TD, fontWeight: 600 }}>{Number(t.reward).toLocaleString()}</td>
+                  <td style={TD}>{t.xp_reward ?? 10}</td>
+                  <td style={TD}>L{t.min_level ?? 1}</td>
                   <td style={TD}>
                     {t.total_budget > 0 ? (
                       <div>
                         <div style={{ fontSize: 12, fontWeight: 600 }}>{Number(t.total_budget).toLocaleString()}</div>
-                        <div style={{ height: 4, background: "#f0f0f0", borderRadius: 2, marginTop: 4, width: 80 }}>
+                        <div style={{ height: 4, background: "#f0f0f0", borderRadius: 2, marginTop: 3, width: 60 }}>
                           <div style={{ height: "100%", borderRadius: 2, background: t.budget_used >= t.total_budget ? "#cc0000" : "#1AEF22", width: `${Math.min(100, (t.budget_used / t.total_budget) * 100)}%` }} />
                         </div>
                       </div>
-                    ) : <span style={{ color: "#aaa", fontSize: 12 }}>Unlimited</span>}
-                  </td>
-                  <td style={TD}>
-                    {t.total_budget > 0 ? (
-                      <span style={{ fontSize: 12 }}>{Number(t.budget_used).toLocaleString()} / {Number(t.total_budget).toLocaleString()}</span>
                     ) : <span style={{ color: "#aaa", fontSize: 12 }}>∞</span>}
                   </td>
                   <td style={TD}>
-                    <span
-                      style={{
-                        display: "inline-block",
-                        padding: "3px 10px",
-                        borderRadius: 20,
-                        fontSize: 12,
-                        fontWeight: 600,
-                        background: t.is_active ? "#e8f5e9" : "#f5f5f5",
-                        color: t.is_active ? "#2e7d32" : "#999",
-                      }}
-                    >
+                    <span style={{ display: "inline-block", padding: "2px 8px", borderRadius: 10, fontSize: 11, fontWeight: 700, background: t.is_active ? "#e8f5e9" : "#f5f5f5", color: t.is_active ? "#2e7d32" : "#999" }}>
                       {t.is_active ? "Active" : "Inactive"}
                     </span>
                   </td>
                   <td style={TD}>
-                    <div style={{ display: "flex", gap: 8 }}>
-                      <button
-                        onClick={() => openEdit(t)}
-                        style={{
-                          padding: "5px 12px",
-                          borderRadius: 6,
-                          border: "1px solid #1AEF22",
-                          background: "transparent",
-                          color: "#1AEF22",
-                          cursor: "pointer",
-                          fontSize: 12,
-                          fontWeight: 600,
-                        }}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => toggleActive(t)}
-                        disabled={actionLoading === t.id}
-                        style={{
-                          padding: "5px 12px",
-                          borderRadius: 6,
-                          border: "none",
-                          background: t.is_active ? "#e67e22" : "#1AEF22",
-                          color: "#fff",
-                          cursor: "pointer",
-                          fontSize: 12,
-                          fontWeight: 600,
-                          opacity: actionLoading === t.id ? 0.6 : 1,
-                        }}
-                      >
-                        {t.is_active ? "Deactivate" : "Activate"}
+                    <div style={{ display: "flex", gap: 6 }}>
+                      <button onClick={() => openEdit(t)} style={{ padding: "5px 10px", borderRadius: 6, border: "1px solid #1AEF22", background: "transparent", color: "#1AEF22", cursor: "pointer", fontSize: 11, fontWeight: 700 }}>Edit</button>
+                      <button onClick={() => toggleActive(t)} disabled={actionLoading === t.id}
+                        style={{ padding: "5px 10px", borderRadius: 6, border: "none", background: t.is_active ? "#e67e22" : "#1AEF22", color: "#fff", cursor: "pointer", fontSize: 11, fontWeight: 700, opacity: actionLoading === t.id ? 0.6 : 1 }}>
+                        {t.is_active ? "Pause" : "Activate"}
                       </button>
                     </div>
                   </td>
                 </tr>
-              ))
-            )}
+              );
+            })}
           </tbody>
         </table>
       </div>
 
-      {/* Modal */}
       {showModal && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,0.5)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 200,
-          }}
-          onClick={(e) => { if (e.target === e.currentTarget) setShowModal(false); }}
-        >
-          <div
-            style={{
-              background: "#fff",
-              borderRadius: 16,
-              padding: 32,
-              width: "100%",
-              maxWidth: 560,
-              maxHeight: "90vh",
-              overflowY: "auto",
-            }}
-          >
-            <h2 style={{ margin: "0 0 24px", fontSize: 20, fontWeight: 700, color: "#1A1A1A" }}>
-              {editTask ? "Edit Task" : "Add New Task"}
-            </h2>
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 200 }}
+          onClick={e => { if (e.target === e.currentTarget) setShowModal(false); }}>
+          <div style={{ background: "#fff", borderRadius: 16, padding: 28, width: "100%", maxWidth: 560, maxHeight: "90vh", overflowY: "auto" }}>
+            <h2 style={{ margin: "0 0 20px", fontSize: 18, fontWeight: 700 }}>{editTask ? "Edit Mission" : "Add New Mission"}</h2>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+              {/* Mission type */}
+              <div>
+                <label style={lbl}>Mission Type *</label>
+                <select style={inp} value={form.mission_type} onChange={e => {
+                  const mt = e.target.value;
+                  const xp = mt === "premium" ? "50" : mt === "participation" ? "25" : "10";
+                  const ml = mt === "premium" ? "2" : "1";
+                  setForm(f => ({ ...f, mission_type: mt, xp_reward: xp, min_level: ml }));
+                }}>
+                  <option value="engagement">Engagement (low value)</option>
+                  <option value="participation">Participation (medium)</option>
+                  <option value="premium">Premium (high value)</option>
+                </select>
+              </div>
+              <div>
+                <label style={lbl}>Category *</label>
+                <input style={inp} value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value }))} placeholder="Social Media, Survey…" />
+              </div>
               <div style={{ gridColumn: "1 / -1" }}>
-                <label style={labelStyle}>Task Link (URL) <span style={{ color: "#aaa", fontWeight: 400 }}>� where users go to perform the task</span></label>
-                <input style={{ ...inputStyle, borderColor: form.task_link ? "#1AEF22" : undefined }} type="url" value={form.task_link} onChange={(e) => setForm({ ...form, task_link: e.target.value })} placeholder="https://facebook.com/... or https://x.com/..." />
-                {form.task_link && (
-                  <a href={form.task_link} target="_blank" rel="noopener noreferrer" style={{ fontSize: 11, color: "#1AEF22", marginTop: 4, display: "inline-block" }}>
-                    🔗 Preview link
-                  </a>
-                )}
-              </div>
-              <div style={{ gridColumn: "1 / -1" }}>
-                <label style={labelStyle}>Title *</label>
-                <input style={inputStyle} value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
+                <label style={lbl}>Title *</label>
+                <input style={inp} value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} />
               </div>
               <div>
-                <label style={labelStyle}>Category *</label>
-                <input style={inputStyle} value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} placeholder="Social Media, Survey..." />
+                <label style={lbl}>Reward (QLT) *</label>
+                <input style={inp} type="number" value={form.reward} onChange={e => setForm(f => ({ ...f, reward: e.target.value }))} />
               </div>
               <div>
-                <label style={labelStyle}>Reward (QLT) *</label>
-                <input style={inputStyle} type="number" value={form.reward} onChange={(e) => setForm({ ...form, reward: e.target.value })} />
+                <label style={lbl}>XP Reward</label>
+                <input style={inp} type="number" value={form.xp_reward} onChange={e => setForm(f => ({ ...f, xp_reward: e.target.value }))} />
               </div>
               <div>
-                <label style={labelStyle}>Duration</label>
-                <input style={inputStyle} value={form.duration} onChange={(e) => setForm({ ...form, duration: e.target.value })} placeholder="5 min" />
+                <label style={lbl}>Min Level (1–5)</label>
+                <input style={inp} type="number" min={1} max={5} value={form.min_level} onChange={e => setForm(f => ({ ...f, min_level: e.target.value }))} />
               </div>
               <div>
-                <label style={labelStyle}>Proof Type</label>
-                <select style={inputStyle} value={form.proof_type} onChange={(e) => setForm({ ...form, proof_type: e.target.value })}>
+                <label style={lbl}>Duration</label>
+                <input style={inp} value={form.duration} onChange={e => setForm(f => ({ ...f, duration: e.target.value }))} placeholder="5 min" />
+              </div>
+              <div>
+                <label style={lbl}>Proof Type</label>
+                <select style={inp} value={form.proof_type} onChange={e => setForm(f => ({ ...f, proof_type: e.target.value }))}>
                   <option value="screenshot">Screenshot</option>
                   <option value="url">URL</option>
                   <option value="text">Text</option>
@@ -359,67 +224,32 @@ export default function TasksPage() {
                 </select>
               </div>
               <div>
-                <label style={labelStyle}>Max Screenshots</label>
-                <input style={inputStyle} type="number" min="1" value={form.max_screenshots} onChange={(e) => setForm({ ...form, max_screenshots: e.target.value })} />
-              </div>
-              <div>
-                <label style={labelStyle}>Total Budget (QLT)</label>
-                <input style={inputStyle} type="number" min="0" value={form.total_budget} onChange={(e) => setForm({ ...form, total_budget: e.target.value })} placeholder="0 = unlimited" />
-                <p style={{ fontSize: 11, color: "#aaa", marginTop: 4 }}>Set to 0 for unlimited completions. Once total QLT paid out reaches this amount, the task closes automatically.</p>
+                <label style={lbl}>Total Budget (QLT)</label>
+                <input style={inp} type="number" min={0} value={form.total_budget} onChange={e => setForm(f => ({ ...f, total_budget: e.target.value }))} placeholder="0 = unlimited" />
               </div>
               <div style={{ gridColumn: "1 / -1" }}>
-                <label style={labelStyle}>Proof Label</label>
-                <input style={inputStyle} value={form.proof_label} onChange={(e) => setForm({ ...form, proof_label: e.target.value })} />
+                <label style={lbl}>Task Link (URL)</label>
+                <input style={inp} type="url" value={form.task_link} onChange={e => setForm(f => ({ ...f, task_link: e.target.value }))} placeholder="https://…" />
               </div>
               <div style={{ gridColumn: "1 / -1" }}>
-                <label style={labelStyle}>Instructions</label>
-                <textarea
-                  style={{ ...inputStyle, minHeight: 80, resize: "vertical" }}
-                  value={form.instructions}
-                  onChange={(e) => setForm({ ...form, instructions: e.target.value })}
-                />
+                <label style={lbl}>Proof Label</label>
+                <input style={inp} value={form.proof_label} onChange={e => setForm(f => ({ ...f, proof_label: e.target.value }))} />
               </div>
               <div style={{ gridColumn: "1 / -1" }}>
-                <label style={labelStyle}>Steps (one per line)</label>
-                <textarea
-                  style={{ ...inputStyle, minHeight: 80, resize: "vertical" }}
-                  value={form.steps}
-                  onChange={(e) => setForm({ ...form, steps: e.target.value })}
-                  placeholder="Step 1&#10;Step 2&#10;Step 3"
-                />
+                <label style={lbl}>Instructions</label>
+                <textarea style={{ ...inp, minHeight: 70, resize: "vertical" }} value={form.instructions} onChange={e => setForm(f => ({ ...f, instructions: e.target.value }))} />
+              </div>
+              <div style={{ gridColumn: "1 / -1" }}>
+                <label style={lbl}>Steps (one per line)</label>
+                <textarea style={{ ...inp, minHeight: 70, resize: "vertical" }} value={form.steps} onChange={e => setForm(f => ({ ...f, steps: e.target.value }))} placeholder={"Step 1\nStep 2\nStep 3"} />
               </div>
             </div>
 
-            <div style={{ display: "flex", gap: 12, marginTop: 24, justifyContent: "flex-end" }}>
-              <button
-                onClick={() => setShowModal(false)}
-                style={{
-                  padding: "10px 20px",
-                  borderRadius: 8,
-                  border: "1px solid #ddd",
-                  background: "#fff",
-                  cursor: "pointer",
-                  fontSize: 14,
-                }}
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSave}
-                disabled={saving || !form.title || !form.category || !form.reward}
-                style={{
-                  padding: "10px 24px",
-                  borderRadius: 8,
-                  border: "none",
-                  background: "#1AEF22",
-                  color: "#fff",
-                  cursor: "pointer",
-                  fontSize: 14,
-                  fontWeight: 600,
-                  opacity: saving ? 0.7 : 1,
-                }}
-              >
-                {saving ? "Saving..." : editTask ? "Save Changes" : "Create Task"}
+            <div style={{ display: "flex", gap: 10, marginTop: 20, justifyContent: "flex-end" }}>
+              <button onClick={() => setShowModal(false)} style={{ padding: "10px 18px", borderRadius: 8, border: "1px solid #ddd", background: "#fff", cursor: "pointer", fontSize: 13 }}>Cancel</button>
+              <button onClick={handleSave} disabled={saving || !form.title || !form.category || !form.reward}
+                style={{ padding: "10px 22px", borderRadius: 8, border: "none", background: "#1AEF22", color: "#000", cursor: "pointer", fontSize: 13, fontWeight: 700, opacity: saving ? 0.7 : 1 }}>
+                {saving ? "Saving…" : editTask ? "Save Changes" : "Create Mission"}
               </button>
             </div>
           </div>
@@ -428,4 +258,3 @@ export default function TasksPage() {
     </div>
   );
 }
-
