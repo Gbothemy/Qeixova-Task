@@ -46,6 +46,7 @@ export default function LandingPage() {
         </div>
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
           <Link href="/login" style={{ fontSize: 14, fontWeight: 600, color: "#1AEF22", textDecoration: "none", padding: "8px 16px" }}>Log in</Link>
+          <Link href="/business/login" style={{ fontSize: 14, fontWeight: 600, color: "#888", textDecoration: "none", padding: "8px 16px" }}>Business</Link>
           <Link href="/register" style={{ fontSize: 14, fontWeight: 700, color: "#000", textDecoration: "none", padding: "9px 20px", background: "linear-gradient(135deg, #1AEF22, #06B517)", borderRadius: 10, boxShadow: "0 4px 14px rgba(26,239,34,0.3)" }}>Get Started</Link>
         </div>
       </nav>
@@ -128,6 +129,59 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ── For Businesses ── */}
+      <section id="for-businesses" style={{ padding: "80px 5vw", background: "#0a0a0a", borderTop: "1px solid #222" }}>
+        <div style={{ maxWidth: 960, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 52 }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: "#F5A623", letterSpacing: 2, textTransform: "uppercase", background: "rgba(245,166,35,0.1)", borderRadius: 20, padding: "4px 14px" }}>For Businesses</span>
+            <h2 style={{ fontSize: "clamp(26px, 4vw, 42px)", fontWeight: 900, color: "#F5F5F5", marginTop: 14, letterSpacing: -1 }}>Reach real people. Get real results.</h2>
+            <p style={{ fontSize: 16, color: "#b0b0b0", maxWidth: 520, margin: "14px auto 0", lineHeight: 1.7 }}>
+              Post tasks to thousands of verified users. Pay only for completed actions — no wasted ad spend.
+            </p>
+          </div>
+
+          {/* How it works for businesses */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 20, marginBottom: 48 }}>
+            {[
+              { icon: "📋", title: "Create a Task", desc: "Define what you need — a follow, a survey, an app install, a review. Set your reward per completion.", color: "rgba(245,166,35,0.1)" },
+              { icon: "🎯", title: "Target Your Audience", desc: "Filter by age, gender, state, interests, and platforms. Reach exactly who matters to your brand.", color: "rgba(26,239,34,0.1)" },
+              { icon: "✅", title: "Get Verified Results", desc: "Every submission is reviewed. You only pay for approved completions — no bots, no fakes.", color: "rgba(245,166,35,0.1)" },
+              { icon: "📊", title: "Track in Real Time", desc: "Monitor submissions, approvals, and campaign progress from your business dashboard.", color: "rgba(26,239,34,0.1)" },
+            ].map(item => (
+              <div key={item.title} style={{ background: "#111111", borderRadius: 20, padding: "28px 22px", border: "1px solid #222222" }}>
+                <div style={{ width: 52, height: 52, borderRadius: 14, background: item.color, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26, marginBottom: 16 }}>
+                  {item.icon}
+                </div>
+                <h3 style={{ fontWeight: 800, fontSize: 15, color: "#F5F5F5", marginBottom: 8 }}>{item.title}</h3>
+                <p style={{ fontSize: 13, color: "#b0b0b0", lineHeight: 1.6 }}>{item.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA banner */}
+          <div style={{ background: "linear-gradient(135deg, #1a1200, #1a1a1a)", border: "1px solid rgba(245,166,35,0.25)", borderRadius: 20, padding: "36px 32px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 24 }}>
+            <div>
+              <p style={{ fontSize: 20, fontWeight: 800, color: "#F5F5F5", marginBottom: 8 }}>Ready to launch your first campaign?</p>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 16 }}>
+                {["Pay per completion", "Verified users only", "Full audience control"].map(t => (
+                  <span key={t} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#b0b0b0" }}>
+                    <span style={{ color: "#F5A623" }}>✓</span> {t}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+              <Link href="/business/register" style={{ background: "linear-gradient(135deg, #F5A623, #d89420)", color: "#000", textDecoration: "none", padding: "13px 28px", borderRadius: 12, fontWeight: 800, fontSize: 15, boxShadow: "0 6px 20px rgba(245,166,35,0.35)", whiteSpace: "nowrap" }}>
+                Start for Free →
+              </Link>
+              <Link href="/business/login" style={{ background: "transparent", border: "1.5px solid #333", color: "#888", textDecoration: "none", padding: "13px 24px", borderRadius: 12, fontWeight: 600, fontSize: 14, whiteSpace: "nowrap" }}>
+                Business Login
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section style={{ padding: "80px 5vw", background: "#000000" }}>
         <div style={{ maxWidth: 680, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 48 }}>
@@ -185,8 +239,8 @@ export default function LandingPage() {
               <p style={{ color: "#F5F5F5", fontWeight: 700, fontSize: 13, marginBottom: 16, letterSpacing: 0.3 }}>Quick Links</p>
               {[
                 { label: "How it works", href: "#how-it-works" },
+                { label: "For businesses", href: "#for-businesses" },
                 { label: "Task categories", href: "#" },
-                { label: "Points & rewards", href: "#" },
                 { label: "Referral program", href: "#" },
               ].map(l => (
                 <a key={l.label} href={l.href} style={{ display: "block", fontSize: 13, marginBottom: 10, color: "#888888", textDecoration: "none" }}
