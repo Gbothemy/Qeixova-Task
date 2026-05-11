@@ -10,6 +10,22 @@ interface Stats {
   completions: { total: number; pending: number; approved: number; rejected: number };
 }
 
+function StatCard({ label, value, sub, color, icon }: { label: string; value: number; sub: string; color: string; icon: string }) {
+  return (
+    <div style={{ background: "#0a0a0a", borderRadius: 16, padding: "18px 16px", border: "1px solid #161616", position: "relative", overflow: "hidden" }}>
+      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: color, borderRadius: "16px 16px 0 0" }} />
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+        <div style={{ width: 28, height: 28, borderRadius: 8, background: color + "18", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <Image src={icon} alt={label} width={14} height={14} style={{ objectFit: "contain", opacity: 0.8 }} />
+        </div>
+        <p style={{ fontSize: 11, color: "#444", fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.5 }}>{label}</p>
+      </div>
+      <p style={{ fontSize: 28, fontWeight: 900, color: "#F5F5F5", lineHeight: 1, letterSpacing: -1 }}>{value.toLocaleString()}</p>
+      <p style={{ fontSize: 11, color: "#333", marginTop: 5 }}>{sub}</p>
+    </div>
+  );
+}
+
 export default function BusinessDashboard() {
   const router = useRouter();
   const [business, setBusiness] = useState<{ name: string; email: string; industry: string } | null>(null);
@@ -24,78 +40,91 @@ export default function BusinessDashboard() {
   }, [router]);
 
   if (!business) return (
-    <div style={{ minHeight: "100vh", background: "#000", display: "flex", alignItems: "center", justifyContent: "center" }}>
+    <div style={{ minHeight: "100vh", background: "#050505", display: "flex", alignItems: "center", justifyContent: "center" }}>
       <div style={{ textAlign: "center" }}>
-        <Image src="/qeixova-icon.png" alt="Loading" width={48} height={48} style={{ borderRadius: 12, opacity: 0.5, marginBottom: 12 }} />
-        <p style={{ color: "#444", fontSize: 14 }}>Loading...</p>
+        <div style={{ width: 48, height: 48, border: "3px solid #1a1a1a", borderTopColor: "#F5A623", borderRadius: "50%", margin: "0 auto 16px", animation: "spin 0.8s linear infinite" }} />
+        <p style={{ color: "#333", fontSize: 13 }}>Loading...</p>
       </div>
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   );
 
   const statCards = [
-    { label: "Total Tasks",      value: stats?.tasks.total ?? 0,          sub: `${stats?.tasks.active ?? 0} active`,       color: "#1AEF22", icon: "/icon-task.png" },
-    { label: "Submissions",      value: stats?.completions.total ?? 0,    sub: `${stats?.completions.pending ?? 0} pending`,color: "#F5A623", icon: "/icon-survey.png" },
-    { label: "Approved",         value: stats?.completions.approved ?? 0, sub: "Verified completions",                      color: "#1AEF22", icon: "/icon-wallet.png" },
-    { label: "Rejected",         value: stats?.completions.rejected ?? 0, sub: "Did not qualify",                           color: "#e53e3e", icon: "/icon-app-testing.png" },
+    { label: "Total Campaigns", value: stats?.tasks.total ?? 0,          sub: `${stats?.tasks.active ?? 0} currently active`,  color: "#4a9eff", icon: "/icon-task.png" },
+    { label: "Submissions",     value: stats?.completions.total ?? 0,    sub: `${stats?.completions.pending ?? 0} pending review`,color: "#F5A623", icon: "/icon-survey.png" },
+    { label: "Approved",        value: stats?.completions.approved ?? 0, sub: "Verified completions",                            color: "#1AEF22", icon: "/icon-wallet.png" },
+    { label: "Rejected",        value: stats?.completions.rejected ?? 0, sub: "Did not qualify",                                 color: "#e53e3e", icon: "/icon-app-testing.png" },
   ];
+
+  const approvalRate = stats && (stats.completions.approved + stats.completions.rejected) > 0
+    ? Math.round((stats.completions.approved / (stats.completions.approved + stats.completions.rejected)) * 100)
+    : null;
 
   return (
     <>
       <BusinessSidebar name={business.name} />
       <main className="page-body">
 
-        {/* Header */}
-        <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 28, flexWrap: "wrap" }}>
-          <div style={{ width: 48, height: 48, borderRadius: 14, background: "linear-gradient(135deg, #F5A623, #d89420)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, flexShrink: 0 }}>🏢</div>
-          <div>
-            <h1 style={{ fontSize: 20, fontWeight: 800, color: "#F5F5F5", marginBottom: 2 }}>Welcome back, {business.name}</h1>
-            <p style={{ fontSize: 13, color: "#555" }}>{business.industry || "Business"} · {business.email}</p>
-          </div>
-        </div>
-
-        {/* Stat cards */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: 12, marginBottom: 28 }}>
-          {statCards.map(s => (
-            <div key={s.label} style={{ background: "#0d0d0d", borderRadius: 14, padding: "16px", border: "1px solid #1a1a1a", borderTop: `3px solid ${s.color}` }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-                <Image src={s.icon} alt={s.label} width={16} height={16} style={{ objectFit: "contain", opacity: 0.5 }} />
-                <p style={{ fontSize: 11, color: "#555", fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.4 }}>{s.label}</p>
-              </div>
-              <p style={{ fontSize: 26, fontWeight: 800, color: "#F5F5F5", lineHeight: 1 }}>{s.value.toLocaleString()}</p>
-              <p style={{ fontSize: 11, color: "#444", marginTop: 4 }}>{s.sub}</p>
+        {/* Page header */}
+        <div style={{ marginBottom: 28 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 6 }}>
+            <div style={{ width: 44, height: 44, borderRadius: 13, background: "linear-gradient(135deg, #F5A623, #d89420)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 4px 14px rgba(245,166,35,0.25)" }}>
+              <Image src="/icon-profile.png" alt="Business" width={22} height={22} style={{ objectFit: "contain", filter: "brightness(0)" }} />
             </div>
-          ))}
+            <div>
+              <h1 style={{ fontSize: 20, fontWeight: 800, color: "#F5F5F5", letterSpacing: -0.3 }}>Welcome back, {business.name}</h1>
+              <p style={{ fontSize: 12, color: "#444", marginTop: 2 }}>{business.industry || "Business"} · {business.email}</p>
+            </div>
+          </div>
+          {approvalRate !== null && (
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: approvalRate >= 70 ? "rgba(26,239,34,0.07)" : "rgba(245,166,35,0.07)", border: `1px solid ${approvalRate >= 70 ? "rgba(26,239,34,0.15)" : "rgba(245,166,35,0.15)"}`, borderRadius: 20, padding: "4px 12px", marginTop: 10 }}>
+              <div style={{ width: 6, height: 6, borderRadius: "50%", background: approvalRate >= 70 ? "#1AEF22" : "#F5A623" }} />
+              <span style={{ fontSize: 12, color: approvalRate >= 70 ? "#1AEF22" : "#F5A623", fontWeight: 600 }}>{approvalRate}% approval rate</span>
+            </div>
+          )}
         </div>
 
-        {/* CTA */}
-        <div style={{ background: "linear-gradient(135deg, #0d0d0d, #111)", borderRadius: 18, padding: "24px 20px", border: "1px solid #1a1a1a", position: "relative", overflow: "hidden" }}>
-          <div style={{ position: "absolute", top: -30, right: -30, width: 120, height: 120, borderRadius: "50%", background: "rgba(245,166,35,0.04)" }} />
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16, position: "relative" }}>
+        {/* Stats grid */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: 12, marginBottom: 24 }}>
+          {statCards.map(s => <StatCard key={s.label} {...s} />)}
+        </div>
+
+        {/* CTA banner */}
+        <div style={{ background: "linear-gradient(135deg, #0d0d0d 0%, #111 100%)", borderRadius: 18, padding: "22px 20px", border: "1px solid #1a1a1a", marginBottom: 16, position: "relative", overflow: "hidden" }}>
+          <div style={{ position: "absolute", top: -40, right: -40, width: 140, height: 140, borderRadius: "50%", background: "rgba(245,166,35,0.04)" }} />
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 14, position: "relative" }}>
             <div>
-              <p style={{ fontSize: 16, fontWeight: 800, color: "#F5F5F5", marginBottom: 6 }}>Ready to launch a campaign?</p>
-              <p style={{ fontSize: 13, color: "#555" }}>Create a task and reach your target audience.</p>
+              <p style={{ fontSize: 16, fontWeight: 800, color: "#F5F5F5", marginBottom: 5 }}>Launch a new campaign</p>
+              <p style={{ fontSize: 13, color: "#444" }}>Reach verified users with targeted missions.</p>
             </div>
             <Link href="/business/tasks/new" style={{
               background: "linear-gradient(135deg, #F5A623, #d89420)", color: "#000",
               textDecoration: "none", padding: "11px 22px", borderRadius: 11,
-              fontWeight: 800, fontSize: 14, boxShadow: "0 4px 16px rgba(245,166,35,0.3)",
-              whiteSpace: "nowrap",
+              fontWeight: 800, fontSize: 13, boxShadow: "0 4px 16px rgba(245,166,35,0.28)",
+              whiteSpace: "nowrap", display: "flex", alignItems: "center", gap: 7,
             }}>
-              + Create Task
+              <Image src="/icon-content.png" alt="Create" width={14} height={14} style={{ objectFit: "contain", filter: "brightness(0)" }} />
+              Create Campaign
             </Link>
           </div>
         </div>
 
         {/* Quick links */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: 16 }}>
-          <Link href="/business/tasks" style={{ background: "#0d0d0d", border: "1px solid #1a1a1a", borderRadius: 12, padding: "14px 16px", textDecoration: "none", display: "flex", alignItems: "center", gap: 10 }}>
-            <Image src="/icon-task.png" alt="Tasks" width={20} height={20} style={{ objectFit: "contain", opacity: 0.6 }} />
-            <span style={{ fontSize: 13, fontWeight: 600, color: "#aaa" }}>View Tasks</span>
-          </Link>
-          <Link href="/business/tasks/new" style={{ background: "#0d0d0d", border: "1px solid #1a1a1a", borderRadius: 12, padding: "14px 16px", textDecoration: "none", display: "flex", alignItems: "center", gap: 10 }}>
-            <Image src="/icon-content.png" alt="Create" width={20} height={20} style={{ objectFit: "contain", opacity: 0.6 }} />
-            <span style={{ fontSize: 13, fontWeight: 600, color: "#aaa" }}>New Campaign</span>
-          </Link>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+          {[
+            { href: "/business/tasks",     icon: "/icon-task.png",    label: "View Campaigns",  sub: "Manage all missions" },
+            { href: "/business/tasks/new", icon: "/icon-content.png", label: "New Campaign",    sub: "Launch a mission" },
+          ].map(item => (
+            <Link key={item.href} href={item.href} style={{ background: "#0a0a0a", border: "1px solid #161616", borderRadius: 14, padding: "14px 16px", textDecoration: "none", display: "flex", alignItems: "center", gap: 12, transition: "border-color 0.15s" }}>
+              <div style={{ width: 36, height: 36, borderRadius: 10, background: "#111", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <Image src={item.icon} alt={item.label} width={18} height={18} style={{ objectFit: "contain", opacity: 0.5 }} />
+              </div>
+              <div>
+                <p style={{ fontSize: 13, fontWeight: 700, color: "#ccc" }}>{item.label}</p>
+                <p style={{ fontSize: 11, color: "#333", marginTop: 1 }}>{item.sub}</p>
+              </div>
+            </Link>
+          ))}
         </div>
       </main>
     </>
