@@ -152,7 +152,7 @@ export default function Home() {
               </span>
               {!(user as Record<string, unknown>).canWithdraw && (
                 <span style={{ fontSize: 11, color: "#F5A623", fontWeight: 600 }}>
-                  🔒 Withdrawals unlock at Bronze
+                  🔒 {(500001 - ((user as Record<string, unknown>).total_earned_qlt as number ?? 0)).toLocaleString()} QLT to unlock withdrawals
                 </span>
               )}
             </div>

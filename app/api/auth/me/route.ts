@@ -41,7 +41,7 @@ export async function GET() {
   const qltToNextLevel = nextMin ? Math.max(0, nextMin - totalEarned) : 0;
 
   // Withdrawal eligibility
-  const canWithdraw = levelNumber >= 1 && totalEarned >= 100001;
+  const canWithdraw = levelNumber >= 1 && totalEarned >= 500001;
 
   // Milestones claimed
   const milestoneRows = await sql`SELECT COUNT(*)::int AS claimed FROM user_milestones WHERE user_id = ${session.userId}`;

@@ -81,7 +81,7 @@ export async function canWithdraw(userId: number): Promise<{
   const totalEarned = Number(user?.total_earned_qlt ?? 0);
   const levelNumber = Number(user?.level_number ?? 0);
   const WITHDRAWAL_UNLOCK_LEVEL = 1; // Bronze
-  const WITHDRAWAL_UNLOCK_QLT = 100001;
+  const WITHDRAWAL_UNLOCK_QLT = 500001;
 
   const allowed = levelNumber >= WITHDRAWAL_UNLOCK_LEVEL && totalEarned >= WITHDRAWAL_UNLOCK_QLT;
   const needed = Math.max(0, WITHDRAWAL_UNLOCK_QLT - totalEarned);
