@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminAuth } from "@/lib/adminAuth";
 import { sql } from "@/lib/db";
+import { awardXP, checkMilestones, updateTrustScore } from "@/lib/missionEngine";
 
 export async function GET(req: NextRequest) {
   if (!await checkAdminAuth(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -15,8 +16,10 @@ export async function GET(req: NextRequest) {
   const [completions, countRows] = await Promise.all([
     sql`
       SELECT c.id, c.proof_value, c.completed_at, c.status, c.rejection_reason,
-        u.id AS user_id, u.full_name AS user_name, u.email,
-        t.title AS task_title, t.proof_type, t.category, t.reward
+        c.xp_awarded, c.qlt_awarded,
+        u.id AS user_id, u.full_name AS user_name, u.email, u.trust_score,
+        t.title AS task_title, t.proof_type, t.category, t.reward,
+        t.mission_type, t.xp_reward
       FROM completions c
       JOIN users u ON u.id = c.user_id
       JOIN tasks t ON t.id = c.task_id
@@ -44,9 +47,9 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
 
-  // Get completion details
   const rows = await sql`
-    SELECT c.*, t.reward, u.referred_by
+    SELECT c.*, t.reward, t.mission_type, t.xp_reward, t.title AS task_title,
+           u.referred_by
     FROM completions c
     JOIN tasks t ON t.id = c.task_id
     JOIN users u ON u.id = c.user_id
@@ -61,20 +64,25 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ error: "Already approved" }, { status: 409 });
     }
 
-    // Update status
     await sql`UPDATE completions SET status = 'approved', rejection_reason = NULL WHERE id = ${completionId}`;
 
-    // If was pending (not yet credited), credit the user now
     if (completion.status === "pending") {
-      await sql`UPDATE users SET balance = balance + ${completion.reward} WHERE id = ${completion.user_id}`;
+      const reward = Number(completion.reward);
+      const xpReward = Number(completion.xp_reward ?? completion.xp_awarded ?? 10);
+
+      // Credit QLT balance
+      await sql`UPDATE users SET balance = balance + ${reward}, daily_earned = daily_earned + ${reward} WHERE id = ${completion.user_id}`;
       await sql`
         INSERT INTO transactions (user_id, type, amount, label)
-        VALUES (${completion.user_id}, 'credit', ${completion.reward}, ${"Task Approved: " + completion.task_title})
+        VALUES (${completion.user_id}, 'credit', ${reward}, ${"Mission Approved: " + completion.task_title})
       `;
 
-      // Credit 10% referral bonus
+      // Award XP + level up
+      const { newLevel, leveledUp } = await awardXP(completion.user_id, xpReward);
+
+      // Referral bonus (10%)
       if (completion.referred_by) {
-        const bonus = Math.floor(completion.reward * 0.1);
+        const bonus = Math.floor(reward * 0.1);
         await sql`UPDATE users SET balance = balance + ${bonus} WHERE id = ${completion.referred_by}`;
         await sql`
           INSERT INTO transactions (user_id, type, amount, label)
@@ -82,37 +90,40 @@ export async function PATCH(req: NextRequest) {
         `;
       }
 
-      // Update approved count and trust level
+      // Update approved count
       await sql`UPDATE users SET approved_count = approved_count + 1 WHERE id = ${completion.user_id}`;
-      // Trust tier: new → trusted after 5 approvals with low rejection rate
-      const userStats = await sql`SELECT approved_count, rejected_count FROM users WHERE id = ${completion.user_id}`;
-      const { approved_count, rejected_count } = userStats[0];
-      const total = approved_count + rejected_count;
-      const rejectionRate = total > 0 ? rejected_count / total : 0;
-      if (approved_count >= 5 && rejectionRate < 0.3) {
-        await sql`UPDATE users SET trust_level = 'trusted' WHERE id = ${completion.user_id}`;
-      }
-      if (approved_count >= 20 && rejectionRate < 0.1) {
-        await sql`UPDATE users SET trust_level = 'verified' WHERE id = ${completion.user_id}`;
-      }
+
+      // Update trust score
+      const { trustScore } = await updateTrustScore(completion.user_id);
+
+      // Check milestones
+      const { awarded: milestones } = await checkMilestones(completion.user_id);
+
+      return NextResponse.json({
+        ok: true,
+        message: "Approved and QLT + XP credited",
+        newLevel,
+        leveledUp,
+        trustScore,
+        milestones,
+      });
     }
 
-    return NextResponse.json({ ok: true, message: "Approved and QLT credited" });
+    return NextResponse.json({ ok: true, message: "Approved" });
   }
 
   if (action === "reject") {
-    const reason = rejectionReason?.trim() || "Task not completed correctly";
+    const reason = rejectionReason?.trim() || "Mission not completed correctly";
     await sql`UPDATE completions SET status = 'rejected', rejection_reason = ${reason} WHERE id = ${completionId}`;
-    // Update rejected count and trust level
     await sql`UPDATE users SET rejected_count = rejected_count + 1 WHERE id = ${completion.user_id}`;
-    // Downgrade trust if rejection rate is too high
-    const userStats = await sql`SELECT approved_count, rejected_count FROM users WHERE id = ${completion.user_id}`;
-    const { approved_count, rejected_count } = userStats[0];
-    const total = approved_count + rejected_count;
-    const rejectionRate = total > 0 ? rejected_count / total : 0;
-    if (rejectionRate >= 0.5 && total >= 4) {
+
+    const { trustScore } = await updateTrustScore(completion.user_id);
+
+    // Flag user if trust score drops too low
+    if (trustScore < 50) {
       await sql`UPDATE users SET trust_level = 'flagged' WHERE id = ${completion.user_id}`;
     }
-    return NextResponse.json({ ok: true, message: "Rejected" });
+
+    return NextResponse.json({ ok: true, message: "Rejected", trustScore });
   }
 }
