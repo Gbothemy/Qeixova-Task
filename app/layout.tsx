@@ -4,6 +4,10 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Qeixova — Earn by Doing",
   description: "Complete tasks, earn real money. Social media, surveys, app testing and more.",
+  icons: {
+    icon: "/qeixova-icon.png",
+    apple: "/qeixova-icon.png",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

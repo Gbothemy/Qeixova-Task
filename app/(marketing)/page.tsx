@@ -246,7 +246,7 @@ export default function LandingPage() {
       {/* Final CTA */}
       <section style={{ background: "#050505", borderTop: "1px solid #1a1a1a", padding: "80px 5vw", textAlign: "center" }}>
         <div style={{ position: "relative", display: "inline-block", marginBottom: 20 }}>
-          <Image src="/qeixova-logo.png" alt="Qeixova" width={64} height={64} style={{ objectFit: "contain", borderRadius: 18 }} />
+          <Image src="/qeixova-icon.png" alt="Qeixova" width={64} height={64} style={{ objectFit: "contain", borderRadius: 18 }} />
         </div>
         <h2 style={{ fontSize: "clamp(24px, 5vw, 48px)", fontWeight: 900, color: "#F5F5F5", letterSpacing: -1.5, marginBottom: 14 }}>
           Your participation has value.<br />
