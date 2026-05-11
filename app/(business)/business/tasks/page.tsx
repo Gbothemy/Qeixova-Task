@@ -55,7 +55,7 @@ export default function BusinessTasksPage() {
   return (
     <>
       <BusinessSidebar name={business.name} />
-      <main className="page-body" style={{ padding: "24px 20px" }}>
+      <main className="page-body">
 
         {/* Header */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24, flexWrap: "wrap", gap: 12 }}>

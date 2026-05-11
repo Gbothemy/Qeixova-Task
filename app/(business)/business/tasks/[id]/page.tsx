@@ -58,7 +58,7 @@ export default function TaskDetailPage() {
   return (
     <>
       <BusinessSidebar name={business.name} />
-      <main className="page-body" style={{ padding: "24px 20px" }}>
+      <main className="page-body">
 
         {/* Back + header */}
         <Link href="/business/tasks" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13, color: "#555", textDecoration: "none", marginBottom: 16 }}>
