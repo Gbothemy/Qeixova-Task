@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminAuth } from "@/lib/adminAuth";
 import { sql } from "@/lib/db";
-import { awardXP, checkMilestones, updateTrustScore } from "@/lib/missionEngine";
+import { awardXP, checkMilestones, updateTrustScore, creditQLTAndUpdateLevel } from "@/lib/missionEngine";
 import { log } from "@/lib/auditLog";
 import { sendMissionApprovedEmail, sendMissionRejectedEmail } from "@/lib/email";
 
@@ -88,8 +88,8 @@ export async function PATCH(req: NextRequest) {
         VALUES (${completion.user_id}, 'credit', ${reward}, ${"Mission Approved: " + completion.task_title})
       `;
 
-      // 3. Award XP + level up
-      const { newLevel, leveledUp, newXP } = await awardXP(completion.user_id, xpReward);
+      // 3. Credit QLT + update level based on lifetime earned
+      const { newLevel, leveledUp, levelName, badgeEmoji } = await creditQLTAndUpdateLevel(completion.user_id, reward);
 
       // 4. Referral bonus (10%)
       if (completion.referred_by) {
@@ -112,17 +112,16 @@ export async function PATCH(req: NextRequest) {
       // 6. Check milestones
       const { awarded: milestones } = await checkMilestones(completion.user_id);
 
-      // 7. Audit logs
       await log(completion.user_id, "mission_approved", {
-        completionId, reward, xpReward, newXP, newLevel, leveledUp, trustScore,
+        completionId, reward, newLevel, leveledUp, levelName, trustScore,
       }, "completion", completionId);
 
       await log(completion.user_id, "wallet_credited", {
-        amount: reward, label: "Mission Approved: " + completion.task_title, newBalance: Number(completion.current_balance) + reward,
+        amount: reward, label: "Mission Approved: " + completion.task_title,
       }, "completion", completionId);
 
       if (leveledUp) {
-        await log(completion.user_id, "level_up", { newLevel, newXP }, "user", completion.user_id);
+        await log(completion.user_id, "level_up", { newLevel, levelName, badgeEmoji }, "user", completion.user_id);
       }
 
       // 8. Email notification (non-blocking)

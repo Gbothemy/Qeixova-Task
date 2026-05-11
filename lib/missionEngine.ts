@@ -1,52 +1,98 @@
 /**
- * Mission Engine — Step 2 Business Logic
- * Handles XP, level progression, daily caps, streaks, milestones.
- * Called from task completion and admin approval routes.
+ * Mission Engine — QLT-based level progression
+ * Levels are determined by total_earned_qlt (lifetime), not wallet balance.
+ * Withdrawals unlock at Bronze (level 1, 100,001+ QLT lifetime).
  */
 import { sql } from "@/lib/db";
 
-// ── XP per mission type ──────────────────────────────────────────────────────
 export const XP_REWARDS: Record<string, number> = {
-  engagement:    10,
-  participation: 25,
-  premium:       50,
+  engagement: 0, participation: 0, premium: 0,
 };
 
-// ── Calc level from XP ───────────────────────────────────────────────────────
-export async function getLevelForXP(xp: number): Promise<{ id: number; level_number: number; name: string; daily_cap_qlt: number; badge_color: string }> {
+// ── Get level for a given lifetime QLT amount ────────────────────────────────
+export async function getLevelForQLT(totalEarnedQLT: number): Promise<{
+  id: number; level_number: number; name: string;
+  daily_cap_qlt: number; badge_color: string; badge_emoji: string;
+  min_qlt: number; max_qlt: number | null;
+}> {
   const rows = await sql`
-    SELECT id, level_number, name, daily_cap_qlt, badge_color
+    SELECT id, level_number, name, daily_cap_qlt, badge_color, badge_emoji, min_qlt, max_qlt
     FROM levels
-    WHERE xp_required <= ${xp}
-    ORDER BY xp_required DESC
+    WHERE min_qlt <= ${totalEarnedQLT}
+    ORDER BY min_qlt DESC
     LIMIT 1
   `;
-  return (rows[0] as { id: number; level_number: number; name: string; daily_cap_qlt: number; badge_color: string }) ?? { id: 1, level_number: 1, name: "Starter", daily_cap_qlt: 5000, badge_color: "#888888" };
+  return (rows[0] as typeof rows[0] & { id: number; level_number: number; name: string; daily_cap_qlt: number; badge_color: string; badge_emoji: string; min_qlt: number; max_qlt: number | null }) ?? {
+    id: 1, level_number: 0, name: "Starter", daily_cap_qlt: 10000,
+    badge_color: "#1AEF22", badge_emoji: "🟢", min_qlt: 0, max_qlt: 100000,
+  };
 }
 
-// ── Award XP + update level ──────────────────────────────────────────────────
-export async function awardXP(userId: number, xpAmount: number): Promise<{ newXP: number; newLevel: number; leveledUp: boolean }> {
-  const before = await sql`SELECT xp, level_id FROM users WHERE id = ${userId}`;
-  const oldXP = Number(before[0]?.xp ?? 0);
+// ── Credit QLT and update level ───────────────────────────────────────────────
+export async function creditQLTAndUpdateLevel(
+  userId: number,
+  amount: number,
+): Promise<{ newTotalEarned: number; newLevel: number; leveledUp: boolean; levelName: string; badgeEmoji: string }> {
+  const before = await sql`SELECT total_earned_qlt, level_id FROM users WHERE id = ${userId}`;
+  const oldTotalEarned = Number(before[0]?.total_earned_qlt ?? 0);
   const oldLevelId = Number(before[0]?.level_id ?? 1);
 
-  const newXP = oldXP + xpAmount;
-  const newLevel = await getLevelForXP(newXP);
+  const newTotalEarned = oldTotalEarned + amount;
+
+  // Get current trust score — trust gate for leveling up
+  const trustRows = await sql`SELECT trust_score FROM users WHERE id = ${userId}`;
+  const trustScore = Number(trustRows[0]?.trust_score ?? 100);
+
+  // Find new level — trust must be >= 40 to go above Starter
+  let newLevel = await getLevelForQLT(newTotalEarned);
+  if (newLevel.level_number > 0 && trustScore < 40) {
+    // Trust too low — cap at Starter
+    const starterRows = await sql`SELECT id, level_number, name, daily_cap_qlt, badge_color, badge_emoji, min_qlt, max_qlt FROM levels WHERE level_number = 0 LIMIT 1`;
+    if (starterRows.length > 0) newLevel = starterRows[0] as typeof newLevel;
+  }
 
   await sql`
     UPDATE users
-    SET xp = ${newXP}, total_xp_earned = total_xp_earned + ${xpAmount}, level_id = ${newLevel.id}
+    SET total_earned_qlt = ${newTotalEarned},
+        level_id = ${newLevel.id}
     WHERE id = ${userId}
   `;
 
-  return { newXP, newLevel: newLevel.level_number, leveledUp: newLevel.id !== oldLevelId };
+  return {
+    newTotalEarned,
+    newLevel: newLevel.level_number,
+    leveledUp: newLevel.id !== oldLevelId,
+    levelName: newLevel.name,
+    badgeEmoji: newLevel.badge_emoji,
+  };
+}
+
+// ── Check if user can withdraw ────────────────────────────────────────────────
+export async function canWithdraw(userId: number): Promise<{
+  allowed: boolean; totalEarned: number; needed: number; levelName: string;
+}> {
+  const rows = await sql`
+    SELECT u.total_earned_qlt, l.level_number, l.name
+    FROM users u
+    LEFT JOIN levels l ON l.id = u.level_id
+    WHERE u.id = ${userId}
+  `;
+  const user = rows[0];
+  const totalEarned = Number(user?.total_earned_qlt ?? 0);
+  const levelNumber = Number(user?.level_number ?? 0);
+  const WITHDRAWAL_UNLOCK_LEVEL = 1; // Bronze
+  const WITHDRAWAL_UNLOCK_QLT = 100001;
+
+  const allowed = levelNumber >= WITHDRAWAL_UNLOCK_LEVEL && totalEarned >= WITHDRAWAL_UNLOCK_QLT;
+  const needed = Math.max(0, WITHDRAWAL_UNLOCK_QLT - totalEarned);
+
+  return { allowed, totalEarned, needed, levelName: user?.name ?? "Starter" };
 }
 
 // ── Check + enforce daily earning cap ────────────────────────────────────────
 export async function checkDailyCap(userId: number, rewardAmount: number): Promise<{ allowed: boolean; remaining: number }> {
   const today = new Date().toISOString().split("T")[0];
 
-  // Reset daily counter if it's a new day
   await sql`
     UPDATE users
     SET daily_earned = 0, daily_reset_at = ${today}
@@ -62,9 +108,7 @@ export async function checkDailyCap(userId: number, rewardAmount: number): Promi
 
   const { daily_earned, daily_cap_qlt } = rows[0];
   const remaining = Math.max(0, daily_cap_qlt - Number(daily_earned));
-  const allowed = remaining >= rewardAmount;
-
-  return { allowed, remaining };
+  return { allowed: remaining >= rewardAmount, remaining };
 }
 
 // ── Update streak ─────────────────────────────────────────────────────────────
@@ -85,10 +129,10 @@ export async function updateStreak(userId: number): Promise<{ newStreak: number 
 }
 
 // ── Check and award milestones ────────────────────────────────────────────────
-export async function checkMilestones(userId: number): Promise<{ awarded: Array<{ name: string; bonus_qlt: number; bonus_xp: number }> }> {
-  const awarded: Array<{ name: string; bonus_qlt: number; bonus_xp: number }> = [];
+export async function checkMilestones(userId: number): Promise<{ awarded: Array<{ name: string; bonus_qlt: number }> }> {
+  const awarded: Array<{ name: string; bonus_qlt: number }> = [];
 
-  const userRows = await sql`SELECT xp, total_xp_earned, streak FROM users WHERE id = ${userId}`;
+  const userRows = await sql`SELECT total_earned_qlt, streak FROM users WHERE id = ${userId}`;
   const user = userRows[0];
 
   const totalCompletions = await sql`
@@ -96,7 +140,6 @@ export async function checkMilestones(userId: number): Promise<{ awarded: Array<
   `;
   const total = totalCompletions[0].total;
 
-  // Get all unclaimed milestones
   const milestones = await sql`
     SELECT m.* FROM milestones m
     WHERE NOT EXISTS (
@@ -108,28 +151,17 @@ export async function checkMilestones(userId: number): Promise<{ awarded: Array<
     let triggered = false;
     if (m.trigger_type === 'total_completions' && total >= m.trigger_value) triggered = true;
     if (m.trigger_type === 'streak' && user.streak >= m.trigger_value) triggered = true;
-    if (m.trigger_type === 'total_xp' && user.total_xp_earned >= m.trigger_value) triggered = true;
+    if (m.trigger_type === 'total_xp' && user.total_earned_qlt >= m.trigger_value) triggered = true;
 
     if (triggered) {
-      // Mark as claimed
-      await sql`
-        INSERT INTO user_milestones (user_id, milestone_id) VALUES (${userId}, ${m.id})
-        ON CONFLICT DO NOTHING
-      `;
+      await sql`INSERT INTO user_milestones (user_id, milestone_id) VALUES (${userId}, ${m.id}) ON CONFLICT DO NOTHING`;
 
-      // Award bonuses
       if (m.bonus_qlt > 0) {
-        await sql`UPDATE users SET balance = balance + ${m.bonus_qlt} WHERE id = ${userId}`;
-        await sql`
-          INSERT INTO transactions (user_id, type, amount, label)
-          VALUES (${userId}, 'credit', ${m.bonus_qlt}, ${'Milestone: ' + m.name})
-        `;
-      }
-      if (m.bonus_xp > 0) {
-        await awardXP(userId, m.bonus_xp);
+        await sql`UPDATE users SET balance = balance + ${m.bonus_qlt}, total_earned_qlt = total_earned_qlt + ${m.bonus_qlt} WHERE id = ${userId}`;
+        await sql`INSERT INTO transactions (user_id, type, amount, label) VALUES (${userId}, 'credit', ${m.bonus_qlt}, ${'Milestone: ' + m.name})`;
       }
 
-      awarded.push({ name: m.name, bonus_qlt: m.bonus_qlt, bonus_xp: m.bonus_xp });
+      awarded.push({ name: m.name, bonus_qlt: m.bonus_qlt });
     }
   }
 
@@ -144,10 +176,16 @@ export async function updateTrustScore(userId: number): Promise<{ trustScore: nu
 
   let trustScore = 100;
   if (total >= 3) {
-    const approvalRate = (approved_count ?? 0) / total;
-    trustScore = Math.round(approvalRate * 100);
+    trustScore = Math.round(((approved_count ?? 0) / total) * 100);
   }
 
   await sql`UPDATE users SET trust_score = ${trustScore} WHERE id = ${userId}`;
   return { trustScore };
+}
+
+// Keep awardXP as a no-op for backward compat (XP removed)
+export async function awardXP(userId: number, _xpAmount: number): Promise<{ newXP: number; newLevel: number; leveledUp: boolean }> {
+  const rows = await sql`SELECT level_id FROM users WHERE id = ${userId}`;
+  const levelRows = await sql`SELECT level_number FROM levels WHERE id = ${rows[0]?.level_id ?? 1} LIMIT 1`;
+  return { newXP: 0, newLevel: levelRows[0]?.level_number ?? 0, leveledUp: false };
 }

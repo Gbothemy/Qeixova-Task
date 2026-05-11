@@ -2,6 +2,7 @@
 import { getSession } from "@/lib/auth";
 import { sql } from "@/lib/db";
 import { sendWithdrawalRequestedEmail } from "@/lib/email";
+import { canWithdraw } from "@/lib/missionEngine";
 
 export async function POST(req: NextRequest) {
   const session = await getSession();
@@ -10,11 +11,21 @@ export async function POST(req: NextRequest) {
   const { amount, bank } = await req.json();
   const amt = Number(amount);
 
-  if (!amt || amt < 100000) {
-    return NextResponse.json({ error: "Minimum withdrawal is 100,000 QLT (₦1,000)" }, { status: 400 });
+  if (!amt || amt < 10000) {
+    return NextResponse.json({ error: "Minimum withdrawal is 10,000 QLT (₦100)" }, { status: 400 });
   }
   if (!bank) {
     return NextResponse.json({ error: "Bank account required" }, { status: 400 });
+  }
+
+  // Check withdrawal eligibility (Bronze level required)
+  const { allowed, totalEarned, needed } = await canWithdraw(session.userId);
+  if (!allowed) {
+    return NextResponse.json({
+      error: `Withdrawals unlock at Bronze level. You need ${needed.toLocaleString()} more QLT lifetime earnings. Currently at ${totalEarned.toLocaleString()} QLT.`,
+      needed,
+      totalEarned,
+    }, { status: 403 });
   }
 
   const userRows = await sql`SELECT balance FROM users WHERE id = ${session.userId}`;
