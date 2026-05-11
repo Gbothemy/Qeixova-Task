@@ -38,8 +38,8 @@ export async function POST(req: NextRequest) {
     const myCode = makeReferralCode(fullName);
 
     const result = await sql`
-      INSERT INTO users (email, phone, full_name, password, referral_code, referred_by, balance)
-      VALUES (${email}, ${phone || null}, ${fullName}, ${hashed}, ${myCode}, ${referrerId}, 0)
+      INSERT INTO users (email, phone, full_name, password, referral_code, referred_by, balance, level_id)
+      VALUES (${email}, ${phone || null}, ${fullName}, ${hashed}, ${myCode}, ${referrerId}, 0, 1)
       RETURNING id, email, full_name
     `;
 
