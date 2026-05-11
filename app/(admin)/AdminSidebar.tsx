@@ -6,9 +6,11 @@ import { useState, useEffect } from "react";
 const NAV = [
   { href: "/admin",             label: "Dashboard",   icon: "📊" },
   { href: "/admin/users",       label: "Users",       icon: "👥" },
-  { href: "/admin/tasks",       label: "Tasks",       icon: "📋" },
+  { href: "/admin/tasks",       label: "Missions",    icon: "📋" },
   { href: "/admin/withdrawals", label: "Withdrawals", icon: "💸" },
-  { href: "/admin/completions", label: "Completions", icon: "✅" },
+  { href: "/admin/completions", label: "Submissions",  icon: "✅" },
+  { href: "/admin/logs",        label: "Audit Logs",  icon: "🔍" },
+  { href: "/admin/config",      label: "Economy",     icon: "⚙️" },
 ];
 
 export default function AdminSidebar() {
