@@ -15,10 +15,10 @@ interface WalletData {
 }
 
 const categories = [
-  { icon: "/icon-social-media.jpg", label: "Social Media", color: "rgba(26,239,34,0.1)",  earn: "10k–15k QLT" },
-  { icon: "/icon-survey.png",      label: "Surveys",      color: "rgba(245,166,35,0.1)", earn: "35k–50k QLT" },
-  { icon: "/icon-app-testing.png", label: "App Testing",  color: "rgba(26,239,34,0.1)",  earn: "80k–120k QLT" },
-  { icon: "/icon-content.png",     label: "AI Testing",   color: "rgba(245,166,35,0.1)", earn: "18k–20k QLT" },
+  { icon: "/icon-social-media.jpg", label: "Engagement",    color: "rgba(74,158,255,0.1)",  earn: "10k–15k QLT", badge: "#4a9eff" },
+  { icon: "/icon-survey.png",       label: "Participation", color: "rgba(245,166,35,0.1)",  earn: "35k–50k QLT", badge: "#F5A623" },
+  { icon: "/icon-app-testing.png",  label: "Premium",       color: "rgba(192,132,252,0.1)", earn: "80k–120k QLT", badge: "#c084fc" },
+  { icon: "/icon-content.png",      label: "AI Testing",    color: "rgba(26,239,34,0.1)",   earn: "18k–20k QLT", badge: "#1AEF22" },
 ];
 
 function timeAgo(dateStr: string) {
@@ -108,8 +108,8 @@ export default function Home() {
             <div style={{ background: "#111111", borderRadius: 18, padding: "18px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16, border: "1px solid #1AEF22", position: "relative", overflow: "hidden" }}>
               <div style={{ position: "absolute", top: -30, right: -30, width: 100, height: 100, borderRadius: "50%", background: "rgba(26,239,34,0.05)" }} />
               <div style={{ flex: 1 }}>
-                <p style={{ color: "#F5F5F5", fontWeight: 800, fontSize: 16, marginBottom: 4 }}>Complete your first task</p>
-                <p style={{ color: "#888888", fontSize: 13 }}>Start earning QLT — tasks take 1–10 minutes</p>
+                <p style={{ color: "#F5F5F5", fontWeight: 800, fontSize: 16, marginBottom: 4 }}>Complete your first mission</p>
+                <p style={{ color: "#888888", fontSize: 13 }}>Start earning QLT — missions take 1–10 minutes</p>
               </div>
               <div style={{ background: "#ffffff", borderRadius: 12, padding: "12px 20px", flexShrink: 0 }}>
                 <span style={{ color: "#000000", fontWeight: 800, fontSize: 14, whiteSpace: "nowrap" }}>Start →</span>
@@ -134,8 +134,8 @@ export default function Home() {
       {/* Categories */}
       <div style={{ padding: "28px 16px 0" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-          <p style={{ fontWeight: 800, fontSize: 17, color: "#F5F5F5" }}>Task Categories</p>
-          <Link href="/tasks" style={{ fontSize: 13, color: "#1AEF22", fontWeight: 600, textDecoration: "none" }}>See all →</Link>
+          <p style={{ fontWeight: 800, fontSize: 17, color: "#F5F5F5" }}>Mission Types</p>
+          <Link href="/tasks" style={{ fontSize: 13, color: "#1AEF22", fontWeight: 600, textDecoration: "none" }}>Browse all →</Link>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }} className="category-grid">
           {categories.map((cat) => (
@@ -145,7 +145,7 @@ export default function Home() {
                   <Image src={cat.icon} alt={cat.label} width={28} height={28} style={{ objectFit: "contain" }} />
                 </div>
                 <p style={{ fontWeight: 700, fontSize: 13, color: "#F5F5F5", marginBottom: 3 }}>{cat.label}</p>
-                <p style={{ fontSize: 11, fontWeight: 700, color: "#F5A623", background: "rgba(245,166,35,0.1)", borderRadius: 6, padding: "2px 8px", display: "inline-block" }}>{cat.earn}</p>
+                <p style={{ fontSize: 11, fontWeight: 700, color: cat.badge, background: cat.color, borderRadius: 6, padding: "2px 8px", display: "inline-block" }}>{cat.earn}</p>
               </div>
             </Link>
           ))}
@@ -189,7 +189,7 @@ export default function Home() {
         <div style={{ padding: "20px 16px 0" }}>
           <div style={{ background: "#111111", borderRadius: 16, padding: "16px 18px", border: "1px solid #222222" }}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
-              <p style={{ fontSize: 13, fontWeight: 600, color: "#F5F5F5" }}>Complete 3 tasks today</p>
+              <p style={{ fontSize: 13, fontWeight: 600, color: "#F5F5F5" }}>Complete 3 missions today</p>
               <p style={{ fontSize: 13, fontWeight: 700, color: "#1AEF22" }}>{Math.min(wallet.stats.tasks_today, 3)}/3</p>
             </div>
             <div style={{ height: 6, background: "#222222", borderRadius: 10, overflow: "hidden" }}>

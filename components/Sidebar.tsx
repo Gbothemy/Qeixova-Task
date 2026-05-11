@@ -5,28 +5,23 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const nav = [
-  { href: "/dashboard", label: "Home",    icon: "/icon-home.png",    desc: "Dashboard" },
-  { href: "/tasks",     label: "Tasks",   icon: "/icon-task.png",    desc: "Browse & earn" },
-  { href: "/wallet",    label: "Wallet",  icon: "/icon-wallet.png",  desc: "Balance & withdraw" },
-  { href: "/profile",   label: "Profile", icon: "/icon-profile.png", desc: "Account settings" },
+  { href: "/dashboard", label: "Home",     icon: "/icon-home.png",    desc: "Dashboard" },
+  { href: "/tasks",     label: "Missions", icon: "/icon-task.png",    desc: "Browse & earn" },
+  { href: "/wallet",    label: "Wallet",   icon: "/icon-wallet.png",  desc: "Balance & withdraw" },
+  { href: "/profile",   label: "Profile",  icon: "/icon-profile.png", desc: "Account settings" },
 ];
 
 export default function Sidebar() {
   const path = usePathname();
   const router = useRouter();
-  const [stats, setStats] = useState({ balance: 0, today_earned: 0, tasks_today: 0, streak: 0, fullName: "" });
+  const [stats, setStats] = useState({ balance: 0, today_earned: 0, tasks_today: 0, streak: 0, fullName: "", xp: 0, levelName: "Starter", badgeColor: "#888888" });
 
   useEffect(() => {
     fetch("/api/auth/me").then(r => r.ok ? r.json() : null).then(d => {
-      if (d?.user) setStats(s => ({ ...s, fullName: d.user.full_name, streak: d.user.streak ?? 0 }));
+      if (d?.user) setStats(s => ({ ...s, fullName: d.user.full_name, streak: d.user.streak ?? 0, xp: d.user.xp ?? 0, levelName: d.user.levelName ?? "Starter", badgeColor: d.user.badgeColor ?? "#888888" }));
     }).catch(() => {});
     fetch("/api/wallet").then(r => r.ok ? r.json() : null).then(d => {
-      if (d) setStats(s => ({
-        ...s,
-        balance: d.balance ?? 0,
-        today_earned: d.stats?.today_earned ?? 0,
-        tasks_today: d.stats?.tasks_today ?? 0,
-      }));
+      if (d) setStats(s => ({ ...s, balance: d.balance ?? 0, today_earned: d.stats?.today_earned ?? 0, tasks_today: d.stats?.tasks_today ?? 0 }));
     }).catch(() => {});
   }, [path]);
 
@@ -96,13 +91,16 @@ export default function Sidebar() {
         <div style={{ background: "linear-gradient(135deg, #F5A623, #d89420)", borderRadius: 14, padding: "14px 16px", position: "relative", overflow: "hidden" }}>
           <div style={{ position: "absolute", top: -15, right: -15, width: 60, height: 60, borderRadius: "50%", background: "rgba(255,255,255,0.1)" }} />
           <p style={{ fontSize: 13, fontWeight: 700, color: "#000", marginBottom: 3 }}>🔥 {stats.streak > 0 ? `${stats.streak}-day streak!` : "Start your streak!"}</p>
-          <p style={{ fontSize: 11, color: "rgba(0,0,0,0.65)" }}>Keep completing tasks daily</p>
+          <p style={{ fontSize: 11, color: "rgba(0,0,0,0.65)" }}>Keep completing missions daily</p>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 14, padding: "0 4px" }}>
           <div style={{ width: 34, height: 34, borderRadius: "50%", background: "linear-gradient(135deg, #F5A623, #d89420)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>👤</div>
           <div style={{ flex: 1 }}>
             <p style={{ fontSize: 13, fontWeight: 600, color: "#F5F5F5" }}>{stats.fullName || "Loading..."}</p>
-            <p style={{ fontSize: 11, color: "#555555" }}>{stats.streak > 0 ? `🔥 ${stats.streak}-day streak` : "Level Earner ⭐"}</p>
+            <p style={{ fontSize: 11, color: "#555555" }}>
+              <span style={{ color: stats.badgeColor, fontWeight: 700 }}>{stats.levelName}</span>
+              {stats.xp > 0 && <span style={{ color: "#F5A623" }}> · {stats.xp.toLocaleString()} XP</span>}
+            </p>
           </div>
           <button
             onClick={async () => { await fetch("/api/auth/logout", { method: "POST" }); router.push("/login"); }}

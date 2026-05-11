@@ -4,10 +4,10 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 
 const nav = [
-  { href: "/dashboard", label: "Home",    icon: "/icon-home.png" },
-  { href: "/tasks",     label: "Tasks",   icon: "/icon-task.png" },
-  { href: "/wallet",    label: "Wallet",  icon: "/icon-wallet.png" },
-  { href: "/profile",   label: "Profile", icon: "/icon-profile.png" },
+  { href: "/dashboard", label: "Home",     icon: "/icon-home.png" },
+  { href: "/tasks",     label: "Missions", icon: "/icon-task.png" },
+  { href: "/wallet",    label: "Wallet",   icon: "/icon-wallet.png" },
+  { href: "/profile",   label: "Profile",  icon: "/icon-profile.png" },
 ];
 
 export default function BottomNav() {
