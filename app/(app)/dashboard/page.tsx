@@ -119,6 +119,37 @@ export default function Home() {
         </div>
       )}
 
+      {/* XP + Level progress */}
+      {user && (
+        <div style={{ padding: "16px 16px 0" }}>
+          <div style={{ background: "#111111", borderRadius: 16, padding: "16px 18px", border: "1px solid #222222" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 20, background: "rgba(245,166,35,0.12)", color: "#F5A623" }}>
+                  {(user as Record<string, unknown>).levelName as string ?? "Starter"}
+                </span>
+                <span style={{ fontSize: 12, color: "#555" }}>⭐ {((user as Record<string, unknown>).xp as number ?? 0).toLocaleString()} XP</span>
+              </div>
+              <Link href="/tasks" style={{ fontSize: 12, color: "#1AEF22", textDecoration: "none", fontWeight: 600 }}>Earn XP →</Link>
+            </div>
+            {(user as Record<string, unknown>).nextLevel && (
+              <>
+                <div style={{ height: 5, background: "#222", borderRadius: 10, overflow: "hidden", marginBottom: 4 }}>
+                  <div style={{
+                    height: "100%",
+                    width: `${Math.min(100, (((user as Record<string, unknown>).xp as number ?? 0) / (((user as Record<string, unknown>).nextLevel as Record<string, unknown>)?.xpRequired as number ?? 500)) * 100)}%`,
+                    background: "linear-gradient(90deg, #F5A623, #1AEF22)", borderRadius: 10,
+                  }} />
+                </div>
+                <p style={{ fontSize: 11, color: "#444" }}>
+                  {((user as Record<string, unknown>).nextLevel as Record<string, unknown>)?.xpRequired as number - ((user as Record<string, unknown>).xp as number ?? 0)} XP to {((user as Record<string, unknown>).nextLevel as Record<string, unknown>)?.name as string}
+                </p>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Quick actions */}
       <div style={{ padding: "20px 16px 0" }}>
         <div style={{ display: "flex", gap: 12 }}>

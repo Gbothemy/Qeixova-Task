@@ -5,10 +5,11 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const nav = [
-  { href: "/dashboard", label: "Home",     icon: "/icon-home.png",    desc: "Dashboard" },
-  { href: "/tasks",     label: "Missions", icon: "/icon-task.png",    desc: "Browse & earn" },
-  { href: "/wallet",    label: "Wallet",   icon: "/icon-wallet.png",  desc: "Balance & withdraw" },
-  { href: "/profile",   label: "Profile",  icon: "/icon-profile.png", desc: "Account settings" },
+  { href: "/dashboard",   label: "Home",        icon: "/icon-home.png",    desc: "Dashboard" },
+  { href: "/tasks",       label: "Missions",    icon: "/icon-task.png",    desc: "Browse & earn" },
+  { href: "/leaderboard", label: "Ranks",       icon: "/icon-profile.png", desc: "Leaderboard" },
+  { href: "/wallet",      label: "Wallet",      icon: "/icon-wallet.png",  desc: "Balance & withdraw" },
+  { href: "/profile",     label: "Profile",     icon: "/icon-profile.png", desc: "Account settings" },
 ];
 
 export default function Sidebar() {

@@ -13,6 +13,8 @@ interface Profile {
   total_withdrawn: number; referral_count: number;
   created_at: string; trust_level: string;
   approved_count: number; rejected_count: number;
+  xp?: number; trust_score?: number; level_name?: string;
+  badge_color?: string; milestones_claimed?: number;
 }
 
 type ModalType = "edit" | "password" | "notifications" | "support" | "terms" | null;
@@ -321,20 +323,23 @@ export default function ProfilePage() {
         {profile?.phone && <p style={{ color: "#666666", fontSize: 12, marginTop: 2 }}>{profile.phone}</p>}
         {profile?.created_at && <p style={{ color: "#555555", fontSize: 11, marginTop: 4 }}>Member since {timeAgo(profile.created_at)}</p>}
         <div style={{ display: "flex", justifyContent: "center", gap: 8, marginTop: 12, flexWrap: "wrap" }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(26,239,34,0.08)", border: "1px solid rgba(26,239,34,0.2)", borderRadius: 20, padding: "6px 16px" }}>
-            <span style={{ fontSize: 14 }}>⭐</span>
-            <span style={{ color: "#1AEF22", fontSize: 12, fontWeight: 700 }}>Level {profile?.level ?? 1} — {levelLabel(profile?.level ?? 1)}</span>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: (profile?.badge_color ?? "#888") + "22", border: `1px solid ${profile?.badge_color ?? "#888"}44`, borderRadius: 20, padding: "6px 16px" }}>
+            <span style={{ color: profile?.badge_color ?? "#888", fontSize: 12, fontWeight: 700 }}>L{profile?.level ?? 1} {profile?.level_name ?? "Starter"}</span>
           </div>
-          {profile && profile.streak > 0 && (
+          {profile?.xp !== undefined && (
             <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(245,166,35,0.08)", border: "1px solid rgba(245,166,35,0.2)", borderRadius: 20, padding: "5px 14px" }}>
-              <span style={{ fontSize: 14 }}>🔥</span>
-              <span style={{ color: "#F5A623", fontSize: 12, fontWeight: 600 }}>{profile.streak}-day streak</span>
+              <span style={{ color: "#F5A623", fontSize: 12, fontWeight: 700 }}>⭐ {profile.xp.toLocaleString()} XP</span>
             </div>
           )}
-          {profile && (
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: profile.trust_level === "verified" ? "rgba(26,239,34,0.08)" : profile.trust_level === "trusted" ? "rgba(26,115,232,0.08)" : profile.trust_level === "flagged" ? "rgba(229,62,62,0.08)" : "rgba(255,255,255,0.05)", border: `1px solid ${profile.trust_level === "verified" ? "rgba(26,239,34,0.2)" : profile.trust_level === "trusted" ? "rgba(26,115,232,0.2)" : profile.trust_level === "flagged" ? "rgba(229,62,62,0.2)" : "#333333"}`, borderRadius: 20, padding: "5px 14px" }}>
-              <span style={{ fontSize: 12, fontWeight: 700, color: profile.trust_level === "verified" ? "#1AEF22" : profile.trust_level === "trusted" ? "#4a9eff" : profile.trust_level === "flagged" ? "#e53e3e" : "#888888" }}>
-                {profile.trust_level === "verified" ? "✓ Verified User" : profile.trust_level === "trusted" ? "Trusted User" : profile.trust_level === "flagged" ? "⚠ Flagged" : "New User"}
+          {profile && profile.streak > 0 && (
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(26,239,34,0.08)", border: "1px solid rgba(26,239,34,0.2)", borderRadius: 20, padding: "5px 14px" }}>
+              <span style={{ color: "#1AEF22", fontSize: 12, fontWeight: 600 }}>🔥 {profile.streak}-day streak</span>
+            </div>
+          )}
+          {profile?.trust_score !== undefined && (
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: profile.trust_score >= 80 ? "rgba(26,239,34,0.08)" : profile.trust_score >= 50 ? "rgba(245,166,35,0.08)" : "rgba(229,62,62,0.08)", border: `1px solid ${profile.trust_score >= 80 ? "rgba(26,239,34,0.2)" : profile.trust_score >= 50 ? "rgba(245,166,35,0.2)" : "rgba(229,62,62,0.2)"}`, borderRadius: 20, padding: "5px 14px" }}>
+              <span style={{ fontSize: 12, fontWeight: 700, color: profile.trust_score >= 80 ? "#1AEF22" : profile.trust_score >= 50 ? "#F5A623" : "#e53e3e" }}>
+                Trust: {profile.trust_score}%
               </span>
             </div>
           )}
