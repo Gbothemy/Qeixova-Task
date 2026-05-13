@@ -83,7 +83,7 @@ export default function LandingPage() {
           Launch awareness campaigns, distribute content, gather engagement, grow communities, and reach real audiences through a network of verified digital participants.
         </p>
         <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-          <Link href="/business/register" style={{ background: "linear-gradient(135deg, #F5A623, #d89420)", color: "#000", textDecoration: "none", padding: "16px 36px", borderRadius: 14, fontWeight: 800, fontSize: 16, boxShadow: "0 8px 28px rgba(245,166,35,0.4)" }}>
+          <Link href="/register" style={{ background: "linear-gradient(135deg, #F5A623, #d89420)", color: "#000", textDecoration: "none", padding: "16px 36px", borderRadius: 14, fontWeight: 800, fontSize: 16, boxShadow: "0 8px 28px rgba(245,166,35,0.4)" }}>
             Start a Campaign
           </Link>
           <Link href="/register" style={{ background: "#111", border: "1.5px solid #222", color: "#F5F5F5", textDecoration: "none", padding: "16px 32px", borderRadius: 14, fontWeight: 600, fontSize: 15 }}>
@@ -167,7 +167,7 @@ export default function LandingPage() {
               </div>
             </div>
             <div style={{ display: "flex", gap: 10 }}>
-              <Link href="/business/register" style={{ background: "linear-gradient(135deg, #F5A623, #d89420)", color: "#000", textDecoration: "none", padding: "12px 24px", borderRadius: 11, fontWeight: 800, fontSize: 14, whiteSpace: "nowrap" }}>
+              <Link href="/register" style={{ background: "linear-gradient(135deg, #F5A623, #d89420)", color: "#000", textDecoration: "none", padding: "12px 24px", borderRadius: 11, fontWeight: 800, fontSize: 14, whiteSpace: "nowrap" }}>
                 Start a Campaign →
               </Link>
               <Link href="/business/login" style={{ background: "transparent", border: "1.5px solid #333", color: "#888", textDecoration: "none", padding: "12px 20px", borderRadius: 11, fontWeight: 600, fontSize: 13, whiteSpace: "nowrap" }}>
@@ -317,7 +317,7 @@ export default function LandingPage() {
           Whether you're promoting a business, a song, an event, an app, or a brand — Qeixova helps you reach real people through real participation.
         </p>
         <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-          <Link href="/business/register" style={{ background: "linear-gradient(135deg, #F5A623, #d89420)", color: "#000", textDecoration: "none", padding: "16px 36px", borderRadius: 14, fontWeight: 800, fontSize: 16, boxShadow: "0 8px 28px rgba(245,166,35,0.4)", display: "inline-block" }}>
+          <Link href="/register" style={{ background: "linear-gradient(135deg, #F5A623, #d89420)", color: "#000", textDecoration: "none", padding: "16px 36px", borderRadius: 14, fontWeight: 800, fontSize: 16, boxShadow: "0 8px 28px rgba(245,166,35,0.4)", display: "inline-block" }}>
             Create Campaign
           </Link>
           <Link href="/register" style={{ background: "#111", border: "1.5px solid #222", color: "#F5F5F5", textDecoration: "none", padding: "16px 28px", borderRadius: 14, fontWeight: 600, fontSize: 15, display: "inline-block" }}>

@@ -39,7 +39,7 @@ export default function BusinessLoginPage() {
           <span style={{ fontWeight: 800, fontSize: 15, color: "#F5F5F5" }}>Qeixova</span>
           <span style={{ fontSize: 10, color: "#F5A623", background: "rgba(245,166,35,0.1)", border: "1px solid rgba(245,166,35,0.2)", borderRadius: 6, padding: "2px 8px", fontWeight: 700, letterSpacing: 0.5 }}>BUSINESS</span>
         </Link>
-        <Link href="/business/register" style={{ fontSize: 13, color: "#F5A623", fontWeight: 700, textDecoration: "none" }}>Create account →</Link>
+        <Link href="/register" style={{ fontSize: 13, color: "#F5A623", fontWeight: 700, textDecoration: "none" }}>Create account →</Link>
       </nav>
 
       <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "32px 20px" }}>
@@ -94,7 +94,7 @@ export default function BusinessLoginPage() {
             </form>
             <p style={{ textAlign: "center", fontSize: 13, color: "#333", marginTop: 20 }}>
               No account?{" "}
-              <Link href="/business/register" style={{ color: "#F5A623", fontWeight: 700, textDecoration: "none" }}>Create one</Link>
+              <Link href="/register" style={{ color: "#F5A623", fontWeight: 700, textDecoration: "none" }}>Create one</Link>
             </p>
           </div>
 
