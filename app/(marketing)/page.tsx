@@ -49,6 +49,7 @@ const faqs = [
 export default function LandingPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [activeStep, setActiveStep] = useState(0);
+  const [bizIndex, setBizIndex] = useState(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   // Scroll reveal
@@ -237,17 +238,50 @@ export default function LandingPage() {
             <span style={{ fontSize: 11, fontWeight: 700, color: "#F5A623", letterSpacing: 2, textTransform: "uppercase", background: "rgba(245,166,35,0.08)", borderRadius: 20, padding: "4px 14px" }}>For Businesses</span>
             <h2 style={{ fontSize: "clamp(24px, 4vw, 40px)", fontWeight: 900, color: "#F5F5F5", marginTop: 14, letterSpacing: -1 }}>Built for Businesses That Want Visibility</h2>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, marginBottom: 40 }}>
-            {businessTypes.map((b, i) => (
-              <div key={b.title} className={`reveal card-hover delay-${i + 1}`} style={{ background: "#0a0a0a", borderRadius: 18, padding: "24px 20px", border: "1px solid #1a1a1a" }}>
-                <div style={{ width: 48, height: 48, borderRadius: 13, background: "rgba(26,239,34,0.06)", border: "1px solid rgba(26,239,34,0.1)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14 }}>
-                  <Image src={b.icon} alt={b.title} width={24} height={24} style={{ objectFit: "contain", filter: "invert(58%) sepia(98%) saturate(400%) hue-rotate(83deg) brightness(110%)" }} />
-                </div>
-                <h3 style={{ fontWeight: 800, fontSize: 14, color: "#F5F5F5", marginBottom: 8 }}>{b.title}</h3>
-                <p style={{ fontSize: 13, color: "#555", lineHeight: 1.6 }}>{b.desc}</p>
+          {/* Business types carousel */}
+          <div style={{ position: "relative", marginBottom: 40 }}>
+            {/* Prev */}
+            <button onClick={() => setBizIndex(i => Math.max(0, i - 1))} disabled={bizIndex === 0}
+              style={{ position: "absolute", left: -20, top: "50%", transform: "translateY(-50%)", zIndex: 10, width: 36, height: 36, borderRadius: "50%", background: bizIndex === 0 ? "#111" : "#F5A623", border: "none", cursor: bizIndex === 0 ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", opacity: bizIndex === 0 ? 0.3 : 1, transition: "all 0.2s" }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={bizIndex === 0 ? "#555" : "#000"} strokeWidth="3" strokeLinecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            {/* Next */}
+            <button onClick={() => setBizIndex(i => Math.min(businessTypes.length - 1, i + 1))} disabled={bizIndex === businessTypes.length - 1}
+              style={{ position: "absolute", right: -20, top: "50%", transform: "translateY(-50%)", zIndex: 10, width: 36, height: 36, borderRadius: "50%", background: bizIndex === businessTypes.length - 1 ? "#111" : "#F5A623", border: "none", cursor: bizIndex === businessTypes.length - 1 ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", opacity: bizIndex === businessTypes.length - 1 ? 0.3 : 1, transition: "all 0.2s" }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={bizIndex === businessTypes.length - 1 ? "#555" : "#000"} strokeWidth="3" strokeLinecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+
+            {/* Track */}
+            <div style={{ overflow: "hidden" }}>
+              <div style={{ display: "flex", gap: 16, transition: "transform 0.4s cubic-bezier(0.4,0,0.2,1)", transform: `translateX(calc(-${bizIndex} * (100% / 3 + 16px / 3)))` }}>
+                {businessTypes.map((b) => (
+                  <div key={b.title} className="card-hover biz-card" style={{ minWidth: "calc(33.333% - 11px)", background: "#0a0a0a", borderRadius: 18, padding: "28px 22px", border: "1px solid #1a1a1a", flexShrink: 0, boxSizing: "border-box" }}>
+                    <div style={{ width: 52, height: 52, borderRadius: 14, background: "rgba(26,239,34,0.06)", border: "1px solid rgba(26,239,34,0.1)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
+                      <Image src={b.icon} alt={b.title} width={26} height={26} style={{ objectFit: "contain", filter: "invert(58%) sepia(98%) saturate(400%) hue-rotate(83deg) brightness(110%)" }} />
+                    </div>
+                    <h3 style={{ fontWeight: 800, fontSize: 15, color: "#F5F5F5", marginBottom: 8 }}>{b.title}</h3>
+                    <p style={{ fontSize: 13, color: "#555", lineHeight: 1.6 }}>{b.desc}</p>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
+
+            {/* Dots */}
+            <div style={{ display: "flex", justifyContent: "center", gap: 6, marginTop: 20 }}>
+              {businessTypes.map((_, i) => (
+                <button key={i} onClick={() => setBizIndex(i)} style={{ width: i === bizIndex ? 24 : 6, height: 6, borderRadius: 3, background: i === bizIndex ? "#F5A623" : "#222", border: "none", cursor: "pointer", padding: 0, transition: "all 0.3s", boxShadow: i === bizIndex ? "0 0 8px rgba(245,166,35,0.5)" : "none" }} />
+              ))}
+            </div>
           </div>
+          <style>{`
+            .biz-card { min-width: calc(33.333% - 11px) !important; }
+            @media (max-width: 767px) {
+              .biz-card { min-width: calc(100% - 0px) !important; }
+            }
+            @media (min-width: 768px) and (max-width: 1023px) {
+              .biz-card { min-width: calc(50% - 8px) !important; }
+            }
+          `}</style>
           <div style={{ background: "linear-gradient(135deg, #0d0d0d, #111)", border: "1px solid rgba(245,166,35,0.2)", borderRadius: 20, padding: "32px 28px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 20 }}>
             <div>
               <p style={{ fontSize: 18, fontWeight: 800, color: "#F5F5F5", marginBottom: 8 }}>Ready to launch your first campaign?</p>
