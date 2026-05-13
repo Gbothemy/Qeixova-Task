@@ -3,52 +3,47 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 
-const missionTypes = [
-  {
-    icon: "/icon-social-media.jpg", type: "Engagement",
-    title: "Social & Community Actions",
-    desc: "Follow, join, engage. Simple actions that build real audience presence for brands.",
-    examples: ["Follow on Instagram", "Join Telegram group", "Like & comment on post"],
-    reward: "10k–15k QLT",
-  },
-  {
-    icon: "/icon-survey.png", type: "Participation",
-    title: "Surveys & Feedback Missions",
-    desc: "Share your opinions on products, services, and ideas. Your insight has real market value.",
-    examples: ["Answer 5-question survey", "Rate product experience", "Vote on design options"],
-    reward: "35k–50k QLT",
-  },
-  {
-    icon: "/icon-app-testing.png", type: "Premium",
-    title: "Testing & Validation Tasks",
-    desc: "Test apps, report bugs, validate UX. Businesses pay premium for structured human feedback.",
-    examples: ["Test mobile app & report 3 issues", "Complete onboarding flow", "Validate checkout process"],
-    reward: "80k–120k QLT",
-  },
-  {
-    icon: "/icon-content.png", type: "AI Testing",
-    title: "AI & Content Evaluation",
-    desc: "Evaluate AI responses, watch content, and provide structured feedback that trains better systems.",
-    examples: ["Rate AI response quality", "Watch video & summarize", "Compare two AI outputs"],
-    reward: "18k–25k QLT",
-  },
+const campaignTypes = [
+  { icon: "/icon-social-media.jpg", title: "WhatsApp Status Campaign", desc: "Share flyers and content to WhatsApp status for 24 hours." },
+  { icon: "/icon-survey.png",       title: "Facebook Repost Campaign", desc: "Post flyers with captions to Facebook stories and timelines." },
+  { icon: "/icon-content.png",      title: "TikTok Promotion",         desc: "Repost short-form videos and tag creator pages." },
+  { icon: "/icon-app-testing.png",  title: "App Testing",              desc: "Download apps and submit onboarding feedback." },
+  { icon: "/icon-survey.png",       title: "Referral Campaign",        desc: "Invite new users and earn for every successful referral." },
+  { icon: "/icon-social-media.jpg", title: "Music Promotion",          desc: "Distribute song teasers and promote releases across communities." },
 ];
 
+const businessTypes = [
+  { emoji: "🏪", title: "Local Businesses",          desc: "Promote products, services, store openings, events, and special offers to nearby communities." },
+  { emoji: "🎵", title: "Musicians & Entertainment", desc: "Distribute songs, promote releases, push trends, and create grassroots awareness." },
+  { emoji: "📱", title: "Startups & Apps",           desc: "Get real users for testing, onboarding, reviews, and feedback." },
+  { emoji: "🎬", title: "Content Creators",          desc: "Increase awareness for videos, pages, live streams, and creator content." },
+  { emoji: "🎪", title: "Event Organizers",          desc: "Spread awareness for concerts, church programs, conferences, and community events." },
+  { emoji: "🌍", title: "Communities & NGOs",        desc: "Mobilize grassroots participation and community-driven campaigns." },
+];
+
+const whyFeatures = [
+  { icon: "/icon-profile.png",      title: "Human Distribution",      desc: "Reach people through real individuals and communities instead of relying only on algorithms." },
+  { icon: "/icon-wallet.png",       title: "Affordable Awareness",    desc: "Launch flexible campaigns that fit your budget and goals." },
+  { icon: "/icon-task.png",         title: "Grassroots Reach",        desc: "Expand visibility organically through community-driven promotion." },
+  { icon: "/icon-content.png",      title: "Flexible Campaign Types", desc: "Run awareness, engagement, testing, referral, and distribution campaigns from one platform." },
+  { icon: "/icon-survey.png",       title: "Verified Participation",  desc: "Campaigns are completed by real contributors with verification and quality checks." },
+  { icon: "/icon-app-testing.png",  title: "Creator-Friendly",        desc: "Perfect for creators, musicians, startups, local businesses, and growing brands." },
+];
 
 const steps = [
-  { num: "01", title: "Create Your Account",    desc: "Sign up free. No experience needed. Access missions immediately." },
-  { num: "02", title: "Pick a Mission",         desc: "Choose from engagement, participation, or premium missions based on your level." },
-  { num: "03", title: "Complete & Submit Proof",desc: "Follow the steps, submit your proof. Every approved mission earns QLT + XP." },
-  { num: "04", title: "Level Up & Earn More",   desc: "XP unlocks higher-value missions and bigger daily earning caps." },
+  { num: "01", icon: "/icon-create-mission.svg", title: "Create a Campaign",           desc: "Upload your flyer, video, product, music, event, app, or promotional content." },
+  { num: "02", icon: "/icon-target-audience.svg",title: "Choose Your Goal",            desc: "Select content distribution, reposts, community awareness, app testing, surveys, or referral campaigns." },
+  { num: "03", icon: "/icon-profile.png",         title: "Activate Real Participants", desc: "Qeixova contributors complete tasks and help spread your content across real communities." },
+  { num: "04", icon: "/icon-analytics.svg",       title: "Track Visibility",           desc: "Monitor campaign performance, submissions, reach activity, and contributor engagement." },
 ];
 
 const faqs = [
-  { q: "What is Qeixova?", a: "Qeixova is a human participation marketplace. Businesses post structured missions — surveys, app tests, community actions, content feedback — and verified users complete them for QLT rewards." },
-  { q: "What are QLT Points?", a: "QLT (Qeixova Loyalty Token) is the reward currency. 100 QLT = ₦1. Every approved mission credits QLT to your balance. Withdraw anytime to your bank account." },
-  { q: "How is this different from other earn apps?", a: "We don't pay for fake engagement. Every mission has a purpose — real feedback, real testing, real participation. Businesses pay for verified human interaction, not bot clicks." },
-  { q: "What is the level system?", a: "You earn XP with every approved mission. Higher levels unlock premium missions with bigger rewards and higher daily earning caps — up to ₦1,500/day at Elite level." },
-  { q: "How do withdrawals work?", a: "Go to Wallet, enter the amount, select your bank account, and tap Withdraw. Minimum is 100,000 QLT (₦1,000). Processed within 24 hours." },
-  { q: "Is it free to join?", a: "Yes, completely free. No registration fee, no deposits, no hidden charges. You can optionally use a referral code during signup for a welcome bonus." },
+  { q: "What is Qeixova Tasks?",                  a: "Qeixova Tasks is a community-powered growth platform where businesses gain visibility and contributors earn through meaningful digital participation — not bots or fake traffic." },
+  { q: "Who can use Qeixova?",                    a: "Any business, creator, musician, startup, event organizer, or community that wants to grow visibility through real human participation. Contributors earn by completing campaigns." },
+  { q: "How do contributors earn?",               a: "Contributors complete participation tasks — sharing flyers, reposting content, testing apps, joining campaigns — and earn QLT rewards. 100 QLT = ₦1. Withdraw to any Nigerian bank." },
+  { q: "Is this real engagement or fake?",        a: "Real. Every contributor is verified. No bots, no fake accounts, no spam. Campaigns are completed by real people with quality checks and fraud prevention." },
+  { q: "How do withdrawals work?",                a: "Contributors earn QLT by completing tasks. Once you reach 500,000 QLT lifetime earnings, withdrawals unlock. Minimum withdrawal is processed within 24 hours to your bank." },
+  { q: "How much does a campaign cost?",          a: "You set the reward per completion and the total budget. You only pay for verified completions — no wasted spend on impressions or clicks that don't convert." },
 ];
 
 export default function LandingPage() {
@@ -70,130 +65,95 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* Hero */}
-      <section style={{ background: "linear-gradient(160deg, #050505 0%, #0d0d0d 100%)", padding: "90px 5vw 100px", position: "relative", overflow: "hidden", textAlign: "center", borderBottom: "1px solid #1a1a1a" }}>
-        <div style={{ position: "absolute", top: -100, left: "50%", transform: "translateX(-50%)", width: 600, height: 600, borderRadius: "50%", background: "radial-gradient(circle, rgba(26,239,34,0.04) 0%, transparent 70%)" }} />
+      {/* HERO */}
+      <section style={{ background: "linear-gradient(160deg, #050505 0%, #0d0d0d 100%)", padding: "90px 5vw 100px", textAlign: "center", borderBottom: "1px solid #1a1a1a", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: -100, left: "50%", transform: "translateX(-50%)", width: 700, height: 700, borderRadius: "50%", background: "radial-gradient(circle, rgba(26,239,34,0.04) 0%, transparent 70%)" }} />
         <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(26,239,34,0.08)", border: "1px solid rgba(26,239,34,0.2)", borderRadius: 20, padding: "6px 16px", marginBottom: 28 }}>
           <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#1AEF22", boxShadow: "0 0 8px #1AEF22" }} />
-          <span style={{ fontSize: 12, color: "#1AEF22", fontWeight: 700, letterSpacing: 0.5 }}>Human Participation Marketplace</span>
+          <span style={{ fontSize: 12, color: "#1AEF22", fontWeight: 700 }}>Community-Powered Digital Growth</span>
         </div>
-        <h1 style={{ fontSize: "clamp(32px, 6vw, 68px)", fontWeight: 900, lineHeight: 1.05, letterSpacing: -2, maxWidth: 820, margin: "0 auto 20px", color: "#F5F5F5" }}>
-          Your participation<br />
-          <span style={{ background: "linear-gradient(135deg, #1AEF22, #06B517)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>has real value.</span>
+        <h1 style={{ fontSize: "clamp(30px, 6vw, 64px)", fontWeight: 900, lineHeight: 1.05, letterSpacing: -2, maxWidth: 820, margin: "0 auto 20px", color: "#F5F5F5" }}>
+          Grow Your Business Through<br />
+          <span style={{ background: "linear-gradient(135deg, #1AEF22, #06B517)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Real Human Participation.</span>
         </h1>
-        <p style={{ fontSize: "clamp(15px, 2vw, 19px)", color: "#888", maxWidth: 560, margin: "0 auto 16px", lineHeight: 1.7 }}>
-          Complete structured missions — surveys, app testing, community actions, AI evaluation — and earn <strong style={{ color: "#F5A623" }}>QLT</strong> that converts to real Naira.
+        <p style={{ fontSize: "clamp(14px, 2vw, 18px)", color: "#888", maxWidth: 620, margin: "0 auto 16px", lineHeight: 1.7 }}>
+          Qeixova Tasks helps businesses, creators, brands, musicians, and communities amplify their visibility through real people — not bots, fake traffic, or empty engagement.
         </p>
-        <div style={{ display: "inline-flex", gap: 20, background: "#0d0d0d", border: "1px solid #222", borderRadius: 14, padding: "12px 24px", marginBottom: 36, flexWrap: "wrap", justifyContent: "center" }}>
-          <span style={{ fontSize: 13, color: "#F5A623", fontWeight: 700 }}>100 QLT = ₦1</span>
-          <span style={{ color: "#333" }}>|</span>
-          <span style={{ fontSize: 13, color: "#888" }}>100 QLT = ₦1 · Transparent · No hidden fees</span>
-        </div>
+        <p style={{ fontSize: 14, color: "#555", maxWidth: 560, margin: "0 auto 36px", lineHeight: 1.7 }}>
+          Launch awareness campaigns, distribute content, gather engagement, grow communities, and reach real audiences through a network of verified digital participants.
+        </p>
         <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-          <Link href="/register" style={{ background: "linear-gradient(135deg, #F5A623, #d89420)", color: "#000", textDecoration: "none", padding: "16px 36px", borderRadius: 14, fontWeight: 800, fontSize: 16, boxShadow: "0 8px 28px rgba(245,166,35,0.4)" }}>
-            Start Earning Free
+          <Link href="/business/register" style={{ background: "linear-gradient(135deg, #F5A623, #d89420)", color: "#000", textDecoration: "none", padding: "16px 36px", borderRadius: 14, fontWeight: 800, fontSize: 16, boxShadow: "0 8px 28px rgba(245,166,35,0.4)" }}>
+            Start a Campaign
           </Link>
-          <a href="#how-it-works" style={{ background: "#111", border: "1.5px solid #222", color: "#F5F5F5", textDecoration: "none", padding: "16px 28px", borderRadius: 14, fontWeight: 600, fontSize: 15 }}>
-            See How It Works
-          </a>
+          <Link href="/register" style={{ background: "#111", border: "1.5px solid #222", color: "#F5F5F5", textDecoration: "none", padding: "16px 32px", borderRadius: 14, fontWeight: 600, fontSize: 15 }}>
+            Become a Contributor
+          </Link>
         </div>
-        <p style={{ color: "#444", fontSize: 12, marginTop: 16 }}>Free to join. No experience needed. Withdraw to any Nigerian bank.</p>
+        <p style={{ color: "#333", fontSize: 12, marginTop: 18 }}>Trusted for community-powered growth, content distribution, and grassroots digital promotion.</p>
       </section>
 
       {/* Trust strip */}
       <section style={{ background: "#0a0a0a", borderBottom: "1px solid #1a1a1a", padding: "18px 5vw" }}>
-        <div style={{ maxWidth: 900, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "center", gap: 32, flexWrap: "wrap" }}>
-          {["Verified missions only", "Pay-per-completion model", "Transparent QLT conversion", "24h withdrawal processing"].map(t => (
+        <div style={{ maxWidth: 900, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "center", gap: 28, flexWrap: "wrap" }}>
+          {["Verified contributors only", "Pay per completion", "Real human participation", "Transparent QLT conversion", "24h withdrawal processing"].map(t => (
             <div key={t} style={{ display: "flex", alignItems: "center", gap: 7 }}>
               <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#1AEF22", flexShrink: 0 }} />
-              <span style={{ fontSize: 12, color: "#888", fontWeight: 500 }}>{t}</span>
+              <span style={{ fontSize: 12, color: "#666", fontWeight: 500 }}>{t}</span>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Mission Types */}
+      {/* SECTION 2 — What Qeixova Does */}
       <section style={{ padding: "80px 5vw", background: "#000" }}>
-        <div style={{ maxWidth: 1000, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 52 }}>
-            <span style={{ fontSize: 11, fontWeight: 700, color: "#1AEF22", letterSpacing: 2, textTransform: "uppercase", background: "rgba(26,239,34,0.08)", borderRadius: 20, padding: "4px 14px" }}>Mission Types</span>
-            <h2 style={{ fontSize: "clamp(24px, 4vw, 40px)", fontWeight: 900, color: "#F5F5F5", marginTop: 14, letterSpacing: -1 }}>Four mission categories. One platform.</h2>
-            <p style={{ fontSize: 15, color: "#666", maxWidth: 500, margin: "12px auto 0", lineHeight: 1.7 }}>Each mission type serves a real business need. You get paid for verified human interaction — not clicks.</p>
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 20 }}>
-            {missionTypes.map(m => (
-              <div key={m.type} style={{ background: "#0d0d0d", borderRadius: 20, padding: "26px 22px", border: "1px solid #1a1a1a" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
-                  <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(26,239,34,0.08)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                    <Image src={m.icon} alt={m.type} width={26} height={26} style={{ objectFit: "contain" }} />
-                  </div>
-                  <span style={{ fontSize: 11, fontWeight: 700, color: "#1AEF22", background: "rgba(26,239,34,0.08)", borderRadius: 8, padding: "3px 10px" }}>{m.type}</span>
-                </div>
-                <h3 style={{ fontWeight: 800, fontSize: 15, color: "#F5F5F5", marginBottom: 8, lineHeight: 1.3 }}>{m.title}</h3>
-                <p style={{ fontSize: 13, color: "#555", lineHeight: 1.6, marginBottom: 14 }}>{m.desc}</p>
-                <div style={{ display: "flex", flexDirection: "column", gap: 5, marginBottom: 14 }}>
-                  {m.examples.map(ex => (
-                    <div key={ex} style={{ display: "flex", alignItems: "center", gap: 7 }}>
-                      <span style={{ color: "#333", fontSize: 11 }}>→</span>
-                      <span style={{ fontSize: 12, color: "#666" }}>{ex}</span>
-                    </div>
-                  ))}
-                </div>
-                <div style={{ background: "rgba(26,239,34,0.06)", border: "1px solid rgba(26,239,34,0.12)", borderRadius: 8, padding: "6px 12px", display: "inline-block" }}>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: "#1AEF22" }}>{m.reward} per mission</span>
-                </div>
-              </div>
-            ))}
-          </div>
+        <div style={{ maxWidth: 800, margin: "0 auto", textAlign: "center" }}>
+          <span style={{ fontSize: 11, fontWeight: 700, color: "#1AEF22", letterSpacing: 2, textTransform: "uppercase", background: "rgba(26,239,34,0.08)", borderRadius: 20, padding: "4px 14px" }}>What We Do</span>
+          <h2 style={{ fontSize: "clamp(24px, 4vw, 42px)", fontWeight: 900, color: "#F5F5F5", marginTop: 14, letterSpacing: -1, marginBottom: 20 }}>More Than Tasks. A Human-Powered Growth Engine.</h2>
+          <p style={{ fontSize: 16, color: "#666", lineHeight: 1.8, marginBottom: 16 }}>
+            Qeixova Tasks connects businesses and creators with real people who help distribute, promote, test, share, and amplify content across digital communities.
+          </p>
+          <p style={{ fontSize: 15, color: "#555", lineHeight: 1.8 }}>
+            Instead of relying only on expensive ads or unpredictable algorithms, brands can activate real human participation to increase awareness and visibility.
+          </p>
         </div>
       </section>
 
-      {/* How it works */}
+      {/* SECTION 3 — How It Works */}
       <section id="how-it-works" style={{ padding: "80px 5vw", background: "#050505", borderTop: "1px solid #1a1a1a" }}>
-        <div style={{ maxWidth: 900, margin: "0 auto" }}>
+        <div style={{ maxWidth: 960, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 52 }}>
             <span style={{ fontSize: 11, fontWeight: 700, color: "#1AEF22", letterSpacing: 2, textTransform: "uppercase", background: "rgba(26,239,34,0.08)", borderRadius: 20, padding: "4px 14px" }}>Simple Process</span>
             <h2 style={{ fontSize: "clamp(24px, 4vw, 40px)", fontWeight: 900, color: "#F5F5F5", marginTop: 14, letterSpacing: -1 }}>How Qeixova Works</h2>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 32 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 28 }}>
             {steps.map(s => (
               <div key={s.num} style={{ textAlign: "center" }}>
-                <div style={{ width: 64, height: 64, borderRadius: "50%", background: "#0d0d0d", border: "2px solid #1AEF22", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px", boxShadow: "0 4px 16px rgba(26,239,34,0.15)" }}>
-                  <span style={{ fontSize: 22, fontWeight: 900, color: "#F5F5F5" }}>{s.num}</span>
+                <div style={{ width: 64, height: 64, borderRadius: "50%", background: "#0d0d0d", border: "2px solid rgba(26,239,34,0.2)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px", position: "relative" }}>
+                  <Image src={s.icon} alt={s.title} width={28} height={28} style={{ objectFit: "contain", filter: "invert(58%) sepia(98%) saturate(400%) hue-rotate(83deg) brightness(110%)" }} />
+                  <span style={{ position: "absolute", top: -8, right: -8, width: 22, height: 22, borderRadius: "50%", background: "#1AEF22", color: "#000", fontSize: 10, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center" }}>{s.num.replace("0","")}</span>
                 </div>
                 <h3 style={{ fontWeight: 700, fontSize: 15, color: "#F5F5F5", marginBottom: 8 }}>{s.title}</h3>
-                <p style={{ fontSize: 13, color: "#666", lineHeight: 1.6 }}>{s.desc}</p>
+                <p style={{ fontSize: 13, color: "#555", lineHeight: 1.6 }}>{s.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Levels system */}
-
-      {/* For Businesses */}
-      <section id="for-businesses" style={{ padding: "80px 5vw", background: "#050505", borderTop: "1px solid #1a1a1a" }}>
-        <div style={{ maxWidth: 960, margin: "0 auto" }}>
+      {/* SECTION 4 — For Businesses */}
+      <section id="for-businesses" style={{ padding: "80px 5vw", background: "#000" }}>
+        <div style={{ maxWidth: 1000, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 48 }}>
             <span style={{ fontSize: 11, fontWeight: 700, color: "#F5A623", letterSpacing: 2, textTransform: "uppercase", background: "rgba(245,166,35,0.08)", borderRadius: 20, padding: "4px 14px" }}>For Businesses</span>
-            <h2 style={{ fontSize: "clamp(24px, 4vw, 40px)", fontWeight: 900, color: "#F5F5F5", marginTop: 14, letterSpacing: -1 }}>Buy human validation. Not impressions.</h2>
-            <p style={{ fontSize: 15, color: "#666", maxWidth: 520, margin: "12px auto 0", lineHeight: 1.7 }}>
-              Ads buy attention. Qeixova buys verified human interaction — opinions, actions, feedback, and proof of participation.
-            </p>
+            <h2 style={{ fontSize: "clamp(24px, 4vw, 40px)", fontWeight: 900, color: "#F5F5F5", marginTop: 14, letterSpacing: -1 }}>Built for Businesses That Want Visibility</h2>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, marginBottom: 40 }}>
-            {[
-              { icon: "/icon-create-mission.svg", title: "Create a Mission", desc: "Define what you need. Set reward per completion. Submit for review." },
-              { icon: "/icon-target-audience.svg", title: "Target Your Audience", desc: "Filter by age, gender, state, interests, and platforms." },
-              { icon: "/icon-verified.svg", title: "Get Verified Results", desc: "Every submission is reviewed. Pay only for approved completions." },
-              { icon: "/icon-analytics.svg", title: "Track in Real Time", desc: "Monitor submissions, approvals, and campaign progress live." },
-            ].map(item => (
-              <div key={item.title} style={{ background: "#0d0d0d", borderRadius: 18, padding: "24px 20px", border: "1px solid #1a1a1a" }}>
-                <div style={{ width: 48, height: 48, borderRadius: 13, background: "rgba(26,239,34,0.06)", border: "1px solid rgba(26,239,34,0.1)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14 }}>
-                  <Image src={item.icon} alt={item.title} width={22} height={22} style={{ objectFit: "contain", filter: "invert(58%) sepia(98%) saturate(400%) hue-rotate(83deg) brightness(110%)" }} />
-                </div>
-                <h3 style={{ fontWeight: 800, fontSize: 14, color: "#F5F5F5", marginBottom: 6 }}>{item.title}</h3>
-                <p style={{ fontSize: 13, color: "#555", lineHeight: 1.6 }}>{item.desc}</p>
+            {businessTypes.map(b => (
+              <div key={b.title} style={{ background: "#0a0a0a", borderRadius: 18, padding: "24px 20px", border: "1px solid #1a1a1a" }}>
+                <div style={{ fontSize: 32, marginBottom: 14 }}>{b.emoji}</div>
+                <h3 style={{ fontWeight: 800, fontSize: 14, color: "#F5F5F5", marginBottom: 8 }}>{b.title}</h3>
+                <p style={{ fontSize: 13, color: "#555", lineHeight: 1.6 }}>{b.desc}</p>
               </div>
             ))}
           </div>
@@ -201,14 +161,14 @@ export default function LandingPage() {
             <div>
               <p style={{ fontSize: 18, fontWeight: 800, color: "#F5F5F5", marginBottom: 8 }}>Ready to launch your first campaign?</p>
               <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-                {["Pay per completion", "Verified users only", "Full audience targeting"].map(t => (
+                {["Pay per completion", "Verified contributors", "Real human reach"].map(t => (
                   <span key={t} style={{ fontSize: 12, color: "#888" }}><span style={{ color: "#F5A623" }}>✓</span> {t}</span>
                 ))}
               </div>
             </div>
             <div style={{ display: "flex", gap: 10 }}>
-              <Link href="/business/register" style={{ background: "linear-gradient(135deg, #F5A623, #d89420)", color: "#000", textDecoration: "none", padding: "12px 24px", borderRadius: 11, fontWeight: 800, fontSize: 14, boxShadow: "0 6px 20px rgba(245,166,35,0.3)", whiteSpace: "nowrap" }}>
-                Start Free →
+              <Link href="/business/register" style={{ background: "linear-gradient(135deg, #F5A623, #d89420)", color: "#000", textDecoration: "none", padding: "12px 24px", borderRadius: 11, fontWeight: 800, fontSize: 14, whiteSpace: "nowrap" }}>
+                Start a Campaign →
               </Link>
               <Link href="/business/login" style={{ background: "transparent", border: "1.5px solid #333", color: "#888", textDecoration: "none", padding: "12px 20px", borderRadius: 11, fontWeight: 600, fontSize: 13, whiteSpace: "nowrap" }}>
                 Business Login
@@ -218,16 +178,119 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* FAQ */}
+      {/* SECTION 5 — For Contributors */}
+      <section style={{ padding: "80px 5vw", background: "#050505", borderTop: "1px solid #1a1a1a" }}>
+        <div style={{ maxWidth: 960, margin: "0 auto" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "center" }}>
+            <div>
+              <span style={{ fontSize: 11, fontWeight: 700, color: "#1AEF22", letterSpacing: 2, textTransform: "uppercase", background: "rgba(26,239,34,0.08)", borderRadius: 20, padding: "4px 14px" }}>For Contributors</span>
+              <h2 style={{ fontSize: "clamp(22px, 3.5vw, 38px)", fontWeight: 900, color: "#F5F5F5", marginTop: 14, letterSpacing: -1, marginBottom: 16 }}>Earn By Helping Businesses Grow</h2>
+              <p style={{ fontSize: 15, color: "#666", lineHeight: 1.8, marginBottom: 20 }}>
+                Become part of a growing network of digital contributors helping brands and creators reach more people online.
+              </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 28 }}>
+                {["Reposting content", "Sharing flyers", "Testing apps", "Joining campaigns", "Giving feedback", "Referral activities"].map(t => (
+                  <div key={t} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#1AEF22", flexShrink: 0 }} />
+                    <span style={{ fontSize: 14, color: "#888" }}>{t}</span>
+                  </div>
+                ))}
+              </div>
+              <Link href="/register" style={{ display: "inline-block", background: "linear-gradient(135deg, #1AEF22, #06B517)", color: "#000", textDecoration: "none", padding: "14px 32px", borderRadius: 12, fontWeight: 800, fontSize: 15 }}>
+                Start Earning →
+              </Link>
+            </div>
+            <div style={{ background: "#0a0a0a", borderRadius: 20, padding: "32px 28px", border: "1px solid #1a1a1a" }}>
+              <div style={{ background: "rgba(26,239,34,0.06)", border: "1px solid rgba(26,239,34,0.12)", borderRadius: 14, padding: "20px", marginBottom: 20 }}>
+                <p style={{ fontSize: 13, fontWeight: 700, color: "#1AEF22", marginBottom: 6 }}>Not fake engagement.</p>
+                <p style={{ fontSize: 13, fontWeight: 700, color: "#1AEF22", marginBottom: 6 }}>Real participation.</p>
+                <p style={{ fontSize: 13, fontWeight: 700, color: "#1AEF22", marginBottom: 6 }}>Real contribution.</p>
+                <p style={{ fontSize: 13, fontWeight: 700, color: "#1AEF22" }}>Real rewards.</p>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                {[
+                  { label: "Starter → Bronze", desc: "Earn 500,000 QLT to unlock withdrawals" },
+                  { label: "Bronze → Silver", desc: "2,000,000 QLT lifetime earned" },
+                  { label: "Silver → Gold", desc: "5,000,000 QLT lifetime earned" },
+                  { label: "Gold → VIP", desc: "10,000,000 QLT lifetime earned" },
+                ].map(l => (
+                  <div key={l.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: "1px solid #111" }}>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: "#F5F5F5" }}>{l.label}</span>
+                    <span style={{ fontSize: 11, color: "#444" }}>{l.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 6 — Why Qeixova */}
       <section style={{ padding: "80px 5vw", background: "#000" }}>
+        <div style={{ maxWidth: 1000, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 48 }}>
+            <span style={{ fontSize: 11, fontWeight: 700, color: "#1AEF22", letterSpacing: 2, textTransform: "uppercase", background: "rgba(26,239,34,0.08)", borderRadius: 20, padding: "4px 14px" }}>Why Qeixova</span>
+            <h2 style={{ fontSize: "clamp(24px, 4vw, 40px)", fontWeight: 900, color: "#F5F5F5", marginTop: 14, letterSpacing: -1 }}>Why Businesses Choose Qeixova</h2>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
+            {whyFeatures.map(f => (
+              <div key={f.title} style={{ background: "#0a0a0a", borderRadius: 16, padding: "22px 18px", border: "1px solid #1a1a1a" }}>
+                <div style={{ width: 40, height: 40, borderRadius: 11, background: "rgba(26,239,34,0.06)", border: "1px solid rgba(26,239,34,0.1)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14 }}>
+                  <Image src={f.icon} alt={f.title} width={20} height={20} style={{ objectFit: "contain", filter: "invert(58%) sepia(98%) saturate(400%) hue-rotate(83deg) brightness(110%)" }} />
+                </div>
+                <h3 style={{ fontWeight: 800, fontSize: 14, color: "#F5F5F5", marginBottom: 6 }}>{f.title}</h3>
+                <p style={{ fontSize: 12, color: "#555", lineHeight: 1.6 }}>{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 7 — Campaign Examples */}
+      <section style={{ padding: "80px 5vw", background: "#050505", borderTop: "1px solid #1a1a1a" }}>
+        <div style={{ maxWidth: 1000, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 48 }}>
+            <span style={{ fontSize: 11, fontWeight: 700, color: "#F5A623", letterSpacing: 2, textTransform: "uppercase", background: "rgba(245,166,35,0.08)", borderRadius: 20, padding: "4px 14px" }}>Campaign Examples</span>
+            <h2 style={{ fontSize: "clamp(24px, 4vw, 40px)", fontWeight: 900, color: "#F5F5F5", marginTop: 14, letterSpacing: -1 }}>What You Can Promote</h2>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
+            {campaignTypes.map(c => (
+              <div key={c.title} style={{ background: "#0a0a0a", borderRadius: 16, padding: "22px 18px", border: "1px solid #1a1a1a" }}>
+                <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(26,239,34,0.06)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14 }}>
+                  <Image src={c.icon} alt={c.title} width={24} height={24} style={{ objectFit: "contain" }} />
+                </div>
+                <h3 style={{ fontWeight: 700, fontSize: 14, color: "#F5F5F5", marginBottom: 6 }}>{c.title}</h3>
+                <p style={{ fontSize: 12, color: "#555", lineHeight: 1.6 }}>{c.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 8 — Vision */}
+      <section style={{ padding: "80px 5vw", background: "#000" }}>
+        <div style={{ maxWidth: 720, margin: "0 auto", textAlign: "center" }}>
+          <span style={{ fontSize: 11, fontWeight: 700, color: "#1AEF22", letterSpacing: 2, textTransform: "uppercase", background: "rgba(26,239,34,0.08)", borderRadius: 20, padding: "4px 14px" }}>Our Vision</span>
+          <h2 style={{ fontSize: "clamp(24px, 4vw, 40px)", fontWeight: 900, color: "#F5F5F5", marginTop: 14, letterSpacing: -1, marginBottom: 20 }}>Building Africa's Human Participation Network</h2>
+          <p style={{ fontSize: 16, color: "#666", lineHeight: 1.8, marginBottom: 16 }}>
+            Qeixova Tasks is building a digital ecosystem where businesses gain visibility, creators grow faster, and contributors earn through meaningful online participation.
+          </p>
+          <p style={{ fontSize: 15, color: "#555", lineHeight: 1.8 }}>
+            We believe growth should not belong only to companies with large advertising budgets. Through community-powered distribution and participation, we help brands and creators reach people in a more human way.
+          </p>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section style={{ padding: "80px 5vw", background: "#050505", borderTop: "1px solid #1a1a1a" }}>
         <div style={{ maxWidth: 680, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 44 }}>
             <span style={{ fontSize: 11, fontWeight: 700, color: "#1AEF22", letterSpacing: 2, textTransform: "uppercase", background: "rgba(26,239,34,0.08)", borderRadius: 20, padding: "4px 14px" }}>FAQ</span>
-            <h2 style={{ fontSize: "clamp(22px, 4vw, 36px)", fontWeight: 900, color: "#F5F5F5", marginTop: 14, letterSpacing: -1 }}>Common questions</h2>
+            <h2 style={{ fontSize: "clamp(22px, 4vw, 36px)", fontWeight: 900, color: "#F5F5F5", marginTop: 14, letterSpacing: -1 }}>Common Questions</h2>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {faqs.map((faq, i) => (
-              <div key={i} style={{ background: openFaq === i ? "#0d0d0d" : "#050505", border: `1.5px solid ${openFaq === i ? "rgba(26,239,34,0.25)" : "#1a1a1a"}`, borderRadius: 14, overflow: "hidden" }}>
+              <div key={i} style={{ background: openFaq === i ? "#0d0d0d" : "#050505", border: `1.5px solid ${openFaq === i ? "rgba(26,239,34,0.2)" : "#1a1a1a"}`, borderRadius: 14, overflow: "hidden" }}>
                 <button onClick={() => setOpenFaq(openFaq === i ? null : i)} style={{ width: "100%", padding: "16px 18px", display: "flex", justifyContent: "space-between", alignItems: "center", background: "none", border: "none", cursor: "pointer", textAlign: "left" }}>
                   <span style={{ fontWeight: 700, fontSize: 14, color: "#F5F5F5" }}>{faq.q}</span>
                   <span style={{ width: 26, height: 26, borderRadius: 7, background: openFaq === i ? "#1AEF22" : "#1a1a1a", display: "flex", alignItems: "center", justifyContent: "center", color: openFaq === i ? "#000" : "#888", fontSize: 16, fontWeight: 700, flexShrink: 0 }}>
@@ -241,26 +304,31 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Final CTA */}
+      {/* SECTION 9 — Final CTA */}
       <section style={{ background: "#050505", borderTop: "1px solid #1a1a1a", padding: "80px 5vw", textAlign: "center" }}>
-        <div style={{ position: "relative", display: "inline-block", marginBottom: 20 }}>
+        <div style={{ marginBottom: 20 }}>
           <Image src="/qeixova-icon.png" alt="Qeixova" width={64} height={64} style={{ objectFit: "contain", borderRadius: 18 }} />
         </div>
         <h2 style={{ fontSize: "clamp(24px, 5vw, 48px)", fontWeight: 900, color: "#F5F5F5", letterSpacing: -1.5, marginBottom: 14 }}>
-          Your participation has value.<br />
-          <span style={{ background: "linear-gradient(135deg, #1AEF22, #06B517)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Start earning it.</span>
+          Launch Your First Growth<br />
+          <span style={{ background: "linear-gradient(135deg, #1AEF22, #06B517)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Campaign Today.</span>
         </h2>
-        <p style={{ color: "#666", fontSize: 15, maxWidth: 420, margin: "0 auto 36px", lineHeight: 1.7 }}>
-          Join users already completing missions and converting QLT to real Naira daily.
+        <p style={{ color: "#666", fontSize: 15, maxWidth: 480, margin: "0 auto 36px", lineHeight: 1.7 }}>
+          Whether you're promoting a business, a song, an event, an app, or a brand — Qeixova helps you reach real people through real participation.
         </p>
-        <Link href="/register" style={{ background: "linear-gradient(135deg, #F5A623, #d89420)", color: "#000", textDecoration: "none", padding: "18px 44px", borderRadius: 14, fontWeight: 800, fontSize: 17, boxShadow: "0 8px 28px rgba(245,166,35,0.4)", display: "inline-block" }}>
-          Start Earning Free
-        </Link>
-        <p style={{ color: "#333", fontSize: 12, marginTop: 14 }}>Free forever. No experience needed. Withdraw to any Nigerian bank.</p>
+        <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+          <Link href="/business/register" style={{ background: "linear-gradient(135deg, #F5A623, #d89420)", color: "#000", textDecoration: "none", padding: "16px 36px", borderRadius: 14, fontWeight: 800, fontSize: 16, boxShadow: "0 8px 28px rgba(245,166,35,0.4)", display: "inline-block" }}>
+            Create Campaign
+          </Link>
+          <Link href="/register" style={{ background: "#111", border: "1.5px solid #222", color: "#F5F5F5", textDecoration: "none", padding: "16px 28px", borderRadius: 14, fontWeight: 600, fontSize: 15, display: "inline-block" }}>
+            Become a Contributor
+          </Link>
+        </div>
+        <p style={{ color: "#333", fontSize: 12, marginTop: 16 }}>Free to join. No experience needed.</p>
       </section>
 
       {/* Footer */}
-      <footer style={{ background: "#000", borderTop: "1px solid #111", padding: "52px 5vw 28px", color: "#555" }}>
+      <footer style={{ background: "#000", borderTop: "1px solid #111", padding: "52px 5vw 28px" }}>
         <div style={{ maxWidth: 960, margin: "0 auto" }}>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 36, marginBottom: 44 }}>
             <div>
@@ -268,25 +336,23 @@ export default function LandingPage() {
                 <Image src="/qeixova-icon.png" alt="Qeixova" width={32} height={32} style={{ borderRadius: 9, objectFit: "contain" }} />
                 <span style={{ fontWeight: 800, fontSize: 16, color: "#F5F5F5" }}>Qeixova</span>
               </div>
-              <p style={{ fontSize: 12, lineHeight: 1.8, color: "#444", maxWidth: 200 }}>Human participation marketplace. Earn by doing real things.</p>
-              <div style={{ marginTop: 12, display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(245,166,35,0.08)", border: "1px solid rgba(245,166,35,0.15)", borderRadius: 8, padding: "5px 10px" }}>
-                <span style={{ fontSize: 11, color: "#F5A623", fontWeight: 700 }}>100 QLT = ₦1</span>
-              </div>
+              <p style={{ fontSize: 12, lineHeight: 1.8, color: "#444", maxWidth: 200 }}>Community-Powered Digital Growth.</p>
+              <p style={{ fontSize: 11, color: "#333", marginTop: 8, lineHeight: 1.6 }}>Helping businesses, creators, and communities grow through human participation.</p>
             </div>
             <div>
-              <p style={{ color: "#F5F5F5", fontWeight: 700, fontSize: 12, marginBottom: 14, letterSpacing: 0.3 }}>Platform</p>
-              {[{ label: "How it works", href: "#how-it-works" }, { label: "Mission types", href: "#" }, { label: "Level system", href: "#" }, { label: "For businesses", href: "#for-businesses" }].map(l => (
+              <p style={{ color: "#F5F5F5", fontWeight: 700, fontSize: 12, marginBottom: 14 }}>Platform</p>
+              {[{ label: "How it works", href: "#how-it-works" }, { label: "For businesses", href: "#for-businesses" }, { label: "Campaigns", href: "#" }, { label: "Contributors", href: "/register" }].map(l => (
                 <a key={l.label} href={l.href} style={{ display: "block", fontSize: 12, marginBottom: 9, color: "#444", textDecoration: "none" }}>{l.label}</a>
               ))}
             </div>
             <div>
-              <p style={{ color: "#F5F5F5", fontWeight: 700, fontSize: 12, marginBottom: 14, letterSpacing: 0.3 }}>Support</p>
-              {[{ label: "Help center", href: "#" }, { label: "Contact", href: "mailto:qeixova@gmail.com" }, { label: "Privacy policy", href: "#" }, { label: "Terms", href: "#" }].map(l => (
+              <p style={{ color: "#F5F5F5", fontWeight: 700, fontSize: 12, marginBottom: 14 }}>Support</p>
+              {[{ label: "Help Center", href: "#" }, { label: "Contact", href: "mailto:qeixova@gmail.com" }, { label: "Privacy Policy", href: "#" }, { label: "Terms", href: "#" }].map(l => (
                 <a key={l.label} href={l.href} style={{ display: "block", fontSize: 12, marginBottom: 9, color: "#444", textDecoration: "none" }}>{l.label}</a>
               ))}
             </div>
             <div>
-              <p style={{ color: "#F5F5F5", fontWeight: 700, fontSize: 12, marginBottom: 14, letterSpacing: 0.3 }}>Social</p>
+              <p style={{ color: "#F5F5F5", fontWeight: 700, fontSize: 12, marginBottom: 14 }}>Social</p>
               <a href="https://x.com/QeixovaTech" target="_blank" rel="noopener noreferrer" style={{ display: "block", fontSize: 12, marginBottom: 9, color: "#444", textDecoration: "none" }}>@QeixovaTech</a>
               <a href="https://www.facebook.com/profile.php?id=61568026449468" target="_blank" rel="noopener noreferrer" style={{ display: "block", fontSize: 12, marginBottom: 9, color: "#444", textDecoration: "none" }}>Facebook</a>
               <a href="mailto:qeixova@gmail.com" style={{ display: "block", fontSize: 12, color: "#444", textDecoration: "none" }}>qeixova@gmail.com</a>
@@ -294,7 +360,7 @@ export default function LandingPage() {
           </div>
           <div style={{ borderTop: "1px solid #111", paddingTop: 20, display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 10 }}>
             <p style={{ fontSize: 11, color: "#333" }}>© 2026 Qeixova. All rights reserved.</p>
-            <p style={{ fontSize: 11, color: "#333" }}>Human participation marketplace. Built for real earners.</p>
+            <p style={{ fontSize: 11, color: "#333" }}>Qeixova Tasks — Community-Powered Digital Growth.</p>
           </div>
         </div>
       </footer>
