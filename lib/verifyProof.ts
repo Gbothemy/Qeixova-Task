@@ -72,11 +72,11 @@ async function verifyScreenshot(proofValue: string, taskTitle: string): Promise<
     return { valid: false, reason: "No screenshot provided." };
   }
 
-  // We store "[screenshot uploaded]" for base64 images
-  if (proofValue === "[screenshot uploaded]") {
+  // The client stores markers instead of raw image data in the DB.
+  if (/^\[(?:screenshot|\d+\s+screenshots) uploaded\]$/i.test(proofValue.trim())) {
     // If OpenAI Vision key is available, we could verify here
     // For now: accept and flag for spot-check
-    return { valid: true, reason: "Screenshot received — accepted" };
+    return { valid: true, reason: "Screenshot received - accepted" };
   }
 
   // If it's a URL to an image
@@ -106,6 +106,6 @@ export async function verifyProof(
       return await verifyScreenshot(proofValue, taskTitle);
 
     default:
-      return { valid: true, reason: "Unknown proof type — accepted" };
+      return { valid: true, reason: "Unknown proof type - accepted" };
   }
 }

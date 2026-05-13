@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminAuth } from "@/lib/adminAuth";
 import { sql } from "@/lib/db";
-import { awardXP, checkMilestones, updateTrustScore, creditQLTAndUpdateLevel } from "@/lib/missionEngine";
+import { checkMilestones, updateTrustScore, creditQLTAndUpdateLevel } from "@/lib/missionEngine";
 import { log } from "@/lib/auditLog";
 import { sendMissionApprovedEmail, sendMissionRejectedEmail } from "@/lib/email";
 
@@ -66,12 +66,14 @@ export async function PATCH(req: NextRequest) {
     if (completion.status === "approved") {
       return NextResponse.json({ error: "Already approved" }, { status: 409 });
     }
+    if (completion.status !== "pending") {
+      return NextResponse.json({ error: "Only pending submissions can be approved" }, { status: 409 });
+    }
 
     await sql`UPDATE completions SET status = 'approved', rejection_reason = NULL WHERE id = ${completionId}`;
 
-    if (completion.status === "pending") {
-      const reward  = Number(completion.reward);
-      const xpReward = Number(completion.xp_reward ?? completion.xp_awarded ?? 10);
+    const reward = Number(completion.reward);
+    const xpReward = Number(completion.xp_reward ?? completion.xp_awarded ?? 10);
 
       // 1. Credit QLT balance + daily_earned
       await sql`
@@ -132,22 +134,34 @@ export async function PATCH(req: NextRequest) {
 
       return NextResponse.json({
         ok: true,
-        message: "Approved — QLT and XP credited",
+        message: "Approved - QLT and XP credited",
         newLevel,
         leveledUp,
         trustScore,
         milestones,
       });
-    }
 
-    return NextResponse.json({ ok: true, message: "Approved" });
   }
 
   // ── REJECT ────────────────────────────────────────────────────────────────
   if (action === "reject") {
+    if (completion.status !== "pending") {
+      return NextResponse.json({ error: "Only pending submissions can be rejected" }, { status: 409 });
+    }
+
     const reason = rejectionReason?.trim() || "Mission not completed correctly";
     await sql`UPDATE completions SET status = 'rejected', rejection_reason = ${reason} WHERE id = ${completionId}`;
     await sql`UPDATE users SET rejected_count = rejected_count + 1 WHERE id = ${completion.user_id}`;
+    await sql`
+      UPDATE tasks
+      SET budget_used = GREATEST(0, budget_used - ${Number(completion.reward)}),
+          is_active = CASE
+            WHEN COALESCE(status, 'active') = 'active' THEN true
+            ELSE is_active
+          END
+      WHERE id = ${completion.task_id}
+        AND total_budget > 0
+    `;
 
     const { trustScore } = await updateTrustScore(completion.user_id);
 

@@ -1,4 +1,6 @@
 "use client";
+"use client";
+
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -125,14 +127,14 @@ export default function Home() {
           <div style={{ background: "#111111", borderRadius: 16, padding: "16px 18px", border: "1px solid #222222" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <span style={{ fontSize: 16 }}>{(user as Record<string, unknown>).badgeEmoji as string ?? "🟢"}</span>
-                <span style={{ fontSize: 12, fontWeight: 700, color: (user as Record<string, unknown>).badgeColor as string ?? "#1AEF22" }}>
-                  {(user as Record<string, unknown>).levelName as string ?? "Starter"}
+                <span style={{ fontSize: 16 }}>{user.badgeEmoji ?? "🟢"}</span>
+                <span style={{ fontSize: 12, fontWeight: 700, color: user.badgeColor ?? "#1AEF22" }}>
+                  {user.levelName ?? "Starter"}
                 </span>
               </div>
-              {(user as Record<string, unknown>).nextLevel ? (
+              {user.nextLevel ? (
                 <span style={{ fontSize: 11, color: "#555" }}>
-                  {((user as Record<string, unknown>).qltToNextLevel as number ?? 0).toLocaleString()} QLT to {((user as Record<string, unknown>).nextLevel as Record<string, unknown>)?.emoji as string} {((user as Record<string, unknown>).nextLevel as Record<string, unknown>)?.name as string}
+                  {user.qltToNextLevel.toLocaleString()} QLT to {user.nextLevel.emoji} {user.nextLevel.name}
                 </span>
               ) : (
                 <span style={{ fontSize: 11, color: "#F5A623", fontWeight: 700 }}>Max Level 👑</span>
@@ -141,18 +143,18 @@ export default function Home() {
             <div style={{ height: 5, background: "#222", borderRadius: 10, overflow: "hidden", marginBottom: 6 }}>
               <div style={{
                 height: "100%",
-                width: `${(user as Record<string, unknown>).progressPct as number ?? 0}%`,
+                width: `${user.progressPct ?? 0}%`,
                 background: "linear-gradient(90deg, #1AEF22, #F5A623)",
                 borderRadius: 10, transition: "width 0.4s",
               }} />
             </div>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <span style={{ fontSize: 11, color: "#444" }}>
-                {((user as Record<string, unknown>).total_earned_qlt as number ?? 0).toLocaleString()} QLT earned lifetime
+                {user.total_earned_qlt.toLocaleString()} QLT earned lifetime
               </span>
-              {!(user as Record<string, unknown>).canWithdraw && (
+              {!user.canWithdraw && (
                 <span style={{ fontSize: 11, color: "#F5A623", fontWeight: 600 }}>
-                  🔒 {(500001 - ((user as Record<string, unknown>).total_earned_qlt as number ?? 0)).toLocaleString()} QLT to unlock withdrawals
+                  🔒 {Math.max(0, 500001 - user.total_earned_qlt).toLocaleString()} QLT to unlock withdrawals
                 </span>
               )}
             </div>

@@ -17,6 +17,7 @@ export async function GET() {
     FROM tasks t
     LEFT JOIN completions c ON c.task_id = t.id
     WHERE t.business_id = ${session.businessId}
+      AND COALESCE(t.status, '') <> 'deleted'
     GROUP BY t.id
     ORDER BY t.created_at DESC
   `;
@@ -29,7 +30,7 @@ export async function POST(req: NextRequest) {
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const {
-    title, category, reward, duration, instructions,
+    title, category, reward, duration, instructions, steps,
     proof_type, proof_label, max_screenshots, task_link,
     total_budget, target_completion_count,
     mission_type, verification_type, difficulty, min_level,
@@ -37,11 +38,19 @@ export async function POST(req: NextRequest) {
     target_age_ranges, target_genders, target_states,
   } = await req.json();
 
-  if (!title || !category || !reward) {
-    return NextResponse.json({ error: "Title, category and reward are required" }, { status: 400 });
+  const rewardAmount = Number(reward);
+  if (!title?.trim() || !category || !Number.isFinite(rewardAmount) || rewardAmount <= 0) {
+    return NextResponse.json({ error: "Title, category and a valid reward are required" }, { status: 400 });
   }
 
-  // Derive mission type from category if not provided
+  const targetCount = Math.max(0, Number(target_completion_count) || 0);
+  const explicitBudget = Math.max(0, Number(total_budget) || 0);
+  const resolvedBudget = explicitBudget > 0 ? explicitBudget : targetCount > 0 ? rewardAmount * targetCount : 0;
+  const screenshotLimit = Math.max(1, Math.min(5, Number(max_screenshots) || 1));
+  const cleanSteps = Array.isArray(steps)
+    ? steps.filter((step) => typeof step === "string" && step.trim()).map((step) => step.trim())
+    : [];
+
   const resolvedMissionType: string = mission_type || (() => {
     if (["Social Media"].includes(category)) return "engagement";
     if (["Survey", "AI Testing"].includes(category)) return "participation";
@@ -56,19 +65,19 @@ export async function POST(req: NextRequest) {
   const result = await sql`
     INSERT INTO tasks (
       title, category, reward, duration, icon, color,
-      instructions, proof_type, proof_label, max_screenshots,
+      instructions, steps, proof_type, proof_label, max_screenshots,
       task_link, total_budget, target_completion_count,
       mission_type, xp_reward, verification_type, difficulty, min_level,
       target_professions, target_interests, target_platforms,
       target_age_ranges, target_genders, target_states,
       business_id, is_active, status
     ) VALUES (
-      ${title}, ${category}, ${Number(reward)},
+      ${title.trim()}, ${category}, ${rewardAmount},
       ${duration || "5 min"}, ${"📋"}, ${"#111111"},
-      ${instructions || ""}, ${proof_type || "screenshot"},
+      ${instructions || ""}, ${cleanSteps}, ${proof_type || "screenshot"},
       ${proof_label || "Upload screenshot as proof"},
-      ${max_screenshots || 1}, ${task_link || ""},
-      ${Number(total_budget) || 0}, ${Number(target_completion_count) || 0},
+      ${screenshotLimit}, ${task_link || ""},
+      ${resolvedBudget}, ${targetCount},
       ${resolvedMissionType}, ${resolvedXpReward}, ${resolvedVerification},
       ${resolvedDifficulty}, ${resolvedMinLevel},
       ${target_professions || []}, ${target_interests || []}, ${target_platforms || []},

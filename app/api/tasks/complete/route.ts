@@ -12,7 +12,8 @@ export async function POST(req: NextRequest) {
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const body = await req.json().catch(() => ({}));
-    const { taskId, proofValue } = body;
+    const { taskId } = body;
+    const proofValue = typeof body.proofValue === "string" ? body.proofValue : "";
     if (!taskId) return NextResponse.json({ error: "taskId required" }, { status: 400 });
 
     // ── Anti-fraud: rate limit ────────────────────────────────────────────
@@ -39,7 +40,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "You have already completed this mission." }, { status: 409 });
     }
 
-    const taskRows = await sql`SELECT * FROM tasks WHERE id = ${taskId} AND is_active = true`;
+    const taskRows = await sql`
+      SELECT *
+      FROM tasks
+      WHERE id = ${taskId}
+        AND is_active = true
+        AND COALESCE(status, 'active') = 'active'
+    `;
     if (taskRows.length === 0) return NextResponse.json({ error: "Mission not found or no longer active." }, { status: 404 });
 
     const task = taskRows[0];
@@ -58,7 +65,7 @@ export async function POST(req: NextRequest) {
     // ── Budget check ──────────────────────────────────────────────────────
     const budget = Number(task.total_budget ?? 0);
     const budgetUsed = Number(task.budget_used ?? 0);
-    if (budget > 0 && budgetUsed >= budget) {
+    if (budget > 0 && budgetUsed + Number(task.reward) > budget) {
       return NextResponse.json({ error: "This mission has reached its completion limit." }, { status: 410 });
     }
 
@@ -72,16 +79,28 @@ export async function POST(req: NextRequest) {
 
     // ── Min level check ───────────────────────────────────────────────────
     const minLevel = Number(task.min_level ?? 1);
-    if (minLevel > 1) {
-      const userRows = await sql`SELECT level_id FROM users WHERE id = ${session.userId}`;
-      const levelRows = await sql`SELECT level_number FROM levels WHERE id = ${userRows[0]?.level_id ?? 1}`;
-      if (Number(levelRows[0]?.level_number ?? 1) < minLevel) {
-        return NextResponse.json({ error: `This mission requires Level ${minLevel}.` }, { status: 403 });
-      }
+    const userLevelRows = await sql`
+      SELECT l.level_number, l.unlock_features
+      FROM users u
+      LEFT JOIN levels l ON l.id = u.level_id
+      WHERE u.id = ${session.userId}
+    `;
+    const userLevel = Number(userLevelRows[0]?.level_number ?? 1);
+    if (userLevel < minLevel) {
+      return NextResponse.json({ error: `This mission requires Level ${minLevel}.` }, { status: 403 });
+    }
+
+    const unlockFeatures: string[] = (userLevelRows[0]?.unlock_features as string[]) ?? ["engagement_missions"];
+    const allowedTypes = new Set<string>();
+    if (unlockFeatures.includes("engagement_missions")) allowedTypes.add("engagement");
+    if (unlockFeatures.includes("participation_missions")) allowedTypes.add("participation");
+    if (unlockFeatures.includes("premium_missions")) allowedTypes.add("premium");
+    const missionType = task.mission_type ?? "engagement";
+    if (!allowedTypes.has(missionType)) {
+      return NextResponse.json({ error: "This mission type is not unlocked for your level yet." }, { status: 403 });
     }
 
     const storedProof = proofValue?.startsWith("data:image") ? "[screenshot uploaded]" : (proofValue ?? null);
-    const missionType = task.mission_type ?? "engagement";
     const xpReward = Number(task.xp_reward ?? XP_REWARDS[missionType] ?? 10);
 
     // ── Insert completion (DB UNIQUE constraint is final guard) ───────────
@@ -103,7 +122,7 @@ export async function POST(req: NextRequest) {
 
     // ── Budget tracking ───────────────────────────────────────────────────
     if (budget > 0) {
-      await sql`UPDATE tasks SET budget_used = budget_used + ${task.reward} WHERE id = ${taskId}`;
+      await sql`UPDATE tasks SET budget_used = LEAST(total_budget, budget_used + ${task.reward}) WHERE id = ${taskId}`;
       await sql`UPDATE tasks SET is_active = FALSE WHERE id = ${taskId} AND total_budget > 0 AND budget_used >= total_budget`;
     }
 

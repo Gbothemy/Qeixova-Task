@@ -18,6 +18,12 @@ export interface FullTask {
   budget_used: number;
   task_link: string;
   completed: boolean;
+  mission_type?: string;
+  xp_reward?: number;
+  difficulty?: string;
+  min_level?: number;
+  lockedByLevel?: boolean;
+  lockedByType?: boolean;
 }
 
 interface Props {

@@ -39,14 +39,15 @@ export async function POST(req: NextRequest) {
   }
 
   const result = await sql`
-    INSERT INTO tasks (title, category, reward, duration, icon, color, instructions, steps, proof_type, proof_label, max_screenshots, total_budget, task_link, mission_type, xp_reward, min_level)
+    INSERT INTO tasks (title, category, reward, duration, icon, color, instructions, steps, proof_type, proof_label, max_screenshots, total_budget, task_link, mission_type, xp_reward, min_level, is_active, status)
     VALUES (
       ${title}, ${category}, ${reward},
       ${duration ?? "5 min"}, ${icon ?? "📋"}, ${color ?? "#e8f5e9"},
       ${instructions ?? ""}, ${steps ?? []}, ${proof_type ?? "screenshot"},
       ${proof_label ?? "Upload screenshot as proof"}, ${max_screenshots ?? 1},
       ${body.total_budget ?? 0}, ${body.task_link ?? ""},
-      ${body.mission_type ?? "engagement"}, ${body.xp_reward ?? 10}, ${body.min_level ?? 1}
+      ${body.mission_type ?? "engagement"}, ${body.xp_reward ?? 10}, ${body.min_level ?? 1},
+      true, 'active'
     )
     RETURNING id, title, category, reward, mission_type
   `;
@@ -78,7 +79,16 @@ export async function PATCH(req: NextRequest) {
       else if (key === "total_budget")   await sql`UPDATE tasks SET total_budget = ${fields[key]} WHERE id = ${id}`;
       else if (key === "task_link")      await sql`UPDATE tasks SET task_link = ${fields[key]} WHERE id = ${id}`;
       else if (key === "is_active") {
-        await sql`UPDATE tasks SET is_active = ${fields[key]} WHERE id = ${id}`;
+        await sql`
+          UPDATE tasks
+          SET is_active = ${fields[key]},
+              status = CASE
+                WHEN business_id IS NOT NULL AND ${fields[key]} = true THEN 'active'
+                WHEN business_id IS NOT NULL AND ${fields[key]} = false THEN 'paused'
+                ELSE status
+              END
+          WHERE id = ${id}
+        `;
         // If activating a business task, notify the business
         if (fields[key] === true) {
           const taskInfo = await sql`

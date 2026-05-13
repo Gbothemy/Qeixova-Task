@@ -11,10 +11,15 @@ export interface AuthUser {
   level: number;
   levelName: string;
   badgeColor: string;
+  badgeEmoji: string;
   xp: number;
   trustScore: number;
+  total_earned_qlt: number;
+  progressPct: number;
+  qltToNextLevel: number;
+  canWithdraw: boolean;
   referralCode: string;
-  nextLevel: { number: number; name: string; xpRequired: number } | null;
+  nextLevel: { number: number; name: string; minQlt: number; emoji: string } | null;
 }
 
 export function useAuth(redirectIfUnauth = true) {
@@ -43,8 +48,13 @@ export function useAuth(redirectIfUnauth = true) {
             level: data.user.level ?? 1,
             levelName: data.user.levelName ?? "Starter",
             badgeColor: data.user.badgeColor ?? "#888888",
+            badgeEmoji: data.user.badgeEmoji ?? "🟢",
             xp: data.user.xp ?? 0,
             trustScore: data.user.trust_score ?? 100,
+            total_earned_qlt: data.user.total_earned_qlt ?? 0,
+            progressPct: data.user.progressPct ?? 0,
+            qltToNextLevel: data.user.qltToNextLevel ?? 0,
+            canWithdraw: data.user.canWithdraw ?? false,
             referralCode: data.user.referral_code,
             nextLevel: data.user.nextLevel ?? null,
           });
