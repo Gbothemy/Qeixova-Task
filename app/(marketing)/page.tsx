@@ -110,7 +110,6 @@ export default function LandingPage() {
         </div>
         <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
           <Link href="/login" style={{ fontSize: 13, fontWeight: 600, color: "#1AEF22", textDecoration: "none", padding: "8px 12px", whiteSpace: "nowrap" }}>Log in</Link>
-          <Link href="/business/login" style={{ fontSize: 13, fontWeight: 600, color: "#666", textDecoration: "none", padding: "8px 12px", whiteSpace: "nowrap" }}>Business</Link>
           <Link href="/register" style={{ fontSize: 13, fontWeight: 700, color: "#000", textDecoration: "none", padding: "9px 16px", background: "linear-gradient(135deg, #1AEF22, #06B517)", borderRadius: 9, boxShadow: "0 4px 14px rgba(26,239,34,0.3)", whiteSpace: "nowrap" }}>Get Started</Link>
         </div>
       </nav>
