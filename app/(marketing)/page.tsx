@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const campaignTypes = [
   { icon: "/icon-social-media.svg", title: "WhatsApp Status Campaign", desc: "Share flyers and content to WhatsApp status for 24 hours." },
@@ -49,6 +49,55 @@ const faqs = [
 export default function LandingPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [activeStep, setActiveStep] = useState(0);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  // Scroll reveal
+  useEffect(() => {
+    const els = document.querySelectorAll(".reveal");
+    const observer = new IntersectionObserver(
+      entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("visible"); }),
+      { threshold: 0.12 }
+    );
+    els.forEach(el => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
+  // Particle canvas
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    let animId: number;
+    const resize = () => { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; };
+    resize();
+    window.addEventListener("resize", resize);
+
+    const particles = Array.from({ length: 40 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 1.5 + 0.5,
+      dx: (Math.random() - 0.5) * 0.3,
+      dy: (Math.random() - 0.5) * 0.3,
+      alpha: Math.random() * 0.4 + 0.1,
+    }));
+
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(26,239,34,${p.alpha})`;
+        ctx.fill();
+        p.x += p.dx; p.y += p.dy;
+        if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+      });
+      animId = requestAnimationFrame(draw);
+    };
+    draw();
+    return () => { cancelAnimationFrame(animId); window.removeEventListener("resize", resize); };
+  }, []);
 
   return (
     <div style={{ background: "#000000", color: "#F5F5F5", overflowX: "hidden" }}>
@@ -68,30 +117,31 @@ export default function LandingPage() {
 
       {/* HERO */}
       <section style={{ background: "linear-gradient(160deg, #050505 0%, #0d0d0d 100%)", padding: "90px 5vw 100px", textAlign: "center", borderBottom: "1px solid #1a1a1a", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", top: -100, left: "50%", transform: "translateX(-50%)", width: 700, height: 700, borderRadius: "50%", background: "radial-gradient(circle, rgba(26,239,34,0.04) 0%, transparent 70%)" }} />
-        <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(26,239,34,0.08)", border: "1px solid rgba(26,239,34,0.2)", borderRadius: 20, padding: "6px 16px", marginBottom: 28 }}>
-          <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#1AEF22", boxShadow: "0 0 8px #1AEF22" }} />
+        <canvas ref={canvasRef} id="landing-particles" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", top: -100, left: "50%", transform: "translateX(-50%)", width: 700, height: 700, borderRadius: "50%", background: "radial-gradient(circle, rgba(26,239,34,0.06) 0%, transparent 70%)" }} />
+        <div className="animate-fade-up" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(26,239,34,0.08)", border: "1px solid rgba(26,239,34,0.2)", borderRadius: 20, padding: "6px 16px", marginBottom: 28 }}>
+          <div className="animate-pulse-glow" style={{ width: 6, height: 6, borderRadius: "50%", background: "#1AEF22" }} />
           <span style={{ fontSize: 12, color: "#1AEF22", fontWeight: 700 }}>Community-Powered Digital Growth</span>
         </div>
-        <h1 style={{ fontSize: "clamp(30px, 6vw, 64px)", fontWeight: 900, lineHeight: 1.05, letterSpacing: -2, maxWidth: 820, margin: "0 auto 20px", color: "#F5F5F5" }}>
+        <h1 className="animate-fade-up delay-1" style={{ fontSize: "clamp(30px, 6vw, 64px)", fontWeight: 900, lineHeight: 1.05, letterSpacing: -2, maxWidth: 820, margin: "0 auto 20px", color: "#F5F5F5", position: "relative" }}>
           Grow Your Business Through<br />
-          <span style={{ background: "linear-gradient(135deg, #1AEF22, #06B517)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Real Human Participation.</span>
+          <span className="shimmer-text">Real Human Participation.</span>
         </h1>
-        <p style={{ fontSize: "clamp(14px, 2vw, 18px)", color: "#888", maxWidth: 620, margin: "0 auto 16px", lineHeight: 1.7 }}>
+        <p className="animate-fade-up delay-2" style={{ fontSize: "clamp(14px, 2vw, 18px)", color: "#888", maxWidth: 620, margin: "0 auto 16px", lineHeight: 1.7, position: "relative" }}>
           Qeixova Tasks helps businesses, creators, brands, musicians, and communities amplify their visibility through real people — not bots, fake traffic, or empty engagement.
         </p>
-        <p style={{ fontSize: 14, color: "#555", maxWidth: 560, margin: "0 auto 36px", lineHeight: 1.7 }}>
+        <p className="animate-fade-up delay-3" style={{ fontSize: 14, color: "#555", maxWidth: 560, margin: "0 auto 36px", lineHeight: 1.7, position: "relative" }}>
           Launch awareness campaigns, distribute content, gather engagement, grow communities, and reach real audiences through a network of verified digital participants.
         </p>
-        <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-          <Link href="/register" style={{ background: "linear-gradient(135deg, #F5A623, #d89420)", color: "#000", textDecoration: "none", padding: "16px 36px", borderRadius: 14, fontWeight: 800, fontSize: 16, boxShadow: "0 8px 28px rgba(245,166,35,0.4)" }}>
+        <div className="animate-fade-up delay-4" style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", position: "relative" }}>
+          <Link href="/register" className="btn-amber-glow" style={{ background: "linear-gradient(135deg, #F5A623, #d89420)", color: "#000", textDecoration: "none", padding: "16px 36px", borderRadius: 14, fontWeight: 800, fontSize: 16, boxShadow: "0 8px 28px rgba(245,166,35,0.4)", transition: "all 0.2s ease" }}>
             Start a Campaign
           </Link>
-          <Link href="/register" style={{ background: "#111", border: "1.5px solid #222", color: "#F5F5F5", textDecoration: "none", padding: "16px 32px", borderRadius: 14, fontWeight: 600, fontSize: 15 }}>
+          <Link href="/register" className="btn-glow" style={{ background: "#111", border: "1.5px solid #222", color: "#F5F5F5", textDecoration: "none", padding: "16px 32px", borderRadius: 14, fontWeight: 600, fontSize: 15, transition: "all 0.2s ease" }}>
             Become a Contributor
           </Link>
         </div>
-        <p style={{ color: "#333", fontSize: 12, marginTop: 18 }}>Trusted for community-powered growth, content distribution, and grassroots digital promotion.</p>
+        <p className="animate-fade-up delay-5" style={{ color: "#333", fontSize: 12, marginTop: 18, position: "relative" }}>Trusted for community-powered growth, content distribution, and grassroots digital promotion.</p>
       </section>
 
       {/* Trust strip */}
@@ -186,8 +236,8 @@ export default function LandingPage() {
             <h2 style={{ fontSize: "clamp(24px, 4vw, 40px)", fontWeight: 900, color: "#F5F5F5", marginTop: 14, letterSpacing: -1 }}>Built for Businesses That Want Visibility</h2>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, marginBottom: 40 }}>
-            {businessTypes.map(b => (
-              <div key={b.title} style={{ background: "#0a0a0a", borderRadius: 18, padding: "24px 20px", border: "1px solid #1a1a1a" }}>
+            {businessTypes.map((b, i) => (
+              <div key={b.title} className={`reveal card-hover delay-${i + 1}`} style={{ background: "#0a0a0a", borderRadius: 18, padding: "24px 20px", border: "1px solid #1a1a1a" }}>
                 <div style={{ width: 48, height: 48, borderRadius: 13, background: "rgba(26,239,34,0.06)", border: "1px solid rgba(26,239,34,0.1)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14 }}>
                   <Image src={b.icon} alt={b.title} width={24} height={24} style={{ objectFit: "contain", filter: "invert(58%) sepia(98%) saturate(400%) hue-rotate(83deg) brightness(110%)" }} />
                 </div>
@@ -272,8 +322,8 @@ export default function LandingPage() {
             <h2 style={{ fontSize: "clamp(24px, 4vw, 40px)", fontWeight: 900, color: "#F5F5F5", marginTop: 14, letterSpacing: -1 }}>Why Businesses Choose Qeixova</h2>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
-            {whyFeatures.map(f => (
-              <div key={f.title} style={{ background: "#0a0a0a", borderRadius: 16, padding: "22px 18px", border: "1px solid #1a1a1a" }}>
+            {whyFeatures.map((f, i) => (
+              <div key={f.title} className={`reveal card-hover delay-${i + 1}`} style={{ background: "#0a0a0a", borderRadius: 16, padding: "22px 18px", border: "1px solid #1a1a1a" }}>
                 <div style={{ width: 40, height: 40, borderRadius: 11, background: "rgba(26,239,34,0.06)", border: "1px solid rgba(26,239,34,0.1)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14 }}>
                   <Image src={f.icon} alt={f.title} width={20} height={20} style={{ objectFit: "contain", filter: "invert(58%) sepia(98%) saturate(400%) hue-rotate(83deg) brightness(110%)" }} />
                 </div>
@@ -293,8 +343,8 @@ export default function LandingPage() {
             <h2 style={{ fontSize: "clamp(24px, 4vw, 40px)", fontWeight: 900, color: "#F5F5F5", marginTop: 14, letterSpacing: -1 }}>What You Can Promote</h2>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
-            {campaignTypes.map(c => (
-              <div key={c.title} style={{ background: "#0a0a0a", borderRadius: 16, padding: "22px 18px", border: "1px solid #1a1a1a" }}>
+            {campaignTypes.map((c, i) => (
+              <div key={c.title} className={`reveal card-hover delay-${i + 1}`} style={{ background: "#0a0a0a", borderRadius: 16, padding: "22px 18px", border: "1px solid #1a1a1a" }}>
                 <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(26,239,34,0.06)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14 }}>
                   <Image src={c.icon} alt={c.title} width={24} height={24} style={{ objectFit: "contain" }} />
                 </div>
@@ -346,7 +396,7 @@ export default function LandingPage() {
       {/* SECTION 9 — Final CTA */}
       <section style={{ background: "#050505", borderTop: "1px solid #1a1a1a", padding: "80px 5vw", textAlign: "center" }}>
         <div style={{ marginBottom: 20 }}>
-          <Image src="/qeixova-icon.png" alt="Qeixova" width={64} height={64} style={{ objectFit: "contain", borderRadius: 18 }} />
+          <Image src="/qeixova-icon.png" alt="Qeixova" width={64} height={64} className="animate-float" style={{ objectFit: "contain", borderRadius: 18 }} />
         </div>
         <h2 style={{ fontSize: "clamp(24px, 5vw, 48px)", fontWeight: 900, color: "#F5F5F5", letterSpacing: -1.5, marginBottom: 14 }}>
           Launch Your First Growth<br />
