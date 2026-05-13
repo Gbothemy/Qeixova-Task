@@ -269,12 +269,12 @@ export default function LandingPage() {
       </section>
 
       {/* SECTION 5 — For Contributors */}
-      <section style={{ padding: "80px 5vw", background: "#050505", borderTop: "1px solid #1a1a1a" }}>
+      <section id="contributors" className="contributors-section" style={{ padding: "80px 5vw", background: "#050505", borderTop: "1px solid #1a1a1a" }}>
         <div style={{ maxWidth: 960, margin: "0 auto" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "center" }}>
-            <div>
-              <span style={{ fontSize: 11, fontWeight: 700, color: "#1AEF22", letterSpacing: 2, textTransform: "uppercase", background: "rgba(26,239,34,0.08)", borderRadius: 20, padding: "4px 14px" }}>For Contributors</span>
-              <h2 style={{ fontSize: "clamp(22px, 3.5vw, 38px)", fontWeight: 900, color: "#F5F5F5", marginTop: 14, letterSpacing: -1, marginBottom: 16 }}>Earn By Helping Businesses Grow</h2>
+          <div className="contributors-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "center" }}>
+            <div className="contributors-copy">
+              <span style={{ display: "inline-flex", fontSize: 11, fontWeight: 700, color: "#1AEF22", letterSpacing: 2, textTransform: "uppercase", background: "rgba(26,239,34,0.08)", borderRadius: 20, padding: "4px 14px" }}>For Contributors</span>
+              <h2 className="contributors-title" style={{ fontSize: "clamp(22px, 3.5vw, 38px)", fontWeight: 900, color: "#F5F5F5", marginTop: 14, letterSpacing: 0, marginBottom: 16 }}>Earn By Helping Businesses Grow</h2>
               <p style={{ fontSize: 15, color: "#666", lineHeight: 1.8, marginBottom: 20 }}>
                 Become part of a growing network of digital contributors helping brands and creators reach more people online.
               </p>
@@ -286,12 +286,12 @@ export default function LandingPage() {
                   </div>
                 ))}
               </div>
-              <Link href="/register" style={{ display: "inline-block", background: "linear-gradient(135deg, #1AEF22, #06B517)", color: "#000", textDecoration: "none", padding: "14px 32px", borderRadius: 12, fontWeight: 800, fontSize: 15 }}>
+              <Link href="/register" className="contributors-cta" style={{ display: "inline-block", background: "linear-gradient(135deg, #1AEF22, #06B517)", color: "#000", textDecoration: "none", padding: "14px 32px", borderRadius: 12, fontWeight: 800, fontSize: 15 }}>
                 Start Earning →
               </Link>
             </div>
-            <div style={{ background: "#0a0a0a", borderRadius: 20, padding: "32px 28px", border: "1px solid #1a1a1a" }}>
-              <div style={{ background: "rgba(26,239,34,0.06)", border: "1px solid rgba(26,239,34,0.12)", borderRadius: 14, padding: "20px", marginBottom: 20 }}>
+            <div className="contributors-card" style={{ background: "#0a0a0a", borderRadius: 20, padding: "32px 28px", border: "1px solid #1a1a1a" }}>
+              <div className="contributors-proof" style={{ background: "rgba(26,239,34,0.06)", border: "1px solid rgba(26,239,34,0.12)", borderRadius: 14, padding: "20px", marginBottom: 20 }}>
                 <p style={{ fontSize: 13, fontWeight: 700, color: "#1AEF22", marginBottom: 6 }}>Not fake engagement.</p>
                 <p style={{ fontSize: 13, fontWeight: 700, color: "#1AEF22", marginBottom: 6 }}>Real participation.</p>
                 <p style={{ fontSize: 13, fontWeight: 700, color: "#1AEF22", marginBottom: 6 }}>Real contribution.</p>
@@ -304,7 +304,7 @@ export default function LandingPage() {
                   { label: "Silver → Gold", desc: "5,000,000 QLT lifetime earned" },
                   { label: "Gold → VIP", desc: "10,000,000 QLT lifetime earned" },
                 ].map(l => (
-                  <div key={l.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: "1px solid #111" }}>
+                  <div className="contributors-level" key={l.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: "1px solid #111" }}>
                     <span style={{ fontSize: 13, fontWeight: 700, color: "#F5F5F5" }}>{l.label}</span>
                     <span style={{ fontSize: 11, color: "#444" }}>{l.desc}</span>
                   </div>

@@ -262,3 +262,59 @@ input[type="number"] {
   pointer-events: none;
   z-index: 0;
 }
+
+@media (max-width: 720px) {
+  .contributors-section {
+    padding: 56px 20px !important;
+  }
+
+  .contributors-grid {
+    grid-template-columns: 1fr !important;
+    gap: 28px !important;
+    align-items: stretch !important;
+  }
+
+  .contributors-copy {
+    max-width: 420px;
+  }
+
+  .contributors-title {
+    max-width: 360px;
+    font-size: clamp(28px, 9vw, 38px) !important;
+    line-height: 1.12 !important;
+    margin-top: 18px !important;
+  }
+
+  .contributors-cta {
+    width: 100%;
+    max-width: 260px;
+    text-align: center;
+    padding: 15px 24px !important;
+  }
+
+  .contributors-card {
+    width: 100%;
+    border-radius: 16px !important;
+    padding: 20px !important;
+  }
+
+  .contributors-proof {
+    padding: 18px !important;
+    margin-bottom: 14px !important;
+  }
+
+  .contributors-level {
+    display: block !important;
+    padding: 13px 0 !important;
+  }
+
+  .contributors-level span {
+    display: block;
+  }
+
+  .contributors-level span:last-child {
+    margin-top: 5px;
+    color: #666 !important;
+    line-height: 1.45;
+  }
+}
