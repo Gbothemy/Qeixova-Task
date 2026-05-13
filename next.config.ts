@@ -9,13 +9,7 @@ const nextConfig: NextConfig = {
       bodySizeLimit: '2mb',
     },
   },
-  webpack: (config, { isServer }) => {
-    if (isServer) {
-      // Ensure nodemailer is treated as external on server
-      config.externals = [...(config.externals || []), 'nodemailer'];
-    }
-    return config;
-  },
+  turbopack: {},
 };
 
 export default nextConfig;
