@@ -178,55 +178,57 @@ export default function LandingPage() {
             <h2 style={{ fontSize: "clamp(24px, 4vw, 40px)", fontWeight: 900, color: "#F5F5F5", marginTop: 14, letterSpacing: -1 }}>How Qeixova Works</h2>
           </div>
 
-          {/* Desktop: grid | Mobile: carousel */}
-          <div className="steps-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 28 }}>
-            {steps.map(s => (
-              <div key={s.num} style={{ textAlign: "center" }}>
-                <div style={{ width: 64, height: 64, borderRadius: "50%", background: "#0d0d0d", border: "2px solid rgba(26,239,34,0.2)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px", position: "relative" }}>
-                  <Image src={s.icon} alt={s.title} width={28} height={28} style={{ objectFit: "contain", filter: "invert(58%) sepia(98%) saturate(400%) hue-rotate(83deg) brightness(110%)" }} />
-                  <span style={{ position: "absolute", top: -8, right: -8, width: 22, height: 22, borderRadius: "50%", background: "#1AEF22", color: "#000", fontSize: 10, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center" }}>{s.num.replace("0","")}</span>
-                </div>
-                <h3 style={{ fontWeight: 700, fontSize: 15, color: "#F5F5F5", marginBottom: 8 }}>{s.title}</h3>
-                <p style={{ fontSize: 13, color: "#555", lineHeight: 1.6 }}>{s.desc}</p>
-              </div>
-            ))}
-          </div>
+          {/* Carousel — all screen sizes */}
+          <div style={{ position: "relative" }}>
+            {/* Prev / Next buttons */}
+            <button onClick={() => setActiveStep(s => Math.max(0, s - 1))} disabled={activeStep === 0}
+              style={{ position: "absolute", left: -20, top: "50%", transform: "translateY(-50%)", zIndex: 10, width: 40, height: 40, borderRadius: "50%", background: activeStep === 0 ? "#111" : "#1AEF22", border: "none", cursor: activeStep === 0 ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", opacity: activeStep === 0 ? 0.3 : 1, transition: "all 0.2s" }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={activeStep === 0 ? "#555" : "#000"} strokeWidth="3" strokeLinecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <button onClick={() => setActiveStep(s => Math.min(steps.length - 1, s + 1))} disabled={activeStep === steps.length - 1}
+              style={{ position: "absolute", right: -20, top: "50%", transform: "translateY(-50%)", zIndex: 10, width: 40, height: 40, borderRadius: "50%", background: activeStep === steps.length - 1 ? "#111" : "#1AEF22", border: "none", cursor: activeStep === steps.length - 1 ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", opacity: activeStep === steps.length - 1 ? 0.3 : 1, transition: "all 0.2s" }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={activeStep === steps.length - 1 ? "#555" : "#000"} strokeWidth="3" strokeLinecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
 
-          {/* Mobile carousel */}
-          <div className="steps-carousel">
-            <div style={{ overflowX: "auto", scrollSnapType: "x mandatory", display: "flex", gap: 16, paddingBottom: 16, scrollbarWidth: "none" }}
-              onScroll={e => {
-                const el = e.currentTarget;
-                const idx = Math.round(el.scrollLeft / (el.scrollWidth / steps.length));
-                setActiveStep(idx);
-              }}>
-              {steps.map(s => (
-                <div key={s.num} style={{ minWidth: "80vw", maxWidth: 300, scrollSnapAlign: "center", textAlign: "center", background: "#0a0a0a", borderRadius: 20, padding: "32px 24px", border: "1px solid #1a1a1a", flexShrink: 0 }}>
-                  <div style={{ width: 72, height: 72, borderRadius: "50%", background: "#0d0d0d", border: "2px solid rgba(26,239,34,0.2)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px", position: "relative" }}>
-                    <Image src={s.icon} alt={s.title} width={32} height={32} style={{ objectFit: "contain", filter: "invert(58%) sepia(98%) saturate(400%) hue-rotate(83deg) brightness(110%)" }} />
-                    <span style={{ position: "absolute", top: -8, right: -8, width: 24, height: 24, borderRadius: "50%", background: "#1AEF22", color: "#000", fontSize: 11, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center" }}>{s.num.replace("0","")}</span>
+            {/* Single card display */}
+            <div style={{ overflow: "hidden", borderRadius: 20 }}>
+              <div style={{ display: "flex", transition: "transform 0.4s cubic-bezier(0.4,0,0.2,1)", transform: `translateX(-${activeStep * 100}%)` }}>
+                {steps.map(s => (
+                  <div key={s.num} style={{ minWidth: "100%", textAlign: "center", background: "#0a0a0a", borderRadius: 20, padding: "48px 40px", border: "1px solid #1a1a1a", boxSizing: "border-box" }}>
+                    <div style={{ width: 80, height: 80, borderRadius: "50%", background: "#0d0d0d", border: "2px solid rgba(26,239,34,0.25)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px", position: "relative", boxShadow: "0 0 24px rgba(26,239,34,0.1)" }}>
+                      <Image src={s.icon} alt={s.title} width={36} height={36} style={{ objectFit: "contain", filter: "invert(58%) sepia(98%) saturate(400%) hue-rotate(83deg) brightness(110%)" }} />
+                      <span style={{ position: "absolute", top: -10, right: -10, width: 28, height: 28, borderRadius: "50%", background: "#1AEF22", color: "#000", fontSize: 12, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 12px rgba(26,239,34,0.4)" }}>{s.num.replace("0","")}</span>
+                    </div>
+                    <div style={{ display: "inline-block", background: "rgba(26,239,34,0.06)", border: "1px solid rgba(26,239,34,0.12)", borderRadius: 20, padding: "4px 14px", marginBottom: 16 }}>
+                      <span style={{ fontSize: 11, color: "#1AEF22", fontWeight: 700 }}>Step {s.num}</span>
+                    </div>
+                    <h3 style={{ fontWeight: 900, fontSize: "clamp(20px, 3vw, 28px)", color: "#F5F5F5", marginBottom: 14, letterSpacing: -0.5 }}>{s.title}</h3>
+                    <p style={{ fontSize: "clamp(14px, 1.5vw, 16px)", color: "#666", lineHeight: 1.7, maxWidth: 480, margin: "0 auto" }}>{s.desc}</p>
                   </div>
-                  <h3 style={{ fontWeight: 800, fontSize: 17, color: "#F5F5F5", marginBottom: 10 }}>{s.title}</h3>
-                  <p style={{ fontSize: 14, color: "#555", lineHeight: 1.7 }}>{s.desc}</p>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
+
             {/* Dot indicators */}
-            <div style={{ display: "flex", justifyContent: "center", gap: 6, marginTop: 16 }}>
+            <div style={{ display: "flex", justifyContent: "center", gap: 8, marginTop: 24 }}>
               {steps.map((_, i) => (
-                <div key={i} style={{ width: i === activeStep ? 20 : 6, height: 6, borderRadius: 3, background: i === activeStep ? "#1AEF22" : "#222", transition: "all 0.3s" }} />
+                <button key={i} onClick={() => setActiveStep(i)} style={{
+                  width: i === activeStep ? 28 : 8, height: 8, borderRadius: 4,
+                  background: i === activeStep ? "#1AEF22" : "#222",
+                  border: "none", cursor: "pointer", padding: 0,
+                  transition: "all 0.3s ease",
+                  boxShadow: i === activeStep ? "0 0 8px rgba(26,239,34,0.5)" : "none",
+                }} />
               ))}
             </div>
+
+            {/* Step counter */}
+            <p style={{ textAlign: "center", fontSize: 12, color: "#333", marginTop: 12 }}>
+              {activeStep + 1} of {steps.length}
+            </p>
           </div>
         </div>
       </section>
-      <style>{`
-        .steps-carousel { display: none; }
-        @media (max-width: 767px) {
-          .steps-grid { display: none !important; }
-          .steps-carousel { display: block; }
-        }
-      `}</style>
 
       {/* SECTION 4 — For Businesses */}
       <section id="for-businesses" style={{ padding: "80px 5vw", background: "#000" }}>
