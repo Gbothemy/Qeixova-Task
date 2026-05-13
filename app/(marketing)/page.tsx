@@ -13,21 +13,21 @@ const campaignTypes = [
 ];
 
 const businessTypes = [
-  { emoji: "🏪", title: "Local Businesses",          desc: "Promote products, services, store openings, events, and special offers to nearby communities." },
-  { emoji: "🎵", title: "Musicians & Entertainment", desc: "Distribute songs, promote releases, push trends, and create grassroots awareness." },
-  { emoji: "📱", title: "Startups & Apps",           desc: "Get real users for testing, onboarding, reviews, and feedback." },
-  { emoji: "🎬", title: "Content Creators",          desc: "Increase awareness for videos, pages, live streams, and creator content." },
-  { emoji: "🎪", title: "Event Organizers",          desc: "Spread awareness for concerts, church programs, conferences, and community events." },
-  { emoji: "🌍", title: "Communities & NGOs",        desc: "Mobilize grassroots participation and community-driven campaigns." },
+  { icon: "/icon-local-business.svg", title: "Local Businesses",          desc: "Promote products, services, store openings, events, and special offers to nearby communities." },
+  { icon: "/icon-music.svg",          title: "Musicians & Entertainment", desc: "Distribute songs, promote releases, push trends, and create grassroots awareness." },
+  { icon: "/icon-startup.svg",        title: "Startups & Apps",           desc: "Get real users for testing, onboarding, reviews, and feedback." },
+  { icon: "/icon-creator.svg",        title: "Content Creators",          desc: "Increase awareness for videos, pages, live streams, and creator content." },
+  { icon: "/icon-events.svg",         title: "Event Organizers",          desc: "Spread awareness for concerts, church programs, conferences, and community events." },
+  { icon: "/icon-community.svg",      title: "Communities & NGOs",        desc: "Mobilize grassroots participation and community-driven campaigns." },
 ];
 
 const whyFeatures = [
-  { icon: "/icon-profile.svg",      title: "Human Distribution",      desc: "Reach people through real individuals and communities instead of relying only on algorithms." },
-  { icon: "/icon-wallet.svg",       title: "Affordable Awareness",    desc: "Launch flexible campaigns that fit your budget and goals." },
-  { icon: "/icon-task.svg",         title: "Grassroots Reach",        desc: "Expand visibility organically through community-driven promotion." },
-  { icon: "/icon-content.svg",      title: "Flexible Campaign Types", desc: "Run awareness, engagement, testing, referral, and distribution campaigns from one platform." },
-  { icon: "/icon-survey.svg",       title: "Verified Participation",  desc: "Campaigns are completed by real contributors with verification and quality checks." },
-  { icon: "/icon-app-testing.svg",  title: "Creator-Friendly",        desc: "Perfect for creators, musicians, startups, local businesses, and growing brands." },
+  { icon: "/icon-human-distribution.svg", title: "Human Distribution",      desc: "Reach people through real individuals and communities instead of relying only on algorithms." },
+  { icon: "/icon-affordable.svg",         title: "Affordable Awareness",    desc: "Launch flexible campaigns that fit your budget and goals." },
+  { icon: "/icon-grassroots.svg",         title: "Grassroots Reach",        desc: "Expand visibility organically through community-driven promotion." },
+  { icon: "/icon-flexible.svg",           title: "Flexible Campaign Types", desc: "Run awareness, engagement, testing, referral, and distribution campaigns from one platform." },
+  { icon: "/icon-verified.svg",           title: "Verified Participation",  desc: "Campaigns are completed by real contributors with verification and quality checks." },
+  { icon: "/icon-creator-friendly.svg",   title: "Creator-Friendly",        desc: "Perfect for creators, musicians, startups, local businesses, and growing brands." },
 ];
 
 const steps = [
@@ -151,7 +151,9 @@ export default function LandingPage() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, marginBottom: 40 }}>
             {businessTypes.map(b => (
               <div key={b.title} style={{ background: "#0a0a0a", borderRadius: 18, padding: "24px 20px", border: "1px solid #1a1a1a" }}>
-                <div style={{ fontSize: 32, marginBottom: 14 }}>{b.emoji}</div>
+                <div style={{ width: 48, height: 48, borderRadius: 13, background: "rgba(26,239,34,0.06)", border: "1px solid rgba(26,239,34,0.1)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14 }}>
+                  <Image src={b.icon} alt={b.title} width={24} height={24} style={{ objectFit: "contain", filter: "invert(58%) sepia(98%) saturate(400%) hue-rotate(83deg) brightness(110%)" }} />
+                </div>
                 <h3 style={{ fontWeight: 800, fontSize: 14, color: "#F5F5F5", marginBottom: 8 }}>{b.title}</h3>
                 <p style={{ fontSize: 13, color: "#555", lineHeight: 1.6 }}>{b.desc}</p>
               </div>
