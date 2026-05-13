@@ -48,6 +48,7 @@ const faqs = [
 
 export default function LandingPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [activeStep, setActiveStep] = useState(0);
 
   return (
     <div style={{ background: "#000000", color: "#F5F5F5", overflowX: "hidden" }}>
@@ -122,11 +123,13 @@ export default function LandingPage() {
       {/* SECTION 3 — How It Works */}
       <section id="how-it-works" style={{ padding: "80px 5vw", background: "#050505", borderTop: "1px solid #1a1a1a" }}>
         <div style={{ maxWidth: 960, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 52 }}>
+          <div style={{ textAlign: "center", marginBottom: 48 }}>
             <span style={{ fontSize: 11, fontWeight: 700, color: "#1AEF22", letterSpacing: 2, textTransform: "uppercase", background: "rgba(26,239,34,0.08)", borderRadius: 20, padding: "4px 14px" }}>Simple Process</span>
             <h2 style={{ fontSize: "clamp(24px, 4vw, 40px)", fontWeight: 900, color: "#F5F5F5", marginTop: 14, letterSpacing: -1 }}>How Qeixova Works</h2>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 28 }}>
+
+          {/* Desktop: grid | Mobile: carousel */}
+          <div className="steps-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 28 }}>
             {steps.map(s => (
               <div key={s.num} style={{ textAlign: "center" }}>
                 <div style={{ width: 64, height: 64, borderRadius: "50%", background: "#0d0d0d", border: "2px solid rgba(26,239,34,0.2)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px", position: "relative" }}>
@@ -138,8 +141,42 @@ export default function LandingPage() {
               </div>
             ))}
           </div>
+
+          {/* Mobile carousel */}
+          <div className="steps-carousel">
+            <div style={{ overflowX: "auto", scrollSnapType: "x mandatory", display: "flex", gap: 16, paddingBottom: 16, scrollbarWidth: "none" }}
+              onScroll={e => {
+                const el = e.currentTarget;
+                const idx = Math.round(el.scrollLeft / (el.scrollWidth / steps.length));
+                setActiveStep(idx);
+              }}>
+              {steps.map(s => (
+                <div key={s.num} style={{ minWidth: "80vw", maxWidth: 300, scrollSnapAlign: "center", textAlign: "center", background: "#0a0a0a", borderRadius: 20, padding: "32px 24px", border: "1px solid #1a1a1a", flexShrink: 0 }}>
+                  <div style={{ width: 72, height: 72, borderRadius: "50%", background: "#0d0d0d", border: "2px solid rgba(26,239,34,0.2)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px", position: "relative" }}>
+                    <Image src={s.icon} alt={s.title} width={32} height={32} style={{ objectFit: "contain", filter: "invert(58%) sepia(98%) saturate(400%) hue-rotate(83deg) brightness(110%)" }} />
+                    <span style={{ position: "absolute", top: -8, right: -8, width: 24, height: 24, borderRadius: "50%", background: "#1AEF22", color: "#000", fontSize: 11, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center" }}>{s.num.replace("0","")}</span>
+                  </div>
+                  <h3 style={{ fontWeight: 800, fontSize: 17, color: "#F5F5F5", marginBottom: 10 }}>{s.title}</h3>
+                  <p style={{ fontSize: 14, color: "#555", lineHeight: 1.7 }}>{s.desc}</p>
+                </div>
+              ))}
+            </div>
+            {/* Dot indicators */}
+            <div style={{ display: "flex", justifyContent: "center", gap: 6, marginTop: 16 }}>
+              {steps.map((_, i) => (
+                <div key={i} style={{ width: i === activeStep ? 20 : 6, height: 6, borderRadius: 3, background: i === activeStep ? "#1AEF22" : "#222", transition: "all 0.3s" }} />
+              ))}
+            </div>
+          </div>
         </div>
       </section>
+      <style>{`
+        .steps-carousel { display: none; }
+        @media (max-width: 767px) {
+          .steps-grid { display: none !important; }
+          .steps-carousel { display: block; }
+        }
+      `}</style>
 
       {/* SECTION 4 — For Businesses */}
       <section id="for-businesses" style={{ padding: "80px 5vw", background: "#000" }}>
