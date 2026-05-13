@@ -8,7 +8,7 @@ interface Props {
 
 const STEPS = [
   {
-    icon: "/icon-task.png",
+    icon: "/icon-task.svg",
     tag: "Step 1 of 5",
     title: "Browse Available Tasks",
     body: "Go to the Tasks tab to see all available tasks. Tasks are grouped by category — Social Media, Surveys, App Testing, and AI Testing.",
@@ -16,7 +16,7 @@ const STEPS = [
     screen: "tasks",
   },
   {
-    icon: "/icon-task.png",
+    icon: "/icon-task.svg",
     tag: "Step 2 of 5",
     title: "Pick a Task",
     body: "Tap any task to see the full instructions, reward amount, and estimated time. Read everything carefully before starting.",
@@ -24,7 +24,7 @@ const STEPS = [
     screen: "task-detail",
   },
   {
-    icon: "/icon-task.png",
+    icon: "/icon-task.svg",
     tag: "Step 3 of 5",
     title: "Complete & Submit Proof",
     body: "Follow the step-by-step instructions exactly. When done, submit your proof — a screenshot, URL, or confirmation code depending on the task.",
@@ -32,7 +32,7 @@ const STEPS = [
     screen: "proof",
   },
   {
-    icon: "/icon-wallet.png",
+    icon: "/icon-wallet.svg",
     tag: "Step 4 of 5",
     title: "Wait for Approval",
     body: "Your submission goes to review. Once approved, QLT is credited to your balance instantly. You can track pending submissions in your Wallet.",
@@ -40,7 +40,7 @@ const STEPS = [
     screen: "wallet",
   },
   {
-    icon: "/icon-wallet.png",
+    icon: "/icon-wallet.svg",
     tag: "Step 5 of 5",
     title: "Convert & Withdraw",
     body: "When you're ready, go to your Wallet and convert your QLT to Naira. Minimum withdrawal is 100,000 QLT (₦1,000). Processed within 24 hours.",

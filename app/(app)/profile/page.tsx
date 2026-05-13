@@ -290,12 +290,12 @@ export default function ProfilePage() {
   const patchProfile = (updates: Partial<Profile>) => setProfile(p => p ? { ...p, ...updates } : p);
 
   const stats = profile ? [
-    { label: "Tasks Today",    value: String(profile.tasks_today),    icon: "/icon-task.png" },
-    { label: "Total Tasks",    value: String(profile.tasks_completed), icon: "/icon-task.png" },
-    { label: "Total Earned",   value: profile.total_earned >= 1000 ? `${(profile.total_earned / 1000).toFixed(0)}k QLT` : `${profile.total_earned} QLT`, icon: "/icon-wallet.png" },
-    { label: "Withdrawn",      value: profile.total_withdrawn >= 1000 ? `${(profile.total_withdrawn / 1000).toFixed(0)}k QLT` : `${profile.total_withdrawn} QLT`, icon: "/icon-wallet.png" },
-    { label: "Balance",        value: `${profile.balance.toLocaleString()} QLT`, icon: "/icon-wallet.png" },
-    { label: "Referrals",      value: String(profile.referral_count), icon: "/icon-profile.png" },
+    { label: "Tasks Today",    value: String(profile.tasks_today),    icon: "/icon-task.svg" },
+    { label: "Total Tasks",    value: String(profile.tasks_completed), icon: "/icon-task.svg" },
+    { label: "Total Earned",   value: profile.total_earned >= 1000 ? `${(profile.total_earned / 1000).toFixed(0)}k QLT` : `${profile.total_earned} QLT`, icon: "/icon-wallet.svg" },
+    { label: "Withdrawn",      value: profile.total_withdrawn >= 1000 ? `${(profile.total_withdrawn / 1000).toFixed(0)}k QLT` : `${profile.total_withdrawn} QLT`, icon: "/icon-wallet.svg" },
+    { label: "Balance",        value: `${profile.balance.toLocaleString()} QLT`, icon: "/icon-wallet.svg" },
+    { label: "Referrals",      value: String(profile.referral_count), icon: "/icon-profile.svg" },
   ] : [];
 
   const menuItems = [

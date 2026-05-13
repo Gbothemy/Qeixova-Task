@@ -15,10 +15,10 @@ interface WalletData {
 }
 
 const categories = [
-  { icon: "/icon-social-media.jpg", label: "Engagement",    color: "rgba(74,158,255,0.1)",  earn: "10k–15k QLT", badge: "#4a9eff" },
-  { icon: "/icon-survey.png",       label: "Participation", color: "rgba(245,166,35,0.1)",  earn: "35k–50k QLT", badge: "#F5A623" },
-  { icon: "/icon-app-testing.png",  label: "Premium",       color: "rgba(192,132,252,0.1)", earn: "80k–120k QLT", badge: "#c084fc" },
-  { icon: "/icon-content.png",      label: "AI Testing",    color: "rgba(26,239,34,0.1)",   earn: "18k–20k QLT", badge: "#1AEF22" },
+  { icon: "/icon-social-media.svg", label: "Engagement",    color: "rgba(74,158,255,0.1)",  earn: "10k–15k QLT", badge: "#4a9eff" },
+  { icon: "/icon-survey.svg",       label: "Participation", color: "rgba(245,166,35,0.1)",  earn: "35k–50k QLT", badge: "#F5A623" },
+  { icon: "/icon-app-testing.svg",  label: "Premium",       color: "rgba(192,132,252,0.1)", earn: "80k–120k QLT", badge: "#c084fc" },
+  { icon: "/icon-content.svg",      label: "AI Testing",    color: "rgba(26,239,34,0.1)",   earn: "18k–20k QLT", badge: "#1AEF22" },
 ];
 
 function timeAgo(dateStr: string) {
@@ -78,7 +78,7 @@ export default function Home() {
             </p>
           </div>
           <div style={{ width: 42, height: 42, borderRadius: 13, background: "#111111", border: "1px solid #222222", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <Image src="/icon-home.png" alt="notifications" width={22} height={22} style={{ objectFit: "contain", opacity: 0.7 }} />
+            <Image src="/icon-home.svg" alt="notifications" width={22} height={22} style={{ objectFit: "contain", opacity: 0.7 }} />
           </div>
         </div>
         {user && user.streak > 0 && (
@@ -202,7 +202,7 @@ export default function Home() {
               <div key={i} style={{ background: "#111111", borderRadius: 16, padding: "14px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", border: "1px solid #222222" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                   <div style={{ width: 40, height: 40, borderRadius: 12, background: tx.type === "credit" ? "rgba(26,239,34,0.12)" : "rgba(229,62,62,0.12)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <Image src={tx.type === "credit" ? "/icon-task.png" : "/icon-wallet.png"} alt="tx" width={20} height={20} style={{ objectFit: "contain" }} />
+                    <Image src={tx.type === "credit" ? "/icon-task.svg" : "/icon-wallet.svg"} alt="tx" width={20} height={20} style={{ objectFit: "contain" }} />
                   </div>
                   <div>
                     <p style={{ fontSize: 13, fontWeight: 600, color: "#F5F5F5" }}>{tx.label}</p>

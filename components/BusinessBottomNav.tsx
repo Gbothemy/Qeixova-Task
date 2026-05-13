@@ -4,9 +4,9 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 const nav = [
-  { href: "/business/dashboard", label: "Home",     icon: "/icon-home.png" },
-  { href: "/business/tasks",     label: "Campaigns", icon: "/icon-task.png" },
-  { href: "/business/tasks/new", label: "Create",   icon: "/icon-content.png" },
+  { href: "/business/dashboard", label: "Home",     icon: "/icon-home.svg" },
+  { href: "/business/tasks",     label: "Campaigns", icon: "/icon-task.svg" },
+  { href: "/business/tasks/new", label: "Create",   icon: "/icon-content.svg" },
 ];
 
 export default function BusinessBottomNav() {

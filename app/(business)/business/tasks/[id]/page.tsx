@@ -65,7 +65,7 @@ export default function TaskDetailPage() {
 
         {/* Back */}
         <Link href="/business/tasks" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: "#444", textDecoration: "none", marginBottom: 20, padding: "6px 12px", background: "#0a0a0a", borderRadius: 8, border: "1px solid #161616" }}>
-          <Image src="/icon-home.png" alt="Back" width={12} height={12} style={{ objectFit: "contain", opacity: 0.4 }} />
+          <Image src="/icon-home.svg" alt="Back" width={12} height={12} style={{ objectFit: "contain", opacity: 0.4 }} />
           Back to Campaigns
         </Link>
 
@@ -96,10 +96,10 @@ export default function TaskDetailPage() {
         {/* Stats */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))", gap: 10, marginBottom: 20 }}>
           {[
-            { label: "Submissions", value: task.total_completions,   color: "#4a9eff", icon: "/icon-task.png" },
-            { label: "Approved",    value: task.approved_completions, color: "#1AEF22", icon: "/icon-wallet.png" },
-            { label: "Pending",     value: task.pending_completions,  color: "#F5A623", icon: "/icon-survey.png" },
-            { label: "Rejected",    value: task.rejected_completions, color: "#e53e3e", icon: "/icon-app-testing.png" },
+            { label: "Submissions", value: task.total_completions,   color: "#4a9eff", icon: "/icon-task.svg" },
+            { label: "Approved",    value: task.approved_completions, color: "#1AEF22", icon: "/icon-wallet.svg" },
+            { label: "Pending",     value: task.pending_completions,  color: "#F5A623", icon: "/icon-survey.svg" },
+            { label: "Rejected",    value: task.rejected_completions, color: "#e53e3e", icon: "/icon-app-testing.svg" },
           ].map(s => (
             <div key={s.label} style={{ background: "#0a0a0a", borderRadius: 14, padding: "14px", border: "1px solid #161616", position: "relative", overflow: "hidden" }}>
               <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: s.color }} />
@@ -134,7 +134,7 @@ export default function TaskDetailPage() {
           </div>
           {completions.length === 0 ? (
             <div style={{ background: "#0a0a0a", borderRadius: 14, padding: "36px", textAlign: "center", border: "1px solid #161616" }}>
-              <Image src="/icon-survey.png" alt="" width={36} height={36} style={{ objectFit: "contain", opacity: 0.15, marginBottom: 12 }} />
+              <Image src="/icon-survey.svg" alt="" width={36} height={36} style={{ objectFit: "contain", opacity: 0.15, marginBottom: 12 }} />
               <p style={{ color: "#333", fontSize: 13 }}>No submissions yet. Share your campaign to get started.</p>
             </div>
           ) : (
@@ -145,7 +145,7 @@ export default function TaskDetailPage() {
                   <div key={c.id} style={{ padding: "13px 16px", borderBottom: i < completions.length - 1 ? "1px solid #111" : "none", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
                       <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#111", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                        <Image src="/icon-profile.png" alt="" width={16} height={16} style={{ objectFit: "contain", opacity: 0.3 }} />
+                        <Image src="/icon-profile.svg" alt="" width={16} height={16} style={{ objectFit: "contain", opacity: 0.3 }} />
                       </div>
                       <div style={{ minWidth: 0 }}>
                         <p style={{ fontSize: 13, fontWeight: 600, color: "#F5F5F5", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c.full_name}</p>

@@ -4,12 +4,12 @@ import Image from "next/image";
 import { useState } from "react";
 
 const campaignTypes = [
-  { icon: "/icon-social-media.jpg", title: "WhatsApp Status Campaign", desc: "Share flyers and content to WhatsApp status for 24 hours." },
-  { icon: "/icon-survey.png",       title: "Facebook Repost Campaign", desc: "Post flyers with captions to Facebook stories and timelines." },
-  { icon: "/icon-content.png",      title: "TikTok Promotion",         desc: "Repost short-form videos and tag creator pages." },
-  { icon: "/icon-app-testing.png",  title: "App Testing",              desc: "Download apps and submit onboarding feedback." },
-  { icon: "/icon-survey.png",       title: "Referral Campaign",        desc: "Invite new users and earn for every successful referral." },
-  { icon: "/icon-social-media.jpg", title: "Music Promotion",          desc: "Distribute song teasers and promote releases across communities." },
+  { icon: "/icon-social-media.svg", title: "WhatsApp Status Campaign", desc: "Share flyers and content to WhatsApp status for 24 hours." },
+  { icon: "/icon-survey.svg",       title: "Facebook Repost Campaign", desc: "Post flyers with captions to Facebook stories and timelines." },
+  { icon: "/icon-content.svg",      title: "TikTok Promotion",         desc: "Repost short-form videos and tag creator pages." },
+  { icon: "/icon-app-testing.svg",  title: "App Testing",              desc: "Download apps and submit onboarding feedback." },
+  { icon: "/icon-survey.svg",       title: "Referral Campaign",        desc: "Invite new users and earn for every successful referral." },
+  { icon: "/icon-social-media.svg", title: "Music Promotion",          desc: "Distribute song teasers and promote releases across communities." },
 ];
 
 const businessTypes = [
@@ -22,18 +22,18 @@ const businessTypes = [
 ];
 
 const whyFeatures = [
-  { icon: "/icon-profile.png",      title: "Human Distribution",      desc: "Reach people through real individuals and communities instead of relying only on algorithms." },
-  { icon: "/icon-wallet.png",       title: "Affordable Awareness",    desc: "Launch flexible campaigns that fit your budget and goals." },
-  { icon: "/icon-task.png",         title: "Grassroots Reach",        desc: "Expand visibility organically through community-driven promotion." },
-  { icon: "/icon-content.png",      title: "Flexible Campaign Types", desc: "Run awareness, engagement, testing, referral, and distribution campaigns from one platform." },
-  { icon: "/icon-survey.png",       title: "Verified Participation",  desc: "Campaigns are completed by real contributors with verification and quality checks." },
-  { icon: "/icon-app-testing.png",  title: "Creator-Friendly",        desc: "Perfect for creators, musicians, startups, local businesses, and growing brands." },
+  { icon: "/icon-profile.svg",      title: "Human Distribution",      desc: "Reach people through real individuals and communities instead of relying only on algorithms." },
+  { icon: "/icon-wallet.svg",       title: "Affordable Awareness",    desc: "Launch flexible campaigns that fit your budget and goals." },
+  { icon: "/icon-task.svg",         title: "Grassroots Reach",        desc: "Expand visibility organically through community-driven promotion." },
+  { icon: "/icon-content.svg",      title: "Flexible Campaign Types", desc: "Run awareness, engagement, testing, referral, and distribution campaigns from one platform." },
+  { icon: "/icon-survey.svg",       title: "Verified Participation",  desc: "Campaigns are completed by real contributors with verification and quality checks." },
+  { icon: "/icon-app-testing.svg",  title: "Creator-Friendly",        desc: "Perfect for creators, musicians, startups, local businesses, and growing brands." },
 ];
 
 const steps = [
   { num: "01", icon: "/icon-create-mission.svg", title: "Create a Campaign",           desc: "Upload your flyer, video, product, music, event, app, or promotional content." },
   { num: "02", icon: "/icon-target-audience.svg",title: "Choose Your Goal",            desc: "Select content distribution, reposts, community awareness, app testing, surveys, or referral campaigns." },
-  { num: "03", icon: "/icon-profile.png",         title: "Activate Real Participants", desc: "Qeixova contributors complete tasks and help spread your content across real communities." },
+  { num: "03", icon: "/icon-profile.svg",         title: "Activate Real Participants", desc: "Qeixova contributors complete tasks and help spread your content across real communities." },
   { num: "04", icon: "/icon-analytics.svg",       title: "Track Visibility",           desc: "Monitor campaign performance, submissions, reach activity, and contributor engagement." },
 ];
 

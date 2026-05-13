@@ -1,15 +1,15 @@
-﻿"use client";
+"use client";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const nav = [
-  { href: "/dashboard",   label: "Home",        icon: "/icon-home.png",    desc: "Dashboard" },
-  { href: "/tasks",       label: "Missions",    icon: "/icon-task.png",    desc: "Browse & earn" },
+  { href: "/dashboard",   label: "Home",        icon: "/icon-home.svg",    desc: "Dashboard" },
+  { href: "/tasks",       label: "Missions",    icon: "/icon-task.svg",    desc: "Browse & earn" },
   { href: "/leaderboard", label: "Ranks",       icon: "/icon-leaderboard.svg", desc: "Leaderboard" },
-  { href: "/wallet",      label: "Wallet",      icon: "/icon-wallet.png",  desc: "Balance & withdraw" },
-  { href: "/profile",     label: "Profile",     icon: "/icon-profile.png", desc: "Account settings" },
+  { href: "/wallet",      label: "Wallet",      icon: "/icon-wallet.svg",  desc: "Balance & withdraw" },
+  { href: "/profile",     label: "Profile",     icon: "/icon-profile.svg", desc: "Account settings" },
 ];
 
 export default function Sidebar() {
@@ -45,10 +45,10 @@ export default function Sidebar() {
           <div style={{ position: "absolute", top: -20, right: -20, width: 80, height: 80, borderRadius: "50%", background: "rgba(245,166,35,0.12)" }} />
           <p style={{ fontSize: 11, color: "rgba(255,255,255,0.7)", marginBottom: 4 }}>Available Balance</p>
           <p style={{ fontSize: 20, fontWeight: 800, color: "#000", letterSpacing: -0.5 }}>
-            ⭐ {stats.balance.toLocaleString()} QLT
+            ? {stats.balance.toLocaleString()} QLT
           </p>
           <p style={{ fontSize: 11, color: "#000", marginTop: 4, fontWeight: 600, opacity: 0.7 }}>
-            +{stats.today_earned.toLocaleString()} QLT today · {stats.tasks_today} tasks
+            +{stats.today_earned.toLocaleString()} QLT today � {stats.tasks_today} tasks
           </p>
         </div>
       </div>
@@ -91,23 +91,23 @@ export default function Sidebar() {
       <div style={{ padding: "16px 20px 24px", borderTop: "1px solid #222222" }}>
         <div style={{ background: "linear-gradient(135deg, #F5A623, #d89420)", borderRadius: 14, padding: "14px 16px", position: "relative", overflow: "hidden" }}>
           <div style={{ position: "absolute", top: -15, right: -15, width: 60, height: 60, borderRadius: "50%", background: "rgba(255,255,255,0.1)" }} />
-          <p style={{ fontSize: 13, fontWeight: 700, color: "#000", marginBottom: 3 }}>🔥 {stats.streak > 0 ? `${stats.streak}-day streak!` : "Start your streak!"}</p>
+          <p style={{ fontSize: 13, fontWeight: 700, color: "#000", marginBottom: 3 }}>?? {stats.streak > 0 ? `${stats.streak}-day streak!` : "Start your streak!"}</p>
           <p style={{ fontSize: 11, color: "rgba(0,0,0,0.65)" }}>Keep completing missions daily</p>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 14, padding: "0 4px" }}>
-          <div style={{ width: 34, height: 34, borderRadius: "50%", background: "linear-gradient(135deg, #F5A623, #d89420)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>👤</div>
+          <div style={{ width: 34, height: 34, borderRadius: "50%", background: "linear-gradient(135deg, #F5A623, #d89420)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>??</div>
           <div style={{ flex: 1 }}>
             <p style={{ fontSize: 13, fontWeight: 600, color: "#F5F5F5" }}>{stats.fullName || "Loading..."}</p>
             <p style={{ fontSize: 11, color: "#555555" }}>
               <span style={{ color: stats.badgeColor, fontWeight: 700 }}>{stats.levelName}</span>
-              {stats.xp > 0 && <span style={{ color: "#F5A623" }}> · {stats.xp.toLocaleString()} XP</span>}
+              {stats.xp > 0 && <span style={{ color: "#F5A623" }}> � {stats.xp.toLocaleString()} XP</span>}
             </p>
           </div>
           <button
             onClick={async () => { await fetch("/api/auth/logout", { method: "POST" }); router.push("/login"); }}
             title="Log out"
             style={{ background: "rgba(229,62,62,0.1)", border: "1px solid rgba(229,62,62,0.2)", borderRadius: 8, width: 32, height: 32, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", fontSize: 15, flexShrink: 0 }}
-          >🚪</button>
+          >??</button>
         </div>
       </div>
     </aside>

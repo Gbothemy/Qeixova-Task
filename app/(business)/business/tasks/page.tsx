@@ -74,7 +74,7 @@ export default function BusinessTasksPage() {
             fontWeight: 800, fontSize: 13, boxShadow: "0 4px 14px rgba(245,166,35,0.22)",
             display: "flex", alignItems: "center", gap: 7,
           }}>
-            <Image src="/icon-content.png" alt="Create" width={13} height={13} style={{ objectFit: "contain", filter: "brightness(0)" }} />
+            <Image src="/icon-content.svg" alt="Create" width={13} height={13} style={{ objectFit: "contain", filter: "brightness(0)" }} />
             New Campaign
           </Link>
         </div>
@@ -88,7 +88,7 @@ export default function BusinessTasksPage() {
         ) : tasks.length === 0 ? (
           <div style={{ background: "#0a0a0a", borderRadius: 20, padding: "56px 24px", textAlign: "center", border: "1px solid #161616" }}>
             <div style={{ width: 64, height: 64, borderRadius: 18, background: "#111", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
-              <Image src="/icon-task.png" alt="No campaigns" width={32} height={32} style={{ objectFit: "contain", opacity: 0.25 }} />
+              <Image src="/icon-task.svg" alt="No campaigns" width={32} height={32} style={{ objectFit: "contain", opacity: 0.25 }} />
             </div>
             <p style={{ fontSize: 16, fontWeight: 700, color: "#F5F5F5", marginBottom: 8 }}>No campaigns yet</p>
             <p style={{ fontSize: 13, color: "#444", marginBottom: 24, maxWidth: 280, margin: "0 auto 24px" }}>Create your first campaign to start reaching your target audience.</p>
@@ -122,9 +122,9 @@ export default function BusinessTasksPage() {
                   {/* Stats row */}
                   <div style={{ display: "flex", gap: 20, marginBottom: 14, paddingBottom: 12, borderBottom: "1px solid #111" }}>
                     {[
-                      { label: "Submissions", val: task.total_completions,   icon: "/icon-task.png" },
-                      { label: "Approved",    val: task.approved_completions, icon: "/icon-wallet.png" },
-                      { label: "Pending",     val: task.pending_completions,  icon: "/icon-survey.png" },
+                      { label: "Submissions", val: task.total_completions,   icon: "/icon-task.svg" },
+                      { label: "Approved",    val: task.approved_completions, icon: "/icon-wallet.svg" },
+                      { label: "Pending",     val: task.pending_completions,  icon: "/icon-survey.svg" },
                     ].map(st => (
                       <div key={st.label} style={{ display: "flex", alignItems: "center", gap: 6 }}>
                         <Image src={st.icon} alt={st.label} width={12} height={12} style={{ objectFit: "contain", opacity: 0.35 }} />

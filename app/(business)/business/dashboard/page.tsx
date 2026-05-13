@@ -50,10 +50,10 @@ export default function BusinessDashboard() {
   );
 
   const statCards = [
-    { label: "Total Campaigns", value: stats?.tasks.total ?? 0,          sub: `${stats?.tasks.active ?? 0} currently active`,  color: "#4a9eff", icon: "/icon-task.png" },
-    { label: "Submissions",     value: stats?.completions.total ?? 0,    sub: `${stats?.completions.pending ?? 0} pending review`,color: "#F5A623", icon: "/icon-survey.png" },
-    { label: "Approved",        value: stats?.completions.approved ?? 0, sub: "Verified completions",                            color: "#1AEF22", icon: "/icon-wallet.png" },
-    { label: "Rejected",        value: stats?.completions.rejected ?? 0, sub: "Did not qualify",                                 color: "#e53e3e", icon: "/icon-app-testing.png" },
+    { label: "Total Campaigns", value: stats?.tasks.total ?? 0,          sub: `${stats?.tasks.active ?? 0} currently active`,  color: "#4a9eff", icon: "/icon-task.svg" },
+    { label: "Submissions",     value: stats?.completions.total ?? 0,    sub: `${stats?.completions.pending ?? 0} pending review`,color: "#F5A623", icon: "/icon-survey.svg" },
+    { label: "Approved",        value: stats?.completions.approved ?? 0, sub: "Verified completions",                            color: "#1AEF22", icon: "/icon-wallet.svg" },
+    { label: "Rejected",        value: stats?.completions.rejected ?? 0, sub: "Did not qualify",                                 color: "#e53e3e", icon: "/icon-app-testing.svg" },
   ];
 
   const approvalRate = stats && (stats.completions.approved + stats.completions.rejected) > 0
@@ -69,7 +69,7 @@ export default function BusinessDashboard() {
         <div style={{ marginBottom: 28 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 6 }}>
             <div style={{ width: 44, height: 44, borderRadius: 13, background: "linear-gradient(135deg, #F5A623, #d89420)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 4px 14px rgba(245,166,35,0.25)" }}>
-              <Image src="/icon-profile.png" alt="Business" width={22} height={22} style={{ objectFit: "contain", filter: "brightness(0)" }} />
+              <Image src="/icon-profile.svg" alt="Business" width={22} height={22} style={{ objectFit: "contain", filter: "brightness(0)" }} />
             </div>
             <div>
               <h1 style={{ fontSize: 20, fontWeight: 800, color: "#F5F5F5", letterSpacing: -0.3 }}>Welcome back, {business.name}</h1>
@@ -103,7 +103,7 @@ export default function BusinessDashboard() {
               fontWeight: 800, fontSize: 13, boxShadow: "0 4px 16px rgba(245,166,35,0.28)",
               whiteSpace: "nowrap", display: "flex", alignItems: "center", gap: 7,
             }}>
-              <Image src="/icon-content.png" alt="Create" width={14} height={14} style={{ objectFit: "contain", filter: "brightness(0)" }} />
+              <Image src="/icon-content.svg" alt="Create" width={14} height={14} style={{ objectFit: "contain", filter: "brightness(0)" }} />
               Create Campaign
             </Link>
           </div>
@@ -112,8 +112,8 @@ export default function BusinessDashboard() {
         {/* Quick links */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
           {[
-            { href: "/business/tasks",     icon: "/icon-task.png",    label: "View Campaigns",  sub: "Manage all missions" },
-            { href: "/business/tasks/new", icon: "/icon-content.png", label: "New Campaign",    sub: "Launch a mission" },
+            { href: "/business/tasks",     icon: "/icon-task.svg",    label: "View Campaigns",  sub: "Manage all missions" },
+            { href: "/business/tasks/new", icon: "/icon-content.svg", label: "New Campaign",    sub: "Launch a mission" },
           ].map(item => (
             <Link key={item.href} href={item.href} style={{ background: "#0a0a0a", border: "1px solid #161616", borderRadius: 14, padding: "14px 16px", textDecoration: "none", display: "flex", alignItems: "center", gap: 12, transition: "border-color 0.15s" }}>
               <div style={{ width: 36, height: 36, borderRadius: 10, background: "#111", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>

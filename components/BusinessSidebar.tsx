@@ -4,9 +4,9 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 
 const nav = [
-  { href: "/business/dashboard", label: "Dashboard",    icon: "/icon-home.png",    desc: "Overview & stats" },
-  { href: "/business/tasks",     label: "Campaigns",    icon: "/icon-task.png",    desc: "Manage missions" },
-  { href: "/business/tasks/new", label: "Create",       icon: "/icon-content.png", desc: "Launch campaign" },
+  { href: "/business/dashboard", label: "Dashboard",    icon: "/icon-home.svg",    desc: "Overview & stats" },
+  { href: "/business/tasks",     label: "Campaigns",    icon: "/icon-task.svg",    desc: "Manage missions" },
+  { href: "/business/tasks/new", label: "Create",       icon: "/icon-content.svg", desc: "Launch campaign" },
 ];
 
 export default function BusinessSidebar({ name }: { name: string }) {
@@ -69,7 +69,7 @@ export default function BusinessSidebar({ name }: { name: string }) {
       <div style={{ padding: "14px 16px 22px", borderTop: "1px solid #1a1a1a" }}>
         <div style={{ background: "#0d0d0d", borderRadius: 12, padding: "12px 14px", border: "1px solid #1a1a1a", display: "flex", alignItems: "center", gap: 10 }}>
           <div style={{ width: 34, height: 34, borderRadius: "50%", background: "linear-gradient(135deg, #F5A623, #d89420)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-            <Image src="/icon-profile.png" alt="Business" width={18} height={18} style={{ objectFit: "contain", filter: "brightness(0)" }} />
+            <Image src="/icon-profile.svg" alt="Business" width={18} height={18} style={{ objectFit: "contain", filter: "brightness(0)" }} />
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <p style={{ fontSize: 12, fontWeight: 700, color: "#F5F5F5", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{name}</p>
