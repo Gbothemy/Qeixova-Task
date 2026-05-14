@@ -126,10 +126,10 @@ export default function LandingPage() {
           Grow Your Business Through<br />
           <span className="shimmer-text">Real Human Participation.</span>
         </h1>
-        <p className="animate-fade-up delay-2" style={{ fontSize: "clamp(14px, 2vw, 18px)", color: "#888", maxWidth: 620, margin: "0 auto 16px", lineHeight: 1.7, position: "relative" }}>
+        <p className="animate-fade-up delay-2" style={{ fontSize: "clamp(14px, 2vw, 18px)", color: "#ccc", maxWidth: 620, margin: "0 auto 16px", lineHeight: 1.7, position: "relative" }}>
           Qeixova Tasks helps businesses, creators, brands, musicians, and communities amplify their visibility through real people — not bots, fake traffic, or empty engagement.
         </p>
-        <p className="animate-fade-up delay-3" style={{ fontSize: 14, color: "#555", maxWidth: 560, margin: "0 auto 36px", lineHeight: 1.7, position: "relative" }}>
+        <p className="animate-fade-up delay-3" style={{ fontSize: 14, color: "#bbb", maxWidth: 560, margin: "0 auto 36px", lineHeight: 1.7, position: "relative" }}>
           Launch awareness campaigns, distribute content, gather engagement, grow communities, and reach real audiences through a network of verified digital participants.
         </p>
         <div className="animate-fade-up delay-4" style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", position: "relative" }}>
@@ -140,7 +140,7 @@ export default function LandingPage() {
             Become a Contributor
           </Link>
         </div>
-        <p className="animate-fade-up delay-5" style={{ color: "#333", fontSize: 12, marginTop: 18, position: "relative" }}>Trusted for community-powered growth, content distribution, and grassroots digital promotion.</p>
+        <p className="animate-fade-up delay-5" style={{ color: "#999", fontSize: 12, marginTop: 18, position: "relative" }}>Trusted for community-powered growth, content distribution, and grassroots digital promotion.</p>
       </section>
 
       {/* Trust strip */}
@@ -149,7 +149,7 @@ export default function LandingPage() {
           {["Verified contributors only", "Pay per completion", "Real human participation", "Transparent QLT conversion", "24h withdrawal processing"].map(t => (
             <div key={t} style={{ display: "flex", alignItems: "center", gap: 7 }}>
               <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#1AEF22", flexShrink: 0 }} />
-              <span style={{ fontSize: 12, color: "#666", fontWeight: 500 }}>{t}</span>
+              <span style={{ fontSize: 12, color: "#ccc", fontWeight: 500 }}>{t}</span>
             </div>
           ))}
         </div>
@@ -160,10 +160,10 @@ export default function LandingPage() {
         <div style={{ maxWidth: 800, margin: "0 auto", textAlign: "center" }}>
           <span style={{ fontSize: 11, fontWeight: 700, color: "#1AEF22", letterSpacing: 2, textTransform: "uppercase", background: "rgba(26,239,34,0.08)", borderRadius: 20, padding: "4px 14px" }}>What We Do</span>
           <h2 style={{ fontSize: "clamp(24px, 4vw, 42px)", fontWeight: 900, color: "#F5F5F5", marginTop: 14, letterSpacing: -1, marginBottom: 20 }}>More Than Tasks. A Human-Powered Growth Engine.</h2>
-          <p style={{ fontSize: 16, color: "#666", lineHeight: 1.8, marginBottom: 16 }}>
+          <p style={{ fontSize: 16, color: "#ccc", lineHeight: 1.8, marginBottom: 16 }}>
             Qeixova Tasks connects businesses and creators with real people who help distribute, promote, test, share, and amplify content across digital communities.
           </p>
-          <p style={{ fontSize: 15, color: "#555", lineHeight: 1.8 }}>
+          <p style={{ fontSize: 15, color: "#bbb", lineHeight: 1.8 }}>
             Instead of relying only on expensive ads or unpredictable algorithms, brands can activate real human participation to increase awareness and visibility.
           </p>
         </div>
@@ -182,11 +182,11 @@ export default function LandingPage() {
             {/* Prev / Next buttons */}
             <button onClick={() => setActiveStep(s => Math.max(0, s - 1))} disabled={activeStep === 0}
               style={{ position: "absolute", left: -20, top: "50%", transform: "translateY(-50%)", zIndex: 10, width: 40, height: 40, borderRadius: "50%", background: activeStep === 0 ? "#111" : "#1AEF22", border: "none", cursor: activeStep === 0 ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", opacity: activeStep === 0 ? 0.3 : 1, transition: "all 0.2s" }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={activeStep === 0 ? "#555" : "#000"} strokeWidth="3" strokeLinecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={activeStep === 0 ? "#bbb" : "#000"} strokeWidth="3" strokeLinecap="round"><polyline points="15 18 9 12 15 6"/></svg>
             </button>
             <button onClick={() => setActiveStep(s => Math.min(steps.length - 1, s + 1))} disabled={activeStep === steps.length - 1}
               style={{ position: "absolute", right: -20, top: "50%", transform: "translateY(-50%)", zIndex: 10, width: 40, height: 40, borderRadius: "50%", background: activeStep === steps.length - 1 ? "#111" : "#1AEF22", border: "none", cursor: activeStep === steps.length - 1 ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", opacity: activeStep === steps.length - 1 ? 0.3 : 1, transition: "all 0.2s" }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={activeStep === steps.length - 1 ? "#555" : "#000"} strokeWidth="3" strokeLinecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={activeStep === steps.length - 1 ? "#bbb" : "#000"} strokeWidth="3" strokeLinecap="round"><polyline points="9 18 15 12 9 6"/></svg>
             </button>
 
             {/* Single card display */}
@@ -202,7 +202,7 @@ export default function LandingPage() {
                       <span style={{ fontSize: 11, color: "#1AEF22", fontWeight: 700 }}>Step {s.num}</span>
                     </div>
                     <h3 style={{ fontWeight: 900, fontSize: "clamp(20px, 3vw, 28px)", color: "#F5F5F5", marginBottom: 14, letterSpacing: -0.5 }}>{s.title}</h3>
-                    <p style={{ fontSize: "clamp(14px, 1.5vw, 16px)", color: "#666", lineHeight: 1.7, maxWidth: 480, margin: "0 auto" }}>{s.desc}</p>
+                    <p style={{ fontSize: "clamp(14px, 1.5vw, 16px)", color: "#ccc", lineHeight: 1.7, maxWidth: 480, margin: "0 auto" }}>{s.desc}</p>
                   </div>
                 ))}
               </div>
@@ -222,7 +222,7 @@ export default function LandingPage() {
             </div>
 
             {/* Step counter */}
-            <p style={{ textAlign: "center", fontSize: 12, color: "#333", marginTop: 12 }}>
+            <p style={{ textAlign: "center", fontSize: 12, color: "#999", marginTop: 12 }}>
               {activeStep + 1} of {steps.length}
             </p>
           </div>
@@ -243,7 +243,7 @@ export default function LandingPage() {
                   <Image src={b.icon} alt={b.title} width={24} height={24} style={{ objectFit: "contain", filter: "invert(58%) sepia(98%) saturate(400%) hue-rotate(83deg) brightness(110%)" }} />
                 </div>
                 <h3 style={{ fontWeight: 800, fontSize: 14, color: "#F5F5F5", marginBottom: 8 }}>{b.title}</h3>
-                <p style={{ fontSize: 13, color: "#555", lineHeight: 1.6 }}>{b.desc}</p>
+                <p style={{ fontSize: 13, color: "#bbb", lineHeight: 1.6 }}>{b.desc}</p>
               </div>
             ))}
           </div>
@@ -252,7 +252,7 @@ export default function LandingPage() {
               <p style={{ fontSize: 18, fontWeight: 800, color: "#F5F5F5", marginBottom: 8 }}>Ready to launch your first campaign?</p>
               <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
                 {["Pay per completion", "Verified contributors", "Real human reach"].map(t => (
-                  <span key={t} style={{ fontSize: 12, color: "#888" }}><span style={{ color: "#F5A623" }}>✓</span> {t}</span>
+                  <span key={t} style={{ fontSize: 12, color: "#ccc" }}><span style={{ color: "#F5A623" }}>✓</span> {t}</span>
                 ))}
               </div>
             </div>
@@ -260,7 +260,7 @@ export default function LandingPage() {
               <Link href="/register" style={{ background: "linear-gradient(135deg, #F5A623, #d89420)", color: "#000", textDecoration: "none", padding: "12px 24px", borderRadius: 11, fontWeight: 800, fontSize: 14, whiteSpace: "nowrap" }}>
                 Start a Campaign →
               </Link>
-              <Link href="/business/login" style={{ background: "transparent", border: "1.5px solid #333", color: "#888", textDecoration: "none", padding: "12px 20px", borderRadius: 11, fontWeight: 600, fontSize: 13, whiteSpace: "nowrap" }}>
+              <Link href="/business/login" style={{ background: "transparent", border: "1.5px solid #333", color: "#ccc", textDecoration: "none", padding: "12px 20px", borderRadius: 11, fontWeight: 600, fontSize: 13, whiteSpace: "nowrap" }}>
                 Business Login
               </Link>
             </div>
@@ -275,14 +275,14 @@ export default function LandingPage() {
             <div className="contributors-copy">
               <span style={{ display: "inline-flex", fontSize: 11, fontWeight: 700, color: "#1AEF22", letterSpacing: 2, textTransform: "uppercase", background: "rgba(26,239,34,0.08)", borderRadius: 20, padding: "4px 14px" }}>For Contributors</span>
               <h2 className="contributors-title" style={{ fontSize: "clamp(22px, 3.5vw, 38px)", fontWeight: 900, color: "#F5F5F5", marginTop: 14, letterSpacing: 0, marginBottom: 16 }}>Earn By Helping Businesses Grow</h2>
-              <p style={{ fontSize: 15, color: "#666", lineHeight: 1.8, marginBottom: 20 }}>
+              <p style={{ fontSize: 15, color: "#ccc", lineHeight: 1.8, marginBottom: 20 }}>
                 Become part of a growing network of digital contributors helping brands and creators reach more people online.
               </p>
               <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 28 }}>
                 {["Reposting content", "Sharing flyers", "Testing apps", "Joining campaigns", "Giving feedback", "Referral activities"].map(t => (
                   <div key={t} style={{ display: "flex", alignItems: "center", gap: 10 }}>
                     <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#1AEF22", flexShrink: 0 }} />
-                    <span style={{ fontSize: 14, color: "#888" }}>{t}</span>
+                    <span style={{ fontSize: 14, color: "#ccc" }}>{t}</span>
                   </div>
                 ))}
               </div>
@@ -306,7 +306,7 @@ export default function LandingPage() {
                 ].map(l => (
                   <div className="contributors-level" key={l.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: "1px solid #111" }}>
                     <span style={{ fontSize: 13, fontWeight: 700, color: "#F5F5F5" }}>{l.label}</span>
-                    <span style={{ fontSize: 11, color: "#444" }}>{l.desc}</span>
+                    <span style={{ fontSize: 11, color: "#aaa" }}>{l.desc}</span>
                   </div>
                 ))}
               </div>
@@ -329,7 +329,7 @@ export default function LandingPage() {
                   <Image src={f.icon} alt={f.title} width={20} height={20} style={{ objectFit: "contain", filter: "invert(58%) sepia(98%) saturate(400%) hue-rotate(83deg) brightness(110%)" }} />
                 </div>
                 <h3 style={{ fontWeight: 800, fontSize: 14, color: "#F5F5F5", marginBottom: 6 }}>{f.title}</h3>
-                <p style={{ fontSize: 12, color: "#555", lineHeight: 1.6 }}>{f.desc}</p>
+                <p style={{ fontSize: 12, color: "#bbb", lineHeight: 1.6 }}>{f.desc}</p>
               </div>
             ))}
           </div>
@@ -350,7 +350,7 @@ export default function LandingPage() {
                   <Image src={c.icon} alt={c.title} width={24} height={24} style={{ objectFit: "contain" }} />
                 </div>
                 <h3 style={{ fontWeight: 700, fontSize: 14, color: "#F5F5F5", marginBottom: 6 }}>{c.title}</h3>
-                <p style={{ fontSize: 12, color: "#555", lineHeight: 1.6 }}>{c.desc}</p>
+                <p style={{ fontSize: 12, color: "#bbb", lineHeight: 1.6 }}>{c.desc}</p>
               </div>
             ))}
           </div>
@@ -362,10 +362,10 @@ export default function LandingPage() {
         <div style={{ maxWidth: 720, margin: "0 auto", textAlign: "center" }}>
           <span style={{ fontSize: 11, fontWeight: 700, color: "#1AEF22", letterSpacing: 2, textTransform: "uppercase", background: "rgba(26,239,34,0.08)", borderRadius: 20, padding: "4px 14px" }}>Our Vision</span>
           <h2 style={{ fontSize: "clamp(24px, 4vw, 40px)", fontWeight: 900, color: "#F5F5F5", marginTop: 14, letterSpacing: -1, marginBottom: 20 }}>Building Africa's Human Participation Network</h2>
-          <p style={{ fontSize: 16, color: "#666", lineHeight: 1.8, marginBottom: 16 }}>
+          <p style={{ fontSize: 16, color: "#ccc", lineHeight: 1.8, marginBottom: 16 }}>
             Qeixova Tasks is building a digital ecosystem where businesses gain visibility, creators grow faster, and contributors earn through meaningful online participation.
           </p>
-          <p style={{ fontSize: 15, color: "#555", lineHeight: 1.8 }}>
+          <p style={{ fontSize: 15, color: "#bbb", lineHeight: 1.8 }}>
             We believe growth should not belong only to companies with large advertising budgets. Through community-powered distribution and participation, we help brands and creators reach people in a more human way.
           </p>
         </div>
@@ -383,11 +383,11 @@ export default function LandingPage() {
               <div key={i} style={{ background: openFaq === i ? "#0d0d0d" : "#050505", border: `1.5px solid ${openFaq === i ? "rgba(26,239,34,0.2)" : "#1a1a1a"}`, borderRadius: 14, overflow: "hidden" }}>
                 <button onClick={() => setOpenFaq(openFaq === i ? null : i)} style={{ width: "100%", padding: "16px 18px", display: "flex", justifyContent: "space-between", alignItems: "center", background: "none", border: "none", cursor: "pointer", textAlign: "left" }}>
                   <span style={{ fontWeight: 700, fontSize: 14, color: "#F5F5F5" }}>{faq.q}</span>
-                  <span style={{ width: 26, height: 26, borderRadius: 7, background: openFaq === i ? "#1AEF22" : "#1a1a1a", display: "flex", alignItems: "center", justifyContent: "center", color: openFaq === i ? "#000" : "#888", fontSize: 16, fontWeight: 700, flexShrink: 0 }}>
+                  <span style={{ width: 26, height: 26, borderRadius: 7, background: openFaq === i ? "#1AEF22" : "#1a1a1a", display: "flex", alignItems: "center", justifyContent: "center", color: openFaq === i ? "#000" : "#ccc", fontSize: 16, fontWeight: 700, flexShrink: 0 }}>
                     {openFaq === i ? "−" : "+"}
                   </span>
                 </button>
-                {openFaq === i && <p style={{ padding: "0 18px 16px", fontSize: 13, color: "#888", lineHeight: 1.7 }}>{faq.a}</p>}
+                {openFaq === i && <p style={{ padding: "0 18px 16px", fontSize: 13, color: "#ccc", lineHeight: 1.7 }}>{faq.a}</p>}
               </div>
             ))}
           </div>
@@ -403,7 +403,7 @@ export default function LandingPage() {
           Launch Your First Growth<br />
           <span style={{ background: "linear-gradient(135deg, #1AEF22, #06B517)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Campaign Today.</span>
         </h2>
-        <p style={{ color: "#666", fontSize: 15, maxWidth: 480, margin: "0 auto 36px", lineHeight: 1.7 }}>
+        <p style={{ color: "#ccc", fontSize: 15, maxWidth: 480, margin: "0 auto 36px", lineHeight: 1.7 }}>
           Whether you're promoting a business, a song, an event, an app, or a brand — Qeixova helps you reach real people through real participation.
         </p>
         <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
@@ -414,7 +414,7 @@ export default function LandingPage() {
             Become a Contributor
           </Link>
         </div>
-        <p style={{ color: "#333", fontSize: 12, marginTop: 16 }}>Free to join. No experience needed.</p>
+        <p style={{ color: "#999", fontSize: 12, marginTop: 16 }}>Free to join. No experience needed.</p>
       </section>
 
       {/* Footer */}
@@ -426,31 +426,31 @@ export default function LandingPage() {
                 <Image src="/qeixova-icon.png" alt="Qeixova" width={32} height={32} style={{ borderRadius: 9, objectFit: "contain" }} />
                 <span style={{ fontWeight: 800, fontSize: 16, color: "#F5F5F5" }}>Qeixova</span>
               </div>
-              <p style={{ fontSize: 12, lineHeight: 1.8, color: "#444", maxWidth: 200 }}>Community-Powered Digital Growth.</p>
-              <p style={{ fontSize: 11, color: "#333", marginTop: 8, lineHeight: 1.6 }}>Helping businesses, creators, and communities grow through human participation.</p>
+              <p style={{ fontSize: 12, lineHeight: 1.8, color: "#aaa", maxWidth: 200 }}>Community-Powered Digital Growth.</p>
+              <p style={{ fontSize: 11, color: "#999", marginTop: 8, lineHeight: 1.6 }}>Helping businesses, creators, and communities grow through human participation.</p>
             </div>
             <div>
               <p style={{ color: "#F5F5F5", fontWeight: 700, fontSize: 12, marginBottom: 14 }}>Platform</p>
               {[{ label: "How it works", href: "#how-it-works" }, { label: "For businesses", href: "#for-businesses" }, { label: "Campaigns", href: "#" }, { label: "Contributors", href: "/register" }].map(l => (
-                <a key={l.label} href={l.href} style={{ display: "block", fontSize: 12, marginBottom: 9, color: "#444", textDecoration: "none" }}>{l.label}</a>
+                <a key={l.label} href={l.href} style={{ display: "block", fontSize: 12, marginBottom: 9, color: "#aaa", textDecoration: "none" }}>{l.label}</a>
               ))}
             </div>
             <div>
               <p style={{ color: "#F5F5F5", fontWeight: 700, fontSize: 12, marginBottom: 14 }}>Support</p>
               {[{ label: "Help Center", href: "#" }, { label: "Contact", href: "mailto:qeixova@gmail.com" }, { label: "Privacy Policy", href: "#" }, { label: "Terms", href: "#" }].map(l => (
-                <a key={l.label} href={l.href} style={{ display: "block", fontSize: 12, marginBottom: 9, color: "#444", textDecoration: "none" }}>{l.label}</a>
+                <a key={l.label} href={l.href} style={{ display: "block", fontSize: 12, marginBottom: 9, color: "#aaa", textDecoration: "none" }}>{l.label}</a>
               ))}
             </div>
             <div>
               <p style={{ color: "#F5F5F5", fontWeight: 700, fontSize: 12, marginBottom: 14 }}>Social</p>
-              <a href="https://x.com/QeixovaTech" target="_blank" rel="noopener noreferrer" style={{ display: "block", fontSize: 12, marginBottom: 9, color: "#444", textDecoration: "none" }}>@QeixovaTech</a>
-              <a href="https://www.facebook.com/profile.php?id=61568026449468" target="_blank" rel="noopener noreferrer" style={{ display: "block", fontSize: 12, marginBottom: 9, color: "#444", textDecoration: "none" }}>Facebook</a>
-              <a href="mailto:qeixova@gmail.com" style={{ display: "block", fontSize: 12, color: "#444", textDecoration: "none" }}>qeixova@gmail.com</a>
+              <a href="https://x.com/QeixovaTech" target="_blank" rel="noopener noreferrer" style={{ display: "block", fontSize: 12, marginBottom: 9, color: "#aaa", textDecoration: "none" }}>@QeixovaTech</a>
+              <a href="https://www.facebook.com/profile.php?id=61568026449468" target="_blank" rel="noopener noreferrer" style={{ display: "block", fontSize: 12, marginBottom: 9, color: "#aaa", textDecoration: "none" }}>Facebook</a>
+              <a href="mailto:qeixova@gmail.com" style={{ display: "block", fontSize: 12, color: "#aaa", textDecoration: "none" }}>qeixova@gmail.com</a>
             </div>
           </div>
           <div style={{ borderTop: "1px solid #111", paddingTop: 20, display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 10 }}>
-            <p style={{ fontSize: 11, color: "#333" }}>© 2026 Qeixova. All rights reserved.</p>
-            <p style={{ fontSize: 11, color: "#333" }}>Qeixova Tasks — Community-Powered Digital Growth.</p>
+            <p style={{ fontSize: 11, color: "#999" }}>© 2026 Qeixova. All rights reserved.</p>
+            <p style={{ fontSize: 11, color: "#999" }}>Qeixova Tasks — Community-Powered Digital Growth.</p>
           </div>
         </div>
       </footer>

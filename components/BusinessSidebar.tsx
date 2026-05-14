@@ -57,7 +57,7 @@ export default function BusinessSidebar({ name }: { name: string }) {
               </div>
               <div style={{ flex: 1 }}>
                 <p style={{ fontSize: 13, fontWeight: isActive ? 700 : 500, color: isActive ? "#F5A623" : "#999", lineHeight: 1.2 }}>{item.label}</p>
-                <p style={{ fontSize: 10, color: "#333", marginTop: 1 }}>{item.desc}</p>
+                <p style={{ fontSize: 10, color: "#999", marginTop: 1 }}>{item.desc}</p>
               </div>
               {isActive && <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#F5A623", flexShrink: 0 }} />}
             </Link>
@@ -73,7 +73,7 @@ export default function BusinessSidebar({ name }: { name: string }) {
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <p style={{ fontSize: 12, fontWeight: 700, color: "#F5F5F5", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{name}</p>
-            <p style={{ fontSize: 10, color: "#444" }}>Business account</p>
+            <p style={{ fontSize: 10, color: "#aaa" }}>Business account</p>
           </div>
           <button onClick={logout} title="Log out"
             style={{ background: "rgba(229,62,62,0.08)", border: "1px solid rgba(229,62,62,0.12)", borderRadius: 8, width: 30, height: 30, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", flexShrink: 0 }}>

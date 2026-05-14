@@ -23,8 +23,8 @@ const MISSION_COLORS: Record<string, { bg: string; color: string }> = {
   premium:       { bg: "#f3e5f5", color: "#7b1fa2" },
 };
 
-const TH: React.CSSProperties = { padding: "10px 14px", textAlign: "left", fontSize: 11, fontWeight: 700, color: "#888", textTransform: "uppercase", letterSpacing: 0.5, borderBottom: "1px solid #eee", whiteSpace: "nowrap" };
-const TD: React.CSSProperties = { padding: "12px 14px", fontSize: 13, color: "#333", borderBottom: "1px solid #f5f5f5", verticalAlign: "middle" };
+const TH: React.CSSProperties = { padding: "10px 14px", textAlign: "left", fontSize: 11, fontWeight: 700, color: "#ccc", textTransform: "uppercase", letterSpacing: 0.5, borderBottom: "1px solid #eee", whiteSpace: "nowrap" };
+const TD: React.CSSProperties = { padding: "12px 14px", fontSize: 13, color: "#999", borderBottom: "1px solid #f5f5f5", verticalAlign: "middle" };
 
 export default function TasksPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -92,14 +92,14 @@ export default function TasksPage() {
   }
 
   const inp: React.CSSProperties = { width: "100%", padding: "9px 12px", border: "1.5px solid #e0e0e0", borderRadius: 7, fontSize: 13, outline: "none", boxSizing: "border-box" };
-  const lbl: React.CSSProperties = { display: "block", fontSize: 11, fontWeight: 700, color: "#555", marginBottom: 5, textTransform: "uppercase", letterSpacing: 0.4 };
+  const lbl: React.CSSProperties = { display: "block", fontSize: 11, fontWeight: 700, color: "#bbb", marginBottom: 5, textTransform: "uppercase", letterSpacing: 0.4 };
 
   return (
     <div>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
         <div>
           <h1 style={{ margin: "0 0 4px", fontSize: 24, fontWeight: 700, color: "#1A1A1A" }}>Missions</h1>
-          <p style={{ margin: 0, color: "#888", fontSize: 13 }}>{tasks.length} missions total</p>
+          <p style={{ margin: 0, color: "#ccc", fontSize: 13 }}>{tasks.length} missions total</p>
         </div>
         <button onClick={openAdd} style={{ padding: "9px 18px", background: "#1AEF22", color: "#000", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
           + Add Mission

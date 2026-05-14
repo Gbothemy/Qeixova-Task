@@ -40,7 +40,7 @@ function Chips({ options, selected, onChange }: { options: string[]; selected: s
             fontWeight: on ? 700 : 400,
             border: `1.5px solid ${on ? "#1AEF22" : "#222"}`,
             background: on ? "rgba(26,239,34,0.1)" : "transparent",
-            color: on ? "#1AEF22" : "#666",
+            color: on ? "#1AEF22" : "#ccc",
           }}>{o}</button>
         );
       })}
@@ -54,7 +54,7 @@ function StepBar({ current, total }: { current: number; total: number }) {
       {Array.from({ length: total }).map((_, i) => (
         <div key={i} style={{ flex: 1, height: 3, borderRadius: 3, background: i < current ? "#1AEF22" : "#1a1a1a", transition: "background 0.3s" }} />
       ))}
-      <span style={{ fontSize: 11, color: "#444", flexShrink: 0 }}>{current}/{total}</span>
+      <span style={{ fontSize: 11, color: "#aaa", flexShrink: 0 }}>{current}/{total}</span>
     </div>
   );
 }
@@ -106,10 +106,10 @@ export default function OnboardingFlow({ userName, onComplete }: Props) {
           <h1 style={{ fontSize: 26, fontWeight: 900, color: "#F5F5F5", letterSpacing: -0.5, marginBottom: 10 }}>
             Welcome, {firstName}!
           </h1>
-          <p style={{ fontSize: 14, color: "#666", lineHeight: 1.7, marginBottom: 12 }}>
+          <p style={{ fontSize: 14, color: "#ccc", lineHeight: 1.7, marginBottom: 12 }}>
             You&apos;re joining Qeixova Tasks — a community-powered growth platform where you earn by helping businesses and creators reach real people.
           </p>
-          <p style={{ fontSize: 13, color: "#444", lineHeight: 1.6, marginBottom: 32 }}>
+          <p style={{ fontSize: 13, color: "#aaa", lineHeight: 1.6, marginBottom: 32 }}>
             Complete participation tasks, earn QLT rewards, and convert to real Naira.
           </p>
           <button onClick={() => setStep(1)} style={{ width: "100%", background: "linear-gradient(135deg, #1AEF22, #06B517)", color: "#000", border: "none", borderRadius: 13, padding: "15px", fontWeight: 800, fontSize: 15, cursor: "pointer", boxShadow: "0 6px 20px rgba(26,239,34,0.3)" }}>
@@ -123,17 +123,17 @@ export default function OnboardingFlow({ userName, onComplete }: Props) {
         <div style={{ maxWidth: 420, width: "100%" }}>
           <StepBar current={1} total={4} />
           <h2 style={{ fontSize: 20, fontWeight: 800, color: "#F5F5F5", marginBottom: 4 }}>Your Profile</h2>
-          <p style={{ fontSize: 13, color: "#555", marginBottom: 20 }}>Helps us recommend relevant campaigns for you.</p>
+          <p style={{ fontSize: 13, color: "#bbb", marginBottom: 20 }}>Helps us recommend relevant campaigns for you.</p>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
             <div>
-              <label style={{ fontSize: 11, fontWeight: 700, color: "#444", letterSpacing: 0.5 }}>USERNAME</label>
+              <label style={{ fontSize: 11, fontWeight: 700, color: "#aaa", letterSpacing: 0.5 }}>USERNAME</label>
               <input type="text" placeholder="e.g. john_contributor" value={username} onChange={e => setUsername(e.target.value)}
                 style={{ ...inp, marginTop: 6 }} onFocus={e => (e.target.style.borderColor = "#1AEF22")} onBlur={e => (e.target.style.borderColor = "#222")} />
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
               <div>
-                <label style={{ fontSize: 11, fontWeight: 700, color: "#444", letterSpacing: 0.5 }}>COUNTRY</label>
+                <label style={{ fontSize: 11, fontWeight: 700, color: "#aaa", letterSpacing: 0.5 }}>COUNTRY</label>
                 <select value={country} onChange={e => setCountry(e.target.value)} style={{ ...inp, marginTop: 6, cursor: "pointer" }}>
                   <option value="Nigeria">Nigeria</option>
                   <option value="Ghana">Ghana</option>
@@ -142,7 +142,7 @@ export default function OnboardingFlow({ userName, onComplete }: Props) {
                 </select>
               </div>
               <div>
-                <label style={{ fontSize: 11, fontWeight: 700, color: "#444", letterSpacing: 0.5 }}>STATE</label>
+                <label style={{ fontSize: 11, fontWeight: 700, color: "#aaa", letterSpacing: 0.5 }}>STATE</label>
                 <select value={state} onChange={e => setState(e.target.value)} style={{ ...inp, marginTop: 6, cursor: "pointer" }}>
                   <option value="">Select state</option>
                   {NIGERIAN_STATES.map(s => <option key={s} value={s}>{s}</option>)}
@@ -150,20 +150,20 @@ export default function OnboardingFlow({ userName, onComplete }: Props) {
               </div>
             </div>
             <div>
-              <label style={{ fontSize: 11, fontWeight: 700, color: "#444", letterSpacing: 0.5 }}>AGE RANGE</label>
+              <label style={{ fontSize: 11, fontWeight: 700, color: "#aaa", letterSpacing: 0.5 }}>AGE RANGE</label>
               <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
                 {AGE_RANGES.map(a => (
-                  <button key={a} type="button" onClick={() => setAgeRange(a)} style={{ flex: 1, padding: "8px", borderRadius: 10, border: `1.5px solid ${ageRange === a ? "#1AEF22" : "#222"}`, background: ageRange === a ? "rgba(26,239,34,0.1)" : "transparent", color: ageRange === a ? "#1AEF22" : "#666", fontSize: 12, cursor: "pointer", fontWeight: ageRange === a ? 700 : 400 }}>
+                  <button key={a} type="button" onClick={() => setAgeRange(a)} style={{ flex: 1, padding: "8px", borderRadius: 10, border: `1.5px solid ${ageRange === a ? "#1AEF22" : "#222"}`, background: ageRange === a ? "rgba(26,239,34,0.1)" : "transparent", color: ageRange === a ? "#1AEF22" : "#ccc", fontSize: 12, cursor: "pointer", fontWeight: ageRange === a ? 700 : 400 }}>
                     {a}
                   </button>
                 ))}
               </div>
             </div>
             <div>
-              <label style={{ fontSize: 11, fontWeight: 700, color: "#444", letterSpacing: 0.5 }}>GENDER</label>
+              <label style={{ fontSize: 11, fontWeight: 700, color: "#aaa", letterSpacing: 0.5 }}>GENDER</label>
               <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
                 {["Male", "Female", "Prefer not to say"].map(g => (
-                  <button key={g} type="button" onClick={() => setGender(g)} style={{ flex: 1, padding: "8px", borderRadius: 10, border: `1.5px solid ${gender === g ? "#1AEF22" : "#222"}`, background: gender === g ? "rgba(26,239,34,0.1)" : "transparent", color: gender === g ? "#1AEF22" : "#666", fontSize: 11, cursor: "pointer", fontWeight: gender === g ? 700 : 400 }}>
+                  <button key={g} type="button" onClick={() => setGender(g)} style={{ flex: 1, padding: "8px", borderRadius: 10, border: `1.5px solid ${gender === g ? "#1AEF22" : "#222"}`, background: gender === g ? "rgba(26,239,34,0.1)" : "transparent", color: gender === g ? "#1AEF22" : "#ccc", fontSize: 11, cursor: "pointer", fontWeight: gender === g ? 700 : 400 }}>
                     {g}
                   </button>
                 ))}
@@ -172,7 +172,7 @@ export default function OnboardingFlow({ userName, onComplete }: Props) {
           </div>
 
           <div style={{ display: "flex", gap: 10, marginTop: 24 }}>
-            <button onClick={() => setStep(0)} style={{ flex: 1, padding: "13px", borderRadius: 12, border: "1.5px solid #222", background: "transparent", color: "#555", fontWeight: 600, fontSize: 13, cursor: "pointer" }}>← Back</button>
+            <button onClick={() => setStep(0)} style={{ flex: 1, padding: "13px", borderRadius: 12, border: "1.5px solid #222", background: "transparent", color: "#bbb", fontWeight: 600, fontSize: 13, cursor: "pointer" }}>← Back</button>
             <button onClick={() => setStep(2)} style={{ flex: 2, padding: "13px", borderRadius: 12, border: "none", background: "linear-gradient(135deg, #1AEF22, #06B517)", color: "#000", fontWeight: 800, fontSize: 14, cursor: "pointer" }}>Continue →</button>
           </div>
         </div>
@@ -184,24 +184,24 @@ export default function OnboardingFlow({ userName, onComplete }: Props) {
           <div style={{ width: "100%", maxWidth: 440, paddingBottom: 40 }}>
             <StepBar current={2} total={4} />
             <h2 style={{ fontSize: 20, fontWeight: 800, color: "#F5F5F5", marginBottom: 4 }}>Your Interests</h2>
-            <p style={{ fontSize: 13, color: "#555", marginBottom: 20 }}>We use this to recommend campaigns you&apos;ll actually enjoy completing.</p>
+            <p style={{ fontSize: 13, color: "#bbb", marginBottom: 20 }}>We use this to recommend campaigns you&apos;ll actually enjoy completing.</p>
 
             <div style={{ marginBottom: 22 }}>
-              <label style={{ fontSize: 11, fontWeight: 700, color: "#444", letterSpacing: 0.5 }}>INTERESTS (select all that apply)</label>
+              <label style={{ fontSize: 11, fontWeight: 700, color: "#aaa", letterSpacing: 0.5 }}>INTERESTS (select all that apply)</label>
               <Chips options={INTERESTS} selected={interests} onChange={setInterests} />
             </div>
 
             <div style={{ marginBottom: 22 }}>
-              <label style={{ fontSize: 11, fontWeight: 700, color: "#444", letterSpacing: 0.5 }}>PLATFORMS YOU USE</label>
-              <p style={{ fontSize: 12, color: "#444", marginTop: 4, marginBottom: 0 }}>Campaigns are matched to platforms you&apos;re active on.</p>
+              <label style={{ fontSize: 11, fontWeight: 700, color: "#aaa", letterSpacing: 0.5 }}>PLATFORMS YOU USE</label>
+              <p style={{ fontSize: 12, color: "#aaa", marginTop: 4, marginBottom: 0 }}>Campaigns are matched to platforms you&apos;re active on.</p>
               <Chips options={PLATFORMS} selected={platforms} onChange={setPlatforms} />
             </div>
 
             <div style={{ display: "flex", gap: 10, marginTop: 8 }}>
-              <button onClick={() => setStep(1)} style={{ flex: 1, padding: "13px", borderRadius: 12, border: "1.5px solid #222", background: "transparent", color: "#555", fontWeight: 600, fontSize: 13, cursor: "pointer" }}>← Back</button>
+              <button onClick={() => setStep(1)} style={{ flex: 1, padding: "13px", borderRadius: 12, border: "1.5px solid #222", background: "transparent", color: "#bbb", fontWeight: 600, fontSize: 13, cursor: "pointer" }}>← Back</button>
               <button onClick={() => setStep(3)} style={{ flex: 2, padding: "13px", borderRadius: 12, border: "none", background: "linear-gradient(135deg, #1AEF22, #06B517)", color: "#000", fontWeight: 800, fontSize: 14, cursor: "pointer" }}>Continue →</button>
             </div>
-            <button onClick={() => setStep(3)} style={{ width: "100%", marginTop: 10, padding: "10px", borderRadius: 12, border: "none", background: "transparent", color: "#444", fontSize: 12, cursor: "pointer" }}>Skip for now</button>
+            <button onClick={() => setStep(3)} style={{ width: "100%", marginTop: 10, padding: "10px", borderRadius: 12, border: "none", background: "transparent", color: "#aaa", fontSize: 12, cursor: "pointer" }}>Skip for now</button>
           </div>
         </div>
       )}
@@ -211,7 +211,7 @@ export default function OnboardingFlow({ userName, onComplete }: Props) {
         <div style={{ maxWidth: 420, width: "100%" }}>
           <StepBar current={3} total={4} />
           <h2 style={{ fontSize: 20, fontWeight: 800, color: "#F5F5F5", marginBottom: 4 }}>Set Up Withdrawals</h2>
-          <p style={{ fontSize: 13, color: "#555", marginBottom: 6 }}>Add your bank account so you can withdraw your earnings.</p>
+          <p style={{ fontSize: 13, color: "#bbb", marginBottom: 6 }}>Add your bank account so you can withdraw your earnings.</p>
           <div style={{ background: "rgba(26,239,34,0.06)", border: "1px solid rgba(26,239,34,0.12)", borderRadius: 10, padding: "10px 14px", marginBottom: 20 }}>
             <p style={{ fontSize: 12, color: "#1AEF22", fontWeight: 600 }}>🔒 Withdrawals unlock at 500,000 QLT lifetime earnings (Bronze level)</p>
           </div>
@@ -223,7 +223,7 @@ export default function OnboardingFlow({ userName, onComplete }: Props) {
               { key: "account_name",   label: "ACCOUNT NAME",    placeholder: "Name on account" },
             ].map(f => (
               <div key={f.key}>
-                <label style={{ fontSize: 11, fontWeight: 700, color: "#444", letterSpacing: 0.5 }}>{f.label}</label>
+                <label style={{ fontSize: 11, fontWeight: 700, color: "#aaa", letterSpacing: 0.5 }}>{f.label}</label>
                 <input type="text" placeholder={f.placeholder} value={bank[f.key as keyof typeof bank]}
                   onChange={e => setBank(b => ({ ...b, [f.key]: e.target.value }))}
                   style={{ ...inp, marginTop: 6 }} onFocus={e => (e.target.style.borderColor = "#1AEF22")} onBlur={e => (e.target.style.borderColor = "#222")} />
@@ -232,10 +232,10 @@ export default function OnboardingFlow({ userName, onComplete }: Props) {
           </div>
 
           <div style={{ display: "flex", gap: 10, marginTop: 24 }}>
-            <button onClick={() => setStep(2)} style={{ flex: 1, padding: "13px", borderRadius: 12, border: "1.5px solid #222", background: "transparent", color: "#555", fontWeight: 600, fontSize: 13, cursor: "pointer" }}>← Back</button>
+            <button onClick={() => setStep(2)} style={{ flex: 1, padding: "13px", borderRadius: 12, border: "1.5px solid #222", background: "transparent", color: "#bbb", fontWeight: 600, fontSize: 13, cursor: "pointer" }}>← Back</button>
             <button onClick={() => setStep(4)} style={{ flex: 2, padding: "13px", borderRadius: 12, border: "none", background: "linear-gradient(135deg, #1AEF22, #06B517)", color: "#000", fontWeight: 800, fontSize: 14, cursor: "pointer" }}>Continue →</button>
           </div>
-          <button onClick={() => setStep(4)} style={{ width: "100%", marginTop: 10, padding: "10px", borderRadius: 12, border: "none", background: "transparent", color: "#444", fontSize: 12, cursor: "pointer" }}>Skip — add later in Profile</button>
+          <button onClick={() => setStep(4)} style={{ width: "100%", marginTop: 10, padding: "10px", borderRadius: 12, border: "none", background: "transparent", color: "#aaa", fontSize: 12, cursor: "pointer" }}>Skip — add later in Profile</button>
         </div>
       )}
 
@@ -244,7 +244,7 @@ export default function OnboardingFlow({ userName, onComplete }: Props) {
         <div style={{ maxWidth: 420, width: "100%" }}>
           <StepBar current={4} total={4} />
           <h2 style={{ fontSize: 20, fontWeight: 800, color: "#F5F5F5", marginBottom: 4 }}>Have a referral code?</h2>
-          <p style={{ fontSize: 13, color: "#555", marginBottom: 24 }}>Optional — enter a code to get a welcome bonus.</p>
+          <p style={{ fontSize: 13, color: "#bbb", marginBottom: 24 }}>Optional — enter a code to get a welcome bonus.</p>
 
           <input type="text" placeholder="ENTER REFERRAL CODE (OPTIONAL)" value={referralCode}
             onChange={e => setReferralCode(e.target.value.toUpperCase())}
@@ -252,12 +252,12 @@ export default function OnboardingFlow({ userName, onComplete }: Props) {
             onFocus={e => (e.target.style.borderColor = "#1AEF22")} onBlur={e => (e.target.style.borderColor = "#222")} />
 
           <div style={{ display: "flex", gap: 10, marginTop: 24 }}>
-            <button onClick={() => setStep(3)} style={{ flex: 1, padding: "13px", borderRadius: 12, border: "1.5px solid #222", background: "transparent", color: "#555", fontWeight: 600, fontSize: 13, cursor: "pointer" }}>← Back</button>
+            <button onClick={() => setStep(3)} style={{ flex: 1, padding: "13px", borderRadius: 12, border: "1.5px solid #222", background: "transparent", color: "#bbb", fontWeight: 600, fontSize: 13, cursor: "pointer" }}>← Back</button>
             <button onClick={handleFinish} disabled={saving} style={{ flex: 2, padding: "13px", borderRadius: 12, border: "none", background: "linear-gradient(135deg, #F5A623, #d89420)", color: "#000", fontWeight: 800, fontSize: 14, cursor: saving ? "not-allowed" : "pointer", boxShadow: "0 6px 20px rgba(245,166,35,0.3)" }}>
               {saving ? "Saving..." : "Start Completing Tasks →"}
             </button>
           </div>
-          <button onClick={handleFinish} disabled={saving} style={{ width: "100%", marginTop: 10, padding: "10px", borderRadius: 12, border: "none", background: "transparent", color: "#444", fontSize: 12, cursor: "pointer" }}>
+          <button onClick={handleFinish} disabled={saving} style={{ width: "100%", marginTop: 10, padding: "10px", borderRadius: 12, border: "none", background: "transparent", color: "#aaa", fontSize: 12, cursor: "pointer" }}>
             Skip for now
           </button>
         </div>

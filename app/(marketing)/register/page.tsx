@@ -20,7 +20,7 @@ function Chips({ options, selected, onChange, color="#1AEF22" }: { options:strin
     <div style={{ display:"flex", flexWrap:"wrap", gap:8, marginTop:8 }}>
       {options.map(o => {
         const on = selected.includes(o);
-        return <button key={o} type="button" onClick={()=>toggle(o)} style={{ padding:"7px 14px", borderRadius:20, fontSize:12, cursor:"pointer", fontWeight:on?700:400, border:`1.5px solid ${on?color:"#1e1e1e"}`, background:on?`${color}18`:"transparent", color:on?color:"#555" }}>{o}</button>;
+        return <button key={o} type="button" onClick={()=>toggle(o)} style={{ padding:"7px 14px", borderRadius:20, fontSize:12, cursor:"pointer", fontWeight:on?700:400, border:`1.5px solid ${on?color:"#1e1e1e"}`, background:on?`${color}18`:"transparent", color:on?color:"#bbb" }}>{o}</button>;
       })}
     </div>
   );
@@ -32,7 +32,7 @@ function StepBar({ current, total, color="#1AEF22" }: { current:number; total:nu
       {Array.from({length:total}).map((_,i) => (
         <div key={i} style={{ flex:1, height:3, borderRadius:3, background:i<current?color:"#1a1a1a", transition:"background 0.3s" }} />
       ))}
-      <span style={{ fontSize:11, color:"#444", flexShrink:0 }}>{current}/{total}</span>
+      <span style={{ fontSize:11, color:"#aaa", flexShrink:0 }}>{current}/{total}</span>
     </div>
   );
 }
@@ -118,7 +118,7 @@ export default function RegisterPage() {
             <div style={{ textAlign:"center" }}>
               <Image src="/qeixova-icon.png" alt="Qeixova" width={72} height={72} style={{ borderRadius:20, objectFit:"contain", boxShadow:"0 8px 28px rgba(26,239,34,0.3)", marginBottom:24 }} />
               <h1 style={{ fontSize:26, fontWeight:900, color:"#F5F5F5", letterSpacing:-0.5, marginBottom:10 }}>Welcome to Qeixova Tasks</h1>
-              <p style={{ fontSize:14, color:"#666", lineHeight:1.7, marginBottom:32, maxWidth:380, margin:"0 auto 32px" }}>
+              <p style={{ fontSize:14, color:"#ccc", lineHeight:1.7, marginBottom:32, maxWidth:380, margin:"0 auto 32px" }}>
                 A community-powered growth platform where businesses gain visibility and contributors earn through meaningful participation.
               </p>
               <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
@@ -129,32 +129,32 @@ export default function RegisterPage() {
                   👤 Continue as Contributor
                 </button>
               </div>
-              <p style={{ fontSize:12, color:"#333", marginTop:16 }}>You can switch account types later.</p>
-              <p style={{ fontSize:13, color:"#444", marginTop:12 }}>Already have an account? <Link href="/login" style={{ color:"#1AEF22", textDecoration:"none", fontWeight:600 }}>Sign in</Link></p>
+              <p style={{ fontSize:12, color:"#999", marginTop:16 }}>You can switch account types later.</p>
+              <p style={{ fontSize:13, color:"#aaa", marginTop:12 }}>Already have an account? <Link href="/login" style={{ color:"#1AEF22", textDecoration:"none", fontWeight:600 }}>Sign in</Link></p>
             </div>
           )}
 
           {/* ── TYPE SELECTION ── */}
           {screen === "type" && accountType && (
             <div>
-              <button onClick={()=>setScreen("welcome")} style={{ background:"none", border:"none", color:"#555", fontSize:13, cursor:"pointer", marginBottom:20, padding:0 }}>← Back</button>
+              <button onClick={()=>setScreen("welcome")} style={{ background:"none", border:"none", color:"#bbb", fontSize:13, cursor:"pointer", marginBottom:20, padding:0 }}>← Back</button>
               {accountType === "business" ? (
                 <div>
                   <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:20 }}>
                     <div style={{ width:52, height:52, borderRadius:14, background:"linear-gradient(135deg, #F5A623, #d89420)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:24 }}>🏢</div>
                     <div>
                       <h2 style={{ fontSize:20, fontWeight:900, color:"#F5F5F5", marginBottom:3 }}>Business Account</h2>
-                      <p style={{ fontSize:13, color:"#555" }}>Grow your brand through real human participation</p>
+                      <p style={{ fontSize:13, color:"#bbb" }}>Grow your brand through real human participation</p>
                     </div>
                   </div>
-                  <p style={{ fontSize:14, color:"#666", lineHeight:1.7, marginBottom:20 }}>
+                  <p style={{ fontSize:14, color:"#ccc", lineHeight:1.7, marginBottom:20 }}>
                     Promote your business, music, events, products, videos, apps, or campaigns through real human participation.
                   </p>
                   <div style={{ background:"#0a0a0a", borderRadius:14, padding:"18px", border:"1px solid #1a1a1a", marginBottom:24 }}>
                     {["Launch awareness campaigns","Get reposts and shares","Run referral campaigns","Test products and apps","Gather feedback","Reach local communities"].map(f => (
                       <div key={f} style={{ display:"flex", alignItems:"center", gap:10, marginBottom:10 }}>
                         <span style={{ color:"#F5A623", fontSize:12 }}>✓</span>
-                        <span style={{ fontSize:13, color:"#888" }}>{f}</span>
+                        <span style={{ fontSize:13, color:"#ccc" }}>{f}</span>
                       </div>
                     ))}
                   </div>
@@ -168,17 +168,17 @@ export default function RegisterPage() {
                     <div style={{ width:52, height:52, borderRadius:14, background:"linear-gradient(135deg, #1AEF22, #06B517)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:24 }}>👤</div>
                     <div>
                       <h2 style={{ fontSize:20, fontWeight:900, color:"#F5F5F5", marginBottom:3 }}>Contributor Account</h2>
-                      <p style={{ fontSize:13, color:"#555" }}>Earn by helping businesses grow</p>
+                      <p style={{ fontSize:13, color:"#bbb" }}>Earn by helping businesses grow</p>
                     </div>
                   </div>
-                  <p style={{ fontSize:14, color:"#666", lineHeight:1.7, marginBottom:20 }}>
+                  <p style={{ fontSize:14, color:"#ccc", lineHeight:1.7, marginBottom:20 }}>
                     Earn rewards by helping businesses and creators distribute content, test products, and grow online.
                   </p>
                   <div style={{ background:"#0a0a0a", borderRadius:14, padding:"18px", border:"1px solid #1a1a1a", marginBottom:24 }}>
                     {["Complete participation tasks","Earn QLT rewards","Build contributor level","Access better campaigns","Join growth communities"].map(f => (
                       <div key={f} style={{ display:"flex", alignItems:"center", gap:10, marginBottom:10 }}>
                         <span style={{ color:"#1AEF22", fontSize:12 }}>✓</span>
-                        <span style={{ fontSize:13, color:"#888" }}>{f}</span>
+                        <span style={{ fontSize:13, color:"#ccc" }}>{f}</span>
                       </div>
                     ))}
                   </div>
@@ -193,32 +193,32 @@ export default function RegisterPage() {
           {/* ── SIGNUP FORM ── */}
           {screen === "signup" && (
             <div>
-              <button onClick={()=>setScreen("type")} style={{ background:"none", border:"none", color:"#555", fontSize:13, cursor:"pointer", marginBottom:20, padding:0 }}>← Back</button>
+              <button onClick={()=>setScreen("type")} style={{ background:"none", border:"none", color:"#bbb", fontSize:13, cursor:"pointer", marginBottom:20, padding:0 }}>← Back</button>
               <h2 style={{ fontSize:20, fontWeight:900, color:"#F5F5F5", marginBottom:4 }}>Create Your Account</h2>
-              <p style={{ fontSize:13, color:"#555", marginBottom:20 }}>
+              <p style={{ fontSize:13, color:"#bbb", marginBottom:20 }}>
                 {accountType === "business" ? "Set up your business login." : "Set up your contributor account."}
               </p>
               {error && <div style={{ background:"rgba(229,62,62,0.07)", border:"1px solid rgba(229,62,62,0.2)", borderRadius:10, padding:"11px 14px", marginBottom:16, fontSize:13, color:"#e53e3e" }}>⚠️ {error}</div>}
               <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
                 <div>
-                  <label style={{ fontSize:11, fontWeight:700, color:"#444", letterSpacing:0.8, textTransform:"uppercase" }}>{accountType === "business" ? "Business Name" : "Full Name"}</label>
+                  <label style={{ fontSize:11, fontWeight:700, color:"#aaa", letterSpacing:0.8, textTransform:"uppercase" }}>{accountType === "business" ? "Business Name" : "Full Name"}</label>
                   <input type="text" placeholder={accountType === "business" ? "Your company or brand name" : "Your full name"} value={form.fullName} onChange={e=>setForm(f=>({...f,fullName:e.target.value}))} style={inp} onFocus={e=>(e.target.style.borderColor=accentColor)} onBlur={e=>(e.target.style.borderColor="#1e1e1e")} />
                 </div>
                 <div>
-                  <label style={{ fontSize:11, fontWeight:700, color:"#444", letterSpacing:0.8, textTransform:"uppercase" }}>Email Address</label>
+                  <label style={{ fontSize:11, fontWeight:700, color:"#aaa", letterSpacing:0.8, textTransform:"uppercase" }}>Email Address</label>
                   <input type="email" placeholder="your@email.com" value={form.email} onChange={e=>setForm(f=>({...f,email:e.target.value}))} style={inp} onFocus={e=>(e.target.style.borderColor=accentColor)} onBlur={e=>(e.target.style.borderColor="#1e1e1e")} />
                 </div>
                 <div>
-                  <label style={{ fontSize:11, fontWeight:700, color:"#444", letterSpacing:0.8, textTransform:"uppercase" }}>Password</label>
+                  <label style={{ fontSize:11, fontWeight:700, color:"#aaa", letterSpacing:0.8, textTransform:"uppercase" }}>Password</label>
                   <input type="password" placeholder="Create a strong password" value={form.password} onChange={e=>setForm(f=>({...f,password:e.target.value}))} style={inp} onFocus={e=>(e.target.style.borderColor=accentColor)} onBlur={e=>(e.target.style.borderColor="#1e1e1e")} />
                 </div>
                 <div>
-                  <label style={{ fontSize:11, fontWeight:700, color:"#444", letterSpacing:0.8, textTransform:"uppercase" }}>Confirm Password</label>
+                  <label style={{ fontSize:11, fontWeight:700, color:"#aaa", letterSpacing:0.8, textTransform:"uppercase" }}>Confirm Password</label>
                   <input type="password" placeholder="Repeat your password" value={form.confirmPassword} onChange={e=>setForm(f=>({...f,confirmPassword:e.target.value}))} style={inp} onFocus={e=>(e.target.style.borderColor=accentColor)} onBlur={e=>(e.target.style.borderColor="#1e1e1e")} />
                 </div>
                 <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
                   <div>
-                    <label style={{ fontSize:11, fontWeight:700, color:"#444", letterSpacing:0.8, textTransform:"uppercase" }}>Country</label>
+                    <label style={{ fontSize:11, fontWeight:700, color:"#aaa", letterSpacing:0.8, textTransform:"uppercase" }}>Country</label>
                     <select value={form.country} onChange={e=>setForm(f=>({...f,country:e.target.value}))} style={{ ...inp, cursor:"pointer" }}>
                       <option value="Nigeria">Nigeria</option>
                       <option value="Ghana">Ghana</option>
@@ -227,7 +227,7 @@ export default function RegisterPage() {
                     </select>
                   </div>
                   <div>
-                    <label style={{ fontSize:11, fontWeight:700, color:"#444", letterSpacing:0.8, textTransform:"uppercase" }}>State</label>
+                    <label style={{ fontSize:11, fontWeight:700, color:"#aaa", letterSpacing:0.8, textTransform:"uppercase" }}>State</label>
                     <select value={form.state} onChange={e=>setForm(f=>({...f,state:e.target.value}))} style={{ ...inp, cursor:"pointer" }}>
                       <option value="">Select state</option>
                       {NIGERIAN_STATES.map(s=><option key={s} value={s}>{s}</option>)}
@@ -236,12 +236,12 @@ export default function RegisterPage() {
                 </div>
                 <div style={{ display:"flex", alignItems:"flex-start", gap:10, marginTop:4 }}>
                   <input type="checkbox" id="terms" checked={termsAccepted} onChange={e=>setTermsAccepted(e.target.checked)} style={{ marginTop:2, accentColor, width:16, height:16, cursor:"pointer", flexShrink:0 }} />
-                  <label htmlFor="terms" style={{ fontSize:12, color:"#555", lineHeight:1.5, cursor:"pointer" }}>
+                  <label htmlFor="terms" style={{ fontSize:12, color:"#bbb", lineHeight:1.5, cursor:"pointer" }}>
                     I agree to the <Link href="/#" style={{ color:accentColor, textDecoration:"none", fontWeight:600 }}>Terms of Service</Link> and <Link href="/#" style={{ color:accentColor, textDecoration:"none", fontWeight:600 }}>Privacy Policy</Link>
                   </label>
                 </div>
               </div>
-              <button onClick={handleSignup} disabled={loading} style={{ width:"100%", marginTop:20, background:loading?"#111":`linear-gradient(135deg, ${accentColor}, ${accountType==="business"?"#d89420":"#06B517"})`, color:loading?"#444":"#000", border:"none", borderRadius:13, padding:"15px", fontWeight:800, fontSize:15, cursor:loading?"not-allowed":"pointer" }}>
+              <button onClick={handleSignup} disabled={loading} style={{ width:"100%", marginTop:20, background:loading?"#111":`linear-gradient(135deg, ${accentColor}, ${accountType==="business"?"#d89420":"#06B517"})`, color:loading?"#aaa":"#000", border:"none", borderRadius:13, padding:"15px", fontWeight:800, fontSize:15, cursor:loading?"not-allowed":"pointer" }}>
                 {loading ? "Creating account..." : "Continue →"}
               </button>
             </div>
@@ -254,33 +254,33 @@ export default function RegisterPage() {
                 <div>
                   <StepBar current={1} total={2} color="#F5A623" />
                   <h2 style={{ fontSize:20, fontWeight:800, color:"#F5F5F5", marginBottom:4 }}>Business Setup</h2>
-                  <p style={{ fontSize:13, color:"#555", marginBottom:20 }}>Help us match you with the right contributors.</p>
+                  <p style={{ fontSize:13, color:"#bbb", marginBottom:20 }}>Help us match you with the right contributors.</p>
                   <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
                     <div>
-                      <label style={{ fontSize:11, fontWeight:700, color:"#444", letterSpacing:0.8, textTransform:"uppercase" }}>Business Category</label>
+                      <label style={{ fontSize:11, fontWeight:700, color:"#aaa", letterSpacing:0.8, textTransform:"uppercase" }}>Business Category</label>
                       <select value={bizCategory} onChange={e=>setBizCategory(e.target.value)} style={{ ...inp, cursor:"pointer" }} onFocus={e=>(e.target.style.borderColor="#F5A623")} onBlur={e=>(e.target.style.borderColor="#1e1e1e")}>
                         <option value="">Select your category</option>
                         {BUSINESS_CATEGORIES.map(c=><option key={c} value={c}>{c}</option>)}
                       </select>
                     </div>
                     <div>
-                      <label style={{ fontSize:11, fontWeight:700, color:"#444", letterSpacing:0.8, textTransform:"uppercase" }}>Business Description (optional)</label>
+                      <label style={{ fontSize:11, fontWeight:700, color:"#aaa", letterSpacing:0.8, textTransform:"uppercase" }}>Business Description (optional)</label>
                       <textarea value={bizDescription} onChange={e=>setBizDescription(e.target.value)} placeholder="Briefly describe your business or campaign..." rows={3} style={{ ...inp, resize:"vertical", lineHeight:1.6 }} onFocus={e=>(e.target.style.borderColor="#F5A623")} onBlur={e=>(e.target.style.borderColor="#1e1e1e")} />
                     </div>
                   </div>
                   <button onClick={()=>setOnboardStep(2)} style={{ width:"100%", marginTop:20, background:"linear-gradient(135deg, #F5A623, #d89420)", color:"#000", border:"none", borderRadius:13, padding:"14px", fontWeight:800, fontSize:14, cursor:"pointer" }}>Continue →</button>
-                  <button onClick={()=>setOnboardStep(2)} style={{ width:"100%", marginTop:8, padding:"10px", borderRadius:12, border:"none", background:"transparent", color:"#444", fontSize:12, cursor:"pointer" }}>Skip for now</button>
+                  <button onClick={()=>setOnboardStep(2)} style={{ width:"100%", marginTop:8, padding:"10px", borderRadius:12, border:"none", background:"transparent", color:"#aaa", fontSize:12, cursor:"pointer" }}>Skip for now</button>
                 </div>
               )}
               {onboardStep === 2 && (
                 <div>
                   <StepBar current={2} total={2} color="#F5A623" />
                   <h2 style={{ fontSize:20, fontWeight:800, color:"#F5F5F5", marginBottom:4 }}>What would you like to achieve?</h2>
-                  <p style={{ fontSize:13, color:"#555", marginBottom:16 }}>Select all that apply.</p>
+                  <p style={{ fontSize:13, color:"#bbb", marginBottom:16 }}>Select all that apply.</p>
                   <Chips options={BUSINESS_GOALS} selected={bizGoals} onChange={setBizGoals} color="#F5A623" />
                   <div style={{ background:"#0a0a0a", borderRadius:14, padding:"16px", border:"1px solid #1a1a1a", marginTop:20, marginBottom:20 }}>
                     <p style={{ fontSize:13, fontWeight:700, color:"#F5A623", marginBottom:8 }}>🚀 Create Your First Campaign</p>
-                    <p style={{ fontSize:12, color:"#555", lineHeight:1.6, marginBottom:12 }}>Qeixova campaigns help real people distribute and amplify your content across digital communities.</p>
+                    <p style={{ fontSize:12, color:"#bbb", lineHeight:1.6, marginBottom:12 }}>Qeixova campaigns help real people distribute and amplify your content across digital communities.</p>
                     <div style={{ display:"flex", flexWrap:"wrap", gap:6 }}>
                       {["WhatsApp Status","Facebook Repost","TikTok Promotion","Flyer Distribution","Referral Campaign","Music Promotion","App Testing"].map(t=>(
                         <span key={t} style={{ fontSize:11, color:"#F5A623", background:"rgba(245,166,35,0.08)", border:"1px solid rgba(245,166,35,0.15)", borderRadius:20, padding:"3px 10px" }}>{t}</span>
@@ -290,7 +290,7 @@ export default function RegisterPage() {
                   <button onClick={handleFinishOnboarding} disabled={loading} style={{ width:"100%", background:"linear-gradient(135deg, #F5A623, #d89420)", color:"#000", border:"none", borderRadius:13, padding:"14px", fontWeight:800, fontSize:14, cursor:"pointer" }}>
                     {loading ? "Saving..." : "Launch My First Campaign →"}
                   </button>
-                  <button onClick={handleFinishOnboarding} style={{ width:"100%", marginTop:8, padding:"10px", borderRadius:12, border:"none", background:"transparent", color:"#444", fontSize:12, cursor:"pointer" }}>Skip — go to dashboard</button>
+                  <button onClick={handleFinishOnboarding} style={{ width:"100%", marginTop:8, padding:"10px", borderRadius:12, border:"none", background:"transparent", color:"#aaa", fontSize:12, cursor:"pointer" }}>Skip — go to dashboard</button>
                 </div>
               )}
             </div>
@@ -302,33 +302,33 @@ export default function RegisterPage() {
                 <div>
                   <StepBar current={1} total={3} />
                   <h2 style={{ fontSize:20, fontWeight:800, color:"#F5F5F5", marginBottom:4 }}>Choose Your Interests</h2>
-                  <p style={{ fontSize:13, color:"#555", marginBottom:4 }}>Your interests help us recommend relevant campaigns and tasks.</p>
+                  <p style={{ fontSize:13, color:"#bbb", marginBottom:4 }}>Your interests help us recommend relevant campaigns and tasks.</p>
                   <Chips options={CONTRIBUTOR_INTERESTS} selected={interests} onChange={setInterests} />
                   <button onClick={()=>setOnboardStep(2)} style={{ width:"100%", marginTop:20, background:"linear-gradient(135deg, #1AEF22, #06B517)", color:"#000", border:"none", borderRadius:13, padding:"14px", fontWeight:800, fontSize:14, cursor:"pointer" }}>Continue →</button>
-                  <button onClick={()=>setOnboardStep(2)} style={{ width:"100%", marginTop:8, padding:"10px", borderRadius:12, border:"none", background:"transparent", color:"#444", fontSize:12, cursor:"pointer" }}>Skip for now</button>
+                  <button onClick={()=>setOnboardStep(2)} style={{ width:"100%", marginTop:8, padding:"10px", borderRadius:12, border:"none", background:"transparent", color:"#aaa", fontSize:12, cursor:"pointer" }}>Skip for now</button>
                 </div>
               )}
               {onboardStep === 2 && (
                 <div>
                   <StepBar current={2} total={3} />
                   <h2 style={{ fontSize:20, fontWeight:800, color:"#F5F5F5", marginBottom:4 }}>Connect Your Platforms</h2>
-                  <p style={{ fontSize:13, color:"#555", marginBottom:4 }}>Campaigns are matched to platforms you&apos;re active on.</p>
-                  <p style={{ fontSize:11, color:"#333", marginBottom:8 }}>Accounts may be reviewed for authenticity and activity quality.</p>
+                  <p style={{ fontSize:13, color:"#bbb", marginBottom:4 }}>Campaigns are matched to platforms you&apos;re active on.</p>
+                  <p style={{ fontSize:11, color:"#999", marginBottom:8 }}>Accounts may be reviewed for authenticity and activity quality.</p>
                   <Chips options={PLATFORMS} selected={platforms} onChange={setPlatforms} />
                   <button onClick={()=>setOnboardStep(3)} style={{ width:"100%", marginTop:20, background:"linear-gradient(135deg, #1AEF22, #06B517)", color:"#000", border:"none", borderRadius:13, padding:"14px", fontWeight:800, fontSize:14, cursor:"pointer" }}>Continue →</button>
-                  <button onClick={()=>setOnboardStep(3)} style={{ width:"100%", marginTop:8, padding:"10px", borderRadius:12, border:"none", background:"transparent", color:"#444", fontSize:12, cursor:"pointer" }}>Skip for now</button>
+                  <button onClick={()=>setOnboardStep(3)} style={{ width:"100%", marginTop:8, padding:"10px", borderRadius:12, border:"none", background:"transparent", color:"#aaa", fontSize:12, cursor:"pointer" }}>Skip for now</button>
                 </div>
               )}
               {onboardStep === 3 && (
                 <div>
                   <StepBar current={3} total={3} />
                   <h2 style={{ fontSize:20, fontWeight:800, color:"#F5F5F5", marginBottom:4 }}>Contributor Verification</h2>
-                  <p style={{ fontSize:13, color:"#555", marginBottom:20 }}>We verify contributors to protect campaign quality and ensure businesses receive authentic participation.</p>
+                  <p style={{ fontSize:13, color:"#bbb", marginBottom:20 }}>We verify contributors to protect campaign quality and ensure businesses receive authentic participation.</p>
                   <div style={{ background:"#0a0a0a", borderRadius:14, padding:"18px", border:"1px solid #1a1a1a", marginBottom:20 }}>
                     {["Active account history","Real profile photo","Engagement consistency","Spam prevention review"].map(c=>(
                       <div key={c} style={{ display:"flex", alignItems:"center", gap:10, marginBottom:10 }}>
                         <span style={{ color:"#1AEF22", fontSize:12 }}>✓</span>
-                        <span style={{ fontSize:13, color:"#888" }}>{c}</span>
+                        <span style={{ fontSize:13, color:"#ccc" }}>{c}</span>
                       </div>
                     ))}
                   </div>
@@ -337,7 +337,7 @@ export default function RegisterPage() {
                     {["Recommended Campaigns","Available Tasks","Earnings Wallet","Performance Level","Referral System"].map(s=>(
                       <div key={s} style={{ display:"flex", alignItems:"center", gap:8, marginBottom:6 }}>
                         <span style={{ color:"#1AEF22", fontSize:10 }}>→</span>
-                        <span style={{ fontSize:12, color:"#666" }}>{s}</span>
+                        <span style={{ fontSize:12, color:"#ccc" }}>{s}</span>
                       </div>
                     ))}
                   </div>
@@ -356,7 +356,7 @@ export default function RegisterPage() {
               <h2 style={{ fontSize:24, fontWeight:900, color:"#F5F5F5", marginBottom:12, letterSpacing:-0.5 }}>
                 {accountType === "business" ? "Welcome to a smarter way to grow visibility through real human participation." : "Welcome to a new way to earn through meaningful digital participation."}
               </h2>
-              <p style={{ fontSize:14, color:"#555", lineHeight:1.7, marginBottom:32 }}>
+              <p style={{ fontSize:14, color:"#bbb", lineHeight:1.7, marginBottom:32 }}>
                 {accountType === "business" ? "Your business account is ready. Create your first campaign and start reaching real people." : "Your contributor account is ready. Start completing tasks and earning QLT rewards."}
               </p>
               <button onClick={()=>router.push(accountType === "business" ? "/business/dashboard" : "/tasks")} style={{ width:"100%", background:`linear-gradient(135deg, ${accountType==="business"?"#F5A623, #d89420":"#1AEF22, #06B517"})`, color:"#000", border:"none", borderRadius:13, padding:"16px", fontWeight:800, fontSize:16, cursor:"pointer" }}>

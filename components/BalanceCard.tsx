@@ -1,4 +1,4 @@
-﻿interface BalanceCardProps {
+interface BalanceCardProps {
   balance: number;
   todayEarned: number;
   tasksToday: number;
@@ -49,7 +49,7 @@ export default function BalanceCard({
             <p style={{ fontSize: 32, fontWeight: 900, letterSpacing: -1.5, lineHeight: 1 }}>
               {balance.toLocaleString()}
             </p>
-            <span style={{ fontSize: 12, color: "#666666" }}>QLT</span>
+            <span style={{ fontSize: 12, color: "#cccccc" }}>QLT</span>
           </div>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 5, background: "rgba(245,166,35,0.08)", border: "1px solid rgba(245,166,35,0.15)", borderRadius: 8, padding: "4px 10px", marginTop: 6 }}>
             <span style={{ fontSize: 11, color: "#999999" }}>≈</span>
@@ -77,21 +77,21 @@ export default function BalanceCard({
         <div style={{ paddingLeft: 12 }}>
           <p style={{ fontSize: 10, color: "#999999", marginBottom: 3, letterSpacing: 0.4 }}>Tasks Today</p>
           <p style={{ fontSize: 16, fontWeight: 700 }}>
-            {tasksToday} <span style={{ fontSize: 11, color: "#666666" }}>done</span>
+            {tasksToday} <span style={{ fontSize: 11, color: "#cccccc" }}>done</span>
           </p>
         </div>
 
         <div style={{ borderRight: "1px solid #222222", paddingRight: 12, paddingTop: 8, borderTop: "1px solid #1a1a1a" }}>
           <p style={{ fontSize: 10, color: "#999999", marginBottom: 3, letterSpacing: 0.4 }}>Total Accumulated</p>
           <p style={{ fontSize: 16, fontWeight: 700 }}>
-            {fmt(totalAccumulated)} <span style={{ fontSize: 11, color: "#666666" }}>QLT</span>
+            {fmt(totalAccumulated)} <span style={{ fontSize: 11, color: "#cccccc" }}>QLT</span>
           </p>
         </div>
 
         <div style={{ paddingLeft: 12, paddingTop: 8, borderTop: "1px solid #1a1a1a" }}>
           <p style={{ fontSize: 10, color: "#999999", marginBottom: 3, letterSpacing: 0.4 }}>Total Withdrawn</p>
           <p style={{ fontSize: 16, fontWeight: 700 }}>
-            {fmt(totalWithdrawn)} <span style={{ fontSize: 11, color: "#666666" }}>QLT</span>
+            {fmt(totalWithdrawn)} <span style={{ fontSize: 11, color: "#cccccc" }}>QLT</span>
           </p>
         </div>
 

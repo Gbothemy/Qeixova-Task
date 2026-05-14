@@ -18,10 +18,10 @@ function StatCard({ label, value, sub, color, icon }: { label: string; value: nu
         <div style={{ width: 28, height: 28, borderRadius: 8, background: color + "18", display: "flex", alignItems: "center", justifyContent: "center" }}>
           <Image src={icon} alt={label} width={14} height={14} style={{ objectFit: "contain", opacity: 0.8 }} />
         </div>
-        <p style={{ fontSize: 11, color: "#444", fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.5 }}>{label}</p>
+        <p style={{ fontSize: 11, color: "#aaa", fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.5 }}>{label}</p>
       </div>
       <p style={{ fontSize: 28, fontWeight: 900, color: "#F5F5F5", lineHeight: 1, letterSpacing: -1 }}>{value.toLocaleString()}</p>
-      <p style={{ fontSize: 11, color: "#333", marginTop: 5 }}>{sub}</p>
+      <p style={{ fontSize: 11, color: "#999", marginTop: 5 }}>{sub}</p>
     </div>
   );
 }
@@ -43,7 +43,7 @@ export default function BusinessDashboard() {
     <div style={{ minHeight: "100vh", background: "#050505", display: "flex", alignItems: "center", justifyContent: "center" }}>
       <div style={{ textAlign: "center" }}>
         <div style={{ width: 48, height: 48, border: "3px solid #1a1a1a", borderTopColor: "#F5A623", borderRadius: "50%", margin: "0 auto 16px", animation: "spin 0.8s linear infinite" }} />
-        <p style={{ color: "#333", fontSize: 13 }}>Loading...</p>
+        <p style={{ color: "#999", fontSize: 13 }}>Loading...</p>
       </div>
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
@@ -73,7 +73,7 @@ export default function BusinessDashboard() {
             </div>
             <div>
               <h1 style={{ fontSize: 20, fontWeight: 800, color: "#F5F5F5", letterSpacing: -0.3 }}>Welcome back, {business.name}</h1>
-              <p style={{ fontSize: 12, color: "#444", marginTop: 2 }}>{business.industry || "Business"} · {business.email}</p>
+              <p style={{ fontSize: 12, color: "#aaa", marginTop: 2 }}>{business.industry || "Business"} · {business.email}</p>
             </div>
           </div>
           {approvalRate !== null && (
@@ -95,7 +95,7 @@ export default function BusinessDashboard() {
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 14, position: "relative" }}>
             <div>
               <p style={{ fontSize: 16, fontWeight: 800, color: "#F5F5F5", marginBottom: 5 }}>Launch a new campaign</p>
-              <p style={{ fontSize: 13, color: "#444" }}>Reach verified users with targeted missions.</p>
+              <p style={{ fontSize: 13, color: "#aaa" }}>Reach verified users with targeted missions.</p>
             </div>
             <Link href="/business/tasks/new" style={{
               background: "linear-gradient(135deg, #F5A623, #d89420)", color: "#000",
@@ -121,7 +121,7 @@ export default function BusinessDashboard() {
               </div>
               <div>
                 <p style={{ fontSize: 13, fontWeight: 700, color: "#ccc" }}>{item.label}</p>
-                <p style={{ fontSize: 11, color: "#333", marginTop: 1 }}>{item.sub}</p>
+                <p style={{ fontSize: 11, color: "#999", marginTop: 1 }}>{item.sub}</p>
               </div>
             </Link>
           ))}

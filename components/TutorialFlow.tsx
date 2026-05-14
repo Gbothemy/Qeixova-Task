@@ -110,7 +110,7 @@ export default function TutorialFlow({ onComplete }: Props) {
 
           <button onClick={onComplete} style={{
             width: "100%", background: "transparent", border: "none",
-            color: "#555555", fontSize: 13, cursor: "pointer", padding: "8px",
+            color: "#bbbbbb", fontSize: 13, cursor: "pointer", padding: "8px",
           }}>
             Go to dashboard instead
           </button>
@@ -176,7 +176,7 @@ export default function TutorialFlow({ onComplete }: Props) {
             <button onClick={() => setStep(s => s - 1)} style={{
               flex: 1, padding: "14px", borderRadius: 12,
               border: "1.5px solid #333333", background: "transparent",
-              color: "#888888", fontWeight: 600, fontSize: 15, cursor: "pointer",
+              color: "#cccccc", fontWeight: 600, fontSize: 15, cursor: "pointer",
             }}>
               ← Back
             </button>
@@ -197,7 +197,7 @@ export default function TutorialFlow({ onComplete }: Props) {
         {/* Skip */}
         <button onClick={() => setShowPrompt(true)} style={{
           width: "100%", marginTop: 14, background: "transparent",
-          border: "none", color: "#444444", fontSize: 12, cursor: "pointer", padding: "6px",
+          border: "none", color: "#aaaaaa", fontSize: 12, cursor: "pointer", padding: "6px",
         }}>
           Skip tutorial
         </button>

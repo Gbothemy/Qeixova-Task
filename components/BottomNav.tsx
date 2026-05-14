@@ -34,7 +34,7 @@ export default function BottomNav() {
             alignItems: "center",
             padding: "10px 0 12px",
             textDecoration: "none",
-            color: active ? "#1AEF22" : "#555555",
+            color: active ? "#1AEF22" : "#bbbbbb",
             fontSize: 10,
             fontWeight: active ? 700 : 500,
             gap: 3,

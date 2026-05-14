@@ -12,8 +12,8 @@ interface Withdrawal {
 
 type StatusFilter = "all" | "pending" | "processing" | "completed" | "failed";
 
-const TH: React.CSSProperties = { padding: "12px 16px", textAlign: "left", fontSize: 12, fontWeight: 600, color: "#888", textTransform: "uppercase", letterSpacing: 0.5, borderBottom: "1px solid #eee", whiteSpace: "nowrap" };
-const TD: React.CSSProperties = { padding: "14px 16px", fontSize: 14, color: "#333", borderBottom: "1px solid #f5f5f5", verticalAlign: "middle" };
+const TH: React.CSSProperties = { padding: "12px 16px", textAlign: "left", fontSize: 12, fontWeight: 600, color: "#ccc", textTransform: "uppercase", letterSpacing: 0.5, borderBottom: "1px solid #eee", whiteSpace: "nowrap" };
+const TD: React.CSSProperties = { padding: "14px 16px", fontSize: 14, color: "#999", borderBottom: "1px solid #f5f5f5", verticalAlign: "middle" };
 const STATUS_COLORS: Record<string, { bg: string; color: string }> = {
   pending:    { bg: "#fff8e1", color: "#e67e22" },
   processing: { bg: "#e3f2fd", color: "#1565c0" },
@@ -64,11 +64,11 @@ export default function WithdrawalsPage() {
   return (
     <div>
       <h1 style={{ margin: "0 0 8px", fontSize: 26, fontWeight: 700, color: "#1A1A1A" }}>Withdrawals</h1>
-      <p style={{ margin: "0 0 24px", color: "#888", fontSize: 14 }}>Manage withdrawal requests</p>
+      <p style={{ margin: "0 0 24px", color: "#ccc", fontSize: 14 }}>Manage withdrawal requests</p>
 
       <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
         {(["all", "pending", "processing", "completed", "failed"] as StatusFilter[]).map((f) => (
-          <button key={f} onClick={() => setFilter(f)} style={{ padding: "8px 18px", borderRadius: 20, border: "1.5px solid", borderColor: filter === f ? "#1AEF22" : "#e0e0e0", background: filter === f ? "#1AEF22" : "#fff", color: filter === f ? "#fff" : "#666", cursor: "pointer", fontSize: 13, fontWeight: 500, textTransform: "capitalize" }}>
+          <button key={f} onClick={() => setFilter(f)} style={{ padding: "8px 18px", borderRadius: 20, border: "1.5px solid", borderColor: filter === f ? "#1AEF22" : "#e0e0e0", background: filter === f ? "#1AEF22" : "#fff", color: filter === f ? "#fff" : "#ccc", cursor: "pointer", fontSize: 13, fontWeight: 500, textTransform: "capitalize" }}>
             {f}
           </button>
         ))}
@@ -110,15 +110,15 @@ export default function WithdrawalsPage() {
                         return (
                           <div>
                             <div style={{ fontWeight: 600, fontSize: 13, color: "#1A1A1A" }}>{parts[0]}</div>
-                            <div style={{ fontSize: 12, color: "#555", marginTop: 2 }}>{parts[1]}</div>
-                            <div style={{ fontSize: 12, color: "#888", marginTop: 1 }}>{parts[2]}</div>
+                            <div style={{ fontSize: 12, color: "#bbb", marginTop: 2 }}>{parts[1]}</div>
+                            <div style={{ fontSize: 12, color: "#ccc", marginTop: 1 }}>{parts[2]}</div>
                           </div>
                         );
                       }
-                      return <span style={{ fontSize: 13, color: "#555" }}>{info}</span>;
+                      return <span style={{ fontSize: 13, color: "#bbb" }}>{info}</span>;
                     })()}
                   </td>
-                  <td style={{ ...TD, color: "#888" }}>{new Date(w.created_at).toLocaleDateString()}</td>
+                  <td style={{ ...TD, color: "#ccc" }}>{new Date(w.created_at).toLocaleDateString()}</td>
                   <td style={TD}>
                     <span style={{ display: "inline-block", padding: "3px 10px", borderRadius: 20, fontSize: 12, fontWeight: 600, background: sc.bg, color: sc.color, textTransform: "capitalize" }}>
                       {w.status}

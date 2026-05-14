@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { useState, useRef } from "react";
 
 export interface FullTask {
@@ -178,7 +178,7 @@ export default function TaskModal({ task, onClose, onComplete }: Props) {
               <p style={{ fontSize: 12, color: "#6b6b6b", marginTop: 4 }}>≈ ₦{(task.reward / 100).toFixed(2)} • Awaiting review</p>
             </div>
             <div style={{ background: "#f5f5f5", borderRadius: 12, padding: "12px 16px", marginBottom: 24, textAlign: "left" }}>
-              <p style={{ fontSize: 12, color: "#555", lineHeight: 1.7 }}>
+              <p style={{ fontSize: 12, color: "#bbb", lineHeight: 1.7 }}>
                 All tasks are verified before listing. Your earnings are tracked transparently and the conversion rate is fixed at <strong>100 QLT = ₦1</strong>.
               </p>
             </div>

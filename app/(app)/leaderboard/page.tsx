@@ -26,7 +26,7 @@ export default function LeaderboardPage() {
   return (
     <div className="page-body" style={{ background: "#000", minHeight: "100vh" }}>
       <div className="page-header" style={{ background: "#0a0a0a", borderBottom: "1px solid #222", padding: "52px 20px 24px" }}>
-        <p style={{ color: "#555", fontSize: 13, marginBottom: 4 }}>Human Participation Marketplace</p>
+        <p style={{ color: "#bbb", fontSize: 13, marginBottom: 4 }}>Human Participation Marketplace</p>
         <p style={{ color: "#F5F5F5", fontSize: 24, fontWeight: 800, letterSpacing: -0.5 }}>Leaderboard</p>
         {myRank && (
           <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(245,166,35,0.08)", border: "1px solid rgba(245,166,35,0.2)", borderRadius: 20, padding: "5px 14px", marginTop: 10 }}>
@@ -41,27 +41,27 @@ export default function LeaderboardPage() {
           <button key={t.val} onClick={() => setTab(t.val as "missions" | "xp")} style={{
             flex: 1, padding: "9px", borderRadius: 10, border: "none", fontSize: 13, fontWeight: tab === t.val ? 800 : 500, cursor: "pointer",
             background: tab === t.val ? "linear-gradient(135deg, #1AEF22, #06B517)" : "#1a1a1a",
-            color: tab === t.val ? "#000" : "#888",
+            color: tab === t.val ? "#000" : "#ccc",
           }}>{t.label}</button>
         ))}
       </div>
 
       <div style={{ padding: "12px 16px", display: "flex", flexDirection: "column", gap: 8 }}>
         {loading ? (
-          <div style={{ textAlign: "center", padding: 40 }}><p style={{ color: "#555" }}>Loading...</p></div>
+          <div style={{ textAlign: "center", padding: 40 }}><p style={{ color: "#bbb" }}>Loading...</p></div>
         ) : list.length === 0 ? (
           <div style={{ textAlign: "center", padding: "48px 24px", background: "#111", borderRadius: 16, border: "1px solid #222" }}>
             <p style={{ fontSize: 32, marginBottom: 12 }}>🏆</p>
-            <p style={{ color: "#555", fontSize: 14 }}>No data yet. Complete missions to appear here!</p>
+            <p style={{ color: "#bbb", fontSize: 14 }}>No data yet. Complete missions to appear here!</p>
           </div>
         ) : list.map((u, i) => (
           <div key={u.id} style={{ background: i < 3 ? "#0d0d0d" : "#111", borderRadius: 14, padding: "14px 16px", border: `1px solid ${i < 3 ? "rgba(245,166,35,0.15)" : "#1a1a1a"}`, display: "flex", alignItems: "center", gap: 12 }}>
             <div style={{ width: 36, height: 36, borderRadius: "50%", background: i < 3 ? "rgba(245,166,35,0.1)" : "#1a1a1a", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-              {i < 3 ? <span style={{ fontSize: 18 }}>{MEDAL[i]}</span> : <span style={{ fontSize: 13, fontWeight: 700, color: "#555" }}>#{i + 1}</span>}
+              {i < 3 ? <span style={{ fontSize: 18 }}>{MEDAL[i]}</span> : <span style={{ fontSize: 13, fontWeight: 700, color: "#bbb" }}>#{i + 1}</span>}
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <p style={{ fontSize: 14, fontWeight: 700, color: "#F5F5F5", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{u.full_name}</p>
-              <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 8, background: (u.badge_color ?? "#888") + "22", color: u.badge_color ?? "#888" }}>
+              <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 8, background: (u.badge_color ?? "#ccc") + "22", color: u.badge_color ?? "#ccc" }}>
                 L{u.level_number ?? 1} {u.level_name ?? "Starter"}
               </span>
             </div>
@@ -69,12 +69,12 @@ export default function LeaderboardPage() {
               {tab === "missions" ? (
                 <>
                   <p style={{ fontSize: 15, fontWeight: 800, color: "#1AEF22" }}>{u.missions_completed}</p>
-                  <p style={{ fontSize: 10, color: "#555" }}>missions</p>
+                  <p style={{ fontSize: 10, color: "#bbb" }}>missions</p>
                 </>
               ) : (
                 <>
                   <p style={{ fontSize: 15, fontWeight: 800, color: "#F5A623" }}>{(u.total_xp_earned ?? 0).toLocaleString()}</p>
-                  <p style={{ fontSize: 10, color: "#555" }}>XP</p>
+                  <p style={{ fontSize: 10, color: "#bbb" }}>XP</p>
                 </>
               )}
               {u.streak > 0 && <p style={{ fontSize: 10, color: "#F5A623", marginTop: 2 }}>🔥{u.streak}</p>}

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 export interface Task {
   id: number;
@@ -57,7 +57,7 @@ export default function TaskCard({ task, onStart }: TaskCardProps) {
         <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.3)", borderRadius: 18, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2 }}>
           <div style={{ background: "#1a1a1a", borderRadius: 10, padding: "6px 14px", display: "flex", alignItems: "center", gap: 6 }}>
             <span style={{ fontSize: 14 }}>🔒</span>
-            <span style={{ fontSize: 12, color: "#888", fontWeight: 600 }}>Level {task.min_level} required</span>
+            <span style={{ fontSize: 12, color: "#ccc", fontWeight: 600 }}>Level {task.min_level} required</span>
           </div>
         </div>
       )}
@@ -79,10 +79,10 @@ export default function TaskCard({ task, onStart }: TaskCardProps) {
           <span style={{ fontSize: 10, fontWeight: 700, color: badge.color, background: badge.bg, borderRadius: 6, padding: "2px 8px" }}>
             {badge.label}
           </span>
-          <span style={{ fontSize: 10, fontWeight: 600, color: "#555", background: "#1a1a1a", borderRadius: 6, padding: "2px 8px" }}>
+          <span style={{ fontSize: 10, fontWeight: 600, color: "#bbb", background: "#1a1a1a", borderRadius: 6, padding: "2px 8px" }}>
             {task.category}
           </span>
-          <span style={{ fontSize: 11, color: "#555555" }}>⏱ {task.duration}</span>
+          <span style={{ fontSize: 11, color: "#bbbbbb" }}>⏱ {task.duration}</span>
         </div>
         {task.total_budget && task.total_budget > 0 && (
           <div style={{ marginTop: 6 }}>

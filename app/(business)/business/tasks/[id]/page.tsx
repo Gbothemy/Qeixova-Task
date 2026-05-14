@@ -56,7 +56,7 @@ export default function TaskDetailPage() {
     ? { label: "Under Review", color: "#F5A623", bg: "rgba(245,166,35,0.08)", dot: "#F5A623" }
     : task.is_active
     ? { label: "Active", color: "#1AEF22", bg: "rgba(26,239,34,0.08)", dot: "#1AEF22" }
-    : { label: "Paused", color: "#555", bg: "rgba(255,255,255,0.04)", dot: "#555" };
+    : { label: "Paused", color: "#bbb", bg: "rgba(255,255,255,0.04)", dot: "#bbb" };
 
   return (
     <>
@@ -64,7 +64,7 @@ export default function TaskDetailPage() {
       <main className="page-body">
 
         {/* Back */}
-        <Link href="/business/tasks" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: "#444", textDecoration: "none", marginBottom: 20, padding: "6px 12px", background: "#0a0a0a", borderRadius: 8, border: "1px solid #161616" }}>
+        <Link href="/business/tasks" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: "#aaa", textDecoration: "none", marginBottom: 20, padding: "6px 12px", background: "#0a0a0a", borderRadius: 8, border: "1px solid #161616" }}>
           <Image src="/icon-home.svg" alt="Back" width={12} height={12} style={{ objectFit: "contain", opacity: 0.4 }} />
           Back to Campaigns
         </Link>
@@ -80,9 +80,9 @@ export default function TaskDetailPage() {
               </div>
             </div>
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
-              <span style={{ fontSize: 12, color: "#444" }}>{task.category}</span>
+              <span style={{ fontSize: 12, color: "#aaa" }}>{task.category}</span>
               <span style={{ fontSize: 12, color: "#F5A623", fontWeight: 600 }}>{task.reward.toLocaleString()} QLT / completion</span>
-              <span style={{ fontSize: 11, color: "#333" }}>Created {new Date(task.created_at).toLocaleDateString()}</span>
+              <span style={{ fontSize: 11, color: "#999" }}>Created {new Date(task.created_at).toLocaleDateString()}</span>
             </div>
           </div>
           {task.status !== "pending_review" && (
@@ -105,7 +105,7 @@ export default function TaskDetailPage() {
               <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: s.color }} />
               <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
                 <Image src={s.icon} alt={s.label} width={12} height={12} style={{ objectFit: "contain", opacity: 0.35 }} />
-                <p style={{ fontSize: 10, color: "#333", textTransform: "uppercase", letterSpacing: 0.4, fontWeight: 600 }}>{s.label}</p>
+                <p style={{ fontSize: 10, color: "#999", textTransform: "uppercase", letterSpacing: 0.4, fontWeight: 600 }}>{s.label}</p>
               </div>
               <p style={{ fontSize: 24, fontWeight: 900, color: "#F5F5F5", letterSpacing: -0.5 }}>{s.value}</p>
             </div>
@@ -122,7 +122,7 @@ export default function TaskDetailPage() {
             <div style={{ height: 6, background: "#111", borderRadius: 10, overflow: "hidden" }}>
               <div style={{ height: "100%", width: `${progress}%`, background: "linear-gradient(90deg, #F5A623, #1AEF22)", borderRadius: 10, transition: "width 0.4s" }} />
             </div>
-            <p style={{ fontSize: 11, color: "#333", marginTop: 6 }}>{Math.round(progress)}% of target reached</p>
+            <p style={{ fontSize: 11, color: "#999", marginTop: 6 }}>{Math.round(progress)}% of target reached</p>
           </div>
         )}
 
@@ -130,12 +130,12 @@ export default function TaskDetailPage() {
         <div>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
             <p style={{ fontSize: 15, fontWeight: 700, color: "#F5F5F5" }}>Submissions</p>
-            <span style={{ fontSize: 12, color: "#444", background: "#0a0a0a", border: "1px solid #161616", borderRadius: 20, padding: "3px 10px" }}>{completions.length} total</span>
+            <span style={{ fontSize: 12, color: "#aaa", background: "#0a0a0a", border: "1px solid #161616", borderRadius: 20, padding: "3px 10px" }}>{completions.length} total</span>
           </div>
           {completions.length === 0 ? (
             <div style={{ background: "#0a0a0a", borderRadius: 14, padding: "36px", textAlign: "center", border: "1px solid #161616" }}>
               <Image src="/icon-survey.svg" alt="" width={36} height={36} style={{ objectFit: "contain", opacity: 0.15, marginBottom: 12 }} />
-              <p style={{ color: "#333", fontSize: 13 }}>No submissions yet. Share your campaign to get started.</p>
+              <p style={{ color: "#999", fontSize: 13 }}>No submissions yet. Share your campaign to get started.</p>
             </div>
           ) : (
             <div style={{ background: "#0a0a0a", borderRadius: 14, border: "1px solid #161616", overflow: "hidden" }}>
@@ -149,7 +149,7 @@ export default function TaskDetailPage() {
                       </div>
                       <div style={{ minWidth: 0 }}>
                         <p style={{ fontSize: 13, fontWeight: 600, color: "#F5F5F5", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c.full_name}</p>
-                        <p style={{ fontSize: 11, color: "#333", marginTop: 1 }}>{c.email} · {new Date(c.completed_at).toLocaleDateString()}</p>
+                        <p style={{ fontSize: 11, color: "#999", marginTop: 1 }}>{c.email} · {new Date(c.completed_at).toLocaleDateString()}</p>
                         {c.rejection_reason && <p style={{ fontSize: 11, color: "#e53e3e", marginTop: 2 }}>↳ {c.rejection_reason}</p>}
                       </div>
                     </div>

@@ -85,7 +85,7 @@ export default function LoginPage() {
           <h1 style={{ fontWeight: 800, fontSize: 22, color: "#F5F5F5", marginBottom: 6 }}>
             Sign in
           </h1>
-          <p style={{ fontSize: 13, color: "#555555", marginBottom: 28 }}>
+          <p style={{ fontSize: 13, color: "#bbbbbb", marginBottom: 28 }}>
             Don&apos;t have an account?{" "}
             <Link href="/register" style={{ color: "#1AEF22", fontWeight: 700, textDecoration: "none" }}>
               Create one free
@@ -106,7 +106,7 @@ export default function LoginPage() {
 
             {/* Email */}
             <div>
-              <label style={{ fontSize: 12, fontWeight: 700, color: "#555555", letterSpacing: 0.5 }}>
+              <label style={{ fontSize: 12, fontWeight: 700, color: "#bbbbbb", letterSpacing: 0.5 }}>
                 EMAIL ADDRESS
               </label>
               <div style={{ position: "relative", marginTop: 8 }}>
@@ -126,7 +126,7 @@ export default function LoginPage() {
                     background: "#1a1a1a", transition: "border-color 0.2s",
                   }}
                   onFocus={(e) => (e.target.style.borderColor = "#1AEF22")}
-                  onBlur={(e) => (e.target.style.borderColor = "#333333")}
+                  onBlur={(e) => (e.target.style.borderColor = "#999999")}
                 />
               </div>
             </div>
@@ -134,7 +134,7 @@ export default function LoginPage() {
             {/* Password */}
             <div>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <label style={{ fontSize: 12, fontWeight: 700, color: "#555555", letterSpacing: 0.5 }}>
+                <label style={{ fontSize: 12, fontWeight: 700, color: "#bbbbbb", letterSpacing: 0.5 }}>
                   PASSWORD
                 </label>
                 <Link href="/forgot-password" style={{ fontSize: 12, color: "#1AEF22", fontWeight: 600, textDecoration: "none" }}>
@@ -158,7 +158,7 @@ export default function LoginPage() {
                     background: "#1a1a1a", transition: "border-color 0.2s",
                   }}
                   onFocus={(e) => (e.target.style.borderColor = "#1AEF22")}
-                  onBlur={(e) => (e.target.style.borderColor = "#333333")}
+                  onBlur={(e) => (e.target.style.borderColor = "#999999")}
                 />
                 <button
                   type="button"

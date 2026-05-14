@@ -42,7 +42,7 @@ export default function ConfigPage() {
     <div>
       <div style={{ marginBottom: 24 }}>
         <h1 style={{ margin: "0 0 4px", fontSize: 24, fontWeight: 700, color: "#1A1A1A" }}>Economy Config</h1>
-        <p style={{ margin: 0, color: "#888", fontSize: 13 }}>Tune platform economics without redeploying.</p>
+        <p style={{ margin: 0, color: "#ccc", fontSize: 13 }}>Tune platform economics without redeploying.</p>
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
@@ -50,7 +50,7 @@ export default function ConfigPage() {
           <div key={c.key} style={{ background: "#fff", borderRadius: 12, padding: "18px 20px", boxShadow: "0 2px 8px rgba(0,0,0,0.06)", display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
             <div style={{ flex: 1, minWidth: 200 }}>
               <p style={{ fontSize: 14, fontWeight: 700, color: "#1A1A1A", marginBottom: 3 }}>{LABELS[c.key] ?? c.key}</p>
-              <p style={{ fontSize: 12, color: "#888" }}>{c.description}</p>
+              <p style={{ fontSize: 12, color: "#ccc" }}>{c.description}</p>
               <p style={{ fontSize: 10, color: "#ccc", marginTop: 3 }}>Updated: {new Date(c.updated_at).toLocaleString()}</p>
             </div>
             <div style={{ display: "flex", gap: 8, alignItems: "center" }}>

@@ -35,12 +35,12 @@ function ResetForm() {
         <div style={{ textAlign: "center" }}>
           <div style={{ fontSize: 52, marginBottom: 16 }}>✅</div>
           <h2 style={{ fontWeight: 800, fontSize: 20, color: "#F5F5F5", marginBottom: 10 }}>Password reset!</h2>
-          <p style={{ fontSize: 14, color: "#555555" }}>Redirecting you to login...</p>
+          <p style={{ fontSize: 14, color: "#bbbbbb" }}>Redirecting you to login...</p>
         </div>
       ) : (
         <>
           <h1 style={{ fontWeight: 800, fontSize: 22, color: "#F5F5F5", marginBottom: 6 }}>Set new password</h1>
-          <p style={{ fontSize: 13, color: "#555555", marginBottom: 28 }}>Choose a strong password for your account.</p>
+          <p style={{ fontSize: 13, color: "#bbbbbb", marginBottom: 28 }}>Choose a strong password for your account.</p>
           {error && (
             <div style={{ background: "rgba(229,62,62,0.1)", border: "1px solid rgba(229,62,62,0.3)", borderRadius: 10, padding: "11px 14px", marginBottom: 16, fontSize: 13, color: "#e53e3e" }}>⚠️ {error}</div>
           )}
@@ -49,13 +49,13 @@ function ResetForm() {
               <span style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", fontSize: 16, pointerEvents: "none" }}>🔒</span>
               <input type="password" placeholder="New password" value={password} onChange={(e) => setPassword(e.target.value)}
                 style={{ width: "100%", padding: "13px 14px 13px 42px", borderRadius: 12, border: "1.5px solid #333333", fontSize: 14, outline: "none", color: "#F5F5F5", background: "#1a1a1a" }}
-                onFocus={(e) => (e.target.style.borderColor = "#1AEF22")} onBlur={(e) => (e.target.style.borderColor = "#333333")} />
+                onFocus={(e) => (e.target.style.borderColor = "#1AEF22")} onBlur={(e) => (e.target.style.borderColor = "#999999")} />
             </div>
             <div style={{ position: "relative" }}>
               <span style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", fontSize: 16, pointerEvents: "none" }}>🔐</span>
               <input type="password" placeholder="Confirm new password" value={confirm} onChange={(e) => setConfirm(e.target.value)}
                 style={{ width: "100%", padding: "13px 14px 13px 42px", borderRadius: 12, border: "1.5px solid #333333", fontSize: 14, outline: "none", color: "#F5F5F5", background: "#1a1a1a" }}
-                onFocus={(e) => (e.target.style.borderColor = "#1AEF22")} onBlur={(e) => (e.target.style.borderColor = "#333333")} />
+                onFocus={(e) => (e.target.style.borderColor = "#1AEF22")} onBlur={(e) => (e.target.style.borderColor = "#999999")} />
             </div>
             <button type="submit" disabled={loading || !token} style={{ background: loading ? "#a0a0a0" : "linear-gradient(135deg, #1AEF22, #06B517)", color: "#fff", border: "none", borderRadius: 14, padding: "15px", fontWeight: 800, fontSize: 15, cursor: loading ? "not-allowed" : "pointer", boxShadow: loading ? "none" : "0 6px 20px rgba(26,239,34,0.35)" }}>
               {loading ? "Resetting..." : "Reset Password →"}

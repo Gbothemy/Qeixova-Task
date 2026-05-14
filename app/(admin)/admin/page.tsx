@@ -57,7 +57,7 @@ function StatCard({ label, value, sub, color, alert }: { label: string; value: s
       {alert && (
         <div style={{ position: "absolute", top: 14, right: 14, width: 10, height: 10, borderRadius: "50%", background: "#e67e22", boxShadow: "0 0 6px rgba(230,126,34,0.6)" }} />
       )}
-      <p style={{ fontSize: 12, color: "#888", fontWeight: 600, marginBottom: 10, textTransform: "uppercase", letterSpacing: 0.5 }}>{label}</p>
+      <p style={{ fontSize: 12, color: "#ccc", fontWeight: 600, marginBottom: 10, textTransform: "uppercase", letterSpacing: 0.5 }}>{label}</p>
       <p style={{ fontSize: 26, fontWeight: 800, color: "#1A1A1A", letterSpacing: -0.5 }}>{value}</p>
       {sub && <p style={{ fontSize: 12, color: "#aaa", marginTop: 4 }}>{sub}</p>}
     </div>
@@ -73,7 +73,7 @@ export default async function AdminDashboard() {
   return (
     <div>
       <h1 style={{ margin: "0 0 4px", fontSize: 26, fontWeight: 700, color: "#1A1A1A" }}>Dashboard</h1>
-      <p style={{ margin: "0 0 28px", color: "#888", fontSize: 14 }}>Platform overview — live data</p>
+      <p style={{ margin: "0 0 28px", color: "#ccc", fontSize: 14 }}>Platform overview — live data</p>
 
       {/* Alert bar */}
       {(s.pendingCompletions > 0 || s.withdrawalsPending > 0) && (

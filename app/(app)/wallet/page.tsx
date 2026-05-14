@@ -71,17 +71,17 @@ export default function WalletPage() {
       {/* Header */}
       <div className="page-header" style={{ background: "#0a0a0a", borderBottom: "1px solid #222222", padding: "52px 20px 32px", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", top: -50, right: -50, width: 180, height: 180, borderRadius: "50%", background: "rgba(26,239,34,0.03)" }} />
-        <p style={{ color: "#555555", fontSize: 13, marginBottom: 4 }}>Points Balance</p>
+        <p style={{ color: "#bbbbbb", fontSize: 13, marginBottom: 4 }}>Points Balance</p>
         <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
           <Image src="/icon-wallet.svg" alt="wallet" width={24} height={24} style={{ objectFit: "contain", marginBottom: -4 }} />
           <p style={{ color: "#F5F5F5", fontSize: 38, fontWeight: 800, letterSpacing: -2, lineHeight: 1 }}>{balance.toLocaleString()}</p>
-          <span style={{ color: "#555555", fontSize: 14 }}>QLT</span>
+          <span style={{ color: "#bbbbbb", fontSize: 14 }}>QLT</span>
         </div>
-        <p style={{ color: "#888888", fontSize: 14, fontWeight: 600, marginTop: 6 }}>≈ ₦{(balance / 100).toLocaleString()} cash value</p>
+        <p style={{ color: "#cccccc", fontSize: 14, fontWeight: 600, marginTop: 6 }}>≈ ₦{(balance / 100).toLocaleString()} cash value</p>
         <div style={{ display: "flex", gap: 10, marginTop: 18 }}>
           {[{ label: "Min. Withdrawal", value: "100,000 QLT" }, { label: "Rate", value: "100 QLT = ₦1" }, { label: "Fee", value: "Free" }].map(item => (
             <div key={item.label} style={{ flex: 1, background: "#111111", border: "1px solid #222222", borderRadius: 12, padding: "10px 8px", textAlign: "center" }}>
-              <p style={{ color: "#555555", fontSize: 10, marginBottom: 3 }}>{item.label}</p>
+              <p style={{ color: "#bbbbbb", fontSize: 10, marginBottom: 3 }}>{item.label}</p>
               <p style={{ color: "#F5F5F5", fontWeight: 700, fontSize: 13 }}>{item.value}</p>
             </div>
           ))}
@@ -140,25 +140,25 @@ export default function WalletPage() {
 
             <form onSubmit={handleWithdraw} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
               <div>
-                <label style={{ fontSize: 12, color: "#555555", fontWeight: 700, letterSpacing: 0.5 }}>QLT POINTS TO CONVERT</label>
+                <label style={{ fontSize: 12, color: "#bbbbbb", fontWeight: 700, letterSpacing: 0.5 }}>QLT POINTS TO CONVERT</label>
                 <div style={{ position: "relative", marginTop: 8 }}>
                   <input type="number" value={amount} onChange={e => setAmount(e.target.value)} placeholder="Min. 100,000 QLT"
                     style={{ width: "100%", padding: "14px 16px", borderRadius: 12, border: "1.5px solid #333333", fontSize: 16, outline: "none", color: "#F5F5F5", background: "#1a1a1a" }}
                     onFocus={e => (e.target.style.borderColor = "#1AEF22")}
-                    onBlur={e => (e.target.style.borderColor = "#333333")}
+                    onBlur={e => (e.target.style.borderColor = "#999999")}
                   />
                 </div>
                 {Number(amount) > 0 && (
                   <div style={{ marginTop: 8, display: "flex", alignItems: "center", gap: 6, background: "rgba(26,239,34,0.1)", borderRadius: 8, padding: "7px 12px" }}>
                     <span style={{ fontSize: 14 }}>⭐</span>
                     <span style={{ fontSize: 13, color: "#1AEF22", fontWeight: 600 }}>{Number(amount).toLocaleString()} QLT</span>
-                    <span style={{ color: "#444444" }}>→</span>
+                    <span style={{ color: "#aaaaaa" }}>→</span>
                     <span style={{ fontSize: 13, color: "#1AEF22", fontWeight: 700 }}>₦{(Number(amount) / 100).toLocaleString()}</span>
                   </div>
                 )}
               </div>
               <div>
-                <label style={{ fontSize: 12, color: "#555555", fontWeight: 700, letterSpacing: 0.5 }}>BANK ACCOUNT</label>
+                <label style={{ fontSize: 12, color: "#bbbbbb", fontWeight: 700, letterSpacing: 0.5 }}>BANK ACCOUNT</label>
                 <select value={bank} onChange={e => setBank(e.target.value)}
                   style={{ width: "100%", marginTop: 8, padding: "14px 16px", borderRadius: 12, border: "1.5px solid #333333", fontSize: 14, outline: "none", color: "#F5F5F5", background: "#1a1a1a", cursor: "pointer" }}>
                   <option value="">Select bank account</option>
@@ -174,7 +174,7 @@ export default function WalletPage() {
                 </select>
               </div>
               <button type="submit" disabled={submitting} style={{
-                background: submitting ? "#333333" : "linear-gradient(135deg, #F5A623, #d89420)",
+                background: submitting ? "#999999" : "linear-gradient(135deg, #F5A623, #d89420)",
                 color: "#000", border: "none", borderRadius: 14, padding: "16px",
                 fontWeight: 800, fontSize: 15, cursor: submitting ? "not-allowed" : "pointer",
                 boxShadow: submitting ? "none" : "0 6px 20px rgba(245,166,35,0.35)", marginTop: 4,
@@ -191,7 +191,7 @@ export default function WalletPage() {
           {transactions.length === 0 ? (
             <div style={{ background: "#111111", borderRadius: 16, padding: "32px", textAlign: "center", border: "1px solid #222222" }}>
               <p style={{ fontSize: 32 }}>📊</p>
-              <p style={{ color: "#555555", marginTop: 8, fontSize: 14 }}>No transactions yet</p>
+              <p style={{ color: "#bbbbbb", marginTop: 8, fontSize: 14 }}>No transactions yet</p>
             </div>
           ) : (
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -204,7 +204,7 @@ export default function WalletPage() {
                     <div>
                       <p style={{ fontSize: 13, fontWeight: 600, color: "#F5F5F5" }}>{tx.label}</p>
                       <div style={{ display: "flex", gap: 6, alignItems: "center", marginTop: 2 }}>
-                        <p style={{ fontSize: 11, color: "#555555" }}>{timeAgo(tx.created_at)}</p>
+                        <p style={{ fontSize: 11, color: "#bbbbbb" }}>{timeAgo(tx.created_at)}</p>
                         {tx.status === "pending" && (
                           <span style={{ fontSize: 10, background: "rgba(245,166,35,0.12)", color: "#F5A623", borderRadius: 4, padding: "1px 6px", fontWeight: 600 }}>Pending</span>
                         )}

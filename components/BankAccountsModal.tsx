@@ -114,7 +114,7 @@ export default function BankAccountsModal({ onClose }: Props) {
 
         {/* Handle */}
         <div style={{ display: "flex", justifyContent: "center", padding: "12px 0 0" }}>
-          <div style={{ width: 40, height: 4, borderRadius: 2, background: "#333333" }} />
+          <div style={{ width: 40, height: 4, borderRadius: 2, background: "#999999" }} />
         </div>
 
         {/* Header */}
@@ -130,7 +130,7 @@ export default function BankAccountsModal({ onClose }: Props) {
               <h2 style={{ fontWeight: 800, fontSize: 18, color: "#F5F5F5" }}>
                 {view === "list" ? "Bank Accounts" : "Add Bank Account"}
               </h2>
-              <p style={{ fontSize: 12, color: "#555555", marginTop: 2 }}>
+              <p style={{ fontSize: 12, color: "#bbbbbb", marginTop: 2 }}>
                 {view === "list" ? "Manage your withdrawal accounts" : "Enter your account details"}
               </p>
             </div>
@@ -146,7 +146,7 @@ export default function BankAccountsModal({ onClose }: Props) {
             {loading ? (
               <div style={{ textAlign: "center", padding: "32px 0" }}>
                 <p style={{ fontSize: 28, marginBottom: 8 }}>🏦</p>
-                <p style={{ color: "#555555", fontSize: 13 }}>Loading accounts...</p>
+                <p style={{ color: "#bbbbbb", fontSize: 13 }}>Loading accounts...</p>
               </div>
             ) : accounts.length === 0 ? (
               <div style={{
@@ -155,21 +155,21 @@ export default function BankAccountsModal({ onClose }: Props) {
               }}>
                 <p style={{ fontSize: 36, marginBottom: 10 }}>🏦</p>
                 <p style={{ fontWeight: 700, fontSize: 15, color: "#F5F5F5", marginBottom: 6 }}>No accounts yet</p>
-                <p style={{ fontSize: 13, color: "#555555" }}>Add a bank account to enable withdrawals</p>
+                <p style={{ fontSize: 13, color: "#bbbbbb" }}>Add a bank account to enable withdrawals</p>
               </div>
             ) : (
               <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 20 }}>
                 {accounts.map((acc) => (
                   <div key={acc.id} style={{
                     background: acc.is_default ? "rgba(26,239,34,0.08)" : "#1a1a1a",
-                    border: `1.5px solid ${acc.is_default ? "rgba(26,239,34,0.3)" : "#333333"}`,
+                    border: `1.5px solid ${acc.is_default ? "rgba(26,239,34,0.3)" : "#999999"}`,
                     borderRadius: 16, padding: "16px 18px",
                   }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                       <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
                         <div style={{
                           width: 44, height: 44, borderRadius: 12,
-                          background: acc.is_default ? "linear-gradient(135deg, #1AEF22, #06B517)" : "#333333",
+                          background: acc.is_default ? "linear-gradient(135deg, #1AEF22, #06B517)" : "#999999",
                           display: "flex", alignItems: "center", justifyContent: "center",
                           fontSize: 20, flexShrink: 0,
                         }}>
@@ -177,10 +177,10 @@ export default function BankAccountsModal({ onClose }: Props) {
                         </div>
                         <div>
                           <p style={{ fontWeight: 700, fontSize: 14, color: "#F5F5F5" }}>{acc.bank_name}</p>
-                          <p style={{ fontSize: 13, color: "#888888", marginTop: 2, letterSpacing: 1 }}>
+                          <p style={{ fontSize: 13, color: "#cccccc", marginTop: 2, letterSpacing: 1 }}>
                             {acc.account_number.replace(/(\d{3})(\d{4})(\d{3})/, "$1 $2 $3")}
                           </p>
-                          <p style={{ fontSize: 12, color: "#555555", marginTop: 1 }}>{acc.account_name}</p>
+                          <p style={{ fontSize: 12, color: "#bbbbbb", marginTop: 1 }}>{acc.account_name}</p>
                         </div>
                       </div>
                       {acc.is_default && (
@@ -257,7 +257,7 @@ export default function BankAccountsModal({ onClose }: Props) {
 
               {/* Bank name */}
               <div>
-                <label style={{ fontSize: 12, fontWeight: 700, color: "#555555", letterSpacing: 0.5 }}>BANK NAME</label>
+                <label style={{ fontSize: 12, fontWeight: 700, color: "#bbbbbb", letterSpacing: 0.5 }}>BANK NAME</label>
                 <div style={{ position: "relative", marginTop: 8 }}>
                   <span style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", fontSize: 16, pointerEvents: "none" }}>🏦</span>
                   <select
@@ -266,12 +266,12 @@ export default function BankAccountsModal({ onClose }: Props) {
                     style={{
                       width: "100%", padding: "13px 14px 13px 42px",
                       borderRadius: 12, border: "1.5px solid #333333",
-                      fontSize: 14, outline: "none", color: form.bankName ? "#F5F5F5" : "#555555",
+                      fontSize: 14, outline: "none", color: form.bankName ? "#F5F5F5" : "#bbbbbb",
                       background: "#1a1a1a", cursor: "pointer",
                       appearance: "none",
                     }}
                     onFocus={(e) => (e.target.style.borderColor = "#1AEF22")}
-                    onBlur={(e) => (e.target.style.borderColor = "#333333")}
+                    onBlur={(e) => (e.target.style.borderColor = "#999999")}
                   >
                     <option value="">Select your bank</option>
                     {NIGERIAN_BANKS.map((b) => (
@@ -283,7 +283,7 @@ export default function BankAccountsModal({ onClose }: Props) {
 
               {/* Account number */}
               <div>
-                <label style={{ fontSize: 12, fontWeight: 700, color: "#555555", letterSpacing: 0.5 }}>ACCOUNT NUMBER</label>
+                <label style={{ fontSize: 12, fontWeight: 700, color: "#bbbbbb", letterSpacing: 0.5 }}>ACCOUNT NUMBER</label>
                 <div style={{ position: "relative", marginTop: 8 }}>
                   <span style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", fontSize: 16, pointerEvents: "none" }}>🔢</span>
                   <input
@@ -300,20 +300,20 @@ export default function BankAccountsModal({ onClose }: Props) {
                       background: "#1a1a1a", letterSpacing: 2,
                     }}
                     onFocus={(e) => (e.target.style.borderColor = "#1AEF22")}
-                    onBlur={(e) => (e.target.style.borderColor = "#333333")}
+                    onBlur={(e) => (e.target.style.borderColor = "#999999")}
                   />
                   {form.accountNumber.length === 10 && (
                     <span style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", fontSize: 16 }}>✅</span>
                   )}
                 </div>
-                <p style={{ fontSize: 11, color: "#555555", marginTop: 4 }}>
+                <p style={{ fontSize: 11, color: "#bbbbbb", marginTop: 4 }}>
                   {form.accountNumber.length}/10 digits
                 </p>
               </div>
 
               {/* Account name */}
               <div>
-                <label style={{ fontSize: 12, fontWeight: 700, color: "#555555", letterSpacing: 0.5 }}>ACCOUNT NAME</label>
+                <label style={{ fontSize: 12, fontWeight: 700, color: "#bbbbbb", letterSpacing: 0.5 }}>ACCOUNT NAME</label>
                 <div style={{ position: "relative", marginTop: 8 }}>
                   <span style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", fontSize: 16, pointerEvents: "none" }}>👤</span>
                   <input
@@ -328,7 +328,7 @@ export default function BankAccountsModal({ onClose }: Props) {
                       background: "#1a1a1a",
                     }}
                     onFocus={(e) => (e.target.style.borderColor = "#1AEF22")}
-                    onBlur={(e) => (e.target.style.borderColor = "#333333")}
+                    onBlur={(e) => (e.target.style.borderColor = "#999999")}
                   />
                 </div>
               </div>
@@ -336,7 +336,7 @@ export default function BankAccountsModal({ onClose }: Props) {
               {/* Info note */}
               <div style={{ background: "rgba(245,166,35,0.1)", border: "1px solid rgba(245,166,35,0.25)", borderRadius: 12, padding: "12px 14px", display: "flex", gap: 10, alignItems: "flex-start" }}>
                 <span style={{ fontSize: 16, flexShrink: 0 }}>ℹ️</span>
-                <p style={{ fontSize: 12, color: "#888888", lineHeight: 1.6 }}>
+                <p style={{ fontSize: 12, color: "#cccccc", lineHeight: 1.6 }}>
                   Make sure the account name matches your bank records exactly. Withdrawals to incorrect accounts cannot be reversed.
                 </p>
               </div>
@@ -345,7 +345,7 @@ export default function BankAccountsModal({ onClose }: Props) {
                 type="submit"
                 disabled={submitting}
                 style={{
-                  background: submitting ? "#333333" : "linear-gradient(135deg, #F5A623, #d89420)",
+                  background: submitting ? "#999999" : "linear-gradient(135deg, #F5A623, #d89420)",
                   color: "#fff", border: "none", borderRadius: 14, padding: "15px",
                   fontWeight: 800, fontSize: 15,
                   cursor: submitting ? "not-allowed" : "pointer",

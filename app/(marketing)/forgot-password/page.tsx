@@ -34,7 +34,7 @@ export default function ForgotPasswordPage() {
             <div style={{ textAlign: "center" }}>
               <div style={{ fontSize: 52, marginBottom: 16 }}>📧</div>
               <h2 style={{ fontWeight: 800, fontSize: 20, color: "#F5F5F5", marginBottom: 10 }}>Check your email</h2>
-              <p style={{ fontSize: 14, color: "#555555", lineHeight: 1.6, marginBottom: 24 }}>
+              <p style={{ fontSize: 14, color: "#bbbbbb", lineHeight: 1.6, marginBottom: 24 }}>
                 If <strong>{email}</strong> is registered, you&apos;ll receive a password reset link shortly.
               </p>
               <Link href="/login" style={{ display: "block", background: "linear-gradient(135deg, #1AEF22, #06B517)", color: "#fff", textDecoration: "none", borderRadius: 14, padding: "14px", fontWeight: 800, fontSize: 15, textAlign: "center" }}>
@@ -44,21 +44,21 @@ export default function ForgotPasswordPage() {
           ) : (
             <>
               <h1 style={{ fontWeight: 800, fontSize: 22, color: "#F5F5F5", marginBottom: 6 }}>Reset password</h1>
-              <p style={{ fontSize: 13, color: "#555555", marginBottom: 28 }}>Enter your email and we&apos;ll send you a reset link.</p>
+              <p style={{ fontSize: 13, color: "#bbbbbb", marginBottom: 28 }}>Enter your email and we&apos;ll send you a reset link.</p>
               <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                 <div style={{ position: "relative" }}>
                   <span style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", fontSize: 16, pointerEvents: "none" }}>📧</span>
                   <input type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)}
                     style={{ width: "100%", padding: "13px 14px 13px 42px", borderRadius: 12, border: "1.5px solid #333333", fontSize: 14, outline: "none", color: "#F5F5F5", background: "#1a1a1a" }}
                     onFocus={(e) => (e.target.style.borderColor = "#1AEF22")}
-                    onBlur={(e) => (e.target.style.borderColor = "#333333")}
+                    onBlur={(e) => (e.target.style.borderColor = "#999999")}
                   />
                 </div>
                 <button type="submit" disabled={loading} style={{ background: loading ? "#a0a0a0" : "linear-gradient(135deg, #1AEF22, #06B517)", color: "#fff", border: "none", borderRadius: 14, padding: "15px", fontWeight: 800, fontSize: 15, cursor: loading ? "not-allowed" : "pointer", boxShadow: loading ? "none" : "0 6px 20px rgba(26,239,34,0.35)" }}>
                   {loading ? "Sending..." : "Send Reset Link →"}
                 </button>
               </form>
-              <p style={{ textAlign: "center", marginTop: 20, fontSize: 13, color: "#555555" }}>
+              <p style={{ textAlign: "center", marginTop: 20, fontSize: 13, color: "#bbbbbb" }}>
                 Remember your password? <Link href="/login" style={{ color: "#1AEF22", fontWeight: 700, textDecoration: "none" }}>Sign in</Link>
               </p>
             </>

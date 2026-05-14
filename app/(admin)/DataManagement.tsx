@@ -94,7 +94,7 @@ export default function DataManagement() {
           DANGER ZONE
         </span>
       </div>
-      <p style={{ margin: "0 0 24px", color: "#888", fontSize: 14 }}>
+      <p style={{ margin: "0 0 24px", color: "#ccc", fontSize: 14 }}>
         These actions are irreversible. Use with extreme caution.
       </p>
 
@@ -135,7 +135,7 @@ export default function DataManagement() {
                       {opt.danger}
                     </span>
                   </div>
-                  <p style={{ margin: 0, fontSize: 12, color: "#666", lineHeight: 1.5 }}>{opt.description}</p>
+                  <p style={{ margin: 0, fontSize: 12, color: "#ccc", lineHeight: 1.5 }}>{opt.description}</p>
                 </div>
               </div>
 
@@ -152,7 +152,7 @@ export default function DataManagement() {
                 </button>
               ) : (
                 <div style={{ background: "#f9f9f9", borderRadius: 8, padding: 14, border: "1px solid #eee" }}>
-                  <p style={{ margin: "0 0 8px", fontSize: 12, color: "#555", fontWeight: 600 }}>
+                  <p style={{ margin: "0 0 8px", fontSize: 12, color: "#bbb", fontWeight: 600 }}>
                     Type <code style={{ background: "#f0f0f0", padding: "1px 6px", borderRadius: 4, fontSize: 11 }}>{CONFIRM_PHRASE}</code> to confirm:
                   </p>
                   <input

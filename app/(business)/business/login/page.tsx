@@ -51,7 +51,7 @@ export default function BusinessLoginPage() {
               <Image src="/qeixova-icon.png" alt="Qeixova" width={36} height={36} style={{ objectFit: "contain", filter: "brightness(0)" }} />
             </div>
             <h1 style={{ fontSize: 24, fontWeight: 900, color: "#F5F5F5", marginBottom: 6, letterSpacing: -0.5 }}>Business Portal</h1>
-            <p style={{ fontSize: 14, color: "#555" }}>Sign in to manage your campaigns</p>
+            <p style={{ fontSize: 14, color: "#bbb" }}>Sign in to manage your campaigns</p>
           </div>
 
           {/* Card */}
@@ -63,14 +63,14 @@ export default function BusinessLoginPage() {
             )}
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               <div>
-                <label style={{ fontSize: 11, fontWeight: 700, color: "#444", letterSpacing: 0.8, textTransform: "uppercase" }}>Email</label>
+                <label style={{ fontSize: 11, fontWeight: 700, color: "#aaa", letterSpacing: 0.8, textTransform: "uppercase" }}>Email</label>
                 <input type="email" placeholder="business@company.com" value={form.email}
                   onChange={e => setForm(p => ({ ...p, email: e.target.value }))} required style={inp}
                   onFocus={e => (e.target.style.borderColor = "#F5A623")} onBlur={e => (e.target.style.borderColor = "#1e1e1e")} />
               </div>
               <div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <label style={{ fontSize: 11, fontWeight: 700, color: "#444", letterSpacing: 0.8, textTransform: "uppercase" }}>Password</label>
+                  <label style={{ fontSize: 11, fontWeight: 700, color: "#aaa", letterSpacing: 0.8, textTransform: "uppercase" }}>Password</label>
                 </div>
                 <input type="password" placeholder="Your password" value={form.password}
                   onChange={e => setForm(p => ({ ...p, password: e.target.value }))} required style={inp}
@@ -78,7 +78,7 @@ export default function BusinessLoginPage() {
               </div>
               <button type="submit" disabled={loading} style={{
                 background: loading ? "#111" : "linear-gradient(135deg, #F5A623, #d89420)",
-                color: loading ? "#444" : "#000", border: "none", borderRadius: 12,
+                color: loading ? "#aaa" : "#000", border: "none", borderRadius: 12,
                 padding: "14px", fontWeight: 800, fontSize: 15,
                 cursor: loading ? "not-allowed" : "pointer", marginTop: 4,
                 boxShadow: loading ? "none" : "0 6px 20px rgba(245,166,35,0.28)",
@@ -86,13 +86,13 @@ export default function BusinessLoginPage() {
               }}>
                 {loading ? (
                   <>
-                    <span style={{ width: 16, height: 16, border: "2px solid #444", borderTopColor: "#888", borderRadius: "50%", display: "inline-block", animation: "spin 0.8s linear infinite" }} />
+                    <span style={{ width: 16, height: 16, border: "2px solid #444", borderTopColor: "#ccc", borderRadius: "50%", display: "inline-block", animation: "spin 0.8s linear infinite" }} />
                     Signing in...
                   </>
                 ) : "Sign In →"}
               </button>
             </form>
-            <p style={{ textAlign: "center", fontSize: 13, color: "#333", marginTop: 20 }}>
+            <p style={{ textAlign: "center", fontSize: 13, color: "#999", marginTop: 20 }}>
               No account?{" "}
               <Link href="/register" style={{ color: "#F5A623", fontWeight: 700, textDecoration: "none" }}>Create one</Link>
             </p>

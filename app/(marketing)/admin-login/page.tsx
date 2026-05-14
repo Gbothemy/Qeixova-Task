@@ -57,14 +57,14 @@ export default function AdminLoginPage() {
           <h1 style={{ margin: 0, fontSize: 24, fontWeight: 700, color: "#1A1A1A" }}>
             Admin Portal
           </h1>
-          <p style={{ margin: "8px 0 0", color: "#888", fontSize: 14 }}>
+          <p style={{ margin: "8px 0 0", color: "#ccc", fontSize: 14 }}>
             Qeixova Administration
           </p>
         </div>
 
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: 16 }}>
-            <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "#444", marginBottom: 6 }}>
+            <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "#aaa", marginBottom: 6 }}>
               Email
             </label>
             <input
@@ -86,7 +86,7 @@ export default function AdminLoginPage() {
           </div>
 
           <div style={{ marginBottom: 24 }}>
-            <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "#444", marginBottom: 6 }}>
+            <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "#aaa", marginBottom: 6 }}>
               Password
             </label>
             <input

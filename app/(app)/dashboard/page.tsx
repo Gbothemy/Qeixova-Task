@@ -73,7 +73,7 @@ export default function Home() {
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
               <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#1AEF22", boxShadow: "0 0 8px #1AEF22" }} />
-              <p style={{ color: "#555555", fontSize: 13 }}>{greeting()} 👋</p>
+              <p style={{ color: "#bbbbbb", fontSize: 13 }}>{greeting()} 👋</p>
             </div>
             <p style={{ color: "#F5F5F5", fontSize: 22, fontWeight: 800, letterSpacing: -0.5 }}>
               {user?.fullName?.split(" ")[0] ?? "Welcome back"}!
@@ -111,7 +111,7 @@ export default function Home() {
               <div style={{ position: "absolute", top: -30, right: -30, width: 100, height: 100, borderRadius: "50%", background: "rgba(26,239,34,0.05)" }} />
               <div style={{ flex: 1 }}>
                 <p style={{ color: "#F5F5F5", fontWeight: 800, fontSize: 16, marginBottom: 4 }}>Complete your first mission</p>
-                <p style={{ color: "#888888", fontSize: 13 }}>Start earning QLT — missions take 1–10 minutes</p>
+                <p style={{ color: "#cccccc", fontSize: 13 }}>Start earning QLT — missions take 1–10 minutes</p>
               </div>
               <div style={{ background: "#ffffff", borderRadius: 12, padding: "12px 20px", flexShrink: 0 }}>
                 <span style={{ color: "#000000", fontWeight: 800, fontSize: 14, whiteSpace: "nowrap" }}>Start →</span>
@@ -133,7 +133,7 @@ export default function Home() {
                 </span>
               </div>
               {user.nextLevel ? (
-                <span style={{ fontSize: 11, color: "#555" }}>
+                <span style={{ fontSize: 11, color: "#bbb" }}>
                   {user.qltToNextLevel.toLocaleString()} QLT to {user.nextLevel.emoji} {user.nextLevel.name}
                 </span>
               ) : (
@@ -149,7 +149,7 @@ export default function Home() {
               }} />
             </div>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span style={{ fontSize: 11, color: "#444" }}>
+              <span style={{ fontSize: 11, color: "#aaa" }}>
                 {user.total_earned_qlt.toLocaleString()} QLT earned lifetime
               </span>
               {!user.canWithdraw && (
@@ -208,7 +208,7 @@ export default function Home() {
                   </div>
                   <div>
                     <p style={{ fontSize: 13, fontWeight: 600, color: "#F5F5F5" }}>{tx.label}</p>
-                    <p style={{ fontSize: 11, color: "#555555", marginTop: 2 }}>{timeAgo(tx.created_at)}</p>
+                    <p style={{ fontSize: 11, color: "#bbbbbb", marginTop: 2 }}>{timeAgo(tx.created_at)}</p>
                   </div>
                 </div>
                 <div style={{ background: tx.type === "credit" ? "rgba(26,239,34,0.12)" : "rgba(229,62,62,0.12)", borderRadius: 10, padding: "5px 12px" }}>
@@ -222,7 +222,7 @@ export default function Home() {
         ) : (
           <div style={{ background: "#111111", borderRadius: 16, padding: "32px", textAlign: "center", border: "1px solid #222222" }}>
             <p style={{ fontSize: 32, marginBottom: 8 }}>📊</p>
-            <p style={{ color: "#555555", fontSize: 14 }}>No activity yet — complete your first task!</p>
+            <p style={{ color: "#bbbbbb", fontSize: 14 }}>No activity yet — complete your first task!</p>
           </div>
         )}
       </div>
@@ -238,7 +238,7 @@ export default function Home() {
             <div style={{ height: 6, background: "#222222", borderRadius: 10, overflow: "hidden" }}>
               <div style={{ height: "100%", width: `${Math.min((wallet.stats.tasks_today / 3) * 100, 100)}%`, background: "linear-gradient(90deg, #1AEF22, #F5A623)", borderRadius: 10, transition: "width 0.4s ease" }} />
             </div>
-            <p style={{ fontSize: 11, color: "#666666", marginTop: 8 }}>Stay active and earn more consistently.</p>
+            <p style={{ fontSize: 11, color: "#cccccc", marginTop: 8 }}>Stay active and earn more consistently.</p>
           </div>
         </div>
       )}
@@ -246,7 +246,7 @@ export default function Home() {
       {/* Step 10 — Exit Hook */}
       <div style={{ padding: "20px 16px 0" }}>
         <div style={{ background: "#0a0a0a", borderRadius: 14, padding: "14px 16px", border: "1px solid #1a1a1a", textAlign: "center" }}>
-          <p style={{ fontSize: 13, color: "#888888" }}>New tasks are added daily. Come back to earn more.</p>
+          <p style={{ fontSize: 13, color: "#cccccc" }}>New tasks are added daily. Come back to earn more.</p>
         </div>
       </div>
 

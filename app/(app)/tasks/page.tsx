@@ -75,22 +75,22 @@ export default function TasksPage() {
       {/* Header */}
       <div className="page-header" style={{ background: "#0a0a0a", borderBottom: "1px solid #222222", padding: "52px 20px 20px", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", top: -50, right: -50, width: 180, height: 180, borderRadius: "50%", background: "rgba(26,239,34,0.03)" }} />
-        <p style={{ color: "#555555", fontSize: 13, marginBottom: 4 }}>Human Participation Marketplace</p>
+        <p style={{ color: "#bbbbbb", fontSize: 13, marginBottom: 4 }}>Human Participation Marketplace</p>
         <p style={{ color: "#F5F5F5", fontSize: 24, fontWeight: 800, letterSpacing: -0.5 }}>Missions</p>
 
         {/* Level + daily cap bar */}
         {meta && (
           <div style={{ marginTop: 14, display: "flex", flexDirection: "column", gap: 8 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-              <span style={{ fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 20, background: (meta.badgeColor ?? "#888") + "22", color: meta.badgeColor ?? "#888" }}>
+              <span style={{ fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 20, background: (meta.badgeColor ?? "#ccc") + "22", color: meta.badgeColor ?? "#ccc" }}>
                 L{meta.userLevel} {meta.levelName}
               </span>
               <span style={{ fontSize: 11, color: "#F5A623", fontWeight: 600 }}>⭐ {meta.xp.toLocaleString()} XP</span>
-              <span style={{ fontSize: 11, color: "#555" }}>Trust: {meta.trustScore}%</span>
+              <span style={{ fontSize: 11, color: "#bbb" }}>Trust: {meta.trustScore}%</span>
             </div>
             <div>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                <span style={{ fontSize: 11, color: "#555" }}>Daily cap</span>
+                <span style={{ fontSize: 11, color: "#bbb" }}>Daily cap</span>
                 <span style={{ fontSize: 11, color: dailyPct >= 90 ? "#e53e3e" : "#F5A623", fontWeight: 600 }}>
                   {meta.dailyEarned.toLocaleString()} / {meta.dailyCap.toLocaleString()} QLT
                 </span>
@@ -110,7 +110,7 @@ export default function TasksPage() {
             flexShrink: 0, padding: "8px 16px", borderRadius: 20,
             border: active === f.val ? "none" : "1.5px solid #333333",
             background: active === f.val ? "linear-gradient(135deg, #1AEF22, #06B517)" : "#1a1a1a",
-            color: active === f.val ? "#000" : "#888888",
+            color: active === f.val ? "#000" : "#cccccc",
             fontWeight: active === f.val ? 800 : 500, fontSize: 12, cursor: "pointer",
           }}>{f.label}</button>
         ))}
@@ -137,12 +137,12 @@ export default function TasksPage() {
           <div style={{ textAlign: "center", padding: "48px 24px", background: "#111111", borderRadius: 16, border: "1px solid #222222" }}>
             <p style={{ fontSize: 40, marginBottom: 12 }}>🎯</p>
             <p style={{ fontWeight: 700, fontSize: 16, color: "#F5F5F5", marginBottom: 8 }}>No missions available</p>
-            <p style={{ color: "#555555", fontSize: 13 }}>New missions are added regularly. Check back soon.</p>
+            <p style={{ color: "#bbbbbb", fontSize: 13 }}>New missions are added regularly. Check back soon.</p>
           </div>
         ) : filtered.length === 0 ? (
           <div style={{ textAlign: "center", padding: "40px 0" }}>
             <p style={{ fontSize: 32 }}>🎉</p>
-            <p style={{ color: "#555555", marginTop: 8 }}>All missions in this category done!</p>
+            <p style={{ color: "#bbbbbb", marginTop: 8 }}>All missions in this category done!</p>
           </div>
         ) : (
           filtered.map(task => (

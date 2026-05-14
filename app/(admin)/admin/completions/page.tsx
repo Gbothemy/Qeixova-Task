@@ -19,8 +19,8 @@ interface Completion {
   xp_reward: number;
 }
 
-const TH: React.CSSProperties = { padding: "10px 14px", textAlign: "left", fontSize: 11, fontWeight: 700, color: "#888", textTransform: "uppercase", letterSpacing: 0.5, borderBottom: "1px solid #eee", whiteSpace: "nowrap" };
-const TD: React.CSSProperties = { padding: "12px 14px", fontSize: 13, color: "#333", borderBottom: "1px solid #f5f5f5", verticalAlign: "middle" };
+const TH: React.CSSProperties = { padding: "10px 14px", textAlign: "left", fontSize: 11, fontWeight: 700, color: "#ccc", textTransform: "uppercase", letterSpacing: 0.5, borderBottom: "1px solid #eee", whiteSpace: "nowrap" };
+const TD: React.CSSProperties = { padding: "12px 14px", fontSize: 13, color: "#999", borderBottom: "1px solid #f5f5f5", verticalAlign: "middle" };
 
 const STATUS_COLORS: Record<string, { bg: string; color: string }> = {
   pending:  { bg: "#fff8e1", color: "#e67e22" },
@@ -51,7 +51,7 @@ function ProofCell({ type, value }: { type: string; value: string | null }) {
   if (type === "url") {
     return <a href={value} target="_blank" rel="noopener noreferrer" style={{ color: "#1565c0", fontSize: 12, wordBreak: "break-all" }}>{value.length > 40 ? value.slice(0, 40) + "…" : value}</a>;
   }
-  return <span style={{ fontSize: 12, color: "#555" }}>{value.length > 50 ? value.slice(0, 50) + "…" : value}</span>;
+  return <span style={{ fontSize: 12, color: "#bbb" }}>{value.length > 50 ? value.slice(0, 50) + "…" : value}</span>;
 }
 
 function TrustBadge({ score }: { score: number }) {
@@ -113,7 +113,7 @@ export default function CompletionsPage() {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
         <div>
           <h1 style={{ margin: "0 0 4px", fontSize: 24, fontWeight: 700, color: "#1A1A1A" }}>Mission Submissions</h1>
-          <p style={{ margin: 0, color: "#888", fontSize: 13 }}>{total.toLocaleString()} total · {pendingCount} pending review</p>
+          <p style={{ margin: 0, color: "#ccc", fontSize: 13 }}>{total.toLocaleString()} total · {pendingCount} pending review</p>
         </div>
         {statusFilter === "pending" && pendingCount > 0 && (
           <div style={{ background: "#fff8e1", border: "1px solid #f5a623", borderRadius: 10, padding: "8px 16px", fontSize: 13, color: "#e67e22", fontWeight: 600 }}>
@@ -126,14 +126,14 @@ export default function CompletionsPage() {
       <div style={{ display: "flex", gap: 8, marginBottom: 10, flexWrap: "wrap" }}>
         {[{ val: "pending", label: "Pending" }, { val: "approved", label: "Approved" }, { val: "rejected", label: "Rejected" }, { val: "", label: "All" }].map(f => (
           <button key={f.val} onClick={() => { setStatusFilter(f.val); setPage(1); }}
-            style={{ padding: "7px 16px", borderRadius: 20, border: "1.5px solid", borderColor: statusFilter === f.val ? "#1AEF22" : "#e0e0e0", background: statusFilter === f.val ? "#1AEF22" : "#fff", color: statusFilter === f.val ? "#fff" : "#666", cursor: "pointer", fontSize: 12, fontWeight: 600 }}>
+            style={{ padding: "7px 16px", borderRadius: 20, border: "1.5px solid", borderColor: statusFilter === f.val ? "#1AEF22" : "#e0e0e0", background: statusFilter === f.val ? "#1AEF22" : "#fff", color: statusFilter === f.val ? "#fff" : "#ccc", cursor: "pointer", fontSize: 12, fontWeight: 600 }}>
             {f.label}
           </button>
         ))}
         <div style={{ width: 1, background: "#eee", margin: "0 4px" }} />
         {["", "screenshot", "url", "text"].map(f => (
           <button key={f} onClick={() => { setProofFilter(f); setPage(1); }}
-            style={{ padding: "7px 14px", borderRadius: 20, border: "1.5px solid", borderColor: proofFilter === f ? "#555" : "#e0e0e0", background: proofFilter === f ? "#555" : "#fff", color: proofFilter === f ? "#fff" : "#888", cursor: "pointer", fontSize: 12 }}>
+            style={{ padding: "7px 14px", borderRadius: 20, border: "1.5px solid", borderColor: proofFilter === f ? "#bbb" : "#e0e0e0", background: proofFilter === f ? "#bbb" : "#fff", color: proofFilter === f ? "#fff" : "#ccc", cursor: "pointer", fontSize: 12 }}>
             {f === "" ? "All Proof" : f}
           </button>
         ))}
@@ -187,7 +187,7 @@ export default function CompletionsPage() {
                       {c.status}
                     </span>
                   </td>
-                  <td style={{ ...TD, color: "#888", whiteSpace: "nowrap", fontSize: 12 }}>
+                  <td style={{ ...TD, color: "#ccc", whiteSpace: "nowrap", fontSize: 12 }}>
                     {new Date(c.completed_at).toLocaleDateString()}<br />
                     <span style={{ fontSize: 11 }}>{new Date(c.completed_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
                   </td>
@@ -215,7 +215,7 @@ export default function CompletionsPage() {
       {totalPages > 1 && (
         <div style={{ display: "flex", gap: 8, marginTop: 16, alignItems: "center" }}>
           <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} style={{ padding: "7px 14px", borderRadius: 6, border: "1px solid #ddd", cursor: "pointer", background: "#fff" }}>← Prev</button>
-          <span style={{ fontSize: 13, color: "#666" }}>Page {page} of {totalPages}</span>
+          <span style={{ fontSize: 13, color: "#ccc" }}>Page {page} of {totalPages}</span>
           <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages} style={{ padding: "7px 14px", borderRadius: 6, border: "1px solid #ddd", cursor: "pointer", background: "#fff" }}>Next →</button>
         </div>
       )}
@@ -225,13 +225,13 @@ export default function CompletionsPage() {
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
           <div style={{ background: "#fff", borderRadius: 16, padding: 28, maxWidth: 460, width: "100%", boxShadow: "0 20px 60px rgba(0,0,0,0.2)" }}>
             <h3 style={{ margin: "0 0 4px", fontSize: 17, fontWeight: 700 }}>Reject Submission</h3>
-            <p style={{ margin: "0 0 20px", fontSize: 13, color: "#888" }}>{rejectModal.title}</p>
-            <label style={{ fontSize: 11, fontWeight: 700, color: "#555", textTransform: "uppercase", letterSpacing: 0.5 }}>Reason</label>
+            <p style={{ margin: "0 0 20px", fontSize: 13, color: "#ccc" }}>{rejectModal.title}</p>
+            <label style={{ fontSize: 11, fontWeight: 700, color: "#bbb", textTransform: "uppercase", letterSpacing: 0.5 }}>Reason</label>
             <select value={rejectReason} onChange={e => setRejectReason(e.target.value)}
               style={{ width: "100%", marginTop: 6, marginBottom: 12, padding: "10px 12px", borderRadius: 8, border: "1.5px solid #ddd", fontSize: 13, outline: "none" }}>
               {REJECTION_REASONS.map(r => <option key={r} value={r}>{r}</option>)}
             </select>
-            <label style={{ fontSize: 11, fontWeight: 700, color: "#555", textTransform: "uppercase", letterSpacing: 0.5 }}>Custom (optional)</label>
+            <label style={{ fontSize: 11, fontWeight: 700, color: "#bbb", textTransform: "uppercase", letterSpacing: 0.5 }}>Custom (optional)</label>
             <input value={customReason} onChange={e => setCustomReason(e.target.value)} placeholder="Override with custom reason..."
               style={{ width: "100%", marginTop: 6, marginBottom: 20, padding: "10px 12px", borderRadius: 8, border: "1.5px solid #ddd", fontSize: 13, outline: "none" }} />
             <div style={{ display: "flex", gap: 10 }}>

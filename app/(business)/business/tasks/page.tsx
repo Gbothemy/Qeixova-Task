@@ -15,7 +15,7 @@ interface Task {
 const STATUS: Record<string, { label: string; color: string; bg: string; dot: string }> = {
   pending_review: { label: "Under Review", color: "#F5A623", bg: "rgba(245,166,35,0.08)", dot: "#F5A623" },
   active:         { label: "Active",       color: "#1AEF22", bg: "rgba(26,239,34,0.08)",  dot: "#1AEF22" },
-  paused:         { label: "Paused",       color: "#555",    bg: "rgba(255,255,255,0.04)", dot: "#555" },
+  paused:         { label: "Paused",       color: "#bbb",    bg: "rgba(255,255,255,0.04)", dot: "#bbb" },
 };
 
 const MISSION_COLORS: Record<string, string> = {
@@ -66,7 +66,7 @@ export default function BusinessTasksPage() {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24, flexWrap: "wrap", gap: 12 }}>
           <div>
             <h1 style={{ fontSize: 20, fontWeight: 800, color: "#F5F5F5", marginBottom: 3 }}>Campaigns</h1>
-            <p style={{ fontSize: 13, color: "#444" }}>{tasks.length} campaign{tasks.length !== 1 ? "s" : ""} created</p>
+            <p style={{ fontSize: 13, color: "#aaa" }}>{tasks.length} campaign{tasks.length !== 1 ? "s" : ""} created</p>
           </div>
           <Link href="/business/tasks/new" style={{
             background: "linear-gradient(135deg, #F5A623, #d89420)", color: "#000",
@@ -91,7 +91,7 @@ export default function BusinessTasksPage() {
               <Image src="/icon-task.svg" alt="No campaigns" width={32} height={32} style={{ objectFit: "contain", opacity: 0.25 }} />
             </div>
             <p style={{ fontSize: 16, fontWeight: 700, color: "#F5F5F5", marginBottom: 8 }}>No campaigns yet</p>
-            <p style={{ fontSize: 13, color: "#444", marginBottom: 24, maxWidth: 280, margin: "0 auto 24px" }}>Create your first campaign to start reaching your target audience.</p>
+            <p style={{ fontSize: 13, color: "#aaa", marginBottom: 24, maxWidth: 280, margin: "0 auto 24px" }}>Create your first campaign to start reaching your target audience.</p>
             <Link href="/business/tasks/new" style={{ background: "linear-gradient(135deg, #F5A623, #d89420)", color: "#000", textDecoration: "none", padding: "12px 24px", borderRadius: 11, fontWeight: 800, fontSize: 14 }}>
               Create First Campaign →
             </Link>
@@ -109,7 +109,7 @@ export default function BusinessTasksPage() {
                       <p style={{ fontSize: 14, fontWeight: 700, color: "#F5F5F5", marginBottom: 5, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{task.title}</p>
                       <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
                         <span style={{ fontSize: 10, fontWeight: 700, color: mColor, background: mColor + "18", borderRadius: 6, padding: "2px 8px" }}>{task.mission_type ?? "engagement"}</span>
-                        <span style={{ fontSize: 11, color: "#444" }}>{task.category}</span>
+                        <span style={{ fontSize: 11, color: "#aaa" }}>{task.category}</span>
                         <span style={{ fontSize: 11, color: "#F5A623", fontWeight: 600 }}>{task.reward.toLocaleString()} QLT</span>
                       </div>
                     </div>
@@ -130,7 +130,7 @@ export default function BusinessTasksPage() {
                         <Image src={st.icon} alt={st.label} width={12} height={12} style={{ objectFit: "contain", opacity: 0.35 }} />
                         <div>
                           <p style={{ fontSize: 14, fontWeight: 700, color: "#F5F5F5", lineHeight: 1 }}>{st.val}</p>
-                          <p style={{ fontSize: 10, color: "#333", marginTop: 1 }}>{st.label}</p>
+                          <p style={{ fontSize: 10, color: "#999", marginTop: 1 }}>{st.label}</p>
                         </div>
                       </div>
                     ))}
@@ -138,7 +138,7 @@ export default function BusinessTasksPage() {
 
                   {/* Actions */}
                   <div style={{ display: "flex", gap: 8 }}>
-                    <Link href={`/business/tasks/${task.id}`} style={{ flex: 1, padding: "8px", borderRadius: 9, border: "1px solid #1e1e1e", background: "transparent", color: "#888", textDecoration: "none", fontSize: 12, fontWeight: 600, textAlign: "center" }}>
+                    <Link href={`/business/tasks/${task.id}`} style={{ flex: 1, padding: "8px", borderRadius: 9, border: "1px solid #1e1e1e", background: "transparent", color: "#ccc", textDecoration: "none", fontSize: 12, fontWeight: 600, textAlign: "center" }}>
                       View Details →
                     </Link>
                     {task.status !== "pending_review" && (

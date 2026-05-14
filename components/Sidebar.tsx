@@ -15,11 +15,11 @@ const nav = [
 export default function Sidebar() {
   const path = usePathname();
   const router = useRouter();
-  const [stats, setStats] = useState({ balance: 0, today_earned: 0, tasks_today: 0, streak: 0, fullName: "", xp: 0, levelName: "Starter", badgeColor: "#888888" });
+  const [stats, setStats] = useState({ balance: 0, today_earned: 0, tasks_today: 0, streak: 0, fullName: "", xp: 0, levelName: "Starter", badgeColor: "#cccccc" });
 
   useEffect(() => {
     fetch("/api/auth/me").then(r => r.ok ? r.json() : null).then(d => {
-      if (d?.user) setStats(s => ({ ...s, fullName: d.user.full_name, streak: d.user.streak ?? 0, xp: d.user.xp ?? 0, levelName: d.user.levelName ?? "Starter", badgeColor: d.user.badgeColor ?? "#888888" }));
+      if (d?.user) setStats(s => ({ ...s, fullName: d.user.full_name, streak: d.user.streak ?? 0, xp: d.user.xp ?? 0, levelName: d.user.levelName ?? "Starter", badgeColor: d.user.badgeColor ?? "#cccccc" }));
     }).catch(() => {});
     fetch("/api/wallet").then(r => r.ok ? r.json() : null).then(d => {
       if (d) setStats(s => ({ ...s, balance: d.balance ?? 0, today_earned: d.stats?.today_earned ?? 0, tasks_today: d.stats?.tasks_today ?? 0 }));
@@ -34,7 +34,7 @@ export default function Sidebar() {
           <Image src="/qeixova-icon.png" alt="Qeixova" width={40} height={40} style={{ borderRadius: 12, objectFit: "contain" }} />
           <div>
             <p style={{ fontWeight: 800, fontSize: 16, color: "#F5F5F5", letterSpacing: -0.5 }}>Qeixova</p>
-            <p style={{ fontSize: 11, color: "#555555" }}>Earn by doing</p>
+            <p style={{ fontSize: 11, color: "#bbbbbb" }}>Earn by doing</p>
           </div>
         </div>
       </div>
@@ -55,7 +55,7 @@ export default function Sidebar() {
 
       {/* Nav links */}
       <nav style={{ padding: "12px 12px", flex: 1 }}>
-        <p style={{ fontSize: 10, fontWeight: 700, color: "#444444", letterSpacing: 1.2, textTransform: "uppercase", padding: "8px 12px 4px" }}>Menu</p>
+        <p style={{ fontSize: 10, fontWeight: 700, color: "#aaaaaa", letterSpacing: 1.2, textTransform: "uppercase", padding: "8px 12px 4px" }}>Menu</p>
         {nav.map((item) => {
           const active = path === item.href;
           return (
@@ -77,7 +77,7 @@ export default function Sidebar() {
               </div>
               <div>
                 <p style={{ fontSize: 14, fontWeight: active ? 700 : 500, color: active ? "#1AEF22" : "#cccccc" }}>{item.label}</p>
-                <p style={{ fontSize: 11, color: "#555555" }}>{item.desc}</p>
+                <p style={{ fontSize: 11, color: "#bbbbbb" }}>{item.desc}</p>
               </div>
               {active && <div style={{ marginLeft: "auto", width: 6, height: 6, borderRadius: "50%", background: "#1AEF22" }} />}
             </Link>
@@ -100,7 +100,7 @@ export default function Sidebar() {
           </div>
           <div style={{ flex: 1 }}>
             <p style={{ fontSize: 13, fontWeight: 600, color: "#F5F5F5" }}>{stats.fullName || "Loading..."}</p>
-            <p style={{ fontSize: 11, color: "#555555" }}>
+            <p style={{ fontSize: 11, color: "#bbbbbb" }}>
               <span style={{ color: stats.badgeColor, fontWeight: 700 }}>{stats.levelName}</span>
               {stats.xp > 0 && <span style={{ color: "#F5A623" }}> &middot; {stats.xp.toLocaleString()} XP</span>}
             </p>

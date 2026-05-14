@@ -16,7 +16,7 @@ const TH: React.CSSProperties = {
   textAlign: "left",
   fontSize: 12,
   fontWeight: 600,
-  color: "#888",
+  color: "#ccc",
   textTransform: "uppercase",
   letterSpacing: 0.5,
   borderBottom: "1px solid #eee",
@@ -26,7 +26,7 @@ const TH: React.CSSProperties = {
 const TD: React.CSSProperties = {
   padding: "14px 16px",
   fontSize: 14,
-  color: "#333",
+  color: "#999",
   borderBottom: "1px solid #f5f5f5",
   verticalAlign: "middle",
 };
@@ -73,7 +73,7 @@ export default function UsersPage() {
   return (
     <div>
       <h1 style={{ margin: "0 0 8px", fontSize: 26, fontWeight: 700, color: "#1A1A1A" }}>Users</h1>
-      <p style={{ margin: "0 0 24px", color: "#888", fontSize: 14 }}>
+      <p style={{ margin: "0 0 24px", color: "#ccc", fontSize: 14 }}>
         {total.toLocaleString()} total users
       </p>
 
@@ -126,10 +126,10 @@ export default function UsersPage() {
                 <tr key={u.id} style={{ background: u.banned ? "#fff8f8" : "transparent" }}>
                   <td style={TD}>{u.id}</td>
                   <td style={{ ...TD, fontWeight: 500 }}>{u.full_name}</td>
-                  <td style={{ ...TD, color: "#666" }}>{u.email}</td>
+                  <td style={{ ...TD, color: "#ccc" }}>{u.email}</td>
                   <td style={TD}>{Number(u.balance).toLocaleString()}</td>
                   <td style={{ ...TD, textAlign: "center" }}>{u.tasks_completed}</td>
-                  <td style={{ ...TD, color: "#888" }}>
+                  <td style={{ ...TD, color: "#ccc" }}>
                     {new Date(u.created_at).toLocaleDateString()}
                   </td>
                   <td style={TD}>
@@ -182,7 +182,7 @@ export default function UsersPage() {
           >
             ← Prev
           </button>
-          <span style={{ fontSize: 13, color: "#666" }}>
+          <span style={{ fontSize: 13, color: "#ccc" }}>
             Page {page} of {totalPages}
           </span>
           <button

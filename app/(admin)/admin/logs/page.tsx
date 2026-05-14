@@ -16,13 +16,13 @@ const EVENT_COLORS: Record<string, string> = {
   wallet_debited:      "#e53e3e",
   referral_bonus:      "#F5A623",
   milestone_awarded:   "#c084fc",
-  trust_score_updated: "#888",
+  trust_score_updated: "#ccc",
   rate_limit_hit:      "#e67e22",
   fraud_flagged:       "#c62828",
 };
 
-const TH: React.CSSProperties = { padding: "10px 14px", textAlign: "left", fontSize: 11, fontWeight: 700, color: "#888", textTransform: "uppercase", letterSpacing: 0.5, borderBottom: "1px solid #eee", whiteSpace: "nowrap" };
-const TD: React.CSSProperties = { padding: "10px 14px", fontSize: 12, color: "#333", borderBottom: "1px solid #f5f5f5", verticalAlign: "top" };
+const TH: React.CSSProperties = { padding: "10px 14px", textAlign: "left", fontSize: 11, fontWeight: 700, color: "#ccc", textTransform: "uppercase", letterSpacing: 0.5, borderBottom: "1px solid #eee", whiteSpace: "nowrap" };
+const TD: React.CSSProperties = { padding: "10px 14px", fontSize: 12, color: "#999", borderBottom: "1px solid #f5f5f5", verticalAlign: "top" };
 
 const EVENT_TYPES = ["", "mission_submitted", "mission_approved", "mission_rejected", "wallet_credited", "level_up", "rate_limit_hit", "fraud_flagged", "referral_bonus", "milestone_awarded"];
 
@@ -53,13 +53,13 @@ export default function AuditLogsPage() {
     <div>
       <div style={{ marginBottom: 20 }}>
         <h1 style={{ margin: "0 0 4px", fontSize: 24, fontWeight: 700, color: "#1A1A1A" }}>Audit Logs</h1>
-        <p style={{ margin: 0, color: "#888", fontSize: 13 }}>{total.toLocaleString()} events logged</p>
+        <p style={{ margin: 0, color: "#ccc", fontSize: 13 }}>{total.toLocaleString()} events logged</p>
       </div>
 
       <div style={{ display: "flex", gap: 8, marginBottom: 16, flexWrap: "wrap" }}>
         {EVENT_TYPES.map(e => (
           <button key={e} onClick={() => { setEventFilter(e); setPage(1); }}
-            style={{ padding: "6px 12px", borderRadius: 20, border: "1.5px solid", borderColor: eventFilter === e ? "#1AEF22" : "#e0e0e0", background: eventFilter === e ? "#1AEF22" : "#fff", color: eventFilter === e ? "#fff" : "#666", cursor: "pointer", fontSize: 11, fontWeight: 600 }}>
+            style={{ padding: "6px 12px", borderRadius: 20, border: "1.5px solid", borderColor: eventFilter === e ? "#1AEF22" : "#e0e0e0", background: eventFilter === e ? "#1AEF22" : "#fff", color: eventFilter === e ? "#fff" : "#ccc", cursor: "pointer", fontSize: 11, fontWeight: 600 }}>
             {e === "" ? "All Events" : e.replace(/_/g, " ")}
           </button>
         ))}
@@ -83,12 +83,12 @@ export default function AuditLogsPage() {
               <tr><td colSpan={5} style={{ ...TD, textAlign: "center", padding: 40, color: "#aaa" }}>No logs found</td></tr>
             ) : logs.map(l => (
               <tr key={l.id}>
-                <td style={{ ...TD, color: "#888", whiteSpace: "nowrap" }}>
+                <td style={{ ...TD, color: "#ccc", whiteSpace: "nowrap" }}>
                   {new Date(l.created_at).toLocaleDateString()}<br />
                   <span style={{ fontSize: 10 }}>{new Date(l.created_at).toLocaleTimeString()}</span>
                 </td>
                 <td style={TD}>
-                  <span style={{ display: "inline-block", padding: "2px 8px", borderRadius: 8, fontSize: 11, fontWeight: 700, background: (EVENT_COLORS[l.event_type] ?? "#888") + "18", color: EVENT_COLORS[l.event_type] ?? "#888" }}>
+                  <span style={{ display: "inline-block", padding: "2px 8px", borderRadius: 8, fontSize: 11, fontWeight: 700, background: (EVENT_COLORS[l.event_type] ?? "#ccc") + "18", color: EVENT_COLORS[l.event_type] ?? "#ccc" }}>
                     {l.event_type.replace(/_/g, " ")}
                   </span>
                 </td>
@@ -96,11 +96,11 @@ export default function AuditLogsPage() {
                   <div style={{ fontWeight: 600, fontSize: 12 }}>{l.user_name ?? "—"}</div>
                   <div style={{ fontSize: 10, color: "#aaa" }}>{l.email}</div>
                 </td>
-                <td style={{ ...TD, color: "#888" }}>
+                <td style={{ ...TD, color: "#ccc" }}>
                   {l.entity_type && <span>{l.entity_type} #{l.entity_id}</span>}
                 </td>
                 <td style={{ ...TD, maxWidth: 300 }}>
-                  <pre style={{ fontSize: 10, color: "#555", margin: 0, whiteSpace: "pre-wrap", wordBreak: "break-all" }}>
+                  <pre style={{ fontSize: 10, color: "#bbb", margin: 0, whiteSpace: "pre-wrap", wordBreak: "break-all" }}>
                     {JSON.stringify(l.data, null, 1)}
                   </pre>
                 </td>
@@ -113,7 +113,7 @@ export default function AuditLogsPage() {
       {totalPages > 1 && (
         <div style={{ display: "flex", gap: 8, marginTop: 16, alignItems: "center" }}>
           <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} style={{ padding: "7px 14px", borderRadius: 6, border: "1px solid #ddd", cursor: "pointer", background: "#fff" }}>← Prev</button>
-          <span style={{ fontSize: 13, color: "#666" }}>Page {page} of {totalPages}</span>
+          <span style={{ fontSize: 13, color: "#ccc" }}>Page {page} of {totalPages}</span>
           <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages} style={{ padding: "7px 14px", borderRadius: 6, border: "1px solid #ddd", cursor: "pointer", background: "#fff" }}>Next →</button>
         </div>
       )}

@@ -52,11 +52,11 @@ function Modal({ title, onClose, children }: { title: string; onClose: () => voi
 function Field({ label, type = "text", value, onChange, placeholder }: { label: string; type?: string; value: string; onChange: (v: string) => void; placeholder?: string; }) {
   return (
     <div style={{ marginBottom: 14 }}>
-      <label style={{ fontSize: 11, color: "#555555", fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase" }}>{label}</label>
+      <label style={{ fontSize: 11, color: "#bbbbbb", fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase" }}>{label}</label>
       <input type={type} value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder}
         style={{ width: "100%", marginTop: 6, padding: "13px 14px", borderRadius: 12, border: "1.5px solid #333333", fontSize: 15, outline: "none", color: "#F5F5F5", background: "#1a1a1a" }}
         onFocus={e => (e.target.style.borderColor = "#1AEF22")}
-        onBlur={e => (e.target.style.borderColor = "#333333")}
+        onBlur={e => (e.target.style.borderColor = "#999999")}
       />
     </div>
   );
@@ -92,11 +92,11 @@ function EditProfileModal({ profile, onClose, onSaved }: { profile: Profile; onC
       <Field label="Full Name" value={name} onChange={setName} placeholder="Your full name" />
       <Field label="Phone Number" value={phone} onChange={setPhone} placeholder="+234 800 000 0000" />
       <div style={{ marginBottom: 14 }}>
-        <label style={{ fontSize: 11, color: "#555555", fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase" }}>Email Address</label>
-        <input value={profile.email} disabled style={{ width: "100%", marginTop: 6, padding: "13px 14px", borderRadius: 12, border: "1.5px solid #333333", fontSize: 15, color: "#555555", background: "#1a1a1a", cursor: "not-allowed" }} />
-        <p style={{ fontSize: 11, color: "#555555", marginTop: 4 }}>Email cannot be changed</p>
+        <label style={{ fontSize: 11, color: "#bbbbbb", fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase" }}>Email Address</label>
+        <input value={profile.email} disabled style={{ width: "100%", marginTop: 6, padding: "13px 14px", borderRadius: 12, border: "1.5px solid #333333", fontSize: 15, color: "#bbbbbb", background: "#1a1a1a", cursor: "not-allowed" }} />
+        <p style={{ fontSize: 11, color: "#bbbbbb", marginTop: 4 }}>Email cannot be changed</p>
       </div>
-      <button onClick={save} disabled={saving} style={{ width: "100%", background: saving ? "#333333" : "linear-gradient(135deg, #1AEF22, #06B517)", color: "#000", border: "none", borderRadius: 14, padding: "15px", fontWeight: 800, fontSize: 15, cursor: saving ? "not-allowed" : "pointer", boxShadow: saving ? "none" : "0 6px 20px rgba(26,239,34,0.3)", marginTop: 4 }}>
+      <button onClick={save} disabled={saving} style={{ width: "100%", background: saving ? "#999999" : "linear-gradient(135deg, #1AEF22, #06B517)", color: "#000", border: "none", borderRadius: 14, padding: "15px", fontWeight: 800, fontSize: 15, cursor: saving ? "not-allowed" : "pointer", boxShadow: saving ? "none" : "0 6px 20px rgba(26,239,34,0.3)", marginTop: 4 }}>
         {saving ? "Saving..." : "Save Changes"}
       </button>
     </Modal>
@@ -127,7 +127,7 @@ function ChangePasswordModal({ onClose }: { onClose: () => void }) {
       <Field label="Current Password" type="password" value={current} onChange={setCurrent} placeholder="Enter current password" />
       <Field label="New Password" type="password" value={next} onChange={setNext} placeholder="At least 6 characters" />
       <Field label="Confirm New Password" type="password" value={confirm} onChange={setConfirm} placeholder="Repeat new password" />
-      <button onClick={save} disabled={saving} style={{ width: "100%", background: saving ? "#333333" : "linear-gradient(135deg, #1AEF22, #06B517)", color: "#000", border: "none", borderRadius: 14, padding: "15px", fontWeight: 800, fontSize: 15, cursor: saving ? "not-allowed" : "pointer", boxShadow: saving ? "none" : "0 6px 20px rgba(26,239,34,0.3)", marginTop: 4 }}>
+      <button onClick={save} disabled={saving} style={{ width: "100%", background: saving ? "#999999" : "linear-gradient(135deg, #1AEF22, #06B517)", color: "#000", border: "none", borderRadius: 14, padding: "15px", fontWeight: 800, fontSize: 15, cursor: saving ? "not-allowed" : "pointer", boxShadow: saving ? "none" : "0 6px 20px rgba(26,239,34,0.3)", marginTop: 4 }}>
         {saving ? "Updating..." : "Update Password"}
       </button>
     </Modal>
@@ -165,15 +165,15 @@ function NotificationsModal({ onClose }: { onClose: () => void }) {
           <div key={item.key} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 0", borderBottom: "1px solid #222222" }}>
             <div>
               <p style={{ fontSize: 14, fontWeight: 600, color: "#F5F5F5" }}>{item.label}</p>
-              <p style={{ fontSize: 12, color: "#555555", marginTop: 2 }}>{item.sub}</p>
+              <p style={{ fontSize: 12, color: "#bbbbbb", marginTop: 2 }}>{item.sub}</p>
             </div>
-            <div onClick={() => toggle(item.key)} style={{ width: 46, height: 26, borderRadius: 13, cursor: "pointer", transition: "background 0.2s", background: prefs[item.key] ? "#1AEF22" : "#333333", position: "relative" }}>
+            <div onClick={() => toggle(item.key)} style={{ width: 46, height: 26, borderRadius: 13, cursor: "pointer", transition: "background 0.2s", background: prefs[item.key] ? "#1AEF22" : "#999999", position: "relative" }}>
               <div style={{ position: "absolute", top: 3, left: prefs[item.key] ? 23 : 3, width: 20, height: 20, borderRadius: "50%", background: "#fff", transition: "left 0.2s", boxShadow: "0 1px 4px rgba(0,0,0,0.4)" }} />
             </div>
           </div>
         ))}
       </div>
-      <button onClick={save} disabled={saving} style={{ width: "100%", background: saved ? "#1AEF22" : saving ? "#333333" : "linear-gradient(135deg, #1AEF22, #06B517)", color: "#000", border: "none", borderRadius: 14, padding: "15px", fontWeight: 800, fontSize: 15, cursor: saving ? "not-allowed" : "pointer", boxShadow: "0 6px 20px rgba(26,239,34,0.3)", marginTop: 20 }}>
+      <button onClick={save} disabled={saving} style={{ width: "100%", background: saved ? "#1AEF22" : saving ? "#999999" : "linear-gradient(135deg, #1AEF22, #06B517)", color: "#000", border: "none", borderRadius: 14, padding: "15px", fontWeight: 800, fontSize: 15, cursor: saving ? "not-allowed" : "pointer", boxShadow: "0 6px 20px rgba(26,239,34,0.3)", marginTop: 20 }}>
         {saved ? "✅ Saved!" : saving ? "Saving..." : "Save Preferences"}
       </button>
     </Modal>
@@ -196,7 +196,7 @@ function SupportModal({ onClose }: { onClose: () => void }) {
       <div style={{ textAlign: "center", padding: "20px 0" }}>
         <div style={{ fontSize: 52, marginBottom: 16 }}>✅</div>
         <p style={{ fontWeight: 800, fontSize: 18, color: "#F5F5F5", marginBottom: 8 }}>Message Sent!</p>
-        <p style={{ color: "#555555", fontSize: 14 }}>Our support team will get back to you within 24 hours.</p>
+        <p style={{ color: "#bbbbbb", fontSize: 14 }}>Our support team will get back to you within 24 hours.</p>
         <button onClick={onClose} style={{ marginTop: 24, background: "linear-gradient(135deg, #1AEF22, #06B517)", color: "#000", border: "none", borderRadius: 14, padding: "14px 32px", fontWeight: 800, fontSize: 15, cursor: "pointer" }}>Done</button>
       </div>
     </Modal>
@@ -213,16 +213,16 @@ function SupportModal({ onClose }: { onClose: () => void }) {
           <a key={c.label} href={c.href} target="_blank" rel="noopener noreferrer" style={{ flex: 1, background: "#1a1a1a", border: "1px solid #333333", borderRadius: 14, padding: "12px 8px", textAlign: "center", textDecoration: "none" }}>
             <p style={{ fontSize: 22 }}>{c.icon}</p>
             <p style={{ fontSize: 12, fontWeight: 700, color: "#F5F5F5", marginTop: 4 }}>{c.label}</p>
-            <p style={{ fontSize: 10, color: "#555555" }}>{c.sub}</p>
+            <p style={{ fontSize: 10, color: "#bbbbbb" }}>{c.sub}</p>
           </a>
         ))}
       </div>
       <Field label="Subject" value={subject} onChange={setSubject} placeholder="What do you need help with?" />
       <div style={{ marginBottom: 14 }}>
-        <label style={{ fontSize: 11, color: "#555555", fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase" }}>Message</label>
+        <label style={{ fontSize: 11, color: "#bbbbbb", fontWeight: 700, letterSpacing: 0.5, textTransform: "uppercase" }}>Message</label>
         <textarea value={message} onChange={e => setMessage(e.target.value)} placeholder="Describe your issue in detail..." rows={4}
           style={{ width: "100%", marginTop: 6, padding: "13px 14px", borderRadius: 12, border: "1.5px solid #333333", fontSize: 14, outline: "none", color: "#F5F5F5", background: "#1a1a1a", resize: "none" }}
-          onFocus={e => (e.target.style.borderColor = "#1AEF22")} onBlur={e => (e.target.style.borderColor = "#333333")} />
+          onFocus={e => (e.target.style.borderColor = "#1AEF22")} onBlur={e => (e.target.style.borderColor = "#999999")} />
       </div>
       <button onClick={send} style={{ width: "100%", background: "linear-gradient(135deg, #1AEF22, #06B517)", color: "#000", border: "none", borderRadius: 14, padding: "15px", fontWeight: 800, fontSize: 15, cursor: "pointer", boxShadow: "0 6px 20px rgba(26,239,34,0.3)" }}>Send Message</button>
     </Modal>
@@ -259,13 +259,13 @@ function TermsModal({ onClose }: { onClose: () => void }) {
             <div style={{ width: 40, height: 40, borderRadius: 12, background: "rgba(26,239,34,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>{item.icon}</div>
             <div style={{ flex: 1 }}>
               <p style={{ fontSize: 14, fontWeight: 600, color: "#F5F5F5" }}>{item.title}</p>
-              <p style={{ fontSize: 12, color: "#555555", marginTop: 2 }}>{item.sub}</p>
+              <p style={{ fontSize: 12, color: "#bbbbbb", marginTop: 2 }}>{item.sub}</p>
             </div>
-            <span style={{ color: "#555555", fontSize: 18 }}>›</span>
+            <span style={{ color: "#bbbbbb", fontSize: 18 }}>›</span>
           </div>
         ))}
       </div>
-      <p style={{ textAlign: "center", color: "#444444", fontSize: 12, marginTop: 20 }}>Last updated: April 2025 · Qeixova v1.0</p>
+      <p style={{ textAlign: "center", color: "#aaaaaa", fontSize: 12, marginTop: 20 }}>Last updated: April 2025 · Qeixova v1.0</p>
     </Modal>
   );
 }
@@ -319,12 +319,12 @@ export default function ProfilePage() {
           <div style={{ position: "absolute", bottom: 0, right: 0, width: 14, height: 14, borderRadius: "50%", background: "#1AEF22", border: "2px solid #0a0a0a" }} />
         </div>
         <p style={{ color: "#F5F5F5", fontSize: 22, fontWeight: 800, letterSpacing: -0.5 }}>{profile?.full_name ?? "Loading..."}</p>
-        <p style={{ color: "#888888", fontSize: 13, marginTop: 3 }}>{profile?.email}</p>
-        {profile?.phone && <p style={{ color: "#666666", fontSize: 12, marginTop: 2 }}>{profile.phone}</p>}
-        {profile?.created_at && <p style={{ color: "#555555", fontSize: 11, marginTop: 4 }}>Member since {timeAgo(profile.created_at)}</p>}
+        <p style={{ color: "#cccccc", fontSize: 13, marginTop: 3 }}>{profile?.email}</p>
+        {profile?.phone && <p style={{ color: "#cccccc", fontSize: 12, marginTop: 2 }}>{profile.phone}</p>}
+        {profile?.created_at && <p style={{ color: "#bbbbbb", fontSize: 11, marginTop: 4 }}>Member since {timeAgo(profile.created_at)}</p>}
         <div style={{ display: "flex", justifyContent: "center", gap: 8, marginTop: 12, flexWrap: "wrap" }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: (profile?.badge_color ?? "#888") + "22", border: `1px solid ${profile?.badge_color ?? "#888"}44`, borderRadius: 20, padding: "6px 16px" }}>
-            <span style={{ color: profile?.badge_color ?? "#888", fontSize: 12, fontWeight: 700 }}>L{profile?.level ?? 1} {profile?.level_name ?? "Starter"}</span>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: (profile?.badge_color ?? "#ccc") + "22", border: `1px solid ${profile?.badge_color ?? "#ccc"}44`, borderRadius: 20, padding: "6px 16px" }}>
+            <span style={{ color: profile?.badge_color ?? "#ccc", fontSize: 12, fontWeight: 700 }}>L{profile?.level ?? 1} {profile?.level_name ?? "Starter"}</span>
           </div>
           {profile?.xp !== undefined && (
             <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(245,166,35,0.08)", border: "1px solid rgba(245,166,35,0.2)", borderRadius: 20, padding: "5px 14px" }}>
@@ -355,7 +355,7 @@ export default function ProfilePage() {
                 <Image src={s.icon} alt={s.label} width={20} height={20} style={{ objectFit: "contain", opacity: 0.7 }} />
               </div>
               <p style={{ fontWeight: 800, fontSize: 15, color: "#1AEF22" }}>{s.value}</p>
-              <p style={{ fontSize: 10, color: "#555555", marginTop: 2 }}>{s.label}</p>
+              <p style={{ fontSize: 10, color: "#bbbbbb", marginTop: 2 }}>{s.label}</p>
             </div>
           ))}
         </div>
@@ -385,7 +385,7 @@ export default function ProfilePage() {
               </div>
             </div>
             {profile.trust_level === "new" && profile.approved_count < 5 && (
-              <p style={{ fontSize: 11, color: "#666666", marginTop: 10, textAlign: "center" }}>
+              <p style={{ fontSize: 11, color: "#cccccc", marginTop: 10, textAlign: "center" }}>
                 Complete {5 - profile.approved_count} more approved task{5 - profile.approved_count !== 1 ? "s" : ""} to become a Trusted User
               </p>
             )}
@@ -438,9 +438,9 @@ export default function ProfilePage() {
               </div>
               <div style={{ flex: 1 }}>
                 <p style={{ fontSize: 14, fontWeight: 600, color: "#F5F5F5" }}>{item.label}</p>
-                <p style={{ fontSize: 12, color: "#555555", marginTop: 1 }}>{item.sub}</p>
+                <p style={{ fontSize: 12, color: "#bbbbbb", marginTop: 1 }}>{item.sub}</p>
               </div>
-              <div style={{ width: 28, height: 28, borderRadius: 8, background: "#1a1a1a", display: "flex", alignItems: "center", justifyContent: "center", color: "#555555", fontSize: 16 }}>›</div>
+              <div style={{ width: 28, height: 28, borderRadius: 8, background: "#1a1a1a", display: "flex", alignItems: "center", justifyContent: "center", color: "#bbbbbb", fontSize: 16 }}>›</div>
             </div>
           ))}
         </div>
