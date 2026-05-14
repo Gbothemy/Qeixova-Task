@@ -226,57 +226,116 @@ export default function RegisterPage() {
           {/* ── SIGNUP FORM ── */}
           {screen === "signup" && (
             <div>
-              <button onClick={()=>setScreen("type")} style={{ background:"none", border:"none", color:"#bbb", fontSize:13, cursor:"pointer", marginBottom:20, padding:0 }}>← Back</button>
-              <h2 style={{ fontSize:20, fontWeight:900, color:"#F5F5F5", marginBottom:4 }}>Create Your Account</h2>
-              <p style={{ fontSize:13, color:"#bbb", marginBottom:20 }}>
-                {accountType === "business" ? "Set up your business login." : "Set up your contributor account."}
-              </p>
-              {error && <div style={{ background:"rgba(229,62,62,0.07)", border:"1px solid rgba(229,62,62,0.2)", borderRadius:10, padding:"11px 14px", marginBottom:16, fontSize:13, color:"#e53e3e" }}>⚠️ {error}</div>}
-              <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-                <div>
-                  <label style={{ fontSize:11, fontWeight:700, color:"#aaa", letterSpacing:0.8, textTransform:"uppercase" }}>{accountType === "business" ? "Business Name" : "Full Name"}</label>
-                  <input type="text" placeholder={accountType === "business" ? "Your company or brand name" : "Your full name"} value={form.fullName} onChange={e=>setForm(f=>({...f,fullName:e.target.value}))} style={inp} onFocus={e=>(e.target.style.borderColor=accentColor)} onBlur={e=>(e.target.style.borderColor="#1e1e1e")} />
-                </div>
-                <div>
-                  <label style={{ fontSize:11, fontWeight:700, color:"#aaa", letterSpacing:0.8, textTransform:"uppercase" }}>Email Address</label>
-                  <input type="email" placeholder="your@email.com" value={form.email} onChange={e=>setForm(f=>({...f,email:e.target.value}))} style={inp} onFocus={e=>(e.target.style.borderColor=accentColor)} onBlur={e=>(e.target.style.borderColor="#1e1e1e")} />
-                </div>
-                <div>
-                  <label style={{ fontSize:11, fontWeight:700, color:"#aaa", letterSpacing:0.8, textTransform:"uppercase" }}>Password</label>
-                  <input type="password" placeholder="Create a strong password" value={form.password} onChange={e=>setForm(f=>({...f,password:e.target.value}))} style={inp} onFocus={e=>(e.target.style.borderColor=accentColor)} onBlur={e=>(e.target.style.borderColor="#1e1e1e")} />
-                </div>
-                <div>
-                  <label style={{ fontSize:11, fontWeight:700, color:"#aaa", letterSpacing:0.8, textTransform:"uppercase" }}>Confirm Password</label>
-                  <input type="password" placeholder="Repeat your password" value={form.confirmPassword} onChange={e=>setForm(f=>({...f,confirmPassword:e.target.value}))} style={inp} onFocus={e=>(e.target.style.borderColor=accentColor)} onBlur={e=>(e.target.style.borderColor="#1e1e1e")} />
-                </div>
-                <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
-                  <div>
-                    <label style={{ fontSize:11, fontWeight:700, color:"#aaa", letterSpacing:0.8, textTransform:"uppercase" }}>Country</label>
-                    <select value={form.country} onChange={e=>setForm(f=>({...f,country:e.target.value}))} style={{ ...inp, cursor:"pointer" }}>
-                      <option value="Nigeria">Nigeria</option>
-                      <option value="Ghana">Ghana</option>
-                      <option value="Kenya">Kenya</option>
-                      <option value="Other">Other</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label style={{ fontSize:11, fontWeight:700, color:"#aaa", letterSpacing:0.8, textTransform:"uppercase" }}>State</label>
-                    <select value={form.state} onChange={e=>setForm(f=>({...f,state:e.target.value}))} style={{ ...inp, cursor:"pointer" }}>
-                      <option value="">Select state</option>
-                      {NIGERIAN_STATES.map(s=><option key={s} value={s}>{s}</option>)}
-                    </select>
-                  </div>
-                </div>
-                <div style={{ display:"flex", alignItems:"flex-start", gap:10, marginTop:4 }}>
-                  <input type="checkbox" id="terms" checked={termsAccepted} onChange={e=>setTermsAccepted(e.target.checked)} style={{ marginTop:2, accentColor, width:16, height:16, cursor:"pointer", flexShrink:0 }} />
-                  <label htmlFor="terms" style={{ fontSize:12, color:"#bbb", lineHeight:1.5, cursor:"pointer" }}>
-                    I agree to the <Link href="/#" style={{ color:accentColor, textDecoration:"none", fontWeight:600 }}>Terms of Service</Link> and <Link href="/#" style={{ color:accentColor, textDecoration:"none", fontWeight:600 }}>Privacy Policy</Link>
-                  </label>
-                </div>
+              {/* Decorative blobs — same as login */}
+              <div style={{ position:"fixed", top:-80, right:-80, width:320, height:320, borderRadius:"50%", background:"rgba(26,239,34,0.03)", pointerEvents:"none" }} />
+              <div style={{ position:"fixed", top:60, left:-60, width:200, height:200, borderRadius:"50%", background:"rgba(245,166,35,0.03)", pointerEvents:"none" }} />
+
+              {/* Logo header */}
+              <div style={{ textAlign:"center", marginBottom:28 }}>
+                <Link href="/" style={{ textDecoration:"none", display:"inline-flex", flexDirection:"column", alignItems:"center", gap:8 }}>
+                  <img src="/qeixova-icon.png" alt="Qeixova" style={{ width:52, height:52, borderRadius:14, objectFit:"contain", boxShadow:"0 8px 24px rgba(26,239,34,0.35)" }} />
+                  <span style={{ fontWeight:900, fontSize:20, color:"#fff", letterSpacing:-0.5 }}>Qeixova</span>
+                </Link>
               </div>
-              <button onClick={handleSignup} disabled={loading} style={{ width:"100%", marginTop:20, background:loading?"#111":`linear-gradient(135deg, ${accentColor}, ${accountType==="business"?"#d89420":"#06B517"})`, color:loading?"#aaa":"#000", border:"none", borderRadius:13, padding:"15px", fontWeight:800, fontSize:15, cursor:loading?"not-allowed":"pointer" }}>
-                {loading ? "Creating account..." : "Continue →"}
-              </button>
+
+              {/* Card */}
+              <div style={{ background:"#111111", borderRadius:24, padding:"32px 28px", boxShadow:"0 20px 60px rgba(0,0,0,0.5)", border:"1px solid #222222" }}>
+                <button onClick={()=>setScreen("type")} style={{ background:"none", border:"none", color:"#bbb", fontSize:13, cursor:"pointer", marginBottom:16, padding:0 }}>← Back</button>
+                <h2 style={{ fontWeight:800, fontSize:22, color:"#F5F5F5", marginBottom:6 }}>Create Your Account</h2>
+                <p style={{ fontSize:13, color:"#bbbbbb", marginBottom:24 }}>
+                  {accountType === "business" ? "Set up your business login." : "Set up your contributor account."}
+                </p>
+
+                {error && <div style={{ background:"rgba(229,62,62,0.1)", border:"1px solid rgba(229,62,62,0.3)", borderRadius:10, padding:"11px 14px", marginBottom:20, fontSize:13, color:"#e53e3e", fontWeight:500 }}>⚠️ {error}</div>}
+
+                <div style={{ display:"flex", flexDirection:"column", gap:16 }}>
+                  {/* Name */}
+                  <div>
+                    <label style={{ fontSize:12, fontWeight:700, color:"#bbbbbb", letterSpacing:0.5 }}>{accountType === "business" ? "BUSINESS NAME" : "FULL NAME"}</label>
+                    <div style={{ position:"relative", marginTop:8 }}>
+                      <span style={{ position:"absolute", left:14, top:"50%", transform:"translateY(-50%)", fontSize:16, pointerEvents:"none" }}>👤</span>
+                      <input type="text" placeholder={accountType === "business" ? "Your company or brand name" : "Your full name"} value={form.fullName} onChange={e=>setForm(f=>({...f,fullName:e.target.value}))}
+                        style={{ width:"100%", padding:"13px 14px 13px 42px", borderRadius:12, border:"1.5px solid #333333", fontSize:14, outline:"none", color:"#F5F5F5", background:"#1a1a1a", transition:"border-color 0.2s" }}
+                        onFocus={e=>(e.target.style.borderColor=accentColor)} onBlur={e=>(e.target.style.borderColor="#333333")} />
+                    </div>
+                  </div>
+                  {/* Email */}
+                  <div>
+                    <label style={{ fontSize:12, fontWeight:700, color:"#bbbbbb", letterSpacing:0.5 }}>EMAIL ADDRESS</label>
+                    <div style={{ position:"relative", marginTop:8 }}>
+                      <span style={{ position:"absolute", left:14, top:"50%", transform:"translateY(-50%)", fontSize:16, pointerEvents:"none" }}>📧</span>
+                      <input type="email" placeholder="your@email.com" value={form.email} onChange={e=>setForm(f=>({...f,email:e.target.value}))}
+                        style={{ width:"100%", padding:"13px 14px 13px 42px", borderRadius:12, border:"1.5px solid #333333", fontSize:14, outline:"none", color:"#F5F5F5", background:"#1a1a1a", transition:"border-color 0.2s" }}
+                        onFocus={e=>(e.target.style.borderColor=accentColor)} onBlur={e=>(e.target.style.borderColor="#333333")} />
+                    </div>
+                  </div>
+                  {/* Password */}
+                  <div>
+                    <label style={{ fontSize:12, fontWeight:700, color:"#bbbbbb", letterSpacing:0.5 }}>PASSWORD</label>
+                    <div style={{ position:"relative", marginTop:8 }}>
+                      <span style={{ position:"absolute", left:14, top:"50%", transform:"translateY(-50%)", fontSize:16, pointerEvents:"none" }}>🔒</span>
+                      <input type="password" placeholder="Create a strong password" value={form.password} onChange={e=>setForm(f=>({...f,password:e.target.value}))}
+                        style={{ width:"100%", padding:"13px 14px 13px 42px", borderRadius:12, border:"1.5px solid #333333", fontSize:14, outline:"none", color:"#F5F5F5", background:"#1a1a1a", transition:"border-color 0.2s" }}
+                        onFocus={e=>(e.target.style.borderColor=accentColor)} onBlur={e=>(e.target.style.borderColor="#333333")} />
+                    </div>
+                  </div>
+                  {/* Confirm Password */}
+                  <div>
+                    <label style={{ fontSize:12, fontWeight:700, color:"#bbbbbb", letterSpacing:0.5 }}>CONFIRM PASSWORD</label>
+                    <div style={{ position:"relative", marginTop:8 }}>
+                      <span style={{ position:"absolute", left:14, top:"50%", transform:"translateY(-50%)", fontSize:16, pointerEvents:"none" }}>🔐</span>
+                      <input type="password" placeholder="Repeat your password" value={form.confirmPassword} onChange={e=>setForm(f=>({...f,confirmPassword:e.target.value}))}
+                        style={{ width:"100%", padding:"13px 14px 13px 42px", borderRadius:12, border:"1.5px solid #333333", fontSize:14, outline:"none", color:"#F5F5F5", background:"#1a1a1a", transition:"border-color 0.2s" }}
+                        onFocus={e=>(e.target.style.borderColor=accentColor)} onBlur={e=>(e.target.style.borderColor="#333333")} />
+                    </div>
+                  </div>
+                  {/* Country + State */}
+                  <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12 }}>
+                    <div>
+                      <label style={{ fontSize:12, fontWeight:700, color:"#bbbbbb", letterSpacing:0.5 }}>COUNTRY</label>
+                      <select value={form.country} onChange={e=>setForm(f=>({...f,country:e.target.value}))}
+                        style={{ width:"100%", marginTop:8, padding:"13px 14px", borderRadius:12, border:"1.5px solid #333333", fontSize:14, outline:"none", color:"#F5F5F5", background:"#1a1a1a", cursor:"pointer" }}
+                        onFocus={e=>(e.target.style.borderColor=accentColor)} onBlur={e=>(e.target.style.borderColor="#333333")}>
+                        <option value="Nigeria">Nigeria</option>
+                        <option value="Ghana">Ghana</option>
+                        <option value="Kenya">Kenya</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label style={{ fontSize:12, fontWeight:700, color:"#bbbbbb", letterSpacing:0.5 }}>STATE</label>
+                      <select value={form.state} onChange={e=>setForm(f=>({...f,state:e.target.value}))}
+                        style={{ width:"100%", marginTop:8, padding:"13px 14px", borderRadius:12, border:"1.5px solid #333333", fontSize:14, outline:"none", color:"#F5F5F5", background:"#1a1a1a", cursor:"pointer" }}
+                        onFocus={e=>(e.target.style.borderColor=accentColor)} onBlur={e=>(e.target.style.borderColor="#333333")}>
+                        <option value="">Select state</option>
+                        {NIGERIAN_STATES.map(s=><option key={s} value={s}>{s}</option>)}
+                      </select>
+                    </div>
+                  </div>
+                  {/* Terms */}
+                  <div style={{ display:"flex", alignItems:"flex-start", gap:10 }}>
+                    <input type="checkbox" id="terms" checked={termsAccepted} onChange={e=>setTermsAccepted(e.target.checked)} style={{ marginTop:3, accentColor, width:16, height:16, cursor:"pointer", flexShrink:0 }} />
+                    <label htmlFor="terms" style={{ fontSize:12, color:"#bbbbbb", lineHeight:1.5, cursor:"pointer" }}>
+                      I agree to the <Link href="/#" style={{ color:accentColor, textDecoration:"none", fontWeight:600 }}>Terms of Service</Link> and <Link href="/#" style={{ color:accentColor, textDecoration:"none", fontWeight:600 }}>Privacy Policy</Link>
+                    </label>
+                  </div>
+                </div>
+
+                <button onClick={handleSignup} disabled={loading} style={{
+                  width:"100%", marginTop:20,
+                  background: loading ? "#a0a0a0" : `linear-gradient(135deg, ${accentColor}, ${accountType==="business"?"#d89420":"#06B517"})`,
+                  color: loading ? "#fff" : "#000", border:"none", borderRadius:14, padding:"15px",
+                  fontWeight:800, fontSize:15, cursor:loading?"not-allowed":"pointer",
+                  boxShadow: loading ? "none" : `0 6px 20px ${accentColor}55`,
+                  transition:"all 0.2s", display:"flex", alignItems:"center", justifyContent:"center", gap:8,
+                }}>
+                  {loading ? (<><span style={{ display:"inline-block", animation:"spin 1s linear infinite" }}>⏳</span> Creating account...</>) : "Continue →"}
+                </button>
+              </div>
+
+              <p style={{ textAlign:"center", fontSize:12, color:"rgba(255,255,255,0.5)", marginTop:20 }}>
+                Already have an account? <Link href="/login" style={{ color:"#1AEF22", fontWeight:700, textDecoration:"none" }}>Login</Link>
+              </p>
             </div>
           )}
 
