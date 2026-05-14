@@ -108,7 +108,7 @@ export default function RegisterPage() {
             <Image src="/qeixova-icon.png" alt="Qeixova" width={30} height={30} style={{ borderRadius:8, objectFit:"contain" }} />
             <span style={{ fontWeight:800, fontSize:15, color:"#F5F5F5" }}>Qeixova</span>
           </Link>
-          <Link href="/login" style={{ fontSize:13, color:"#1AEF22", fontWeight:700, textDecoration:"none" }}>Sign in →</Link>
+          <Link href="/login" style={{ fontSize:13, color:"#1AEF22", fontWeight:700, textDecoration:"none" }}>Login →</Link>
         </nav>
       )}
 
@@ -145,7 +145,7 @@ export default function RegisterPage() {
                     style={{ width:"100%", background:"#ffffff", color:"#000", border:"none", borderRadius:13, padding:"15px", fontWeight:800, fontSize:15, cursor:"pointer", boxShadow:"0 6px 20px rgba(255,255,255,0.15)", display:"flex", alignItems:"center", justifyContent:"center", gap:10, transition:"all 0.2s ease" }}
                     onMouseEnter={e=>(e.currentTarget.style.boxShadow="0 8px 28px rgba(255,255,255,0.25)")}
                     onMouseLeave={e=>(e.currentTarget.style.boxShadow="0 6px 20px rgba(255,255,255,0.15)")}>
-                    <Image src="/icon-local-business.svg" alt="Business" width={18} height={18} style={{ objectFit:"contain", filter:"brightness(0)" }} />
+                    <Image src="/icon-task.svg" alt="Business" width={18} height={18} style={{ objectFit:"contain", filter:"brightness(0)" }} />
                     Continue as Business
                   </button>
 
@@ -154,14 +154,14 @@ export default function RegisterPage() {
                     style={{ width:"100%", background:"linear-gradient(135deg, #1AEF22, #06B517)", color:"#000", border:"none", borderRadius:13, padding:"15px", fontWeight:800, fontSize:15, cursor:"pointer", boxShadow:"0 6px 20px rgba(26,239,34,0.28)", display:"flex", alignItems:"center", justifyContent:"center", gap:10, transition:"all 0.2s ease" }}
                     onMouseEnter={e=>(e.currentTarget.style.boxShadow="0 8px 28px rgba(26,239,34,0.45)")}
                     onMouseLeave={e=>(e.currentTarget.style.boxShadow="0 6px 20px rgba(26,239,34,0.28)")}>
-                    <Image src="/icon-community.svg" alt="Contributor" width={18} height={18} style={{ objectFit:"contain", filter:"brightness(0)" }} />
+                    <Image src="/icon-profile.svg" alt="Contributor" width={18} height={18} style={{ objectFit:"contain", filter:"brightness(0)" }} />
                     Continue as Contributor
                   </button>
                 </div>
 
                 <p className="animate-fade-up delay-4" style={{ fontSize:12, color:"#999", marginTop:16 }}>You can switch account types later.</p>
                 <p className="animate-fade-up delay-5" style={{ fontSize:13, color:"#aaa", marginTop:10 }}>
-                  Already have an account? <Link href="/login" style={{ color:"#1AEF22", textDecoration:"none", fontWeight:600 }}>Sign in</Link>
+                  Already have an account? <Link href="/login" style={{ color:"#1AEF22", textDecoration:"none", fontWeight:600 }}>Login</Link>
                 </p>
               </div>
             </div>

@@ -89,7 +89,7 @@ export default function BusinessLoginPage() {
                     <span style={{ width: 16, height: 16, border: "2px solid #444", borderTopColor: "#ccc", borderRadius: "50%", display: "inline-block", animation: "spin 0.8s linear infinite" }} />
                     Signing in...
                   </>
-                ) : "Sign In →"}
+                ) : "Login →"}
               </button>
             </form>
             <p style={{ textAlign: "center", fontSize: 13, color: "#999", marginTop: 20 }}>

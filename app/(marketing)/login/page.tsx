@@ -192,7 +192,7 @@ export default function LoginPage() {
                   <span style={{ display: "inline-block", animation: "spin 1s linear infinite" }}>⏳</span>
                   Signing in...
                 </>
-              ) : "Sign In →"}
+              ) : "Login →"}
             </button>
           </form>
         </div>
