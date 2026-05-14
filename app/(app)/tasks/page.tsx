@@ -56,7 +56,7 @@ export default function TasksPage() {
 
   if (fetchError) return (
     <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#000000", flexDirection: "column", gap: 16, padding: 24 }}>
-      <p style={{ fontSize: 40 }}>😕</p>
+      <img src="/icon-alert.svg" width={48} height={48} style={{ opacity:0.5, filter:"invert(40%) sepia(100%) saturate(500%) hue-rotate(320deg)" }} alt="" />
       <p style={{ fontWeight: 700, color: "#F5F5F5", fontSize: 16 }}>Couldn&apos;t load missions</p>
       <button onClick={loadTasks} style={{ background: "linear-gradient(135deg, #1AEF22, #06B517)", color: "#000", border: "none", borderRadius: 12, padding: "12px 28px", fontWeight: 800, fontSize: 14, cursor: "pointer" }}>Retry</button>
     </div>
@@ -141,7 +141,7 @@ export default function TasksPage() {
           </div>
         ) : filtered.length === 0 ? (
           <div style={{ textAlign: "center", padding: "40px 0" }}>
-            <p style={{ fontSize: 32 }}>🎉</p>
+            <img src="/icon-check-circle.svg" width={40} height={40} style={{ opacity:0.4, filter:"invert(58%) sepia(98%) saturate(400%) hue-rotate(83deg) brightness(110%)", marginBottom:8 }} alt="" />
             <p style={{ color: "#bbbbbb", marginTop: 8 }}>All missions in this category done!</p>
           </div>
         ) : (
@@ -163,7 +163,7 @@ function LoadingScreen() {
   return (
     <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#000000" }}>
       <div style={{ textAlign: "center" }}>
-        <div style={{ fontSize: 40, marginBottom: 12 }}>🎯</div>
+        <img src="/icon-target.svg" width={48} height={48} style={{ opacity:0.4, filter:"invert(58%) sepia(98%) saturate(400%) hue-rotate(83deg) brightness(110%)", marginBottom:12 }} alt="" />
         <p style={{ color: "#1AEF22", fontWeight: 700 }}>Loading missions...</p>
       </div>
     </div>

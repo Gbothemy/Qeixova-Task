@@ -108,7 +108,6 @@ export default function RegisterPage() {
             <Image src="/qeixova-icon.png" alt="Qeixova" width={30} height={30} style={{ borderRadius:8, objectFit:"contain" }} />
             <span style={{ fontWeight:800, fontSize:15, color:"#F5F5F5" }}>Qeixova</span>
           </Link>
-          <Link href="/login" style={{ fontSize:13, color:"#1AEF22", fontWeight:700, textDecoration:"none" }}>Login →</Link>
         </nav>
       )}
 
@@ -174,7 +173,9 @@ export default function RegisterPage() {
               {accountType === "business" ? (
                 <div>
                   <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:20 }}>
-                    <div style={{ width:52, height:52, borderRadius:14, background:"linear-gradient(135deg, #F5A623, #d89420)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:24 }}>🏢</div>
+                    <div style={{ width:52, height:52, borderRadius:14, background:"linear-gradient(135deg, #F5A623, #d89420)", display:"flex", alignItems:"center", justifyContent:"center" }}>
+                    <img src="/icon-task.svg" width={26} height={26} style={{ filter:"brightness(0)" }} alt="" />
+                  </div>
                     <div>
                       <h2 style={{ fontSize:20, fontWeight:900, color:"#F5F5F5", marginBottom:3 }}>Business Account</h2>
                       <p style={{ fontSize:13, color:"#bbb" }}>Grow your brand through real human participation</p>
@@ -186,7 +187,7 @@ export default function RegisterPage() {
                   <div style={{ background:"#0a0a0a", borderRadius:14, padding:"18px", border:"1px solid #1a1a1a", marginBottom:24 }}>
                     {["Launch awareness campaigns","Get reposts and shares","Run referral campaigns","Test products and apps","Gather feedback","Reach local communities"].map(f => (
                       <div key={f} style={{ display:"flex", alignItems:"center", gap:10, marginBottom:10 }}>
-                        <span style={{ color:"#F5A623", fontSize:12 }}>✓</span>
+                        <div style={{ width:6, height:6, borderRadius:"50%", background:"#F5A623", flexShrink:0 }} />
                         <span style={{ fontSize:13, color:"#ccc" }}>{f}</span>
                       </div>
                     ))}
@@ -198,7 +199,9 @@ export default function RegisterPage() {
               ) : (
                 <div>
                   <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:20 }}>
-                    <div style={{ width:52, height:52, borderRadius:14, background:"linear-gradient(135deg, #1AEF22, #06B517)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:24 }}>👤</div>
+                    <div style={{ width:52, height:52, borderRadius:14, background:"linear-gradient(135deg, #1AEF22, #06B517)", display:"flex", alignItems:"center", justifyContent:"center" }}>
+                    <img src="/icon-profile.svg" width={26} height={26} style={{ filter:"brightness(0)" }} alt="" />
+                  </div>
                     <div>
                       <h2 style={{ fontSize:20, fontWeight:900, color:"#F5F5F5", marginBottom:3 }}>Contributor Account</h2>
                       <p style={{ fontSize:13, color:"#bbb" }}>Earn by helping businesses grow</p>
@@ -210,7 +213,7 @@ export default function RegisterPage() {
                   <div style={{ background:"#0a0a0a", borderRadius:14, padding:"18px", border:"1px solid #1a1a1a", marginBottom:24 }}>
                     {["Complete participation tasks","Earn QLT rewards","Build contributor level","Access better campaigns","Join growth communities"].map(f => (
                       <div key={f} style={{ display:"flex", alignItems:"center", gap:10, marginBottom:10 }}>
-                        <span style={{ color:"#1AEF22", fontSize:12 }}>✓</span>
+                        <div style={{ width:6, height:6, borderRadius:"50%", background:"#1AEF22", flexShrink:0 }} />
                         <span style={{ fontSize:13, color:"#ccc" }}>{f}</span>
                       </div>
                     ))}
@@ -379,7 +382,7 @@ export default function RegisterPage() {
                   <p style={{ fontSize:13, color:"#bbb", marginBottom:16 }}>Select all that apply.</p>
                   <Chips options={BUSINESS_GOALS} selected={bizGoals} onChange={setBizGoals} color="#F5A623" />
                   <div style={{ background:"#0a0a0a", borderRadius:14, padding:"16px", border:"1px solid #1a1a1a", marginTop:20, marginBottom:20 }}>
-                    <p style={{ fontSize:13, fontWeight:700, color:"#F5A623", marginBottom:8 }}>🚀 Create Your First Campaign</p>
+                    <p style={{ fontSize:13, fontWeight:700, color:"#F5A623", marginBottom:8 }}>Create Your First Campaign</p>
                     <p style={{ fontSize:12, color:"#bbb", lineHeight:1.6, marginBottom:12 }}>Qeixova campaigns help real people distribute and amplify your content across digital communities.</p>
                     <div style={{ display:"flex", flexWrap:"wrap", gap:6 }}>
                       {["WhatsApp Status","Facebook Repost","TikTok Promotion","Flyer Distribution","Referral Campaign","Music Promotion","App Testing"].map(t=>(
@@ -427,7 +430,7 @@ export default function RegisterPage() {
                   <div style={{ background:"#0a0a0a", borderRadius:14, padding:"18px", border:"1px solid #1a1a1a", marginBottom:20 }}>
                     {["Active account history","Real profile photo","Engagement consistency","Spam prevention review"].map(c=>(
                       <div key={c} style={{ display:"flex", alignItems:"center", gap:10, marginBottom:10 }}>
-                        <span style={{ color:"#1AEF22", fontSize:12 }}>✓</span>
+                        <div style={{ width:6, height:6, borderRadius:"50%", background:"#1AEF22", flexShrink:0 }} />
                         <span style={{ fontSize:13, color:"#ccc" }}>{c}</span>
                       </div>
                     ))}
@@ -452,7 +455,9 @@ export default function RegisterPage() {
           {/* ── DONE ── */}
           {screen === "done" && (
             <div style={{ textAlign:"center" }}>
-              <div style={{ fontSize:64, marginBottom:20 }}>{accountType === "business" ? "🏢" : "🎉"}</div>
+              <div style={{ width:80, height:80, borderRadius:22, background: accountType === "business" ? "linear-gradient(135deg, #F5A623, #d89420)" : "linear-gradient(135deg, #1AEF22, #06B517)", display:"flex", alignItems:"center", justifyContent:"center", margin:"0 auto 20px", boxShadow: accountType === "business" ? "0 8px 28px rgba(245,166,35,0.35)" : "0 8px 28px rgba(26,239,34,0.35)" }}>
+                <img src={accountType === "business" ? "/icon-task.svg" : "/icon-check-circle.svg"} width={40} height={40} style={{ filter:"brightness(0)" }} alt="" />
+              </div>
               <h2 style={{ fontSize:24, fontWeight:900, color:"#F5F5F5", marginBottom:12, letterSpacing:-0.5 }}>
                 {accountType === "business" ? "Welcome to a smarter way to grow visibility through real human participation." : "Welcome to a new way to earn through meaningful digital participation."}
               </h2>

@@ -73,7 +73,7 @@ export default function Home() {
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
               <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#1AEF22", boxShadow: "0 0 8px #1AEF22" }} />
-              <p style={{ color: "#bbbbbb", fontSize: 13 }}>{greeting()} 👋</p>
+              <p style={{ color: "#bbbbbb", fontSize: 13 }}>{greeting()}</p>
             </div>
             <p style={{ color: "#F5F5F5", fontSize: 22, fontWeight: 800, letterSpacing: -0.5 }}>
               {user?.fullName?.split(" ")[0] ?? "Welcome back"}!
@@ -85,7 +85,7 @@ export default function Home() {
         </div>
         {user && user.streak > 0 && (
           <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(26,239,34,0.08)", border: "1px solid rgba(26,239,34,0.2)", borderRadius: 20, padding: "5px 14px", marginTop: 14 }}>
-            <span style={{ fontSize: 14 }}>🔥</span>
+            <img src="/icon-fire.svg" width={14} height={14} style={{ filter: "invert(58%) sepia(98%) saturate(400%) hue-rotate(83deg) brightness(110%)" }} alt="" />
             <span style={{ color: "#1AEF22", fontSize: 12, fontWeight: 700 }}>{user.streak}-day streak — Keep it up!</span>
           </div>
         )}
@@ -127,7 +127,6 @@ export default function Home() {
           <div style={{ background: "#111111", borderRadius: 16, padding: "16px 18px", border: "1px solid #222222" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <span style={{ fontSize: 16 }}>{user.badgeEmoji ?? "🟢"}</span>
                 <span style={{ fontSize: 12, fontWeight: 700, color: user.badgeColor ?? "#1AEF22" }}>
                   {user.levelName ?? "Starter"}
                 </span>
@@ -137,7 +136,7 @@ export default function Home() {
                   {user.qltToNextLevel.toLocaleString()} QLT to {user.nextLevel.emoji} {user.nextLevel.name}
                 </span>
               ) : (
-                <span style={{ fontSize: 11, color: "#F5A623", fontWeight: 700 }}>Max Level 👑</span>
+                <span style={{ fontSize: 11, color: "#F5A623", fontWeight: 700 }}>Max Level</span>
               )}
             </div>
             <div style={{ height: 5, background: "#222", borderRadius: 10, overflow: "hidden", marginBottom: 6 }}>
@@ -154,7 +153,8 @@ export default function Home() {
               </span>
               {!user.canWithdraw && (
                 <span style={{ fontSize: 11, color: "#F5A623", fontWeight: 600 }}>
-                  🔒 {Math.max(0, 500001 - user.total_earned_qlt).toLocaleString()} QLT to unlock withdrawals
+                  <img src="/icon-lock.svg" width={10} height={10} style={{ opacity:0.7, marginRight:3, verticalAlign:"middle" }} alt="" />
+                  {Math.max(0, 500001 - user.total_earned_qlt).toLocaleString()} QLT to unlock withdrawals
                 </span>
               )}
             </div>
@@ -169,7 +169,7 @@ export default function Home() {
             Withdraw
           </Link>
           <Link href="/tasks" style={{ flex: 1, background: "linear-gradient(135deg, #F5A623, #d89420)", color: "#000", borderRadius: 14, padding: "14px 0", textAlign: "center", fontWeight: 800, fontSize: 14, textDecoration: "none", boxShadow: "0 4px 16px rgba(245,166,35,0.35)", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
-            ⚡ Earn Now
+            Earn Now
           </Link>
         </div>
       </div>
@@ -221,8 +221,8 @@ export default function Home() {
           </div>
         ) : (
           <div style={{ background: "#111111", borderRadius: 16, padding: "32px", textAlign: "center", border: "1px solid #222222" }}>
-            <p style={{ fontSize: 32, marginBottom: 8 }}>📊</p>
-            <p style={{ color: "#bbbbbb", fontSize: 14 }}>No activity yet — complete your first task!</p>
+            <img src="/icon-analytics.svg" width={36} height={36} style={{ opacity:0.3, filter:"invert(58%) sepia(98%) saturate(400%) hue-rotate(83deg) brightness(110%)", marginBottom:8 }} alt="" />
+            <p style={{ color: "#bbbbbb", fontSize: 14 }}>No activity yet — complete your first mission!</p>
           </div>
         )}
       </div>

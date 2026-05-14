@@ -5,7 +5,7 @@ import BottomNav from "@/components/BottomNav";
 
 interface Leader { id: number; full_name: string; level_number: number; level_name: string; badge_color: string; xp: number; total_xp_earned: number; streak: number; missions_completed: number; total_qlt_earned: number; }
 
-const MEDAL = ["🥇", "🥈", "🥉"];
+const MEDAL_COLORS = ["#F5A623", "#aaaaaa", "#cd7f32"];
 
 export default function LeaderboardPage() {
   const [tab, setTab] = useState<"missions" | "xp">("missions");
@@ -51,13 +51,13 @@ export default function LeaderboardPage() {
           <div style={{ textAlign: "center", padding: 40 }}><p style={{ color: "#bbb" }}>Loading...</p></div>
         ) : list.length === 0 ? (
           <div style={{ textAlign: "center", padding: "48px 24px", background: "#111", borderRadius: 16, border: "1px solid #222" }}>
-            <p style={{ fontSize: 32, marginBottom: 12 }}>🏆</p>
+            <img src="/icon-trophy.svg" width={48} height={48} style={{ opacity:0.3, marginBottom:12, filter:"invert(72%) sepia(60%) saturate(500%) hue-rotate(5deg)" }} alt="" />
             <p style={{ color: "#bbb", fontSize: 14 }}>No data yet. Complete missions to appear here!</p>
           </div>
         ) : list.map((u, i) => (
           <div key={u.id} style={{ background: i < 3 ? "#0d0d0d" : "#111", borderRadius: 14, padding: "14px 16px", border: `1px solid ${i < 3 ? "rgba(245,166,35,0.15)" : "#1a1a1a"}`, display: "flex", alignItems: "center", gap: 12 }}>
-            <div style={{ width: 36, height: 36, borderRadius: "50%", background: i < 3 ? "rgba(245,166,35,0.1)" : "#1a1a1a", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-              {i < 3 ? <span style={{ fontSize: 18 }}>{MEDAL[i]}</span> : <span style={{ fontSize: 13, fontWeight: 700, color: "#bbb" }}>#{i + 1}</span>}
+            <div style={{ width: 36, height: 36, borderRadius: "50%", background: i < 3 ? MEDAL_COLORS[i] + "22" : "#1a1a1a", border: i < 3 ? `2px solid ${MEDAL_COLORS[i]}` : "none", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <span style={{ fontSize: 13, fontWeight: 800, color: i < 3 ? MEDAL_COLORS[i] : "#bbb" }}>#{i + 1}</span>
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <p style={{ fontSize: 14, fontWeight: 700, color: "#F5F5F5", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{u.full_name}</p>
@@ -77,7 +77,7 @@ export default function LeaderboardPage() {
                   <p style={{ fontSize: 10, color: "#bbb" }}>XP</p>
                 </>
               )}
-              {u.streak > 0 && <p style={{ fontSize: 10, color: "#F5A623", marginTop: 2 }}>🔥{u.streak}</p>}
+              {u.streak > 0 && <p style={{ fontSize: 10, color: "#F5A623", marginTop: 2 }}>{u.streak} streak</p>}
             </div>
           </div>
         ))}

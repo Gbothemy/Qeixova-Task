@@ -97,11 +97,6 @@ export default function BusinessLoginPage() {
               <Link href="/register" style={{ color: "#F5A623", fontWeight: 700, textDecoration: "none" }}>Create one</Link>
             </p>
           </div>
-
-          <p style={{ textAlign: "center", fontSize: 12, color: "#222", marginTop: 20 }}>
-            Looking to earn?{" "}
-            <Link href="/login" style={{ color: "#1AEF22", textDecoration: "none", fontWeight: 600 }}>User login →</Link>
-          </p>
         </div>
       </div>
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
