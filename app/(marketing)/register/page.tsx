@@ -101,36 +101,68 @@ export default function RegisterPage() {
 
   return (
     <div style={{ minHeight:"100vh", background:"#000", display:"flex", flexDirection:"column" }}>
-      {/* Nav */}
-      <nav style={{ padding:"0 24px", height:60, display:"flex", alignItems:"center", justifyContent:"space-between", borderBottom:"1px solid #111" }}>
-        <Link href="/" style={{ display:"flex", alignItems:"center", gap:10, textDecoration:"none" }}>
-          <Image src="/qeixova-icon.png" alt="Qeixova" width={30} height={30} style={{ borderRadius:8, objectFit:"contain" }} />
-          <span style={{ fontWeight:800, fontSize:15, color:"#F5F5F5" }}>Qeixova</span>
-        </Link>
-        <Link href="/login" style={{ fontSize:13, color:"#1AEF22", fontWeight:700, textDecoration:"none" }}>Sign in →</Link>
-      </nav>
+      {/* Nav — only show on non-welcome screens */}
+      {screen !== "welcome" && (
+        <nav style={{ padding:"0 24px", height:60, display:"flex", alignItems:"center", justifyContent:"space-between", borderBottom:"1px solid #111" }}>
+          <Link href="/" style={{ display:"flex", alignItems:"center", gap:10, textDecoration:"none" }}>
+            <Image src="/qeixova-icon.png" alt="Qeixova" width={30} height={30} style={{ borderRadius:8, objectFit:"contain" }} />
+            <span style={{ fontWeight:800, fontSize:15, color:"#F5F5F5" }}>Qeixova</span>
+          </Link>
+          <Link href="/login" style={{ fontSize:13, color:"#1AEF22", fontWeight:700, textDecoration:"none" }}>Sign in →</Link>
+        </nav>
+      )}
 
       <div style={{ flex:1, display:"flex", alignItems:"center", justifyContent:"center", padding:"32px 20px" }}>
         <div style={{ width:"100%", maxWidth:480 }}>
 
           {/* ── WELCOME ── */}
           {screen === "welcome" && (
-            <div style={{ textAlign:"center" }}>
-              <Image src="/qeixova-icon.png" alt="Qeixova" width={72} height={72} style={{ borderRadius:20, objectFit:"contain", boxShadow:"0 8px 28px rgba(26,239,34,0.3)", marginBottom:24 }} />
-              <h1 style={{ fontSize:26, fontWeight:900, color:"#F5F5F5", letterSpacing:-0.5, marginBottom:10 }}>Welcome to Qeixova Tasks</h1>
-              <p style={{ fontSize:14, color:"#ccc", lineHeight:1.7, marginBottom:32, maxWidth:380, margin:"0 auto 32px" }}>
-                A community-powered growth platform where businesses gain visibility and contributors earn through meaningful participation.
-              </p>
-              <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
-                <button onClick={()=>{ setAccountType("business"); setScreen("type"); }} style={{ width:"100%", background:"linear-gradient(135deg, #F5A623, #d89420)", color:"#000", border:"none", borderRadius:13, padding:"15px", fontWeight:800, fontSize:15, cursor:"pointer", boxShadow:"0 6px 20px rgba(245,166,35,0.28)" }}>
-                  🏢 Continue as Business
-                </button>
-                <button onClick={()=>{ setAccountType("contributor"); setScreen("type"); }} style={{ width:"100%", background:"linear-gradient(135deg, #1AEF22, #06B517)", color:"#000", border:"none", borderRadius:13, padding:"15px", fontWeight:800, fontSize:15, cursor:"pointer", boxShadow:"0 6px 20px rgba(26,239,34,0.28)" }}>
-                  👤 Continue as Contributor
-                </button>
+            <div style={{ textAlign:"center", position:"relative" }}>
+              {/* Particle-style glow bg */}
+              <div style={{ position:"fixed", inset:0, background:"radial-gradient(ellipse at 50% 40%, rgba(26,239,34,0.06) 0%, transparent 70%)", pointerEvents:"none", zIndex:0 }} />
+
+              <div style={{ position:"relative", zIndex:1 }}>
+                <div className="animate-float" style={{ display:"inline-block", marginBottom:24 }}>
+                  <Image src="/qeixova-icon.png" alt="Qeixova" width={80} height={80} style={{ borderRadius:22, objectFit:"contain", boxShadow:"0 8px 32px rgba(26,239,34,0.4)" }} />
+                </div>
+
+                <div className="animate-fade-up" style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(26,239,34,0.08)", border:"1px solid rgba(26,239,34,0.2)", borderRadius:20, padding:"5px 14px", marginBottom:20 }}>
+                  <div className="animate-pulse-glow" style={{ width:6, height:6, borderRadius:"50%", background:"#1AEF22" }} />
+                  <span style={{ fontSize:11, color:"#1AEF22", fontWeight:700, letterSpacing:0.5 }}>Community-Powered Growth</span>
+                </div>
+
+                <h1 className="animate-fade-up delay-1" style={{ fontSize:"clamp(24px, 5vw, 36px)", fontWeight:900, color:"#F5F5F5", letterSpacing:-0.5, marginBottom:12 }}>
+                  Welcome to <span className="shimmer-text">Qeixova Tasks</span>
+                </h1>
+                <p className="animate-fade-up delay-2" style={{ fontSize:14, color:"#ccc", lineHeight:1.7, marginBottom:36, maxWidth:380, margin:"0 auto 36px" }}>
+                  A community-powered growth platform where businesses gain visibility and contributors earn through meaningful participation.
+                </p>
+
+                <div className="animate-fade-up delay-3" style={{ display:"flex", flexDirection:"column", gap:12 }}>
+                  {/* Business button — white */}
+                  <button onClick={()=>{ setAccountType("business"); setScreen("type"); }}
+                    style={{ width:"100%", background:"#ffffff", color:"#000", border:"none", borderRadius:13, padding:"15px", fontWeight:800, fontSize:15, cursor:"pointer", boxShadow:"0 6px 20px rgba(255,255,255,0.15)", display:"flex", alignItems:"center", justifyContent:"center", gap:10, transition:"all 0.2s ease" }}
+                    onMouseEnter={e=>(e.currentTarget.style.boxShadow="0 8px 28px rgba(255,255,255,0.25)")}
+                    onMouseLeave={e=>(e.currentTarget.style.boxShadow="0 6px 20px rgba(255,255,255,0.15)")}>
+                    <Image src="/icon-local-business.svg" alt="Business" width={18} height={18} style={{ objectFit:"contain", filter:"brightness(0)" }} />
+                    Continue as Business
+                  </button>
+
+                  {/* Contributor button — green */}
+                  <button onClick={()=>{ setAccountType("contributor"); setScreen("type"); }}
+                    style={{ width:"100%", background:"linear-gradient(135deg, #1AEF22, #06B517)", color:"#000", border:"none", borderRadius:13, padding:"15px", fontWeight:800, fontSize:15, cursor:"pointer", boxShadow:"0 6px 20px rgba(26,239,34,0.28)", display:"flex", alignItems:"center", justifyContent:"center", gap:10, transition:"all 0.2s ease" }}
+                    onMouseEnter={e=>(e.currentTarget.style.boxShadow="0 8px 28px rgba(26,239,34,0.45)")}
+                    onMouseLeave={e=>(e.currentTarget.style.boxShadow="0 6px 20px rgba(26,239,34,0.28)")}>
+                    <Image src="/icon-community.svg" alt="Contributor" width={18} height={18} style={{ objectFit:"contain", filter:"brightness(0)" }} />
+                    Continue as Contributor
+                  </button>
+                </div>
+
+                <p className="animate-fade-up delay-4" style={{ fontSize:12, color:"#999", marginTop:16 }}>You can switch account types later.</p>
+                <p className="animate-fade-up delay-5" style={{ fontSize:13, color:"#aaa", marginTop:10 }}>
+                  Already have an account? <Link href="/login" style={{ color:"#1AEF22", textDecoration:"none", fontWeight:600 }}>Sign in</Link>
+                </p>
               </div>
-              <p style={{ fontSize:12, color:"#999", marginTop:16 }}>You can switch account types later.</p>
-              <p style={{ fontSize:13, color:"#aaa", marginTop:12 }}>Already have an account? <Link href="/login" style={{ color:"#1AEF22", textDecoration:"none", fontWeight:600 }}>Sign in</Link></p>
             </div>
           )}
 
