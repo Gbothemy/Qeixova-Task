@@ -193,13 +193,9 @@ export default function LandingPage() {
             <div style={{ overflow: "hidden", borderRadius: 20 }}>
               <div style={{ display: "flex", transition: "transform 0.4s cubic-bezier(0.4,0,0.2,1)", transform: `translateX(-${activeStep * 100}%)` }}>
                 {steps.map(s => (
-                  <div key={s.num} style={{ minWidth: "100%", textAlign: "center", background: "#0a0a0a", borderRadius: 20, padding: "48px 40px", border: "1px solid #1a1a1a", boxSizing: "border-box" }}>
-                    <div style={{ width: 80, height: 80, borderRadius: "50%", background: "#0d0d0d", border: "2px solid rgba(26,239,34,0.25)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px", position: "relative", boxShadow: "0 0 24px rgba(26,239,34,0.1)" }}>
-                      <Image src={s.icon} alt={s.title} width={36} height={36} style={{ objectFit: "contain", filter: "invert(58%) sepia(98%) saturate(400%) hue-rotate(83deg) brightness(110%)" }} />
-                      <span style={{ position: "absolute", top: -10, right: -10, width: 28, height: 28, borderRadius: "50%", background: "#1AEF22", color: "#000", fontSize: 12, fontWeight: 900, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 12px rgba(26,239,34,0.4)" }}>{s.num.replace("0","")}</span>
-                    </div>
-                    <div style={{ display: "inline-block", background: "rgba(26,239,34,0.06)", border: "1px solid rgba(26,239,34,0.12)", borderRadius: 20, padding: "4px 14px", marginBottom: 16 }}>
-                      <span style={{ fontSize: 11, color: "#1AEF22", fontWeight: 700 }}>Step {s.num}</span>
+                  <div key={s.num} style={{ minWidth: "100%", textAlign: "center", background: "linear-gradient(135deg, #0a1a0a, #0d1f0d)", borderRadius: 20, padding: "48px 40px", border: "1px solid rgba(26,239,34,0.15)", boxSizing: "border-box", boxShadow: "0 0 40px rgba(26,239,34,0.05)" }}>
+                    <div style={{ width: 88, height: 88, borderRadius: 24, background: "linear-gradient(135deg, #1AEF22, #06B517)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 28px", boxShadow: "0 8px 32px rgba(26,239,34,0.35)" }}>
+                      <Image src={s.icon} alt={s.title} width={40} height={40} style={{ objectFit: "contain", filter: "brightness(0)" }} />
                     </div>
                     <h3 style={{ fontWeight: 900, fontSize: "clamp(20px, 3vw, 28px)", color: "#F5F5F5", marginBottom: 14, letterSpacing: -0.5 }}>{s.title}</h3>
                     <p style={{ fontSize: "clamp(14px, 1.5vw, 16px)", color: "#ccc", lineHeight: 1.7, maxWidth: 480, margin: "0 auto" }}>{s.desc}</p>
@@ -220,11 +216,6 @@ export default function LandingPage() {
                 }} />
               ))}
             </div>
-
-            {/* Step counter */}
-            <p style={{ textAlign: "center", fontSize: 12, color: "#999", marginTop: 12 }}>
-              {activeStep + 1} of {steps.length}
-            </p>
           </div>
         </div>
       </section>
