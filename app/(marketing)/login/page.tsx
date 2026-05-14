@@ -112,8 +112,10 @@ export default function LoginPage() {
               <div style={{ position: "relative", marginTop: 8 }}>
                 <span style={{
                   position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)",
-                  fontSize: 16, pointerEvents: "none",
-                }}>📧</span>
+                  display: "flex", alignItems: "center", pointerEvents: "none",
+                }}>
+                  <img src="/icon-email.svg" width={16} height={16} style={{ opacity: 0.5 }} alt="" />
+                </span>
                 <input
                   type="email"
                   placeholder="you@example.com"
@@ -144,8 +146,10 @@ export default function LoginPage() {
               <div style={{ position: "relative", marginTop: 8 }}>
                 <span style={{
                   position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)",
-                  fontSize: 16, pointerEvents: "none",
-                }}>🔒</span>
+                  display: "flex", alignItems: "center", pointerEvents: "none",
+                }}>
+                  <img src="/icon-lock.svg" width={16} height={16} style={{ opacity: 0.5 }} alt="" />
+                </span>
                 <input
                   type={showPass ? "text" : "password"}
                   placeholder="Enter your password"

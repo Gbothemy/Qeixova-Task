@@ -253,7 +253,9 @@ export default function RegisterPage() {
                   <div>
                     <label style={{ fontSize:12, fontWeight:700, color:"#bbbbbb", letterSpacing:0.5 }}>{accountType === "business" ? "BUSINESS NAME" : "FULL NAME"}</label>
                     <div style={{ position:"relative", marginTop:8 }}>
-                      <span style={{ position:"absolute", left:14, top:"50%", transform:"translateY(-50%)", fontSize:16, pointerEvents:"none" }}>👤</span>
+                      <span style={{ position:"absolute", left:14, top:"50%", transform:"translateY(-50%)", display:"flex", alignItems:"center", pointerEvents:"none" }}>
+                        <img src="/icon-profile.svg" width={16} height={16} style={{ opacity:0.5 }} alt="" />
+                      </span>
                       <input type="text" placeholder={accountType === "business" ? "Your company or brand name" : "Your full name"} value={form.fullName} onChange={e=>setForm(f=>({...f,fullName:e.target.value}))}
                         style={{ width:"100%", padding:"13px 14px 13px 42px", borderRadius:12, border:"1.5px solid #333333", fontSize:14, outline:"none", color:"#F5F5F5", background:"#1a1a1a", transition:"border-color 0.2s" }}
                         onFocus={e=>(e.target.style.borderColor=accentColor)} onBlur={e=>(e.target.style.borderColor="#333333")} />
@@ -263,7 +265,9 @@ export default function RegisterPage() {
                   <div>
                     <label style={{ fontSize:12, fontWeight:700, color:"#bbbbbb", letterSpacing:0.5 }}>EMAIL ADDRESS</label>
                     <div style={{ position:"relative", marginTop:8 }}>
-                      <span style={{ position:"absolute", left:14, top:"50%", transform:"translateY(-50%)", fontSize:16, pointerEvents:"none" }}>📧</span>
+                      <span style={{ position:"absolute", left:14, top:"50%", transform:"translateY(-50%)", display:"flex", alignItems:"center", pointerEvents:"none" }}>
+                        <img src="/icon-email.svg" width={16} height={16} style={{ opacity:0.5 }} alt="" />
+                      </span>
                       <input type="email" placeholder="your@email.com" value={form.email} onChange={e=>setForm(f=>({...f,email:e.target.value}))}
                         style={{ width:"100%", padding:"13px 14px 13px 42px", borderRadius:12, border:"1.5px solid #333333", fontSize:14, outline:"none", color:"#F5F5F5", background:"#1a1a1a", transition:"border-color 0.2s" }}
                         onFocus={e=>(e.target.style.borderColor=accentColor)} onBlur={e=>(e.target.style.borderColor="#333333")} />
@@ -273,7 +277,9 @@ export default function RegisterPage() {
                   <div>
                     <label style={{ fontSize:12, fontWeight:700, color:"#bbbbbb", letterSpacing:0.5 }}>PASSWORD</label>
                     <div style={{ position:"relative", marginTop:8 }}>
-                      <span style={{ position:"absolute", left:14, top:"50%", transform:"translateY(-50%)", fontSize:16, pointerEvents:"none" }}>🔒</span>
+                      <span style={{ position:"absolute", left:14, top:"50%", transform:"translateY(-50%)", display:"flex", alignItems:"center", pointerEvents:"none" }}>
+                        <img src="/icon-lock.svg" width={16} height={16} style={{ opacity:0.5 }} alt="" />
+                      </span>
                       <input type="password" placeholder="Create a strong password" value={form.password} onChange={e=>setForm(f=>({...f,password:e.target.value}))}
                         style={{ width:"100%", padding:"13px 14px 13px 42px", borderRadius:12, border:"1.5px solid #333333", fontSize:14, outline:"none", color:"#F5F5F5", background:"#1a1a1a", transition:"border-color 0.2s" }}
                         onFocus={e=>(e.target.style.borderColor=accentColor)} onBlur={e=>(e.target.style.borderColor="#333333")} />
@@ -283,7 +289,9 @@ export default function RegisterPage() {
                   <div>
                     <label style={{ fontSize:12, fontWeight:700, color:"#bbbbbb", letterSpacing:0.5 }}>CONFIRM PASSWORD</label>
                     <div style={{ position:"relative", marginTop:8 }}>
-                      <span style={{ position:"absolute", left:14, top:"50%", transform:"translateY(-50%)", fontSize:16, pointerEvents:"none" }}>🔐</span>
+                      <span style={{ position:"absolute", left:14, top:"50%", transform:"translateY(-50%)", display:"flex", alignItems:"center", pointerEvents:"none" }}>
+                        <img src="/icon-lock.svg" width={16} height={16} style={{ opacity:0.5 }} alt="" />
+                      </span>
                       <input type="password" placeholder="Repeat your password" value={form.confirmPassword} onChange={e=>setForm(f=>({...f,confirmPassword:e.target.value}))}
                         style={{ width:"100%", padding:"13px 14px 13px 42px", borderRadius:12, border:"1.5px solid #333333", fontSize:14, outline:"none", color:"#F5F5F5", background:"#1a1a1a", transition:"border-color 0.2s" }}
                         onFocus={e=>(e.target.style.borderColor=accentColor)} onBlur={e=>(e.target.style.borderColor="#333333")} />
