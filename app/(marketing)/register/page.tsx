@@ -14,13 +14,22 @@ const NIGERIAN_STATES = ["Abia","Adamawa","Akwa Ibom","Anambra","Bauchi","Bayels
 // ── Helpers ───────────────────────────────────────────────────────────────────
 const inp: React.CSSProperties = { width:"100%", marginTop:7, padding:"13px 14px", borderRadius:11, border:"1.5px solid #1e1e1e", fontSize:14, outline:"none", color:"#F5F5F5", background:"#0d0d0d" };
 
-function Chips({ options, selected, onChange, color="#1AEF22" }: { options:string[]; selected:string[]; onChange:(v:string[])=>void; color?:string }) {
-  const toggle = (v:string) => onChange(selected.includes(v) ? selected.filter(s=>s!==v) : [...selected,v]);
+function Chips({ options, selected, onChange, color="#1AEF22", max }: { options:string[]; selected:string[]; onChange:(v:string[])=>void; color?:string; max?:number }) {
+  const toggle = (v:string) => {
+    if (selected.includes(v)) {
+      onChange(selected.filter(s=>s!==v));
+    } else {
+      if (max && selected.length >= max) return; // at limit, ignore
+      onChange([...selected, v]);
+    }
+  };
   return (
     <div style={{ display:"flex", flexWrap:"wrap", gap:8, marginTop:8 }}>
+      {max && <p style={{ width:"100%", fontSize:11, color:"#bbb", marginBottom:2 }}>Select up to {max} · {selected.length}/{max} chosen</p>}
       {options.map(o => {
         const on = selected.includes(o);
-        return <button key={o} type="button" onClick={()=>toggle(o)} style={{ padding:"7px 14px", borderRadius:20, fontSize:12, cursor:"pointer", fontWeight:on?700:400, border:`1.5px solid ${on?color:"#1e1e1e"}`, background:on?`${color}18`:"transparent", color:on?color:"#bbb" }}>{o}</button>;
+        const atLimit = !on && max !== undefined && selected.length >= max;
+        return <button key={o} type="button" onClick={()=>toggle(o)} disabled={atLimit} style={{ padding:"7px 14px", borderRadius:20, fontSize:12, cursor:atLimit?"not-allowed":"pointer", fontWeight:on?700:400, border:`1.5px solid ${on?color:atLimit?"#111":"#1e1e1e"}`, background:on?`${color}18`:"transparent", color:on?color:atLimit?"#444":"#bbb", opacity:atLimit?0.4:1, transition:"all 0.15s" }}>{o}</button>;
       })}
     </div>
   );
@@ -406,7 +415,7 @@ export default function RegisterPage() {
                   <StepBar current={1} total={3} />
                   <h2 style={{ fontSize:20, fontWeight:800, color:"#F5F5F5", marginBottom:4 }}>Choose Your Interests</h2>
                   <p style={{ fontSize:13, color:"#bbb", marginBottom:4 }}>Your interests help us recommend relevant campaigns and tasks.</p>
-                  <Chips options={CONTRIBUTOR_INTERESTS} selected={interests} onChange={setInterests} />
+                  <Chips options={CONTRIBUTOR_INTERESTS} selected={interests} onChange={setInterests} max={3} />
                   <button onClick={()=>setOnboardStep(2)} style={{ width:"100%", marginTop:20, background:"linear-gradient(135deg, #1AEF22, #06B517)", color:"#000", border:"none", borderRadius:13, padding:"14px", fontWeight:800, fontSize:14, cursor:"pointer" }}>Continue →</button>
                   <button onClick={()=>setOnboardStep(2)} style={{ width:"100%", marginTop:8, padding:"10px", borderRadius:12, border:"none", background:"transparent", color:"#aaa", fontSize:12, cursor:"pointer" }}>Skip for now</button>
                 </div>
@@ -417,7 +426,7 @@ export default function RegisterPage() {
                   <h2 style={{ fontSize:20, fontWeight:800, color:"#F5F5F5", marginBottom:4 }}>Connect Your Platforms</h2>
                   <p style={{ fontSize:13, color:"#bbb", marginBottom:4 }}>Campaigns are matched to platforms you&apos;re active on.</p>
                   <p style={{ fontSize:11, color:"#999", marginBottom:8 }}>Accounts may be reviewed for authenticity and activity quality.</p>
-                  <Chips options={PLATFORMS} selected={platforms} onChange={setPlatforms} />
+                  <Chips options={PLATFORMS} selected={platforms} onChange={setPlatforms} max={4} />
                   <button onClick={()=>setOnboardStep(3)} style={{ width:"100%", marginTop:20, background:"linear-gradient(135deg, #1AEF22, #06B517)", color:"#000", border:"none", borderRadius:13, padding:"14px", fontWeight:800, fontSize:14, cursor:"pointer" }}>Continue →</button>
                   <button onClick={()=>setOnboardStep(3)} style={{ width:"100%", marginTop:8, padding:"10px", borderRadius:12, border:"none", background:"transparent", color:"#aaa", fontSize:12, cursor:"pointer" }}>Skip for now</button>
                 </div>
