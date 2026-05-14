@@ -207,6 +207,22 @@ export default function LoginPage() {
           <span style={{ color: "rgba(255,255,255,0.8)", cursor: "pointer" }}>Terms</span> &amp;{" "}
           <span style={{ color: "rgba(255,255,255,0.8)", cursor: "pointer" }}>Privacy Policy</span>
         </p>
+
+        {/* Account type switcher */}
+        <div style={{ marginTop: 20, background: "#0d0d0d", border: "1px solid #1a1a1a", borderRadius: 14, padding: "14px 18px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <div style={{ width: 28, height: 28, borderRadius: 8, background: "rgba(26,239,34,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <img src="/icon-profile.svg" width={14} height={14} style={{ filter: "invert(58%) sepia(98%) saturate(400%) hue-rotate(83deg) brightness(110%)" }} alt="" />
+            </div>
+            <span style={{ fontSize: 12, color: "#bbb" }}>Contributor Login</span>
+          </div>
+          <Link href="/business/login" style={{ fontSize: 12, color: "#F5A623", fontWeight: 700, textDecoration: "none", display: "flex", alignItems: "center", gap: 6 }}>
+            <div style={{ width: 24, height: 24, borderRadius: 6, background: "rgba(245,166,35,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <img src="/icon-task.svg" width={12} height={12} style={{ filter: "invert(72%) sepia(60%) saturate(500%) hue-rotate(5deg)" }} alt="" />
+            </div>
+            Business Login →
+          </Link>
+        </div>
       </div>
     </div>
   );
