@@ -122,13 +122,14 @@ export default function RegisterPage() {
               <div style={{ position:"fixed", inset:0, background:"radial-gradient(ellipse at 50% 40%, rgba(26,239,34,0.06) 0%, transparent 70%)", pointerEvents:"none", zIndex:0 }} />
 
               <div style={{ position:"relative", zIndex:1 }}>
-                <div className="animate-float" style={{ display:"inline-block", marginBottom:24 }}>
-                  <Image src="/qeixova-icon.png" alt="Qeixova" width={80} height={80} style={{ borderRadius:22, objectFit:"contain", boxShadow:"0 8px 32px rgba(26,239,34,0.4)" }} />
-                </div>
-
-                <div className="animate-fade-up" style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(26,239,34,0.08)", border:"1px solid rgba(26,239,34,0.2)", borderRadius:20, padding:"5px 14px", marginBottom:20 }}>
-                  <div className="animate-pulse-glow" style={{ width:6, height:6, borderRadius:"50%", background:"#1AEF22" }} />
-                  <span style={{ fontSize:11, color:"#1AEF22", fontWeight:700, letterSpacing:0.5 }}>Community-Powered Growth</span>
+                <div className="animate-fade-up" style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:12, marginBottom:28 }}>
+                  <div className="animate-float">
+                    <Image src="/qeixova-icon.png" alt="Qeixova" width={56} height={56} style={{ borderRadius:16, objectFit:"contain", boxShadow:"0 8px 32px rgba(26,239,34,0.4)" }} />
+                  </div>
+                  <div style={{ textAlign:"left" }}>
+                    <p style={{ fontWeight:900, fontSize:22, color:"#F5F5F5", letterSpacing:-0.5, lineHeight:1.1 }}>Qeixova</p>
+                    <p style={{ fontSize:11, color:"#1AEF22", fontWeight:700, letterSpacing:1, textTransform:"uppercase" }}>Tasks</p>
+                  </div>
                 </div>
 
                 <h1 className="animate-fade-up delay-1" style={{ fontSize:"clamp(24px, 5vw, 36px)", fontWeight:900, color:"#F5F5F5", letterSpacing:-0.5, marginBottom:12 }}>
