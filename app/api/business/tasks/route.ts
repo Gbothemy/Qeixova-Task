@@ -10,6 +10,7 @@ export async function GET() {
   const tasks = await sql`
     SELECT
       t.*,
+      t.task_status AS status,
       COUNT(c.id)::int AS total_completions,
       COUNT(CASE WHEN c.status = 'pending'  THEN 1 END)::int AS pending_completions,
       COUNT(CASE WHEN c.status = 'approved' THEN 1 END)::int AS approved_completions,
@@ -17,7 +18,7 @@ export async function GET() {
     FROM tasks t
     LEFT JOIN completions c ON c.task_id = t.id
     WHERE t.business_id = ${session.businessId}
-      AND COALESCE(t.status, '') <> 'deleted'
+      AND COALESCE(t.task_status, '') <> 'deleted'
     GROUP BY t.id
     ORDER BY t.created_at DESC
   `;
@@ -70,7 +71,7 @@ export async function POST(req: NextRequest) {
       mission_type, xp_reward, verification_type, difficulty, min_level,
       target_professions, target_interests, target_platforms,
       target_age_ranges, target_genders, target_states,
-      business_id, is_active, status
+      business_id, is_active, task_status
     ) VALUES (
       ${title.trim()}, ${category}, ${rewardAmount},
       ${duration || "5 min"}, ${"📋"}, ${"#111111"},

@@ -28,17 +28,21 @@ type Package = {
 };
 
 const campaignCategories: CampaignCategory[] = [
-  { id: "content", title: "Content Distribution", description: "Promote flyers, announcements, videos, and posts.", bestFor: "Flyers, launch posts, announcements", icon: "/icon-content.svg", accent: "#4a9eff", category: "Content", missionType: "engagement" },
-  { id: "music", title: "Music Promotion", description: "Push songs, music videos, snippets, and artist campaigns.", bestFor: "Singles, snippets, video drops", icon: "/icon-content.svg", accent: "#c084fc", category: "Music Promotion", missionType: "engagement" },
-  { id: "creator", title: "Creator Campaigns", description: "Amplify creator content and social visibility.", bestFor: "Reposts, follows, social proof", icon: "/icon-profile.svg", accent: "#F5A623", category: "Creator Campaign", missionType: "engagement" },
-  { id: "business", title: "Business Awareness", description: "Promote products, services, offers, and local businesses.", bestFor: "Restaurants, stores, service offers", icon: "/icon-home.svg", accent: "#1AEF22", category: "Business Awareness", missionType: "engagement" },
-  { id: "apps", title: "App Testing & Reviews", description: "Get real users to test apps and provide feedback.", bestFor: "Beta tests, reviews, downloads", icon: "/icon-app-testing.svg", accent: "#38bdf8", category: "App Testing", missionType: "participation" },
-  { id: "surveys", title: "Surveys & Feedback", description: "Gather opinions and customer insights.", bestFor: "Polls, product feedback, research", icon: "/icon-survey.svg", accent: "#fb7185", category: "Survey", missionType: "participation" },
-  { id: "referral", title: "Referral Missions", description: "Grow through user invites and ambassador campaigns.", bestFor: "Invite drives, referral codes", icon: "/icon-task.svg", accent: "#22c55e", category: "Referral Mission", missionType: "premium" },
-  { id: "event", title: "Event Promotion", description: "Spread awareness for events and gatherings.", bestFor: "Concerts, popups, campus events", icon: "/icon-alert.svg", accent: "#f97316", category: "Event Promotion", missionType: "engagement" },
-  { id: "community", title: "Community Growth", description: "Grow WhatsApp, Telegram, Discord, and social communities.", bestFor: "Groups, channels, communities", icon: "/icon-profile.svg", accent: "#14b8a6", category: "Community Growth", missionType: "participation" },
-  { id: "video", title: "Video Engagement", description: "Increase visibility for short-form video content.", bestFor: "TikTok, Reels, Shorts", icon: "/icon-content.svg", accent: "#e879f9", category: "Video Engagement", missionType: "engagement" },
-  { id: "premium", title: "Premium Missions", description: "UGC creation, testimonials, and influencer-style participation.", bestFor: "UGC, testimonials, quality promos", icon: "/icon-wallet.svg", accent: "#facc15", category: "Premium Mission", missionType: "premium" },
+  { id: "content", title: "Content Distribution", description: "Spread flyers, videos, announcements, and promotional content across social channels.", bestFor: "WhatsApp status, Facebook reposts, Instagram stories, Telegram, X, YouTube Shorts, TikTok", icon: "/icon-human-distribution.svg", accent: "#4a9eff", category: "Content Distribution", missionType: "engagement" },
+  { id: "music", title: "Music Promotion", description: "Launch dedicated entertainment campaigns for artists, songs, sounds, and releases.", bestFor: "Music teasers, TikTok sounds, album flyers, song reviews, dance or reaction challenges", icon: "/icon-music.svg", accent: "#F5A623", category: "Music Promotion", missionType: "engagement" },
+  { id: "business", title: "Business Awareness", description: "Build visibility for SMEs, local stores, products, services, and offers.", bestFor: "Product promotion, store awareness, promo campaigns, service awareness, local distribution", icon: "/icon-local-business.svg", accent: "#1AEF22", category: "Business Awareness", missionType: "engagement" },
+  { id: "creator", title: "Creator Campaigns", description: "Amplify influencers, skit makers, streamers, creators, and personal brands.", bestFor: "Creator reposts, engagement support, livestream awareness, page awareness, collaborations", icon: "/icon-creator.svg", accent: "#c084fc", category: "Creator Campaigns", missionType: "engagement" },
+  { id: "apps", title: "App Testing & Reviews", description: "Get real participants to download, test, review, and report app experiences.", bestFor: "App downloads, onboarding tests, bug reports, feature testing, review submissions", icon: "/icon-app-testing.svg", accent: "#14b8a6", category: "App Testing", missionType: "participation" },
+  { id: "referral", title: "Referral Missions", description: "Run performance-based growth campaigns tied to signups, invites, or ambassadors.", bestFor: "Invite campaigns, signup referrals, ambassador programs, user acquisition campaigns", icon: "/icon-target.svg", accent: "#f87171", category: "Referral Missions", missionType: "premium" },
+  { id: "surveys", title: "Surveys & Feedback", description: "Collect market insight, customer opinions, product feedback, and structured responses.", bestFor: "Surveys, polls, feedback forms, customer opinion missions, product experience reviews", icon: "/icon-survey.svg", accent: "#fb7185", category: "Surveys & Feedback", missionType: "participation" },
+  { id: "event", title: "Event Promotion", description: "Drive awareness for events, programs, campus activities, and local gatherings.", bestFor: "Church programs, concerts, conferences, campus events, local gathering awareness", icon: "/icon-events.svg", accent: "#f97316", category: "Event Promotion", missionType: "engagement" },
+  { id: "community", title: "Community Growth", description: "Grow active brand communities and invite relevant people into social spaces.", bestFor: "Telegram joins, WhatsApp community joins, Discord joins, Facebook group participation", icon: "/icon-community.svg", accent: "#22c55e", category: "Community Growth", missionType: "participation" },
+  { id: "video", title: "Video Engagement", description: "Improve visibility for short-form and long-form video content through real participation.", bestFor: "Watch campaigns, save campaigns, repost video campaigns, short-form content engagement", icon: "/icon-content.svg", accent: "#e879f9", category: "Video Engagement", missionType: "engagement" },
+  { id: "ambassador", title: "Brand Ambassador Missions", description: "Create longer-term contributor partnerships for recurring brand representation.", bestFor: "Recurring promotions, monthly campaigns, niche representation, campus ambassador activities", icon: "/icon-verified.svg", accent: "#60a5fa", category: "Brand Ambassador Missions", missionType: "premium" },
+  { id: "digital", title: "AI & Digital Work", description: "Prepare scalable digital work campaigns beyond social growth and awareness.", bestFor: "AI training tasks, image labeling, transcription, moderation, simple online work", icon: "/icon-analytics.svg", accent: "#38bdf8", category: "AI & Digital Work", missionType: "participation" },
+  { id: "local", title: "Local Discovery Missions", description: "Activate geo-targeted participation for physical locations and local discovery.", bestFor: "Store visits, local awareness, QR scan campaigns, neighborhood promotion, physical-to-digital activation", icon: "/icon-grassroots.svg", accent: "#10b981", category: "Local Discovery Missions", missionType: "participation" },
+  { id: "trend", title: "Trend Missions", description: "Launch time-sensitive campaigns around viral sounds, hashtags, memes, and challenges.", bestFor: "Trending sound participation, hashtag waves, viral challenge support, meme participation", icon: "/icon-fire.svg", accent: "#fb7185", category: "Trend Missions", missionType: "engagement" },
+  { id: "premium", title: "Premium Missions", description: "Reserve higher-quality, higher-paying work for verified contributors.", bestFor: "Influencer-level participation, UGC creation, testimonial videos, premium reviews, creator collaborations", icon: "/icon-trophy.svg", accent: "#facc15", category: "Premium Missions", missionType: "premium" },
 ];
 
 const goals = [
@@ -55,7 +59,7 @@ const goals = [
 ];
 
 const contentTypes = ["Flyer", "Video", "Audio", "Product image", "Link"];
-const actionOptions = ["Share to WhatsApp status", "Post to Facebook story", "Repost TikTok video", "Join Telegram community", "Invite friends", "Download app", "Submit feedback", "Share flyer in groups", "Use provided caption"];
+const actionOptions = ["Share to WhatsApp status", "Post to Facebook story", "Share Instagram story", "Repost TikTok video", "Repost on X/Twitter", "Share YouTube Short", "Join Telegram community", "Join WhatsApp community", "Invite friends", "Download app", "Test onboarding", "Submit feedback", "Upload testimonial video", "Share flyer in groups", "Use provided caption"];
 const interestOptions = ["Music", "Business", "Entertainment", "Tech", "Students", "Fashion", "Gaming", "Lifestyle", "Local Communities"];
 const platformOptions = ["WhatsApp", "Facebook", "TikTok", "Instagram", "Telegram", "X/Twitter", "YouTube"];
 const levelOptions = ["All Contributors", "Verified Contributors", "Premium Promoters", "Community Influencers"];
@@ -113,7 +117,7 @@ export default function CreateCampaignPage() {
   const [contentLink, setContentLink] = useState("");
   const [fileName, setFileName] = useState("");
   const [caption, setCaption] = useState("");
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState("Business Awareness Campaign");
   const [actions, setActions] = useState<string[]>(["Share to WhatsApp status", "Use provided caption"]);
   const [instructions, setInstructions] = useState("Leave the post visible for at least 24 hours.");
   const [interests, setInterests] = useState<string[]>(["Business", "Local Communities"]);
@@ -150,10 +154,6 @@ export default function CreateCampaignPage() {
       })
       .finally(() => setLoading(false));
   }, [router]);
-
-  useEffect(() => {
-    if (!title.trim()) setTitle(`${category.title} Campaign`);
-  }, [category.title, title]);
 
   const previewInstructions = useMemo(() => {
     return [
@@ -338,7 +338,17 @@ export default function CreateCampaignPage() {
                   {campaignCategories.map((item) => {
                     const active = item.id === categoryId;
                     return (
-                      <button key={item.id} type="button" onClick={() => setCategoryId(item.id)} className={active ? "categoryCard selected" : "categoryCard"} style={{ borderColor: active ? item.accent : "#202020" }}>
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => {
+                          const previousDefault = `${category.title} Campaign`;
+                          setCategoryId(item.id);
+                          if (!title.trim() || title === previousDefault) setTitle(`${item.title} Campaign`);
+                        }}
+                        className={active ? "categoryCard selected" : "categoryCard"}
+                        style={{ borderColor: active ? item.accent : "#202020" }}
+                      >
                         <span className="iconBox" style={{ background: `${item.accent}18` }}>
                           <Image src={item.icon} alt="" width={22} height={22} />
                         </span>
@@ -752,7 +762,7 @@ const pageStyles = `
     border-radius: 14px;
     padding: 15px;
     cursor: pointer;
-    min-height: 164px;
+    min-height: 228px;
     transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
   }
   .categoryCard:hover, .packageCard:hover {
@@ -787,6 +797,7 @@ const pageStyles = `
   .categoryCard small {
     color: #777;
     margin-top: 10px;
+    overflow-wrap: anywhere;
   }
   .goalGrid, .toggleGrid, .previewTags {
     display: flex;

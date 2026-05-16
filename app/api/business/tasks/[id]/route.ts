@@ -10,6 +10,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 
   const taskRows = await sql`
     SELECT t.*,
+      t.task_status AS status,
       COUNT(c.id)::int AS total_completions,
       COUNT(CASE WHEN c.status = 'pending' THEN 1 END)::int AS pending_completions,
       COUNT(CASE WHEN c.status = 'approved' THEN 1 END)::int AS approved_completions,
@@ -43,18 +44,18 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   const { action } = await req.json();
 
   // Verify ownership
-  const rows = await sql`SELECT id, status FROM tasks WHERE id = ${Number(id)} AND business_id = ${session.businessId}`;
+  const rows = await sql`SELECT id, task_status FROM tasks WHERE id = ${Number(id)} AND business_id = ${session.businessId}`;
   if (rows.length === 0) return NextResponse.json({ error: "Task not found" }, { status: 404 });
 
   if (action === "pause") {
-    await sql`UPDATE tasks SET is_active = false, status = 'paused' WHERE id = ${Number(id)}`;
+    await sql`UPDATE tasks SET is_active = false, task_status = 'paused' WHERE id = ${Number(id)}`;
   } else if (action === "resume") {
-    if (rows[0].status === "pending_review" || rows[0].status === "deleted") {
+    if (rows[0].task_status === "pending_review" || rows[0].task_status === "deleted") {
       return NextResponse.json({ error: "This campaign cannot be resumed yet" }, { status: 409 });
     }
-    await sql`UPDATE tasks SET is_active = true, status = 'active' WHERE id = ${Number(id)}`;
+    await sql`UPDATE tasks SET is_active = true, task_status = 'active' WHERE id = ${Number(id)}`;
   } else if (action === "delete") {
-    await sql`UPDATE tasks SET is_active = false, status = 'deleted' WHERE id = ${Number(id)}`;
+    await sql`UPDATE tasks SET is_active = false, task_status = 'deleted' WHERE id = ${Number(id)}`;
   } else {
     return NextResponse.json({ error: "Unknown action" }, { status: 400 });
   }

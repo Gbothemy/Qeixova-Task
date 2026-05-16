@@ -10,10 +10,10 @@ export async function GET() {
     sql`
       SELECT
         COUNT(*)::int AS total,
-        COUNT(CASE WHEN is_active AND COALESCE(status, 'active') = 'active' THEN 1 END)::int AS active
+        COUNT(CASE WHEN is_active AND COALESCE(task_status, 'active') = 'active' THEN 1 END)::int AS active
       FROM tasks
       WHERE business_id = ${session.businessId}
-        AND COALESCE(status, '') <> 'deleted'
+        AND COALESCE(task_status, '') <> 'deleted'
     `,
     sql`
       SELECT
