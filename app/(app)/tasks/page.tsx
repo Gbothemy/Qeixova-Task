@@ -1,18 +1,51 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import BottomNav from "@/components/BottomNav";
 import TaskCard, { Task } from "@/components/TaskCard";
 import TaskModal, { FullTask } from "@/components/TaskModal";
 import { useAuth } from "@/lib/useAuth";
 
-const FILTERS = [
-  { val: "All",           label: "All Missions" },
-  { val: "engagement",    label: "Engagement" },
-  { val: "participation", label: "Participation" },
-  { val: "premium",       label: "Premium" },
+type MissionCategoryFilter = {
+  val: string;
+  label: string;
+  accent: string;
+  aliases?: string[];
+};
+
+const topCategoryFilters: MissionCategoryFilter[] = [
+  { val: "All", label: "All Opportunities", accent: "#1AEF22" },
+  { val: "Content Distribution", label: "Content Distribution", accent: "#4a9eff", aliases: ["Social Media", "Content"] },
+  { val: "Music Promotion", label: "Music Promotion", accent: "#F5A623" },
+  { val: "Business Awareness", label: "Business Awareness", accent: "#1AEF22" },
+  { val: "Creator Campaigns", label: "Creator Campaigns", accent: "#c084fc", aliases: ["Creator Campaign"] },
+  { val: "App Testing", label: "App Testing", accent: "#14b8a6", aliases: ["App Testing & Reviews"] },
+  { val: "Referral Missions", label: "Referral Missions", accent: "#f87171", aliases: ["Referral Mission"] },
+];
+
+const moreCategoryFilters: MissionCategoryFilter[] = [
+  { val: "Surveys & Feedback", label: "Surveys & Feedback", accent: "#fb7185", aliases: ["Survey", "Surveys"] },
+  { val: "Event Promotion", label: "Event Promotion", accent: "#f97316" },
+  { val: "Community Growth", label: "Community Growth", accent: "#22c55e" },
+  { val: "Video Engagement", label: "Video Engagement", accent: "#e879f9" },
+  { val: "Brand Ambassador Missions", label: "Brand Ambassador", accent: "#60a5fa" },
+  { val: "AI & Digital Work", label: "AI & Digital Work", accent: "#38bdf8", aliases: ["AI Testing"] },
+  { val: "Local Discovery Missions", label: "Local Discovery", accent: "#10b981" },
+  { val: "Trend Missions", label: "Trend Missions", accent: "#fb7185" },
+  { val: "Premium Missions", label: "Premium Missions", accent: "#facc15", aliases: ["Premium Mission"] },
 ];
 
 interface Meta { userLevel: number; levelName: string; badgeColor: string; xp: number; dailyEarned: number; dailyCap: number; dailyRemaining: number; trustScore: number; }
+
+const allCategoryFilters = [...topCategoryFilters, ...moreCategoryFilters];
+
+function normalizeCategory(category: string) {
+  const normalized = category.trim().toLowerCase();
+  const match = allCategoryFilters.find((filter) => {
+    if (filter.val.toLowerCase() === normalized || filter.label.toLowerCase() === normalized) return true;
+    return filter.aliases?.some((alias) => alias.toLowerCase() === normalized);
+  });
+  return match?.val ?? category;
+}
 
 export default function TasksPage() {
   const { user, loading } = useAuth();
@@ -20,19 +53,23 @@ export default function TasksPage() {
   const [meta, setMeta] = useState<Meta | null>(null);
   const [fetching, setFetching] = useState(true);
   const [fetchError, setFetchError] = useState(false);
-  const [active, setActive] = useState("All");
+  const [activeCategory, setActiveCategory] = useState("All");
+  const [showMoreCategories, setShowMoreCategories] = useState(false);
   const [selectedTask, setSelectedTask] = useState<FullTask | null>(null);
 
-  const loadTasks = () => {
+  const loadTasks = useCallback(() => {
     setFetching(true); setFetchError(false);
     fetch("/api/tasks")
       .then(r => r.ok ? r.json() : Promise.reject(r.status))
       .then(d => { if (d?.tasks) setTasks(d.tasks); if (d?.meta) setMeta(d.meta); })
       .catch(() => setFetchError(true))
       .finally(() => setFetching(false));
-  };
+  }, []);
 
-  useEffect(() => { if (!user) return; loadTasks(); }, [user]);
+  useEffect(() => {
+    if (!user) return;
+    void Promise.resolve().then(loadTasks);
+  }, [user, loadTasks]);
 
   const handleComplete = async (id: number, proofValue: string) => {
     try {
@@ -62,21 +99,23 @@ export default function TasksPage() {
     </div>
   );
 
-  const filtered = tasks.filter(t => {
-    if (active === "All") return true;
-    return t.mission_type === active;
+  const filtered = tasks.filter((task) => {
+    if (activeCategory === "All") return true;
+    return normalizeCategory(task.category) === activeCategory;
   });
 
   const completedCount = tasks.filter(t => t.completed).length;
   const dailyPct = meta ? Math.min(100, (meta.dailyEarned / meta.dailyCap) * 100) : 0;
+  const activeLabel = allCategoryFilters.find((filter) => filter.val === activeCategory)?.label ?? activeCategory;
 
   return (
     <div className="page-body" style={{ background: "#000000", minHeight: "100vh" }}>
       {/* Header */}
       <div className="page-header" style={{ background: "#0a0a0a", borderBottom: "1px solid #222222", padding: "52px 20px 20px", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", top: -50, right: -50, width: 180, height: 180, borderRadius: "50%", background: "rgba(26,239,34,0.03)" }} />
-        <p style={{ color: "#bbbbbb", fontSize: 13, marginBottom: 4 }}>Human Participation Marketplace</p>
+        <p style={{ color: "#bbbbbb", fontSize: 13, marginBottom: 4 }}>Participation Missions</p>
         <p style={{ color: "#F5F5F5", fontSize: 24, fontWeight: 800, letterSpacing: -0.5 }}>Missions</p>
+        <p style={{ color: "#aaaaaa", fontSize: 13, marginTop: 6, lineHeight: 1.5, maxWidth: 460 }}>Choose a contribution channel and join campaigns that match how you want to participate.</p>
 
         {/* Level + daily cap bar */}
         {meta && (
@@ -103,17 +142,54 @@ export default function TasksPage() {
         )}
       </div>
 
-      {/* Mission type filters */}
-      <div style={{ display: "flex", gap: 8, padding: "14px 16px", overflowX: "auto", background: "#111111", borderBottom: "1px solid #222222" }}>
-        {FILTERS.map(f => (
-          <button key={f.val} onClick={() => setActive(f.val)} style={{
-            flexShrink: 0, padding: "8px 16px", borderRadius: 20,
-            border: active === f.val ? "none" : "1.5px solid #333333",
-            background: active === f.val ? "linear-gradient(135deg, #1AEF22, #06B517)" : "#1a1a1a",
-            color: active === f.val ? "#000" : "#cccccc",
-            fontWeight: active === f.val ? 800 : 500, fontSize: 12, cursor: "pointer",
-          }}>{f.label}</button>
-        ))}
+      {/* Mission category filters */}
+      <div style={{ padding: "14px 16px", background: "#111111", borderBottom: "1px solid #222222" }}>
+        <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 8 }}>
+          {topCategoryFilters.map((filter) => {
+            const active = activeCategory === filter.val;
+            return (
+              <button key={filter.val} onClick={() => setActiveCategory(filter.val)} style={{
+                flexShrink: 0, padding: "8px 14px", borderRadius: 20,
+                border: active ? "none" : "1.5px solid #333333",
+                background: active ? filter.accent : "#1a1a1a",
+                color: active ? "#000" : "#cccccc",
+                fontWeight: active ? 800 : 600, fontSize: 12, cursor: "pointer",
+              }}>{filter.label}</button>
+            );
+          })}
+        </div>
+        <button
+          type="button"
+          onClick={() => setShowMoreCategories((open) => !open)}
+          style={{ width: "100%", border: "1px solid #242424", borderRadius: 12, background: "#0a0a0a", color: "#F5F5F5", padding: "10px 12px", fontSize: 12, fontWeight: 800, cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" }}
+        >
+          <span>{showMoreCategories ? "Hide more categories" : "Explore more categories"}</span>
+          <span style={{ color: "#1AEF22", fontSize: 16 }}>{showMoreCategories ? "-" : "+"}</span>
+        </button>
+        {showMoreCategories && (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 10 }}>
+            {moreCategoryFilters.map((filter) => {
+              const active = activeCategory === filter.val;
+              return (
+                <button key={filter.val} onClick={() => setActiveCategory(filter.val)} style={{
+                  padding: "8px 12px", borderRadius: 12,
+                  border: active ? "none" : "1px solid #303030",
+                  background: active ? filter.accent : "#171717",
+                  color: active ? "#000" : "#cccccc",
+                  fontWeight: 800, fontSize: 12, cursor: "pointer",
+                }}>{filter.label}</button>
+              );
+            })}
+          </div>
+        )}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, marginTop: 12 }}>
+          <p style={{ color: "#bbbbbb", fontSize: 12 }}>
+            {filtered.length.toLocaleString()} {activeCategory === "All" ? "available mission" : activeLabel.toLowerCase() + " mission"}{filtered.length === 1 ? "" : "s"}
+          </p>
+          {activeCategory !== "All" && (
+            <button type="button" onClick={() => setActiveCategory("All")} style={{ border: "none", background: "transparent", color: "#1AEF22", fontSize: 12, fontWeight: 800, cursor: "pointer" }}>Clear</button>
+          )}
+        </div>
       </div>
 
       {/* Progress */}
@@ -142,7 +218,7 @@ export default function TasksPage() {
         ) : filtered.length === 0 ? (
           <div style={{ textAlign: "center", padding: "40px 0" }}>
             <img src="/icon-check-circle.svg" width={40} height={40} style={{ opacity:0.4, filter:"invert(58%) sepia(98%) saturate(400%) hue-rotate(83deg) brightness(110%)", marginBottom:8 }} alt="" />
-            <p style={{ color: "#bbbbbb", marginTop: 8 }}>All missions in this category done!</p>
+            <p style={{ color: "#bbbbbb", marginTop: 8 }}>No open {activeLabel.toLowerCase()} missions right now.</p>
           </div>
         ) : (
           filtered.map(task => (
