@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { sql } from "@/lib/db";
 import { verifyProof } from "@/lib/verifyProof";
-import { checkDailyCap, updateStreak, XP_REWARDS } from "@/lib/missionEngine";
+import { checkDailyCap, updateStreak, QLT_PROGRESS_REWARDS } from "@/lib/missionEngine";
 import { checkRateLimit, incrementRateLimit, checkDuplicate, checkTrustScore } from "@/lib/antiFraud";
 import { log } from "@/lib/auditLog";
 
@@ -101,13 +101,13 @@ export async function POST(req: NextRequest) {
     }
 
     const storedProof = proofValue?.startsWith("data:image") ? "[screenshot uploaded]" : (proofValue ?? null);
-    const xpReward = Number(task.xp_reward ?? XP_REWARDS[missionType] ?? 10);
+    const qltProgressReward = Number(task.xp_reward ?? QLT_PROGRESS_REWARDS[missionType] ?? 0);
 
     // ── Insert completion (DB UNIQUE constraint is final guard) ───────────
     try {
       await sql`
         INSERT INTO completions (user_id, task_id, proof_value, status, xp_awarded, qlt_awarded)
-        VALUES (${session.userId}, ${taskId}, ${storedProof}, 'pending', ${xpReward}, ${task.reward})
+        VALUES (${session.userId}, ${taskId}, ${storedProof}, 'pending', ${qltProgressReward}, ${task.reward})
       `;
     } catch (err: unknown) {
       // Catch DB unique violation
@@ -131,17 +131,18 @@ export async function POST(req: NextRequest) {
 
     // ── Audit log ─────────────────────────────────────────────────────────
     await log(session.userId, "mission_submitted", {
-      taskId, missionType, xpReward, reward: task.reward, newStreak,
+      taskId, missionType, qltProgressReward, reward: task.reward, newStreak,
     }, "task", taskId);
 
     return NextResponse.json({
       ok: true,
       pending: true,
       reward: task.reward,
-      xpReward,
+      xpReward: qltProgressReward,
+      qltProgressReward,
       missionType,
       newStreak,
-      message: "Submission received. Your QLT and XP will be credited after review.",
+      message: "Submission received. Your QLT will be credited after review.",
     });
 
   } catch (err) {

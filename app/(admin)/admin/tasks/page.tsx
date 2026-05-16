@@ -14,7 +14,7 @@ const EMPTY_FORM = {
   icon: "📋", color: "#e8f5e9", instructions: "", steps: "",
   proof_type: "screenshot", proof_label: "Upload screenshot as proof",
   max_screenshots: "1", total_budget: "0", task_link: "",
-  mission_type: "engagement", xp_reward: "10", min_level: "1",
+  mission_type: "engagement", xp_reward: "0", min_level: "1",
 };
 
 const MISSION_COLORS: Record<string, { bg: string; color: string }> = {
@@ -38,13 +38,13 @@ export default function TasksPage() {
   const fetchTasks = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/admin/tasks", { headers: { "x-admin-key": "qeixova-admin-2025" } });
+      const res = await fetch("/api/admin/tasks");
       const data = await res.json();
       setTasks(data.tasks ?? []);
     } finally { setLoading(false); }
   }, []);
 
-  useEffect(() => { fetchTasks(); }, [fetchTasks]);
+  useEffect(() => { void Promise.resolve().then(fetchTasks); }, [fetchTasks]);
 
   function openAdd() { setEditTask(null); setForm(EMPTY_FORM); setShowModal(true); }
 
@@ -57,7 +57,7 @@ export default function TasksPage() {
       max_screenshots: String(t.max_screenshots), total_budget: String(t.total_budget ?? 0),
       task_link: t.task_link ?? "",
       mission_type: t.mission_type ?? "engagement",
-      xp_reward: String(t.xp_reward ?? 10),
+      xp_reward: String(t.xp_reward ?? 0),
       min_level: String(t.min_level ?? 1),
     });
     setShowModal(true);
@@ -74,9 +74,9 @@ export default function TasksPage() {
         steps: form.steps ? form.steps.split("\n").filter(Boolean) : [],
       };
       if (editTask) {
-        await fetch("/api/admin/tasks", { method: "PATCH", headers: { "Content-Type": "application/json", "x-admin-key": "qeixova-admin-2025" }, body: JSON.stringify({ id: editTask.id, ...payload }) });
+        await fetch("/api/admin/tasks", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: editTask.id, ...payload }) });
       } else {
-        await fetch("/api/admin/tasks", { method: "POST", headers: { "Content-Type": "application/json", "x-admin-key": "qeixova-admin-2025" }, body: JSON.stringify(payload) });
+        await fetch("/api/admin/tasks", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
       }
       setShowModal(false);
       fetchTasks();
@@ -86,7 +86,7 @@ export default function TasksPage() {
   async function toggleActive(t: Task) {
     setActionLoading(t.id);
     try {
-      await fetch("/api/admin/tasks", { method: "PATCH", headers: { "Content-Type": "application/json", "x-admin-key": "qeixova-admin-2025" }, body: JSON.stringify({ id: t.id, is_active: !t.is_active }) });
+      await fetch("/api/admin/tasks", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: t.id, is_active: !t.is_active }) });
       fetchTasks();
     } finally { setActionLoading(null); }
   }
@@ -115,7 +115,7 @@ export default function TasksPage() {
               <th style={TH}>Type</th>
               <th style={TH}>Category</th>
               <th style={TH}>Reward</th>
-              <th style={TH}>XP</th>
+              <th style={TH}>QLT Bonus</th>
               <th style={TH}>Min Lvl</th>
               <th style={TH}>Budget</th>
               <th style={TH}>Status</th>
@@ -136,7 +136,7 @@ export default function TasksPage() {
                   <td style={TD}><span style={{ display: "inline-block", padding: "2px 8px", borderRadius: 10, fontSize: 11, fontWeight: 700, background: mt.bg, color: mt.color }}>{t.mission_type ?? "engagement"}</span></td>
                   <td style={TD}>{t.category}</td>
                   <td style={{ ...TD, fontWeight: 600 }}>{Number(t.reward).toLocaleString()}</td>
-                  <td style={TD}>{t.xp_reward ?? 10}</td>
+                  <td style={TD}>{t.xp_reward ?? 0}</td>
                   <td style={TD}>L{t.min_level ?? 1}</td>
                   <td style={TD}>
                     {t.total_budget > 0 ? (
@@ -181,7 +181,7 @@ export default function TasksPage() {
                 <label style={lbl}>Mission Type *</label>
                 <select style={inp} value={form.mission_type} onChange={e => {
                   const mt = e.target.value;
-                  const xp = mt === "premium" ? "50" : mt === "participation" ? "25" : "10";
+                  const xp = "0";
                   const ml = mt === "premium" ? "2" : "1";
                   setForm(f => ({ ...f, mission_type: mt, xp_reward: xp, min_level: ml }));
                 }}>
@@ -203,7 +203,7 @@ export default function TasksPage() {
                 <input style={inp} type="number" value={form.reward} onChange={e => setForm(f => ({ ...f, reward: e.target.value }))} />
               </div>
               <div>
-                <label style={lbl}>XP Reward</label>
+                <label style={lbl}>QLT Bonus</label>
                 <input style={inp} type="number" value={form.xp_reward} onChange={e => setForm(f => ({ ...f, xp_reward: e.target.value }))} />
               </div>
               <div>

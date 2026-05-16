@@ -103,7 +103,7 @@ export default function Sidebar() {
             <p style={{ fontSize: 13, fontWeight: 600, color: "#F5F5F5" }}>{stats.fullName || "Loading..."}</p>
             <p style={{ fontSize: 11, color: "#bbbbbb" }}>
               <span style={{ color: stats.badgeColor, fontWeight: 700 }}>{stats.levelName}</span>
-              {stats.xp > 0 && <span style={{ color: "#F5A623" }}> &middot; {stats.xp.toLocaleString()} XP</span>}
+              {stats.xp > 0 && <span style={{ color: "#F5A623" }}> &middot; {stats.xp.toLocaleString()} QLT progress</span>}
             </p>
           </div>
           <button

@@ -63,7 +63,7 @@ export default function BusinessDashboard() {
   return (
     <>
       <BusinessSidebar name={business.name} />
-      <main className="page-body">
+      <main className="page-body business-page-pro">
 
         {/* Page header */}
         <div style={{ marginBottom: 28 }}>
@@ -72,7 +72,7 @@ export default function BusinessDashboard() {
               <Image src="/icon-profile.svg" alt="Business" width={22} height={22} style={{ objectFit: "contain", filter: "brightness(0)" }} />
             </div>
             <div>
-              <h1 style={{ fontSize: 20, fontWeight: 800, color: "#F5F5F5", letterSpacing: -0.3 }}>Welcome back, {business.name}</h1>
+              <h1 style={{ fontSize: 28, fontWeight: 900, color: "#F5F5F5", letterSpacing: 0, lineHeight: 1.05 }}>Welcome back, {business.name}</h1>
               <p style={{ fontSize: 12, color: "#aaa", marginTop: 2 }}>{business.industry || "Business"} · {business.email}</p>
             </div>
           </div>
@@ -85,7 +85,7 @@ export default function BusinessDashboard() {
         </div>
 
         {/* Stats grid */}
-        <div style={{ background: "#0a0a0a", borderRadius: 18, padding: "18px", border: "1px solid #161616", marginBottom: 16, display: "flex", justifyContent: "space-between", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
+        <div style={{ background: "linear-gradient(135deg, rgba(245,166,35,0.12), rgba(255,255,255,0.025))", borderRadius: 18, padding: "20px", border: "1px solid rgba(245,166,35,0.18)", marginBottom: 16, display: "flex", justifyContent: "space-between", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
           <div>
             <p style={{ fontSize: 12, color: "#aaa", fontWeight: 800, textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 5 }}>Campaign funding balance</p>
             <p style={{ fontSize: 28, fontWeight: 900, color: "#F5A623", letterSpacing: 0 }}>{Number(business.balance ?? 0).toLocaleString()} QLT</p>
@@ -102,7 +102,7 @@ export default function BusinessDashboard() {
         </div>
 
         {/* CTA banner */}
-        <div style={{ background: "linear-gradient(135deg, #0d0d0d 0%, #111 100%)", borderRadius: 18, padding: "22px 20px", border: "1px solid #1a1a1a", marginBottom: 16, position: "relative", overflow: "hidden" }}>
+        <div style={{ background: "linear-gradient(135deg, #101010 0%, #090909 100%)", borderRadius: 18, padding: "22px 20px", border: "1px solid rgba(245,166,35,0.14)", marginBottom: 16, position: "relative", overflow: "hidden" }}>
           <div style={{ position: "absolute", top: -40, right: -40, width: 140, height: 140, borderRadius: "50%", background: "rgba(245,166,35,0.04)" }} />
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 14, position: "relative" }}>
             <div>

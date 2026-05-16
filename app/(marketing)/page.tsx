@@ -352,7 +352,7 @@ export default function LandingPage() {
       <section style={{ padding: "80px 5vw", background: "#000" }}>
         <div style={{ maxWidth: 720, margin: "0 auto", textAlign: "center" }}>
           <span style={{ fontSize: 11, fontWeight: 700, color: "#1AEF22", letterSpacing: 2, textTransform: "uppercase", background: "rgba(26,239,34,0.08)", borderRadius: 20, padding: "4px 14px" }}>Our Vision</span>
-          <h2 style={{ fontSize: "clamp(24px, 4vw, 40px)", fontWeight: 900, color: "#F5F5F5", marginTop: 14, letterSpacing: -1, marginBottom: 20 }}>Building Africa's Human Participation Network</h2>
+          <h2 style={{ fontSize: "clamp(24px, 4vw, 40px)", fontWeight: 900, color: "#F5F5F5", marginTop: 14, letterSpacing: -1, marginBottom: 20 }}>Building Africa&apos;s Human Participation Network</h2>
           <p style={{ fontSize: 16, color: "#ccc", lineHeight: 1.8, marginBottom: 16 }}>
             Qeixova Tasks is building a digital ecosystem where businesses gain visibility, creators grow faster, and contributors earn through meaningful online participation.
           </p>
@@ -395,7 +395,7 @@ export default function LandingPage() {
           <span style={{ background: "linear-gradient(135deg, #1AEF22, #06B517)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Campaign Today.</span>
         </h2>
         <p style={{ color: "#ccc", fontSize: 15, maxWidth: 480, margin: "0 auto 36px", lineHeight: 1.7 }}>
-          Whether you're promoting a business, a song, an event, an app, or a brand — Qeixova helps you reach real people through real participation.
+          Whether you&apos;re promoting a business, a song, an event, an app, or a brand — Qeixova helps you reach real people through real participation.
         </p>
         <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
           <Link href="/register" style={{ background: "linear-gradient(135deg, #F5A623, #d89420)", color: "#000", textDecoration: "none", padding: "16px 36px", borderRadius: 14, fontWeight: 800, fontSize: 16, boxShadow: "0 8px 28px rgba(245,166,35,0.4)", display: "inline-block" }}>
@@ -448,3 +448,5 @@ export default function LandingPage() {
     </div>
   );
 }
+
+

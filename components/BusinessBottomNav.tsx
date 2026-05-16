@@ -16,7 +16,7 @@ export default function BusinessBottomNav() {
   return (
     <nav className="bottom-nav" style={{
       position: "fixed", bottom: 0, left: 0, right: 0,
-      background: "#080808", borderTop: "1px solid #1a1a1a",
+      background: "rgba(8,8,8,0.96)", borderTop: "1px solid rgba(245,166,35,0.14)",
       display: "flex", zIndex: 50,
       boxShadow: "0 -8px 32px rgba(0,0,0,0.7)",
     }}>
@@ -27,7 +27,7 @@ export default function BusinessBottomNav() {
             flex: 1, display: "flex", flexDirection: "column",
             alignItems: "center", padding: "10px 0 13px",
             textDecoration: "none",
-            color: active ? "#F5A623" : "#3a3a3a",
+            color: active ? "#F5A623" : "#8d8d8d",
             fontSize: 10, fontWeight: active ? 700 : 500,
             gap: 4, position: "relative", letterSpacing: 0.3,
           }}>

@@ -49,7 +49,7 @@ export async function GET() {
         COALESCE(t.budget_used, 0) AS budget_used,
         COALESCE(t.task_link, '') AS task_link,
         COALESCE(t.mission_type, 'engagement') AS mission_type,
-        COALESCE(t.xp_reward, 10) AS xp_reward,
+        COALESCE(t.xp_reward, 0) AS xp_reward,
         COALESCE(t.verification_type, t.proof_type, 'screenshot') AS verification_type,
         COALESCE(t.difficulty, 'easy') AS difficulty,
         COALESCE(t.min_level, 1) AS min_level,

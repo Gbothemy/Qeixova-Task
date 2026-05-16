@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getBusinessSession } from "@/lib/businessAuth";
 import { sql } from "@/lib/db";
-import { XP_REWARDS } from "@/lib/missionEngine";
+import { QLT_PROGRESS_REWARDS } from "@/lib/missionEngine";
 import { ensureBusinessWalletTables } from "@/lib/businessWallet";
 
 export async function GET() {
@@ -74,7 +74,7 @@ export async function POST(req: NextRequest) {
     return "premium";
   })();
 
-  const resolvedXpReward = XP_REWARDS[resolvedMissionType] ?? 10;
+  const resolvedXpReward = QLT_PROGRESS_REWARDS[resolvedMissionType] ?? 0;
   const resolvedVerification = verification_type || proof_type || "screenshot";
   const resolvedDifficulty = difficulty || (resolvedMissionType === "premium" ? "hard" : resolvedMissionType === "participation" ? "medium" : "easy");
   const resolvedMinLevel = min_level || (resolvedMissionType === "premium" ? 2 : 1);

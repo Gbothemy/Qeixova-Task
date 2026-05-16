@@ -1,7 +1,16 @@
 import { NextResponse } from "next/server";
 import { sql } from "@/lib/db";
 
-export async function GET() {
+function setupAllowed(req: Request) {
+  if (process.env.NODE_ENV !== "production") return true;
+  return Boolean(process.env.SETUP_SECRET) && req.headers.get("x-setup-key") === process.env.SETUP_SECRET;
+}
+
+export async function GET(req: Request) {
+  if (!setupAllowed(req)) {
+    return NextResponse.json({ error: "Setup is not enabled" }, { status: 403 });
+  }
+
   try {
     await sql`
       CREATE TABLE IF NOT EXISTS users (

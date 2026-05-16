@@ -60,7 +60,7 @@ export default function BusinessTasksPage() {
   return (
     <>
       <BusinessSidebar name={business.name} />
-      <main className="page-body">
+      <main className="page-body business-page-pro">
 
         {/* Header */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24, flexWrap: "wrap", gap: 12 }}>

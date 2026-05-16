@@ -119,7 +119,7 @@ export default function TaskDetailPage() {
   return (
     <>
       <BusinessSidebar name={business.name} />
-      <main className="page-body">
+      <main className="page-body business-page-pro">
         <Link href="/business/tasks" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: "#aaa", textDecoration: "none", marginBottom: 20, padding: "6px 12px", background: "#0a0a0a", borderRadius: 8, border: "1px solid #161616" }}>
           <Image src="/icon-home.svg" alt="Back" width={12} height={12} style={{ objectFit: "contain", opacity: 0.4 }} />
           Back to Campaigns

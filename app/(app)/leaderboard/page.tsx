@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import BottomNav from "@/components/BottomNav";
@@ -8,20 +8,20 @@ interface Leader { id: number; full_name: string; level_number: number; level_na
 const MEDAL_COLORS = ["#F5A623", "#aaaaaa", "#cd7f32"];
 
 export default function LeaderboardPage() {
-  const [tab, setTab] = useState<"missions" | "xp">("missions");
+  const [tab, setTab] = useState<"missions" | "qlt">("missions");
   const [topEarners, setTopEarners] = useState<Leader[]>([]);
-  const [topXP, setTopXP] = useState<Leader[]>([]);
+  const [topQLT, setTopQLT] = useState<Leader[]>([]);
   const [myRank, setMyRank] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch("/api/leaderboard").then(r => r.ok ? r.json() : null).then(d => {
-      if (d) { setTopEarners(d.topEarners ?? []); setTopXP(d.topXP ?? []); setMyRank(d.myRank); }
+      if (d) { setTopEarners(d.topEarners ?? []); setTopQLT(d.topQLT ?? d.topXP ?? []); setMyRank(d.myRank); }
       setLoading(false);
     }).catch(() => setLoading(false));
   }, []);
 
-  const list = tab === "missions" ? topEarners : topXP;
+  const list = tab === "missions" ? topEarners : topQLT;
 
   return (
     <div className="page-body" style={{ background: "#000", minHeight: "100vh" }}>
@@ -37,8 +37,8 @@ export default function LeaderboardPage() {
 
       {/* Tabs */}
       <div style={{ display: "flex", gap: 8, padding: "14px 16px", background: "#111", borderBottom: "1px solid #222" }}>
-        {[{ val: "missions", label: "🎯 Monthly Missions" }, { val: "xp", label: "⭐ All-Time XP" }].map(t => (
-          <button key={t.val} onClick={() => setTab(t.val as "missions" | "xp")} style={{
+        {[{ val: "missions", label: "Monthly Missions" }, { val: "qlt", label: "All-Time QLT" }].map(t => (
+          <button key={t.val} onClick={() => setTab(t.val as "missions" | "qlt")} style={{
             flex: 1, padding: "9px", borderRadius: 10, border: "none", fontSize: 13, fontWeight: tab === t.val ? 800 : 500, cursor: "pointer",
             background: tab === t.val ? "linear-gradient(135deg, #1AEF22, #06B517)" : "#1a1a1a",
             color: tab === t.val ? "#000" : "#ccc",
@@ -74,7 +74,7 @@ export default function LeaderboardPage() {
               ) : (
                 <>
                   <p style={{ fontSize: 15, fontWeight: 800, color: "#F5A623" }}>{(u.total_xp_earned ?? 0).toLocaleString()}</p>
-                  <p style={{ fontSize: 10, color: "#bbb" }}>XP</p>
+                  <p style={{ fontSize: 10, color: "#bbb" }}>QLT</p>
                 </>
               )}
               {u.streak > 0 && <p style={{ fontSize: 10, color: "#F5A623", marginTop: 2 }}>{u.streak} streak</p>}
@@ -85,10 +85,11 @@ export default function LeaderboardPage() {
 
       <div style={{ padding: "8px 16px 0", textAlign: "center" }}>
         <Link href="/tasks" style={{ display: "inline-block", background: "linear-gradient(135deg, #F5A623, #d89420)", color: "#000", textDecoration: "none", padding: "12px 28px", borderRadius: 12, fontWeight: 800, fontSize: 14 }}>
-          Complete Missions to Rank Up →
+          Complete Missions to Rank Up â†’
         </Link>
       </div>
       <BottomNav />
     </div>
   );
 }
+

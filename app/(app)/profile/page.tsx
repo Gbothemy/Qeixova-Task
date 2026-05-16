@@ -19,12 +19,6 @@ interface Profile {
 
 type ModalType = "edit" | "password" | "notifications" | "support" | "terms" | null;
 
-function levelLabel(l: number) {
-  if (l >= 5) return "Elite Earner";
-  if (l >= 3) return "Pro Earner";
-  return "Rising Earner";
-}
-
 function timeAgo(d: string) {
   const diff = Date.now() - new Date(d).getTime();
   const days = Math.floor(diff / 86400000);
@@ -328,7 +322,7 @@ export default function ProfilePage() {
           </div>
           {profile?.xp !== undefined && (
             <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(245,166,35,0.08)", border: "1px solid rgba(245,166,35,0.2)", borderRadius: 20, padding: "5px 14px" }}>
-              <span style={{ color: "#F5A623", fontSize: 12, fontWeight: 700 }}>⭐ {profile.xp.toLocaleString()} XP</span>
+              <span style={{ color: "#F5A623", fontSize: 12, fontWeight: 700 }}>{profile.xp.toLocaleString()} QLT progress</span>
             </div>
           )}
           {profile && profile.streak > 0 && (

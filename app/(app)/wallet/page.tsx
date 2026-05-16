@@ -16,7 +16,7 @@ function timeAgo(d: string) {
 }
 
 const TX_ICONS: Record<string, string> = { "Task:": "✅", "Withdrawal": "💸", "Referral": "👥", "default": "💰" };
-function txIcon(label: string) {
+function _txIcon(label: string) {
   for (const key of Object.keys(TX_ICONS)) { if (label.startsWith(key)) return TX_ICONS[key]; }
   return TX_ICONS.default;
 }

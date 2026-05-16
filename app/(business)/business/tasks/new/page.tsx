@@ -273,7 +273,7 @@ export default function CreateCampaignPage() {
     return (
       <>
         <BusinessSidebar name={business.name} />
-        <main className="page-body campaignPage">
+        <main className="page-body campaignPage business-page-pro">
           <section className="launchScreen">
             <div className="launchIcon">
               <Image src="/icon-check-circle.svg" alt="" width={34} height={34} />
@@ -301,7 +301,7 @@ export default function CreateCampaignPage() {
   return (
     <>
       <BusinessSidebar name={business.name} />
-      <main className="page-body campaignPage">
+      <main className="page-body campaignPage business-page-pro">
         <header className="campaignHeader">
           <div>
             <p className="eyebrow">Qeixova Tasks</p>

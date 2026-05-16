@@ -6,7 +6,7 @@ export async function GET() {
   const session = await getSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const [topEarners, topXP, currentUser] = await Promise.all([
+  const [topEarners, topQLT, currentUser] = await Promise.all([
     // Top 10 by approved completions this month
     sql`
       SELECT
@@ -23,7 +23,7 @@ export async function GET() {
       ORDER BY missions_completed DESC, total_qlt_earned DESC
       LIMIT 10
     `,
-    // Top 10 by total XP all time
+    // Top 10 by total QLT progress all time
     sql`
       SELECT
         u.id, u.full_name,
@@ -50,7 +50,8 @@ export async function GET() {
 
   return NextResponse.json({
     topEarners,
-    topXP,
+    topXP: topQLT,
+    topQLT,
     myRank: currentUser[0]?.rank ?? null,
   });
 }

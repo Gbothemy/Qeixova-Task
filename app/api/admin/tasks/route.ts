@@ -9,19 +9,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sql } from "@/lib/db";
 import { sendCampaignLiveEmail } from "@/lib/email";
-
-const ADMIN_SECRET = process.env.ADMIN_SECRET ?? "qeixova-admin-2025";
-
-function checkAuth(req: NextRequest) {
-  const key = req.headers.get("x-admin-key");
-  return key === ADMIN_SECRET;
-}
+import { checkAdminAuth } from "@/lib/adminAuth";
 
 export async function GET(req: NextRequest) {
-  if (!checkAuth(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!await checkAdminAuth(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const tasks = await sql`
     SELECT *, COALESCE(mission_type, 'engagement') AS mission_type,
-      COALESCE(xp_reward, 10) AS xp_reward,
+      COALESCE(xp_reward, 0) AS xp_reward,
       COALESCE(min_level, 1) AS min_level
     FROM tasks ORDER BY category, reward DESC
   `;
@@ -29,7 +23,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  if (!checkAuth(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!await checkAdminAuth(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await req.json();
   const { title, category, reward, duration, icon, color, instructions, steps, proof_type, proof_label, max_screenshots } = body;
@@ -46,7 +40,7 @@ export async function POST(req: NextRequest) {
       ${instructions ?? ""}, ${steps ?? []}, ${proof_type ?? "screenshot"},
       ${proof_label ?? "Upload screenshot as proof"}, ${max_screenshots ?? 1},
       ${body.total_budget ?? 0}, ${body.task_link ?? ""},
-      ${body.mission_type ?? "engagement"}, ${body.xp_reward ?? 10}, ${body.min_level ?? 1},
+      ${body.mission_type ?? "engagement"}, ${body.xp_reward ?? 0}, ${body.min_level ?? 1},
       true, 'active'
     )
     RETURNING id, title, category, reward, mission_type
@@ -56,7 +50,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
-  if (!checkAuth(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!await checkAdminAuth(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { id, ...fields } = await req.json();
   if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });
@@ -111,7 +105,7 @@ export async function PATCH(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-  if (!checkAuth(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!await checkAdminAuth(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { id } = await req.json();
   if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });

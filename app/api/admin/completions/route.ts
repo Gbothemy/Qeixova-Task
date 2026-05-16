@@ -73,8 +73,6 @@ export async function PATCH(req: NextRequest) {
     await sql`UPDATE completions SET status = 'approved', rejection_reason = NULL WHERE id = ${completionId}`;
 
     const reward = Number(completion.reward);
-    const xpReward = Number(completion.xp_reward ?? completion.xp_awarded ?? 10);
-
       // 1. Credit QLT balance + daily_earned
       await sql`
         UPDATE users
@@ -134,7 +132,7 @@ export async function PATCH(req: NextRequest) {
 
       return NextResponse.json({
         ok: true,
-        message: "Approved - QLT and XP credited",
+        message: "Approved - QLT credited",
         newLevel,
         leveledUp,
         trustScore,

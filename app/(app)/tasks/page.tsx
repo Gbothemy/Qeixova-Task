@@ -148,7 +148,7 @@ export default function TasksPage() {
               <span style={{ fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 20, background: (meta.badgeColor ?? "#ccc") + "22", color: meta.badgeColor ?? "#ccc" }}>
                 L{meta.userLevel} {meta.levelName}
               </span>
-              <span style={{ fontSize: 11, color: "#F5A623", fontWeight: 600 }}>⭐ {meta.xp.toLocaleString()} XP</span>
+              <span style={{ fontSize: 11, color: "#F5A623", fontWeight: 600 }}>{meta.xp.toLocaleString()} QLT progress</span>
               <span style={{ fontSize: 11, color: "#bbb" }}>Trust: {meta.trustScore}%</span>
             </div>
             <div>

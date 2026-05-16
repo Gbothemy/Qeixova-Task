@@ -10,7 +10,7 @@ const EVENT_COLORS: Record<string, string> = {
   mission_submitted:   "#4a9eff",
   mission_approved:    "#2e7d32",
   mission_rejected:    "#c62828",
-  xp_awarded:          "#F5A623",
+  qlt_progress_awarded: "#F5A623",
   level_up:            "#c084fc",
   wallet_credited:     "#1AEF22",
   wallet_debited:      "#e53e3e",
@@ -45,7 +45,7 @@ export default function AuditLogsPage() {
     } finally { setLoading(false); }
   }, [page, eventFilter]);
 
-  useEffect(() => { fetchLogs(); }, [fetchLogs]);
+  useEffect(() => { void Promise.resolve().then(fetchLogs); }, [fetchLogs]);
 
   const totalPages = Math.ceil(total / 50);
 

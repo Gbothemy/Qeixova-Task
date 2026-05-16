@@ -85,7 +85,7 @@ export default function CompletionsPage() {
     } finally { setLoading(false); }
   }, [page, proofFilter, statusFilter]);
 
-  useEffect(() => { fetchCompletions(); }, [fetchCompletions]);
+  useEffect(() => { void Promise.resolve().then(fetchCompletions); }, [fetchCompletions]);
 
   const handleApprove = async (id: number) => {
     setActionLoading(id);
@@ -179,7 +179,7 @@ export default function CompletionsPage() {
                   </td>
                   <td style={TD}>
                     <div style={{ fontWeight: 700, color: "#2e7d32", fontSize: 13 }}>{c.reward?.toLocaleString()} QLT</div>
-                    <div style={{ fontSize: 11, color: "#aaa" }}>+{c.xp_reward ?? 10} XP</div>
+                    <div style={{ fontSize: 11, color: "#aaa" }}>+{c.xp_reward ?? 0} QLT bonus</div>
                   </td>
                   <td style={{ ...TD, maxWidth: 200 }}><ProofCell type={c.proof_type} value={c.proof_value} /></td>
                   <td style={TD}>

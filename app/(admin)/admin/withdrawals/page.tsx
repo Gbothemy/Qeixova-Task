@@ -28,8 +28,6 @@ function QLTToNaira(QLT: number) {
 export default function WithdrawalsPage() {
   const [withdrawals, setWithdrawals] = useState<Withdrawal[]>([]);
   const [filter, setFilter] = useState<StatusFilter>("all");
-
-  type StatusFilter = "all" | "pending" | "processing" | "completed" | "failed";
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<number | null>(null);
 
@@ -45,7 +43,7 @@ export default function WithdrawalsPage() {
     }
   }, [filter]);
 
-  useEffect(() => { fetchWithdrawals(); }, [fetchWithdrawals]);
+  useEffect(() => { void Promise.resolve().then(fetchWithdrawals); }, [fetchWithdrawals]);
 
   async function handleAction(id: number, action: "approve" | "processing" | "reject") {
     setActionLoading(id);

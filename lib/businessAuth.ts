@@ -1,7 +1,11 @@
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 
-const SECRET = process.env.JWT_SECRET || "fallback-secret-change-in-prod";
+function getBusinessJwtSecret() {
+  if (process.env.JWT_SECRET) return `${process.env.JWT_SECRET}_business`;
+  if (process.env.NODE_ENV !== "production") return "dev-jwt-secret_business";
+  throw new Error("JWT_SECRET environment variable is required in production");
+}
 
 export interface BusinessJWTPayload {
   businessId: number;
@@ -10,12 +14,12 @@ export interface BusinessJWTPayload {
 }
 
 export function signBusinessToken(payload: BusinessJWTPayload): string {
-  return jwt.sign(payload, SECRET + "_business", { expiresIn: "7d" });
+  return jwt.sign(payload, getBusinessJwtSecret(), { expiresIn: "7d" });
 }
 
 export function verifyBusinessToken(token: string): BusinessJWTPayload | null {
   try {
-    return jwt.verify(token, SECRET + "_business") as BusinessJWTPayload;
+    return jwt.verify(token, getBusinessJwtSecret()) as BusinessJWTPayload;
   } catch {
     return null;
   }

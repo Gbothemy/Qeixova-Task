@@ -3,7 +3,11 @@ import { sql } from "@/lib/db";
 import jwt from "jsonwebtoken";
 import { sendPasswordResetEmail } from "@/lib/email";
 
-const SECRET = process.env.JWT_SECRET || "fallback-secret";
+function getResetSecret() {
+  if (process.env.JWT_SECRET) return process.env.JWT_SECRET;
+  if (process.env.NODE_ENV !== "production") return "dev-jwt-secret";
+  throw new Error("JWT_SECRET environment variable is required in production");
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -19,7 +23,7 @@ export async function POST(req: NextRequest) {
 
     const user = rows[0];
     // Generate a short-lived reset token (15 min)
-    const token = jwt.sign({ userId: user.id, purpose: "reset" }, SECRET, { expiresIn: "15m" });
+    const token = jwt.sign({ userId: user.id, purpose: "reset" }, getResetSecret(), { expiresIn: "15m" });
 
     // Store token in DB
     await sql`

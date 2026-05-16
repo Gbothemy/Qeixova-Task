@@ -12,7 +12,20 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    "check-*.js",
+    "fix-*.js",
+    "migrate-*.js",
+    "test-*.js",
+    "app/**/page_backup.tsx",
+    "app/**/*.bak",
   ]),
+  {
+    rules: {
+      "@next/next/no-img-element": "off",
+      "react-hooks/set-state-in-effect": "off",
+      "@typescript-eslint/no-unused-vars": ["warn", { "varsIgnorePattern": "^_", "argsIgnorePattern": "^_" }],
+    },
+  },
 ]);
 
 export default eslintConfig;

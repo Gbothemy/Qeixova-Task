@@ -17,6 +17,33 @@ Qeixova is a Nigerian micro-task platform where users earn **QLT (Qeixova Loyalt
 
 ---
 
+## Production Readiness Notes
+
+Before deploying to production, configure these environment variables in Vercel or your hosting provider:
+
+| Variable | Required | Purpose |
+|----------|----------|---------|
+| `DATABASE_URL` | Yes | Neon/Postgres connection string |
+| `JWT_SECRET` | Yes | Signs contributor, business, and password-reset tokens |
+| `ADMIN_SECRET` | Yes | Signs and validates the admin session cookie |
+| `ADMIN_EMAIL` | Yes | Admin login email |
+| `ADMIN_PASSWORD` | Yes | Admin login password |
+| `SETUP_SECRET` | Yes | Protects `/api/setup` in production |
+| `NEXT_PUBLIC_APP_URL` | Recommended | Absolute URL used in emails and redirects |
+| `GMAIL_USER` | Optional | Gmail sender account |
+| `GMAIL_APP_PASSWORD` | Optional | Gmail app password |
+| `PAYSTACK_SECRET_KEY` | Later | Paystack server-side integration |
+| `NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY` | Later | Paystack client-side public key |
+| `PAYSTACK_WEBHOOK_SECRET` | Later | Paystack webhook verification |
+
+Use `.env.example` as the safe template. Never commit real `.env`, `.env.local`, or `.env.production` secrets.
+
+### UI Maintenance Recommendation
+
+The app currently uses inline styles across most screens. This is functional and build-safe, but future polish should extract repeated page shells, cards, buttons, form fields, and status badges into shared components. Some older files also contain mojibake artifacts from legacy encoded emoji/text. They do not block builds, but a dedicated copy/icon cleanup pass would improve consistency, accessibility, and long-term maintainability.
+
+---
+
 ## Project Structure
 
 ```

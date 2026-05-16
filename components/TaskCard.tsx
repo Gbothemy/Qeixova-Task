@@ -103,7 +103,7 @@ export default function TaskCard({ task, onStart }: TaskCardProps) {
           +{task.reward.toLocaleString()} QLT
         </p>
         <p style={{ fontSize: 10, color: "#F5A623", fontWeight: 600, marginBottom: 6 }}>
-          +{task.xp_reward ?? 10} XP
+          +{task.xp_reward ?? 0} QLT boost
         </p>
         {task.completed ? (
           <div style={{ display: "flex", alignItems: "center", gap: 4, background: "rgba(26,239,34,0.12)", borderRadius: 8, padding: "5px 10px" }}>

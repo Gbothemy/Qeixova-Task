@@ -5,7 +5,7 @@
  */
 import { sql } from "@/lib/db";
 
-export const XP_REWARDS: Record<string, number> = {
+export const QLT_PROGRESS_REWARDS: Record<string, number> = {
   engagement: 0, participation: 0, premium: 0,
 };
 
@@ -183,8 +183,8 @@ export async function updateTrustScore(userId: number): Promise<{ trustScore: nu
   return { trustScore };
 }
 
-// Keep awardXP as a no-op for backward compat (XP removed)
-export async function awardXP(userId: number, _xpAmount: number): Promise<{ newXP: number; newLevel: number; leveledUp: boolean }> {
+// Keep awardXP as a no-op for backward compatibility with legacy callers.
+export async function awardXP(userId: number): Promise<{ newXP: number; newLevel: number; leveledUp: boolean }> {
   const rows = await sql`SELECT level_id FROM users WHERE id = ${userId}`;
   const levelRows = await sql`SELECT level_number FROM levels WHERE id = ${rows[0]?.level_id ?? 1} LIMIT 1`;
   return { newXP: 0, newLevel: levelRows[0]?.level_number ?? 0, leveledUp: false };

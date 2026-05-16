@@ -4,7 +4,7 @@ export type AuditEvent =
   | "mission_submitted"
   | "mission_approved"
   | "mission_rejected"
-  | "xp_awarded"
+  | "qlt_progress_awarded"
   | "level_up"
   | "wallet_credited"
   | "wallet_debited"

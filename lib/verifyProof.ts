@@ -66,7 +66,7 @@ function verifyText(proofValue: string): VerifyResult {
   return { valid: true, reason: "Code accepted" };
 }
 
-async function verifyScreenshot(proofValue: string, taskTitle: string): Promise<VerifyResult> {
+async function verifyScreenshot(proofValue: string): Promise<VerifyResult> {
   // Basic check — must be a stored proof marker or a data URL
   if (!proofValue) {
     return { valid: false, reason: "No screenshot provided." };
@@ -103,7 +103,7 @@ export async function verifyProof(
       return verifyText(proofValue);
 
     case "screenshot":
-      return await verifyScreenshot(proofValue, taskTitle);
+      return await verifyScreenshot(proofValue);
 
     default:
       return { valid: true, reason: "Unknown proof type - accepted" };

@@ -173,6 +173,19 @@ input[type="number"] {
   }
 }
 
+.business-sidebar {
+  background:
+    linear-gradient(180deg, rgba(245,166,35,0.08), rgba(245,166,35,0) 30%),
+    #080808 !important;
+  border-right: 1px solid rgba(245,166,35,0.12) !important;
+}
+
+.business-page-pro {
+  background:
+    radial-gradient(circle at top right, rgba(245,166,35,0.07), transparent 34%),
+    linear-gradient(180deg, #080808 0%, #030303 100%);
+}
+
 /* ── Landing page animations ── */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(32px); }

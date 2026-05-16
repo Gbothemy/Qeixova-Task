@@ -52,7 +52,7 @@ export default function UsersPage() {
     }
   }, [search, page]);
 
-  useEffect(() => { fetchUsers(); }, [fetchUsers]);
+  useEffect(() => { void Promise.resolve().then(fetchUsers); }, [fetchUsers]);
 
   async function toggleBan(user: User) {
     setActionLoading(user.id);

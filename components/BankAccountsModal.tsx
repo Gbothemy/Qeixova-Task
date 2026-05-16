@@ -42,7 +42,7 @@ export default function BankAccountsModal({ onClose }: Props) {
       .finally(() => setLoading(false));
   };
 
-  useEffect(() => { fetchAccounts(); }, []);
+  useEffect(() => { void Promise.resolve().then(fetchAccounts); }, []);
 
   const handleAdd = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

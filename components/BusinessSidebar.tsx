@@ -21,9 +21,9 @@ export default function BusinessSidebar({ name }: { name: string }) {
   };
 
   return (
-    <aside className="sidebar" style={{ background: "#080808", borderRight: "1px solid #1a1a1a" }}>
+    <aside className="sidebar business-sidebar">
       {/* Brand */}
-      <div style={{ padding: "28px 22px 22px", borderBottom: "1px solid #1a1a1a" }}>
+      <div style={{ padding: "28px 22px 22px", borderBottom: "1px solid rgba(245,166,35,0.12)" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 11 }}>
           <Image src="/qeixova-icon.png" alt="Qeixova" width={40} height={40} style={{ borderRadius: 12, objectFit: "contain" }} />
           <div>
@@ -35,21 +35,21 @@ export default function BusinessSidebar({ name }: { name: string }) {
 
       {/* Nav */}
       <nav style={{ padding: "16px 12px", flex: 1 }}>
-        <p style={{ fontSize: 10, fontWeight: 700, color: "#2a2a2a", letterSpacing: 1.5, textTransform: "uppercase", padding: "0 10px 10px" }}>Navigation</p>
+        <p style={{ fontSize: 10, fontWeight: 800, color: "#777", letterSpacing: 1.5, textTransform: "uppercase", padding: "0 10px 10px" }}>Navigation</p>
         {nav.map(item => {
           const isActive = path === item.href || (item.href === "/business/tasks" && path.startsWith("/business/tasks/") && path !== "/business/tasks/new");
           return (
             <Link key={item.href} href={item.href} style={{
               display: "flex", alignItems: "center", gap: 12,
               padding: "10px 12px", borderRadius: 12, textDecoration: "none",
-              background: isActive ? "rgba(245,166,35,0.1)" : "transparent",
+              background: isActive ? "rgba(245,166,35,0.12)" : "transparent",
               marginBottom: 3,
               border: isActive ? "1px solid rgba(245,166,35,0.18)" : "1px solid transparent",
               transition: "all 0.15s",
             }}>
               <div style={{
                 width: 36, height: 36, borderRadius: 10, flexShrink: 0,
-                background: isActive ? "linear-gradient(135deg, #F5A623, #d89420)" : "#111",
+                background: isActive ? "linear-gradient(135deg, #F5A623, #d89420)" : "#151515",
                 display: "flex", alignItems: "center", justifyContent: "center",
                 boxShadow: isActive ? "0 4px 12px rgba(245,166,35,0.25)" : "none",
               }}>
@@ -57,8 +57,8 @@ export default function BusinessSidebar({ name }: { name: string }) {
                   style={{ objectFit: "contain", filter: isActive ? "brightness(0)" : "invert(40%) brightness(60%)" }} />
               </div>
               <div style={{ flex: 1 }}>
-                <p style={{ fontSize: 13, fontWeight: isActive ? 700 : 500, color: isActive ? "#F5A623" : "#999", lineHeight: 1.2 }}>{item.label}</p>
-                <p style={{ fontSize: 10, color: "#999", marginTop: 1 }}>{item.desc}</p>
+                <p style={{ fontSize: 13, fontWeight: isActive ? 800 : 600, color: isActive ? "#F5A623" : "#d7d7d7", lineHeight: 1.2 }}>{item.label}</p>
+                <p style={{ fontSize: 10, color: "#8d8d8d", marginTop: 1 }}>{item.desc}</p>
               </div>
               {isActive && <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#F5A623", flexShrink: 0 }} />}
             </Link>

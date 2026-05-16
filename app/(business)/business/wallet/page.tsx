@@ -96,7 +96,7 @@ export default function BusinessWalletPage() {
   return (
     <>
       <BusinessSidebar name={business.name} />
-      <main className="page-body businessWallet">
+      <main className="page-body businessWallet business-page-pro">
         <header className="walletHeader">
           <div>
             <p className="eyebrow">Business Credits</p>
