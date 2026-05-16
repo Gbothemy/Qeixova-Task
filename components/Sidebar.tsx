@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 const nav = [
   { href: "/dashboard",   label: "Home",     icon: "/icon-home.svg",        desc: "Dashboard" },
   { href: "/tasks",       label: "Missions", icon: "/icon-task.svg",        desc: "Browse & earn" },
+  { href: "/growth",      label: "Growth",   icon: "/icon-analytics.svg",   desc: "Ecosystem flows" },
   { href: "/leaderboard", label: "Ranks",    icon: "/icon-leaderboard.svg", desc: "Leaderboard" },
   { href: "/wallet",      label: "Wallet",   icon: "/icon-wallet.svg",      desc: "Balance & withdraw" },
   { href: "/profile",     label: "Profile",  icon: "/icon-profile.svg",     desc: "Account settings" },

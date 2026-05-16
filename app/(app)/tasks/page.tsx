@@ -54,6 +54,11 @@ export default function TasksPage() {
   const [fetching, setFetching] = useState(true);
   const [fetchError, setFetchError] = useState(false);
   const [activeCategory, setActiveCategory] = useState("All");
+  const [activeView, setActiveView] = useState<"recommended" | "trending" | "all">("recommended");
+  const [query, setQuery] = useState("");
+  const [proofFilter, setProofFilter] = useState("All proof");
+  const [rewardFilter, setRewardFilter] = useState("Any reward");
+  const [availabilityFilter, setAvailabilityFilter] = useState("Open");
   const [showMoreCategories, setShowMoreCategories] = useState(false);
   const [selectedTask, setSelectedTask] = useState<FullTask | null>(null);
 
@@ -99,10 +104,29 @@ export default function TasksPage() {
     </div>
   );
 
-  const filtered = tasks.filter((task) => {
-    if (activeCategory === "All") return true;
-    return normalizeCategory(task.category) === activeCategory;
-  });
+  const filtered = tasks
+    .filter((task) => {
+      const text = `${task.title} ${task.category} ${task.instructions} ${task.steps?.join(" ") ?? ""}`.toLowerCase();
+      const matchesQuery = query.trim() ? text.includes(query.trim().toLowerCase()) : true;
+      const matchesCategory = activeCategory === "All" || normalizeCategory(task.category) === activeCategory;
+      const matchesProof = proofFilter === "All proof" || task.proof_type === proofFilter.toLowerCase();
+      const matchesReward = rewardFilter === "Any reward"
+        || (rewardFilter === "High reward" && Number(task.reward) >= 1500)
+        || (rewardFilter === "Quick earn" && Number(task.reward) < 1500);
+      const matchesAvailability = availabilityFilter === "All"
+        || (availabilityFilter === "Open" && !task.completed && !task.lockedByLevel && !task.lockedByType)
+        || (availabilityFilter === "Pending" && task.completed);
+      const matchesView = activeView === "all"
+        || (activeView === "recommended" && Number((task as FullTask & { matchScore?: number }).matchScore ?? 100) >= 60)
+        || (activeView === "trending" && (Number(task.reward) >= 1500 || ["premium", "participation"].includes(task.mission_type ?? "")));
+      return matchesQuery && matchesCategory && matchesProof && matchesReward && matchesAvailability && matchesView;
+    })
+    .sort((a, b) => {
+      if (activeView === "trending") return Number(b.reward) - Number(a.reward);
+      const aScore = Number((a as FullTask & { matchScore?: number }).matchScore ?? 100);
+      const bScore = Number((b as FullTask & { matchScore?: number }).matchScore ?? 100);
+      return bScore - aScore || Number(b.reward) - Number(a.reward);
+    });
 
   const completedCount = tasks.filter(t => t.completed).length;
   const dailyPct = meta ? Math.min(100, (meta.dailyEarned / meta.dailyCap) * 100) : 0;
@@ -144,6 +168,51 @@ export default function TasksPage() {
 
       {/* Mission category filters */}
       <div style={{ padding: "14px 16px", background: "#111111", borderBottom: "1px solid #222222" }}>
+        <div style={{ display: "grid", gap: 10, marginBottom: 12 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
+            {[
+              { key: "recommended", label: "For You" },
+              { key: "trending", label: "Trending" },
+              { key: "all", label: "All" },
+            ].map((item) => {
+              const active = activeView === item.key;
+              return (
+                <button
+                  key={item.key}
+                  type="button"
+                  onClick={() => setActiveView(item.key as typeof activeView)}
+                  style={{ border: active ? "1px solid rgba(26,239,34,0.45)" : "1px solid #242424", borderRadius: 12, background: active ? "rgba(26,239,34,0.1)" : "#0a0a0a", color: active ? "#1AEF22" : "#bbbbbb", padding: "10px 8px", fontSize: 12, fontWeight: 800, cursor: "pointer" }}
+                >
+                  {item.label}
+                </button>
+              );
+            })}
+          </div>
+          <input
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Search campaigns, platforms, instructions..."
+            style={{ width: "100%", border: "1px solid #303030", borderRadius: 12, background: "#0a0a0a", color: "#F5F5F5", padding: "12px 14px", fontSize: 13, outline: "none" }}
+          />
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 8 }}>
+            <select value={proofFilter} onChange={(event) => setProofFilter(event.target.value)} style={{ minWidth: 0, border: "1px solid #303030", borderRadius: 10, background: "#0a0a0a", color: "#cccccc", padding: "9px 8px", fontSize: 12 }}>
+              <option>All proof</option>
+              <option>Screenshot</option>
+              <option>Url</option>
+              <option>Text</option>
+            </select>
+            <select value={rewardFilter} onChange={(event) => setRewardFilter(event.target.value)} style={{ minWidth: 0, border: "1px solid #303030", borderRadius: 10, background: "#0a0a0a", color: "#cccccc", padding: "9px 8px", fontSize: 12 }}>
+              <option>Any reward</option>
+              <option>High reward</option>
+              <option>Quick earn</option>
+            </select>
+            <select value={availabilityFilter} onChange={(event) => setAvailabilityFilter(event.target.value)} style={{ minWidth: 0, border: "1px solid #303030", borderRadius: 10, background: "#0a0a0a", color: "#cccccc", padding: "9px 8px", fontSize: 12 }}>
+              <option>Open</option>
+              <option>Pending</option>
+              <option>All</option>
+            </select>
+          </div>
+        </div>
         <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 8 }}>
           {topCategoryFilters.map((filter) => {
             const active = activeCategory === filter.val;
@@ -186,8 +255,8 @@ export default function TasksPage() {
           <p style={{ color: "#bbbbbb", fontSize: 12 }}>
             {filtered.length.toLocaleString()} {activeCategory === "All" ? "available mission" : activeLabel.toLowerCase() + " mission"}{filtered.length === 1 ? "" : "s"}
           </p>
-          {activeCategory !== "All" && (
-            <button type="button" onClick={() => setActiveCategory("All")} style={{ border: "none", background: "transparent", color: "#1AEF22", fontSize: 12, fontWeight: 800, cursor: "pointer" }}>Clear</button>
+          {(activeCategory !== "All" || query || proofFilter !== "All proof" || rewardFilter !== "Any reward" || availabilityFilter !== "Open") && (
+            <button type="button" onClick={() => { setActiveCategory("All"); setQuery(""); setProofFilter("All proof"); setRewardFilter("Any reward"); setAvailabilityFilter("Open"); }} style={{ border: "none", background: "transparent", color: "#1AEF22", fontSize: 12, fontWeight: 800, cursor: "pointer" }}>Clear</button>
           )}
         </div>
       </div>

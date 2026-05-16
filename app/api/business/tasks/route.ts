@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getBusinessSession } from "@/lib/businessAuth";
 import { sql } from "@/lib/db";
 import { XP_REWARDS } from "@/lib/missionEngine";
+import { ensureBusinessWalletTables } from "@/lib/businessWallet";
 
 export async function GET() {
   const session = await getBusinessSession();
@@ -47,6 +48,21 @@ export async function POST(req: NextRequest) {
   const targetCount = Math.max(0, Number(target_completion_count) || 0);
   const explicitBudget = Math.max(0, Number(total_budget) || 0);
   const resolvedBudget = explicitBudget > 0 ? explicitBudget : targetCount > 0 ? rewardAmount * targetCount : 0;
+  if (resolvedBudget <= 0) {
+    return NextResponse.json({ error: "Campaign budget is required before launch" }, { status: 400 });
+  }
+
+  await ensureBusinessWalletTables();
+  const businessRows = await sql`SELECT balance FROM businesses WHERE id = ${session.businessId}`;
+  const balance = Number(businessRows[0]?.balance ?? 0);
+  if (balance < resolvedBudget) {
+    return NextResponse.json({
+      error: `Insufficient business balance. Fund at least ${(resolvedBudget - balance).toLocaleString()} more QLT before launching this campaign.`,
+      requiredBalance: resolvedBudget,
+      currentBalance: balance,
+    }, { status: 402 });
+  }
+
   const screenshotLimit = Math.max(1, Math.min(5, Number(max_screenshots) || 1));
   const cleanSteps = Array.isArray(steps)
     ? steps.filter((step) => typeof step === "string" && step.trim()).map((step) => step.trim())
@@ -86,6 +102,16 @@ export async function POST(req: NextRequest) {
       ${session.businessId}, false, 'pending_review'
     )
     RETURNING id
+  `;
+
+  await sql`UPDATE businesses SET balance = balance - ${resolvedBudget} WHERE id = ${session.businessId}`;
+  await sql`
+    INSERT INTO business_transactions (business_id, type, amount, label, status, provider, reference, metadata)
+    VALUES (
+      ${session.businessId}, 'debit', ${resolvedBudget}, ${"Campaign budget reserved: " + title.trim()},
+      'completed', 'campaign_budget', ${"QXC-" + result[0].id},
+      ${JSON.stringify({ taskId: result[0].id, reward: rewardAmount, targetCount })}
+    )
   `;
 
   return NextResponse.json({ ok: true, taskId: result[0].id, missionType: resolvedMissionType });

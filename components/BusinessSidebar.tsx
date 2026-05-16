@@ -7,6 +7,8 @@ const nav = [
   { href: "/business/dashboard", label: "Dashboard",    icon: "/icon-home.svg",    desc: "Overview & stats" },
   { href: "/business/tasks",     label: "Campaigns",    icon: "/icon-task.svg",    desc: "Manage missions" },
   { href: "/business/tasks/new", label: "Create",       icon: "/icon-content.svg", desc: "Launch campaign" },
+  { href: "/business/wallet",    label: "Funding",      icon: "/icon-wallet.svg",  desc: "Credits & receipts" },
+  { href: "/business/growth",    label: "Growth",       icon: "/icon-analytics.svg", desc: "Ecosystem flows" },
 ];
 
 export default function BusinessSidebar({ name }: { name: string }) {
@@ -35,8 +37,7 @@ export default function BusinessSidebar({ name }: { name: string }) {
       <nav style={{ padding: "16px 12px", flex: 1 }}>
         <p style={{ fontSize: 10, fontWeight: 700, color: "#2a2a2a", letterSpacing: 1.5, textTransform: "uppercase", padding: "0 10px 10px" }}>Navigation</p>
         {nav.map(item => {
-          const active = path === item.href || (item.href !== "/business/dashboard" && path.startsWith(item.href) && item.href !== "/business/tasks/new") || (item.href === "/business/tasks/new" && path === "/business/tasks/new");
-          const isActive = path === item.href;
+          const isActive = path === item.href || (item.href === "/business/tasks" && path.startsWith("/business/tasks/") && path !== "/business/tasks/new");
           return (
             <Link key={item.href} href={item.href} style={{
               display: "flex", alignItems: "center", gap: 12,

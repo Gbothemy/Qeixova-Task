@@ -7,6 +7,8 @@ const nav = [
   { href: "/business/dashboard", label: "Home",     icon: "/icon-home.svg" },
   { href: "/business/tasks",     label: "Campaigns", icon: "/icon-task.svg" },
   { href: "/business/tasks/new", label: "Create",   icon: "/icon-content.svg" },
+  { href: "/business/wallet",    label: "Funding",  icon: "/icon-wallet.svg" },
+  { href: "/business/growth",    label: "Growth",   icon: "/icon-analytics.svg" },
 ];
 
 export default function BusinessBottomNav() {

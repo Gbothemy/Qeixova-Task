@@ -28,7 +28,7 @@ function StatCard({ label, value, sub, color, icon }: { label: string; value: nu
 
 export default function BusinessDashboard() {
   const router = useRouter();
-  const [business, setBusiness] = useState<{ name: string; email: string; industry: string } | null>(null);
+  const [business, setBusiness] = useState<{ name: string; email: string; industry: string; balance: number } | null>(null);
   const [stats, setStats] = useState<Stats | null>(null);
 
   useEffect(() => {
@@ -85,6 +85,18 @@ export default function BusinessDashboard() {
         </div>
 
         {/* Stats grid */}
+        <div style={{ background: "#0a0a0a", borderRadius: 18, padding: "18px", border: "1px solid #161616", marginBottom: 16, display: "flex", justifyContent: "space-between", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
+          <div>
+            <p style={{ fontSize: 12, color: "#aaa", fontWeight: 800, textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 5 }}>Campaign funding balance</p>
+            <p style={{ fontSize: 28, fontWeight: 900, color: "#F5A623", letterSpacing: 0 }}>{Number(business.balance ?? 0).toLocaleString()} QLT</p>
+            <p style={{ fontSize: 12, color: "#888", marginTop: 4 }}>Fund your wallet before launching campaigns.</p>
+          </div>
+          <Link href="/business/wallet" style={{ background: "#F5A623", color: "#000", textDecoration: "none", padding: "11px 18px", borderRadius: 11, fontWeight: 900, fontSize: 13 }}>
+            Add Funds
+          </Link>
+        </div>
+
+        {/* Stats grid */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: 12, marginBottom: 24 }}>
           {statCards.map(s => <StatCard key={s.label} {...s} />)}
         </div>
@@ -113,6 +125,7 @@ export default function BusinessDashboard() {
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
           {[
             { href: "/business/tasks",     icon: "/icon-task.svg",    label: "View Campaigns",  sub: "Manage all missions" },
+            { href: "/business/wallet",    icon: "/icon-wallet.svg",  label: "Fund Wallet",     sub: "Add campaign credits" },
             { href: "/business/tasks/new", icon: "/icon-content.svg", label: "New Campaign",    sub: "Launch a mission" },
           ].map(item => (
             <Link key={item.href} href={item.href} style={{ background: "#0a0a0a", border: "1px solid #161616", borderRadius: 14, padding: "14px 16px", textDecoration: "none", display: "flex", alignItems: "center", gap: 12, transition: "border-color 0.15s" }}>
