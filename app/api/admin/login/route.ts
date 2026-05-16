@@ -1,15 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAdminToken } from "@/lib/adminAuth";
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? (process.env.NODE_ENV !== "production" ? "admin@qeixova.com" : "");
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? (process.env.NODE_ENV !== "production" ? "Qeixova@Admin2025" : "");
+function getAdminCredentials() {
+  const isProd = process.env.NODE_ENV === "production";
+  const adminSecret = process.env.ADMIN_SECRET ?? "";
+
+  return {
+    email: process.env.ADMIN_EMAIL ?? (isProd ? "admin@qeixova.com" : "admin@qeixova.com"),
+    password: process.env.ADMIN_PASSWORD ?? (isProd ? adminSecret : "Qeixova@Admin2025"),
+  };
+}
 
 export async function POST(req: NextRequest) {
   const { email, password } = await req.json();
-  if (!ADMIN_EMAIL || !ADMIN_PASSWORD) {
+  const admin = getAdminCredentials();
+
+  if (!admin.email || !admin.password) {
     return NextResponse.json({ error: "Admin login is not configured" }, { status: 503 });
   }
-  if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+  if (email === admin.email && password === admin.password) {
     const res = NextResponse.json({ ok: true });
     res.cookies.set("admin_token", getAdminToken(), {
       httpOnly: true,
