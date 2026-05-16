@@ -65,7 +65,7 @@ export async function GET() {
       FROM tasks t
       LEFT JOIN completions c ON c.task_id = t.id AND c.user_id = ${session.userId}
       WHERE t.is_active = true
-        AND COALESCE(t.status, 'active') = 'active'
+        AND COALESCE(t.task_status, 'active') = 'active'
         AND (t.total_budget = 0 OR t.budget_used < t.total_budget)
       ORDER BY t.reward DESC
     `;
