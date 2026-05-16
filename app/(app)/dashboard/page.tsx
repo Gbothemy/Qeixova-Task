@@ -1,5 +1,4 @@
 "use client";
-"use client";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -16,11 +15,67 @@ interface WalletData {
   transactions: { type: string; label: string; amount: number; created_at: string }[];
 }
 
-const categories = [
-  { icon: "/icon-social-media.svg", label: "Engagement",    color: "rgba(74,158,255,0.1)",  earn: "10k–15k QLT", badge: "#4a9eff" },
-  { icon: "/icon-survey.svg",       label: "Participation", color: "rgba(245,166,35,0.1)",  earn: "35k–50k QLT", badge: "#F5A623" },
-  { icon: "/icon-app-testing.svg",  label: "Premium",       color: "rgba(192,132,252,0.1)", earn: "80k–120k QLT", badge: "#c084fc" },
-  { icon: "/icon-content.svg",      label: "AI Testing",    color: "rgba(26,239,34,0.1)",   earn: "18k–20k QLT", badge: "#1AEF22" },
+const topMissionCategories = [
+  {
+    icon: "/icon-human-distribution.svg",
+    label: "Content Distribution",
+    summary: "Share flyers, videos, announcements, and promotional content.",
+    examples: "WhatsApp, Instagram, Telegram, X, TikTok",
+    color: "rgba(74,158,255,0.12)",
+    badge: "#4a9eff",
+  },
+  {
+    icon: "/icon-music.svg",
+    label: "Music Promotion",
+    summary: "Support artists, releases, sounds, teasers, and challenges.",
+    examples: "Teasers, sounds, album flyers, reviews",
+    color: "rgba(245,166,35,0.13)",
+    badge: "#F5A623",
+  },
+  {
+    icon: "/icon-local-business.svg",
+    label: "Business Awareness",
+    summary: "Help SMEs and local services become visible to real people.",
+    examples: "Products, stores, promos, local reach",
+    color: "rgba(26,239,34,0.1)",
+    badge: "#1AEF22",
+  },
+  {
+    icon: "/icon-creator.svg",
+    label: "Creator Campaigns",
+    summary: "Grow creators, skit makers, streamers, and personal brands.",
+    examples: "Reposts, livestreams, page awareness",
+    color: "rgba(192,132,252,0.12)",
+    badge: "#c084fc",
+  },
+  {
+    icon: "/icon-app-testing.svg",
+    label: "App Testing",
+    summary: "Download, test, review, and report product experiences.",
+    examples: "Onboarding, bugs, features, reviews",
+    color: "rgba(20,184,166,0.12)",
+    badge: "#14b8a6",
+  },
+  {
+    icon: "/icon-target.svg",
+    label: "Referral Missions",
+    summary: "Join performance-based growth and invite campaigns.",
+    examples: "Signups, ambassadors, user acquisition",
+    color: "rgba(248,113,113,0.12)",
+    badge: "#f87171",
+  },
+];
+
+const moreMissionCategories = [
+  { icon: "/icon-survey.svg", label: "Surveys & Feedback", summary: "Answer polls, forms, opinions, and product experience reviews.", color: "rgba(245,166,35,0.1)", badge: "#F5A623" },
+  { icon: "/icon-events.svg", label: "Event Promotion", summary: "Promote church programs, concerts, conferences, campus events, and gatherings.", color: "rgba(74,158,255,0.1)", badge: "#4a9eff" },
+  { icon: "/icon-community.svg", label: "Community Growth", summary: "Help brands grow Telegram, WhatsApp, Discord, and Facebook communities.", color: "rgba(26,239,34,0.1)", badge: "#1AEF22" },
+  { icon: "/icon-content.svg", label: "Video Engagement", summary: "Support watch, save, repost, and short-form visibility campaigns.", color: "rgba(20,184,166,0.1)", badge: "#14b8a6" },
+  { icon: "/icon-verified.svg", label: "Brand Ambassador Missions", summary: "Take part in longer-term recurring promotions and niche representation.", color: "rgba(192,132,252,0.1)", badge: "#c084fc" },
+  { icon: "/icon-analytics.svg", label: "AI & Digital Work", summary: "Contribute to AI training, labeling, transcription, moderation, and online work.", color: "rgba(59,130,246,0.1)", badge: "#60a5fa" },
+  { icon: "/icon-grassroots.svg", label: "Local Discovery Missions", summary: "Complete store visits, QR scans, neighborhood promotion, and local activation.", color: "rgba(34,197,94,0.1)", badge: "#22c55e" },
+  { icon: "/icon-fire.svg", label: "Trend Missions", summary: "Join time-sensitive hashtag waves, viral challenges, memes, and trending sounds.", color: "rgba(248,113,113,0.1)", badge: "#f87171" },
+  { icon: "/icon-trophy.svg", label: "Premium Missions", summary: "Access higher-quality UGC, testimonials, premium reviews, and collaborations.", color: "rgba(250,204,21,0.1)", badge: "#facc15" },
 ];
 
 function timeAgo(dateStr: string) {
@@ -36,6 +91,7 @@ export default function Home() {
   const { user, loading } = useAuth();
   const [wallet, setWallet] = useState<WalletData | null>(null);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showMoreCategories, setShowMoreCategories] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -174,24 +230,70 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Categories */}
+      {/* Mission categories */}
       <div style={{ padding: "28px 16px 0" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-          <p style={{ fontWeight: 800, fontSize: 17, color: "#F5F5F5" }}>Mission Types</p>
-          <Link href="/tasks" style={{ fontSize: 13, color: "#1AEF22", fontWeight: 600, textDecoration: "none" }}>Browse all →</Link>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, marginBottom: 16 }}>
+          <div>
+            <p style={{ fontWeight: 800, fontSize: 17, color: "#F5F5F5", marginBottom: 4 }}>Growth Opportunities</p>
+            <p style={{ color: "#bbbbbb", fontSize: 12, lineHeight: 1.5 }}>Choose the kind of contribution you want to make.</p>
+          </div>
+          <Link href="/tasks" style={{ fontSize: 13, color: "#1AEF22", fontWeight: 600, textDecoration: "none", flexShrink: 0 }}>Browse all</Link>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }} className="category-grid">
-          {categories.map((cat) => (
+          {topMissionCategories.map((cat) => (
             <Link key={cat.label} href="/tasks" style={{ textDecoration: "none" }}>
-              <div style={{ background: "#111111", borderRadius: 18, padding: "18px 16px", border: "1px solid #222222" }}>
-                <div style={{ width: 48, height: 48, borderRadius: 14, background: cat.color, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 12 }}>
+              <div style={{ minHeight: 194, background: "#111111", borderRadius: 14, padding: "16px 14px", border: "1px solid #222222", display: "flex", flexDirection: "column" }}>
+                <div style={{ width: 46, height: 46, borderRadius: 12, background: cat.color, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 12 }}>
                   <Image src={cat.icon} alt={cat.label} width={28} height={28} style={{ objectFit: "contain" }} />
                 </div>
-                <p style={{ fontWeight: 700, fontSize: 13, color: "#F5F5F5", marginBottom: 3 }}>{cat.label}</p>
-                <p style={{ fontSize: 11, fontWeight: 700, color: cat.badge, background: cat.color, borderRadius: 6, padding: "2px 8px", display: "inline-block" }}>{cat.earn}</p>
+                <p style={{ fontWeight: 800, fontSize: 13, color: "#F5F5F5", marginBottom: 6, lineHeight: 1.25 }}>{cat.label}</p>
+                <p style={{ fontSize: 11, color: "#bbbbbb", lineHeight: 1.45, marginBottom: 10, flex: 1 }}>{cat.summary}</p>
+                <p style={{ fontSize: 10, fontWeight: 800, color: cat.badge, background: cat.color, borderRadius: 6, padding: "5px 7px", lineHeight: 1.35 }}>{cat.examples}</p>
               </div>
             </Link>
           ))}
+        </div>
+
+        <div style={{ marginTop: 14 }}>
+          <button
+            type="button"
+            onClick={() => setShowMoreCategories(v => !v)}
+            style={{
+              width: "100%",
+              border: "1px solid #222222",
+              borderRadius: 12,
+              background: "#0a0a0a",
+              color: "#F5F5F5",
+              padding: "13px 14px",
+              fontSize: 13,
+              fontWeight: 800,
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <span>{showMoreCategories ? "Hide more opportunities" : "Explore More"}</span>
+            <span style={{ color: "#1AEF22", fontSize: 18, lineHeight: 1 }}>{showMoreCategories ? "-" : "+"}</span>
+          </button>
+
+          {showMoreCategories && (
+            <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 10, marginTop: 12 }} className="mission-more-grid">
+              {moreMissionCategories.map((cat) => (
+                <Link key={cat.label} href="/tasks" style={{ textDecoration: "none" }}>
+                  <div style={{ background: "#111111", border: "1px solid #222222", borderRadius: 12, padding: "13px 14px", display: "flex", gap: 12, alignItems: "center", minHeight: 84 }}>
+                    <div style={{ width: 40, height: 40, borderRadius: 10, background: cat.color, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                      <Image src={cat.icon} alt={cat.label} width={22} height={22} style={{ objectFit: "contain" }} />
+                    </div>
+                    <div style={{ minWidth: 0 }}>
+                      <p style={{ fontWeight: 800, color: "#F5F5F5", fontSize: 13, marginBottom: 4 }}>{cat.label}</p>
+                      <p style={{ color: "#bbbbbb", fontSize: 11, lineHeight: 1.45 }}>{cat.summary}</p>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
@@ -246,7 +348,7 @@ export default function Home() {
       {/* Step 10 — Exit Hook */}
       <div style={{ padding: "20px 16px 0" }}>
         <div style={{ background: "#0a0a0a", borderRadius: 14, padding: "14px 16px", border: "1px solid #1a1a1a", textAlign: "center" }}>
-          <p style={{ fontSize: 13, color: "#cccccc" }}>New tasks are added daily. Come back to earn more.</p>
+          <p style={{ fontSize: 13, color: "#cccccc" }}>New participation missions are added regularly. Come back for more opportunities.</p>
         </div>
       </div>
 

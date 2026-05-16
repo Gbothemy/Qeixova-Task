@@ -117,7 +117,11 @@ input[type="number"] {
 
   /* Desktop grid for categories — 4 cols */
   .category-grid {
-    grid-template-columns: repeat(4, 1fr) !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  .mission-more-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
   }
 
   /* Desktop task list — 2 cols */
@@ -144,7 +148,11 @@ input[type="number"] {
   }
 
   .category-grid {
-    grid-template-columns: repeat(4, 1fr) !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  .mission-more-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
   }
 
   .task-grid {
