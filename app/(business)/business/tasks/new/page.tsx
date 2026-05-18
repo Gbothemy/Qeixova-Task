@@ -27,6 +27,51 @@ type Package = {
   duration: string;
 };
 
+type CampaignBundle = {
+  id: string;
+  name: string;
+  shortName: string;
+  description: string;
+  bestFor: string[];
+  contentTypes: string[];
+  platforms: string[];
+  actions: string[];
+  verification: string[];
+  accent: string;
+  icon: string;
+};
+
+type CategoryFlow = {
+  id: string;
+  builderIntro: string;
+  contentHeadline: string;
+  contentHelp: string;
+  contentTypes: string[];
+  goalsHeadline: string;
+  goals: string[];
+  uploadRequirements: Record<string, string[]>;
+  linkLabel: string;
+  linkPlaceholder: string;
+  captionLabel: string;
+  captionPlaceholder: string;
+  bundlesHeadline: string;
+  targetHeadline: string;
+  targetHelp: string;
+  interests: string[];
+  levels: string[];
+  packages: Package[];
+  launchHeadline: string;
+  launchSummary: string;
+  launchCta: string;
+  previewLabel: string;
+  defaultContentType: string;
+  defaultGoal: string;
+  defaultTitle: string;
+  defaultInterests: string[];
+  defaultLevels: string[];
+  defaultBundleId: string;
+};
+
 const campaignCategories: CampaignCategory[] = [
   { id: "content", title: "Content Distribution", description: "Spread flyers, videos, announcements, and promotional content across social channels.", bestFor: "WhatsApp status, Facebook reposts, Instagram stories, Telegram, X, YouTube Shorts, TikTok", icon: "/icon-human-distribution.svg", accent: "#4a9eff", category: "Content Distribution", missionType: "engagement" },
   { id: "music", title: "Music Promotion", description: "Launch dedicated entertainment campaigns for artists, songs, sounds, and releases.", bestFor: "Music teasers, TikTok sounds, album flyers, song reviews, dance or reaction challenges", icon: "/icon-music.svg", accent: "#F5A623", category: "Music Promotion", missionType: "engagement" },
@@ -58,20 +103,475 @@ const goals = [
   "Generate conversations",
 ];
 
-const contentTypes = ["Flyer", "Video", "Audio", "Product image", "Link"];
-const actionOptions = ["Share to WhatsApp status", "Post to Facebook story", "Share Instagram story", "Repost TikTok video", "Repost on X/Twitter", "Share YouTube Short", "Join Telegram community", "Join WhatsApp community", "Invite friends", "Download app", "Test onboarding", "Submit feedback", "Upload testimonial video", "Share flyer in groups", "Use provided caption"];
+const defaultContentTypes = ["Flyer", "Video", "Audio", "Product image", "Link"];
+const actionOptions = [
+  "Post flyer to WhatsApp status",
+  "Post song artwork to WhatsApp status",
+  "Post product flyer to WhatsApp status",
+  "Post to Facebook story",
+  "Post to Instagram story",
+  "Share product/store link",
+  "Share in relevant groups",
+  "Mention business handle",
+  "Encourage page visits",
+  "Add call-to-action text",
+  "Repost TikTok video",
+  "Share Instagram Reel",
+  "Upload or repost Facebook Reel",
+  "Use provided sound",
+  "Upload short-form video",
+  "Add required hashtag",
+  "Tag artist page",
+  "Include streaming link",
+  "Stream song from provided link",
+  "Repost creator video",
+  "Tag creator page",
+  "Encourage comments",
+  "Join creator community",
+  "Stay active for required duration",
+  "Share invite link",
+  "Invite relevant users",
+  "Share livestream reminder",
+  "Repost on X/Twitter",
+  "Share YouTube Short",
+  "Join Telegram community",
+  "Join WhatsApp community",
+  "Invite friends",
+  "Download app",
+  "Test onboarding",
+  "Submit feedback",
+  "Upload testimonial video",
+  "Share flyer in groups",
+  "Use provided caption",
+  "Keep post active for 24 hours",
+];
 const interestOptions = ["Music", "Business", "Entertainment", "Tech", "Students", "Fashion", "Gaming", "Lifestyle", "Local Communities"];
-const platformOptions = ["WhatsApp", "Facebook", "TikTok", "Instagram", "Telegram", "X/Twitter", "YouTube"];
+const platformOptions = ["WhatsApp Status", "Facebook Story", "Instagram Story", "TikTok", "Instagram Reels", "Facebook Reels", "Telegram Groups", "X/Twitter", "YouTube Shorts"];
 const levelOptions = ["All Contributors", "Verified Contributors", "Premium Promoters", "Community Influencers"];
 const stateOptions = ["Lagos", "Abuja (FCT)", "Kano", "Rivers", "Oyo", "Kaduna", "Anambra", "Delta", "Edo", "Ogun", "Enugu", "Imo"];
 const cityOptions = ["Lagos Mainland", "Lekki", "Ikeja", "Abuja Central", "Port Harcourt", "Ibadan", "Kano City", "Benin City"];
 const campusOptions = ["University of Lagos", "University of Ibadan", "Covenant University", "Ahmadu Bello University", "University of Nigeria", "Yaba College of Technology"];
+
+const campaignBundles: CampaignBundle[] = [
+  {
+    id: "music-story-status",
+    name: "Story & Status Music Push",
+    shortName: "Music Status Push",
+    description: "Push cover art, snippets, and artist announcements through temporary story/status channels.",
+    bestFor: ["Song awareness", "Local buzz", "Artist visibility", "Quick distribution"],
+    contentTypes: ["Song Release", "Artist Awareness Campaign", "Album / EP Launch"],
+    platforms: ["WhatsApp Status", "Facebook Story", "Instagram Story"],
+    actions: ["Post song artwork to WhatsApp status", "Post to Facebook story", "Post to Instagram story", "Use provided caption", "Include streaming link", "Keep post active for 24 hours"],
+    verification: ["Screenshot proof", "Timestamp check", "24 hour duration"],
+    accent: "#F5A623",
+    icon: "/icon-music.svg",
+  },
+  {
+    id: "music-short-video",
+    name: "Short-Form Video Boost",
+    shortName: "Video Boost",
+    description: "Drive viral momentum for sounds, snippets, teasers, and music-video clips.",
+    bestFor: ["Viral momentum", "Trend creation", "Sound promotion", "Teaser campaigns"],
+    contentTypes: ["Song Snippet / Teaser", "TikTok Sound Campaign", "Music Video"],
+    platforms: ["TikTok", "Instagram Reels", "Facebook Reels"],
+    actions: ["Use provided sound", "Upload short-form video", "Add required hashtag", "Tag artist page", "Use provided caption"],
+    verification: ["Video link", "Caption check", "Hashtag check", "Sound usage check"],
+    accent: "#F5A623",
+    icon: "/icon-fire.svg",
+  },
+  {
+    id: "music-streaming",
+    name: "Streaming Awareness Bundle",
+    shortName: "Streaming Push",
+    description: "Route contributors toward streaming links and release discovery.",
+    bestFor: ["Increasing streams", "Listener traffic", "Release promotion"],
+    contentTypes: ["Song Release", "Streaming Campaign", "Album / EP Launch"],
+    platforms: ["Audiomack", "Spotify", "Boomplay", "Apple Music"],
+    actions: ["Stream song from provided link", "Include streaming link", "Use provided caption", "Share flyer in groups"],
+    verification: ["Streaming screenshot", "Link proof", "Platform check"],
+    accent: "#F5A623",
+    icon: "/icon-content.svg",
+  },
+  {
+    id: "music-fan-engagement",
+    name: "Fan Engagement Bundle",
+    shortName: "Fan Activation",
+    description: "Activate music communities, artist mentions, and fanbase interaction.",
+    bestFor: ["Artist fanbase growth", "Community interaction", "Fan activation"],
+    contentTypes: ["Artist Awareness Campaign", "Album / EP Launch"],
+    platforms: ["Telegram Groups", "WhatsApp Communities", "Instagram", "TikTok"],
+    actions: ["Join Telegram community", "Join WhatsApp community", "Tag artist page", "Submit feedback", "Share in relevant groups"],
+    verification: ["Membership validation", "Interaction proof", "Screenshot proof"],
+    accent: "#F5A623",
+    icon: "/icon-community.svg",
+  },
+  {
+    id: "creator-story-status",
+    name: "Story & Status Creator Push",
+    shortName: "Creator Status Push",
+    description: "Quick visibility for creator posts, livestream flyers, and personal brand announcements.",
+    bestFor: ["Creator visibility", "Livestream awareness", "Quick content exposure"],
+    contentTypes: ["Content Awareness Campaign", "Livestream Promotion", "Personal Brand Awareness"],
+    platforms: ["WhatsApp Status", "Instagram Story", "Facebook Story"],
+    actions: ["Post to Instagram story", "Post to Facebook story", "Post flyer to WhatsApp status", "Use provided caption", "Tag creator page"],
+    verification: ["Screenshot proof", "Timestamp check", "Story visibility"],
+    accent: "#F5A623",
+    icon: "/icon-creator.svg",
+  },
+  {
+    id: "creator-short-form",
+    name: "Short-Form Visibility Boost",
+    shortName: "Short-Form Boost",
+    description: "Amplify Reels, TikToks, clips, and creator videos for algorithm momentum.",
+    bestFor: ["Viral content", "Creator clips", "Algorithm momentum"],
+    contentTypes: ["Short-Form Video Promotion"],
+    platforms: ["TikTok", "Instagram Reels", "Facebook Reels"],
+    actions: ["Repost creator video", "Use provided caption", "Add required hashtag", "Tag creator page", "Encourage comments"],
+    verification: ["Repost link", "Caption check", "Hashtag check", "Visibility check"],
+    accent: "#F5A623",
+    icon: "/icon-fire.svg",
+  },
+  {
+    id: "creator-community",
+    name: "Community Growth Bundle",
+    shortName: "Community Growth",
+    description: "Grow fan spaces, broadcast groups, and creator communities with retention checks.",
+    bestFor: ["Fanbase growth", "Audience retention", "Creator community building"],
+    contentTypes: ["Community Growth Campaign"],
+    platforms: ["Telegram", "WhatsApp Communities", "Discord"],
+    actions: ["Join creator community", "Stay active for required duration", "Share invite link", "Invite relevant users"],
+    verification: ["Membership validation", "Retention duration", "Participation check"],
+    accent: "#F5A623",
+    icon: "/icon-community.svg",
+  },
+  {
+    id: "creator-engagement",
+    name: "Creator Engagement Boost",
+    shortName: "Engagement Boost",
+    description: "Support content visibility through real reactions, comments, reposts, and social discovery.",
+    bestFor: ["Engagement activity", "Comment momentum", "Content visibility"],
+    contentTypes: ["Content Awareness Campaign", "Personal Brand Awareness", "Podcast / Long-Form Content Promotion"],
+    platforms: ["TikTok", "Instagram", "X/Twitter", "Facebook"],
+    actions: ["Use provided caption", "Tag creator page", "Encourage comments", "Repost on X/Twitter"],
+    verification: ["Engagement screenshot", "Comment proof", "Repost link"],
+    accent: "#F5A623",
+    icon: "/icon-social-media.svg",
+  },
+  {
+    id: "creator-livestream",
+    name: "Livestream Awareness Bundle",
+    shortName: "Livestream Push",
+    description: "Drive reminders and attendance for live sessions across story and community channels.",
+    bestFor: ["Live session awareness", "Viewer reminders", "Stream attendance"],
+    contentTypes: ["Livestream Promotion"],
+    platforms: ["WhatsApp Status", "Telegram Groups", "Instagram Story", "Facebook Story"],
+    actions: ["Share livestream reminder", "Use provided caption", "Post to Instagram story", "Post to Facebook story", "Join Telegram community"],
+    verification: ["Reminder screenshot", "Timestamp check", "Community proof"],
+    accent: "#F5A623",
+    icon: "/icon-events.svg",
+  },
+  {
+    id: "business-story-status",
+    name: "Story & Status Awareness Bundle",
+    shortName: "Awareness Push",
+    description: "Simple local visibility through WhatsApp Status, Facebook Story, and Instagram Story.",
+    bestFor: ["Local awareness", "Promo visibility", "Event awareness", "Product promotion"],
+    contentTypes: ["Product Promotion", "Service Awareness", "Offer / Discount Campaign", "Event Awareness"],
+    platforms: ["WhatsApp Status", "Facebook Story", "Instagram Story"],
+    actions: ["Post product flyer to WhatsApp status", "Post to Facebook story", "Post to Instagram story", "Use provided caption", "Keep post active for 24 hours"],
+    verification: ["Screenshot proof", "Timestamp check", "24 hour duration"],
+    accent: "#F5A623",
+    icon: "/icon-local-business.svg",
+  },
+  {
+    id: "business-social-feed",
+    name: "Social Feed Distribution Bundle",
+    shortName: "Feed Distribution",
+    description: "Longer-lasting exposure for product posts, announcements, and business updates.",
+    bestFor: ["Product visibility", "Announcements", "Long-term exposure"],
+    contentTypes: ["Product Promotion", "Store / Brand Awareness", "Multi-Promotion Campaign"],
+    platforms: ["Facebook Feed", "X/Twitter", "Instagram Feed"],
+    actions: ["Use provided caption", "Mention business handle", "Share product/store link", "Repost on X/Twitter"],
+    verification: ["Post link", "Caption check", "Screenshot proof"],
+    accent: "#F5A623",
+    icon: "/icon-social-media.svg",
+  },
+  {
+    id: "business-short-form",
+    name: "Short-Form Business Visibility Bundle",
+    shortName: "Business Reels",
+    description: "Showcase promos, restaurants, fashion, products, and visual offers through short video.",
+    bestFor: ["Promo videos", "Restaurant visuals", "Fashion showcases", "Lifestyle branding"],
+    contentTypes: ["Product Promotion", "Offer / Discount Campaign", "Store / Brand Awareness"],
+    platforms: ["TikTok", "Instagram Reels", "Facebook Reels"],
+    actions: ["Repost TikTok video", "Share Instagram Reel", "Upload or repost Facebook Reel", "Use provided caption"],
+    verification: ["Repost link", "Caption check", "Visibility check"],
+    accent: "#F5A623",
+    icon: "/icon-content.svg",
+  },
+  {
+    id: "business-community",
+    name: "Community Distribution Bundle",
+    shortName: "Community Blast",
+    description: "Distribute offers and awareness in relevant local groups and communities.",
+    bestFor: ["Local community reach", "Neighborhood awareness", "Event promotion"],
+    contentTypes: ["Event Awareness", "Offer / Discount Campaign", "Service Awareness"],
+    platforms: ["WhatsApp Groups", "Telegram Communities", "Facebook Groups"],
+    actions: ["Share in relevant groups", "Use provided caption", "Mention business handle", "Share product/store link"],
+    verification: ["Group screenshot", "Timestamp check", "Community relevance"],
+    accent: "#F5A623",
+    icon: "/icon-community.svg",
+  },
+  {
+    id: "business-traffic",
+    name: "Traffic Push Bundle",
+    shortName: "Traffic Push",
+    description: "Send attention toward websites, online stores, booking pages, and catalog links.",
+    bestFor: ["Website visits", "Ecommerce traffic", "Booking pages", "Landing pages"],
+    contentTypes: ["Website / Online Store Traffic", "Product Promotion"],
+    platforms: ["Facebook", "X/Twitter", "WhatsApp Status", "Instagram Bio Traffic"],
+    actions: ["Share product/store link", "Use provided caption", "Encourage page visits", "Add call-to-action text"],
+    verification: ["Shared link proof", "Caption check", "Screenshot proof"],
+    accent: "#F5A623",
+    icon: "/icon-target.svg",
+  },
+  {
+    id: "story-status",
+    name: "Story & Status Distribution Bundle",
+    shortName: "Story & Status",
+    description: "Temporary awareness posts across WhatsApp Status, Facebook Story, and Instagram Story.",
+    bestFor: ["Flyer", "Product image", "Event announcement"],
+    contentTypes: ["Flyer", "Product image"],
+    platforms: ["WhatsApp Status", "Facebook Story", "Instagram Story"],
+    actions: ["Post flyer to WhatsApp status", "Post to Facebook story", "Post to Instagram story", "Use provided caption", "Keep post active for 24 hours"],
+    verification: ["Screenshot proof", "Timestamp check", "24 hour duration"],
+    accent: "#F5A623",
+    icon: "/icon-human-distribution.svg",
+  },
+  {
+    id: "video-distribution",
+    name: "Short-Form Video Distribution Bundle",
+    shortName: "Video Boost",
+    description: "Push short videos through TikTok, Instagram Reels, Facebook Reels, and Shorts-style channels.",
+    bestFor: ["Short video", "Music teaser", "Creator clip"],
+    contentTypes: ["Video"],
+    platforms: ["TikTok", "Instagram Reels", "Facebook Reels", "YouTube Shorts"],
+    actions: ["Repost TikTok video", "Share Instagram Reel", "Upload or repost Facebook Reel", "Share YouTube Short", "Use provided caption"],
+    verification: ["Repost link", "Caption check", "Hashtag check", "Visibility check"],
+    accent: "#F5A623",
+    icon: "/icon-content.svg",
+  },
+  {
+    id: "community-growth",
+    name: "Community Growth Bundle",
+    shortName: "Community Growth",
+    description: "Route contributors into brand communities with proof and retention checks.",
+    bestFor: ["Telegram", "WhatsApp communities", "Groups"],
+    contentTypes: ["Link"],
+    platforms: ["Telegram Groups", "WhatsApp Status"],
+    actions: ["Join Telegram community", "Join WhatsApp community", "Invite friends", "Submit feedback"],
+    verification: ["Membership validation", "Retention duration", "Participation check"],
+    accent: "#F5A623",
+    icon: "/icon-community.svg",
+  },
+  {
+    id: "guided-engagement",
+    name: "Guided Engagement Bundle",
+    shortName: "Engagement",
+    description: "A flexible campaign pack for links, feedback, app tests, reviews, and broad participation.",
+    bestFor: ["App tests", "Surveys", "Feedback", "Links"],
+    contentTypes: ["Audio", "Link"],
+    platforms: ["X/Twitter", "Telegram Groups", "YouTube Shorts"],
+    actions: ["Submit feedback", "Use provided caption", "Repost on X/Twitter"],
+    verification: ["Text proof", "Screenshot proof", "Manual review"],
+    accent: "#F5A623",
+    icon: "/icon-target.svg",
+  },
+];
 
 const packages: Package[] = [
   { id: "starter", name: "Starter Reach", reach: "Up to 100 contributors", description: "A clean test launch for local visibility.", reward: 1200, contributors: 100, duration: "3 days" },
   { id: "growth", name: "Growth Reach", reach: "Up to 500 contributors", description: "Balanced reach for offers, launches, and communities.", reward: 1500, contributors: 500, duration: "7 days" },
   { id: "viral", name: "Viral Push", reach: "Large-scale awareness", description: "Higher reward and pacing for broad participation.", reward: 2000, contributors: 1200, duration: "14 days" },
 ];
+
+const musicPackages: Package[] = [
+  { id: "starter-buzz", name: "Starter Buzz", reach: "Up to 120 contributors", description: "Good for upcoming artists and first release push.", reward: 1200, contributors: 120, duration: "3 days" },
+  { id: "growth-push", name: "Growth Push", reach: "Up to 500 contributors", description: "Mid-level awareness for songs, videos, and snippets.", reward: 1600, contributors: 500, duration: "5 days" },
+  { id: "viral-momentum", name: "Viral Momentum", reach: "Up to 1,200 contributors", description: "Trend-focused distribution for sound and teaser campaigns.", reward: 2200, contributors: 1200, duration: "7 days" },
+  { id: "release-week-blast", name: "Release Week Blast", reach: "High-intensity release week", description: "Fast campaign pacing for launch windows and project drops.", reward: 2600, contributors: 1800, duration: "5 days" },
+];
+
+const creatorPackages: Package[] = [
+  { id: "starter-visibility", name: "Starter Visibility", reach: "Up to 120 contributors", description: "Good for small creators testing content visibility.", reward: 1200, contributors: 120, duration: "3 days" },
+  { id: "growth-momentum", name: "Growth Momentum", reach: "Up to 550 contributors", description: "Increase creator discovery and engagement quality.", reward: 1600, contributors: 550, duration: "5 days" },
+  { id: "creator-viral-push", name: "Viral Push", reach: "Up to 1,300 contributors", description: "Aggressive visibility for clips and algorithm momentum.", reward: 2200, contributors: 1300, duration: "7 days" },
+  { id: "community-expansion", name: "Community Expansion", reach: "Fanbase growth focus", description: "Built for communities, livestreams, and audience retention.", reward: 1800, contributors: 800, duration: "10 days" },
+];
+
+const businessPackages: Package[] = [
+  { id: "starter-awareness", name: "Starter Awareness", reach: "Up to 100 contributors", description: "Good for small and local businesses.", reward: 1200, contributors: 100, duration: "3 days" },
+  { id: "growth-visibility", name: "Growth Visibility", reach: "Up to 500 contributors", description: "Expand local and online reach.", reward: 1500, contributors: 500, duration: "7 days" },
+  { id: "community-blast", name: "Community Blast", reach: "Up to 1,000 contributors", description: "High-volume local awareness for offers and events.", reward: 1900, contributors: 1000, duration: "7 days" },
+  { id: "premium-visibility", name: "Premium Visibility Push", reach: "Large-scale multi-platform push", description: "Best for broader product, brand, and traffic campaigns.", reward: 2400, contributors: 1600, duration: "14 days" },
+];
+
+const defaultFlow: CategoryFlow = {
+  id: "default",
+  builderIntro: "Launch a guided growth campaign in minutes.",
+  contentHeadline: "What would you like to promote?",
+  contentHelp: "Choose the closest campaign type. Qeixova will use this to guide rewards, proof, and targeting.",
+  contentTypes: defaultContentTypes,
+  goalsHeadline: "What should contributors help you achieve?",
+  goals,
+  uploadRequirements: {
+    Flyer: ["Campaign flyer or banner", "Campaign link", "Suggested caption"],
+    Video: ["Video link or file", "Thumbnail", "Caption", "Hashtags"],
+    Audio: ["Audio file or link", "Cover image", "Caption"],
+    "Product image": ["Product image", "Description", "CTA link"],
+    Link: ["Campaign link", "Short description", "Proof instructions"],
+  },
+  linkLabel: "Campaign link",
+  linkPlaceholder: "https://your-campaign-link.com",
+  captionLabel: "Suggested caption",
+  captionPlaceholder: "Optional caption contributors can use...",
+  bundlesHeadline: "Choose the campaign bundle",
+  targetHeadline: "Choose target contributors",
+  targetHelp: "Start broad, then add location or platform focus where it helps.",
+  interests: interestOptions,
+  levels: levelOptions,
+  packages,
+  launchHeadline: "Your campaign is queued for growth.",
+  launchSummary: "Qeixova will distribute it to relevant contributors based on interests, platform activity, contributor level, and location relevance.",
+  launchCta: "Launch campaign",
+  previewLabel: "Campaign Preview",
+  defaultContentType: "Flyer",
+  defaultGoal: "Increase visibility",
+  defaultTitle: "Business Awareness Campaign",
+  defaultInterests: ["Business", "Local Communities"],
+  defaultLevels: ["All Contributors"],
+  defaultBundleId: "story-status",
+};
+
+const categoryFlows: Record<string, CategoryFlow> = {
+  music: {
+    ...defaultFlow,
+    id: "music",
+    builderIntro: "Build release buzz, trend activity, and community-powered music visibility.",
+    contentHeadline: "What music are you pushing?",
+    contentHelp: "Choose the music campaign type so Qeixova can shape the upload fields, contributor actions, bundles, and verification.",
+    contentTypes: ["Song Release", "Music Video", "Song Snippet / Teaser", "Streaming Campaign", "TikTok Sound Campaign", "Artist Awareness Campaign", "Album / EP Launch"],
+    goalsHeadline: "What would you like this music campaign to achieve?",
+    goals: ["Increase Song Awareness", "Push Viral Momentum", "Grow Artist Visibility", "Increase Streams", "Promote A Music Video", "Boost TikTok Usage", "Build Fan Engagement"],
+    uploadRequirements: {
+      "Song Release": ["Song cover art", "Streaming link", "Audio snippet optional", "Artist name", "Song title"],
+      "Music Video": ["Video link", "Thumbnail", "Caption", "Hashtags optional"],
+      "Song Snippet / Teaser": ["Short clip", "Cover art", "Caption", "Hashtags optional"],
+      "Streaming Campaign": ["Streaming link", "Song cover art", "Artist name", "Song title"],
+      "TikTok Sound Campaign": ["TikTok sound link", "Sample video", "Suggested trend caption", "Challenge instructions optional"],
+      "Artist Awareness Campaign": ["Artist photo or flyer", "Artist bio", "Social profile link", "Campaign caption"],
+      "Album / EP Launch": ["Cover art", "Track list", "Streaming links", "Promo flyer", "Artist bio optional"],
+    },
+    linkLabel: "Music or streaming link",
+    linkPlaceholder: "Paste Audiomack, Spotify, Boomplay, TikTok sound, or video link",
+    captionLabel: "Music promo caption",
+    captionPlaceholder: "Example: New sound out now. Stream, share, and tag the artist...",
+    bundlesHeadline: "Recommended music promotion bundle",
+    targetHeadline: "Choose music-focused contributors",
+    targetHelp: "Music campaigns perform better when contributor interests, creator activity, and local buzz match the sound.",
+    interests: ["Music", "Entertainment", "Dance", "Lifestyle", "Campus Communities", "Creators", "Pop Culture"],
+    levels: ["All Contributors", "Verified Music Promoters", "Trend Creators", "Community Influencers"],
+    packages: musicPackages,
+    launchHeadline: "Your music campaign is ready to go live",
+    launchSummary: "Qeixova will distribute your campaign based on music interests, creator activity, platform relevance, trend behavior, and location targeting.",
+    launchCta: "Launch Music Campaign",
+    previewLabel: "Music Promo Preview",
+    defaultContentType: "Song Release",
+    defaultGoal: "Increase Song Awareness",
+    defaultTitle: "Music Release Promotion",
+    defaultInterests: ["Music", "Entertainment", "Campus Communities"],
+    defaultLevels: ["All Contributors"],
+    defaultBundleId: "music-story-status",
+  },
+  creator: {
+    ...defaultFlow,
+    id: "creator",
+    builderIntro: "Grow creator visibility, social momentum, and audience engagement.",
+    contentHeadline: "What creator campaign are you promoting?",
+    contentHelp: "Choose the content type so the flow can adapt platforms, actions, verification, and the right growth bundle.",
+    contentTypes: ["Short-Form Video Promotion", "Content Awareness Campaign", "Creator Page Growth", "Livestream Promotion", "Community Growth Campaign", "Podcast / Long-Form Content Promotion", "Personal Brand Awareness"],
+    goalsHeadline: "What would you like this creator campaign to achieve?",
+    goals: ["Increase Content Reach", "Boost Engagement", "Grow Creator Visibility", "Push Viral Momentum", "Increase Livestream Attendance", "Grow Community Members", "Strengthen Audience Loyalty", "Increase Profile Traffic"],
+    uploadRequirements: {
+      "Short-Form Video Promotion": ["Video link", "Thumbnail", "Caption", "Hashtags optional"],
+      "Content Awareness Campaign": ["Post URL", "Caption", "Creator handle/page link"],
+      "Creator Page Growth": ["Creator profile link", "Creator bio", "Promo caption"],
+      "Livestream Promotion": ["Livestream flyer/banner", "Stream link", "Stream time/date", "Reminder caption"],
+      "Community Growth Campaign": ["Community invite link", "Community description", "Rules/instructions"],
+      "Podcast / Long-Form Content Promotion": ["Video/podcast link", "Thumbnail", "Episode title", "Short description"],
+      "Personal Brand Awareness": ["Creator profile link", "Brand image", "Short creator bio", "Campaign caption"],
+    },
+    linkLabel: "Creator content link",
+    linkPlaceholder: "Paste TikTok, Instagram, YouTube, livestream, podcast, or community link",
+    captionLabel: "Creator campaign caption",
+    captionPlaceholder: "Example: Check out this creator, engage with the post, and follow for more...",
+    bundlesHeadline: "Recommended creator promotion bundle",
+    targetHeadline: "Choose creator-focused contributors",
+    targetHelp: "Target by content relevance, social interests, community influence, and creator activity.",
+    interests: ["Entertainment", "Lifestyle", "Comedy", "Gaming", "Tech", "Education", "Fashion", "Music", "Sports", "Pop Culture"],
+    levels: ["All Contributors", "Verified Creators", "Community Influencers", "Trend Contributors", "Premium Promoters"],
+    packages: creatorPackages,
+    launchHeadline: "Your creator campaign is ready to go live",
+    launchSummary: "Qeixova will distribute your campaign based on creator content relevance, contributor interests, platform activity, visibility potential, and audience targeting.",
+    launchCta: "Launch Creator Campaign",
+    previewLabel: "Creator Growth Preview",
+    defaultContentType: "Short-Form Video Promotion",
+    defaultGoal: "Increase Content Reach",
+    defaultTitle: "Creator Visibility Campaign",
+    defaultInterests: ["Entertainment", "Lifestyle", "Pop Culture"],
+    defaultLevels: ["All Contributors"],
+    defaultBundleId: "creator-short-form",
+  },
+  business: {
+    ...defaultFlow,
+    id: "business",
+    builderIntro: "Launch simple business visibility campaigns without complex ad-manager setup.",
+    contentHeadline: "What business promotion are you running?",
+    contentHelp: "Choose what you want people to discover so Qeixova can recommend the right awareness bundle.",
+    contentTypes: ["Product Promotion", "Service Awareness", "Store / Brand Awareness", "Offer / Discount Campaign", "Event Awareness", "Website / Online Store Traffic", "Multi-Promotion Campaign"],
+    goalsHeadline: "What would you like this campaign to achieve?",
+    goals: ["Increase Local Awareness", "Promote A Product", "Generate Customer Interest", "Drive Store Visits", "Increase Online Traffic", "Promote A Special Offer", "Build Brand Visibility", "Spread Community Awareness"],
+    uploadRequirements: {
+      "Product Promotion": ["Product images", "Product video optional", "Product description", "Pricing optional", "Website/social link"],
+      "Service Awareness": ["Business flyer/banner", "Service description", "Contact information", "Booking link/contact"],
+      "Store / Brand Awareness": ["Brand flyer", "Store photos", "Brand description", "Location details"],
+      "Offer / Discount Campaign": ["Promo flyer", "Offer details", "Expiry date", "CTA link/contact"],
+      "Event Awareness": ["Event flyer", "Event details", "Date/time/location", "CTA link/contact"],
+      "Website / Online Store Traffic": ["Website/store link", "Promo image", "CTA text", "Offer summary"],
+      "Multi-Promotion Campaign": ["Promo flyer", "Product/service list", "Contact link", "CTA text"],
+    },
+    linkLabel: "Website, page, or contact link",
+    linkPlaceholder: "Paste website, Instagram, WhatsApp, booking, catalog, or store link",
+    captionLabel: "Business promo caption",
+    captionPlaceholder: "Example: Discover our new offer. Message us today or visit our store...",
+    bundlesHeadline: "Recommended business awareness bundle",
+    targetHeadline: "Choose business-focused contributors",
+    targetHelp: "Local relevance matters. Select interests, contributor quality, and location signals that match your customers.",
+    interests: ["Fashion", "Food & Restaurants", "Lifestyle", "Tech", "Beauty", "Local Communities", "Students", "Entertainment", "Shopping"],
+    levels: ["All Contributors", "Verified Contributors", "Community Influencers", "Local Promoters", "Premium Contributors"],
+    packages: businessPackages,
+    launchHeadline: "Your business awareness campaign is ready",
+    launchSummary: "Qeixova will distribute your campaign based on audience interests, local relevance, platform activity, contributor quality, and visibility potential.",
+    launchCta: "Launch Campaign",
+    previewLabel: "Business Growth Preview",
+    defaultContentType: "Product Promotion",
+    defaultGoal: "Increase Local Awareness",
+    defaultTitle: "Business Awareness Campaign",
+    defaultInterests: ["Local Communities", "Shopping"],
+    defaultLevels: ["All Contributors"],
+    defaultBundleId: "business-story-status",
+  },
+};
 
 const steps = [
   "Promote",
@@ -93,13 +593,51 @@ function ToggleGrid({ options, selected, onChange }: { options: string[]; select
         const active = selected.includes(option);
         return (
           <button key={option} type="button" onClick={() => toggle(option)} className={active ? "pill active" : "pill"}>
-            {active && <span className="checkMark">✓</span>}
+            {active && <span className="checkMark">OK</span>}
             {option}
           </button>
         );
       })}
     </div>
   );
+}
+
+function getCategoryFlow(categoryId: string) {
+  return categoryFlows[categoryId] ?? defaultFlow;
+}
+
+function getBundlesForCategory(categoryId: string) {
+  if (categoryId === "music") return campaignBundles.filter((bundle) => bundle.id.startsWith("music-"));
+  if (categoryId === "creator") return campaignBundles.filter((bundle) => bundle.id.startsWith("creator-"));
+  if (categoryId === "business") return campaignBundles.filter((bundle) => bundle.id.startsWith("business-"));
+  return campaignBundles.filter((bundle) => !bundle.id.startsWith("music-") && !bundle.id.startsWith("creator-") && !bundle.id.startsWith("business-"));
+}
+
+function getRecommendedBundle(contentType: string, categoryId: string, goal = "") {
+  if (categoryId === "music") {
+    if (contentType === "TikTok Sound Campaign" || contentType === "Song Snippet / Teaser" || goal === "Push Viral Momentum" || goal === "Boost TikTok Usage") return campaignBundles.find((bundle) => bundle.id === "music-short-video") ?? campaignBundles[0];
+    if (contentType === "Streaming Campaign" || goal === "Increase Streams") return campaignBundles.find((bundle) => bundle.id === "music-streaming") ?? campaignBundles[0];
+    if (contentType === "Artist Awareness Campaign" || goal === "Build Fan Engagement") return campaignBundles.find((bundle) => bundle.id === "music-fan-engagement") ?? campaignBundles[0];
+    return campaignBundles.find((bundle) => bundle.id === "music-story-status") ?? campaignBundles[0];
+  }
+  if (categoryId === "creator") {
+    if (contentType === "Livestream Promotion" || goal === "Increase Livestream Attendance") return campaignBundles.find((bundle) => bundle.id === "creator-livestream") ?? campaignBundles[0];
+    if (contentType === "Community Growth Campaign" || goal === "Grow Community Members") return campaignBundles.find((bundle) => bundle.id === "creator-community") ?? campaignBundles[0];
+    if (contentType === "Short-Form Video Promotion" || goal === "Push Viral Momentum") return campaignBundles.find((bundle) => bundle.id === "creator-short-form") ?? campaignBundles[0];
+    if (goal === "Boost Engagement" || goal === "Increase Profile Traffic") return campaignBundles.find((bundle) => bundle.id === "creator-engagement") ?? campaignBundles[0];
+    return campaignBundles.find((bundle) => bundle.id === "creator-story-status") ?? campaignBundles[0];
+  }
+  if (categoryId === "business") {
+    if (contentType === "Website / Online Store Traffic" || goal === "Increase Online Traffic") return campaignBundles.find((bundle) => bundle.id === "business-traffic") ?? campaignBundles[0];
+    if (contentType === "Event Awareness" || goal === "Spread Community Awareness" || goal === "Drive Store Visits") return campaignBundles.find((bundle) => bundle.id === "business-community") ?? campaignBundles[0];
+    if (contentType === "Store / Brand Awareness" || goal === "Build Brand Visibility") return campaignBundles.find((bundle) => bundle.id === "business-social-feed") ?? campaignBundles[0];
+    if (contentType === "Product Promotion" && goal === "Promote A Product") return campaignBundles.find((bundle) => bundle.id === "business-short-form") ?? campaignBundles[0];
+    return campaignBundles.find((bundle) => bundle.id === "business-story-status") ?? campaignBundles[0];
+  }
+  if (categoryId === "community") return campaignBundles.find((bundle) => bundle.id === "community-growth") ?? campaignBundles[0];
+  if (categoryId === "video" || categoryId === "music" || contentType === "Video") return campaignBundles.find((bundle) => bundle.id === "video-distribution") ?? campaignBundles[0];
+  if (contentType === "Link" || categoryId === "apps" || categoryId === "surveys") return campaignBundles.find((bundle) => bundle.id === "guided-engagement") ?? campaignBundles[0];
+  return campaignBundles.find((bundle) => bundle.id === "story-status") ?? campaignBundles[0];
 }
 
 export default function CreateCampaignPage() {
@@ -112,21 +650,22 @@ export default function CreateCampaignPage() {
   const [stepIndex, setStepIndex] = useState(0);
 
   const [categoryId, setCategoryId] = useState("business");
-  const [goal, setGoal] = useState("Increase visibility");
-  const [contentType, setContentType] = useState("Flyer");
+  const [goal, setGoal] = useState("Increase Local Awareness");
+  const [contentType, setContentType] = useState("Product Promotion");
   const [contentLink, setContentLink] = useState("");
   const [fileName, setFileName] = useState("");
   const [caption, setCaption] = useState("");
   const [title, setTitle] = useState("Business Awareness Campaign");
-  const [actions, setActions] = useState<string[]>(["Share to WhatsApp status", "Use provided caption"]);
+  const [bundleId, setBundleId] = useState("business-story-status");
+  const [actions, setActions] = useState<string[]>(["Post product flyer to WhatsApp status", "Use provided caption", "Keep post active for 24 hours"]);
   const [instructions, setInstructions] = useState("Leave the post visible for at least 24 hours.");
-  const [interests, setInterests] = useState<string[]>(["Business", "Local Communities"]);
-  const [platforms, setPlatforms] = useState<string[]>(["WhatsApp"]);
+  const [interests, setInterests] = useState<string[]>(["Local Communities", "Shopping"]);
+  const [platforms, setPlatforms] = useState<string[]>(["WhatsApp Status"]);
   const [levels, setLevels] = useState<string[]>(["All Contributors"]);
   const [states, setStates] = useState<string[]>(["Lagos"]);
   const [cities, setCities] = useState<string[]>([]);
   const [campuses, setCampuses] = useState<string[]>([]);
-  const [packageId, setPackageId] = useState("starter");
+  const [packageId, setPackageId] = useState("starter-awareness");
   const [advancedOpen, setAdvancedOpen] = useState(false);
   const [customReward, setCustomReward] = useState("");
   const [customContributors, setCustomContributors] = useState("");
@@ -134,7 +673,11 @@ export default function CreateCampaignPage() {
   const [customPacing, setCustomPacing] = useState("Steady distribution");
 
   const category = campaignCategories.find((item) => item.id === categoryId) ?? campaignCategories[0];
-  const selectedPackage = packages.find((item) => item.id === packageId) ?? packages[0];
+  const categoryFlow = getCategoryFlow(categoryId);
+  const recommendedBundle = getRecommendedBundle(contentType, categoryId, goal);
+  const selectedBundle = campaignBundles.find((item) => item.id === bundleId) ?? recommendedBundle;
+  const selectedPackage = categoryFlow.packages.find((item) => item.id === packageId) ?? categoryFlow.packages[0];
+  const categoryPlatforms = useMemo(() => Array.from(new Set(getBundlesForCategory(categoryId).flatMap((bundle) => bundle.platforms))), [categoryId]);
   const resolvedReward = advancedOpen && Number(customReward) > 0 ? Number(customReward) : selectedPackage.reward;
   const resolvedContributors = advancedOpen && Number(customContributors) > 0 ? Number(customContributors) : selectedPackage.contributors;
   const resolvedDuration = advancedOpen && customDuration.trim() ? customDuration.trim() : selectedPackage.duration;
@@ -158,6 +701,7 @@ export default function CreateCampaignPage() {
   const previewInstructions = useMemo(() => {
     return [
       `Goal: ${goal}.`,
+      selectedBundle ? `Campaign bundle: ${selectedBundle.name}. Verification: ${selectedBundle.verification.join(", ")}.` : "",
       contentType ? `Campaign content: ${contentType}${contentLink ? ` - ${contentLink}` : fileName ? ` - ${fileName}` : ""}.` : "",
       actions.length ? `Contributor actions: ${actions.join(", ")}.` : "",
       caption ? `Suggested caption: ${caption}` : "",
@@ -168,7 +712,7 @@ export default function CreateCampaignPage() {
       cities.length || campuses.length ? `Local focus: ${[...cities, ...campuses].join(", ")}.` : "",
       advancedOpen ? `Campaign pacing: ${customPacing}.` : "",
     ].filter(Boolean).join("\n");
-  }, [actions, advancedOpen, campuses, caption, cities, contentLink, contentType, customPacing, fileName, goal, instructions, interests, levels, platforms]);
+  }, [actions, advancedOpen, campuses, caption, cities, contentLink, contentType, customPacing, fileName, goal, instructions, interests, levels, platforms, selectedBundle]);
 
   const proofLabel = useMemo(() => {
     if (actions.some((action) => action.toLowerCase().includes("feedback"))) return "Submit your feedback and attach proof if requested";
@@ -181,6 +725,35 @@ export default function CreateCampaignPage() {
     const quality = category.missionType === "premium" ? "high-touch participation" : category.missionType === "participation" ? "useful feedback quality" : "fast visibility";
     return { platforms: recommendedPlatforms, quality };
   }, [category.missionType, platforms]);
+
+  const applyBundle = (bundle: CampaignBundle) => {
+    setBundleId(bundle.id);
+    setPlatforms(bundle.platforms);
+    setActions(bundle.actions);
+    setInstructions(
+      bundle.id === "story-status"
+        ? "Use the provided caption, keep the story/status visible for 24 hours, and upload screenshots with timestamps."
+        : bundle.id === "video-distribution"
+          ? "Use the provided caption and hashtags, keep the video public during the campaign, and submit repost links or screenshots."
+          : bundle.id === "community-growth"
+            ? "Join the selected community, remain active for the required duration, and submit proof of membership or participation."
+            : "Follow the campaign instruction, submit proof clearly, and keep the action visible until review is complete."
+    );
+  };
+
+  const applyFlow = (nextCategoryId: string) => {
+    const flow = getCategoryFlow(nextCategoryId);
+    const bundle = campaignBundles.find((item) => item.id === flow.defaultBundleId) ?? getRecommendedBundle(flow.defaultContentType, nextCategoryId, flow.defaultGoal);
+    setCategoryId(nextCategoryId);
+    setGoal(flow.defaultGoal);
+    setContentType(flow.defaultContentType);
+    setTitle(flow.defaultTitle);
+    setInterests(flow.defaultInterests);
+    setLevels(flow.defaultLevels);
+    setPackageId(flow.packages[0]?.id ?? "starter");
+    setCustomPacing(nextCategoryId === "music" ? "Fast launch burst" : nextCategoryId === "creator" ? "Weekend push" : "Steady distribution");
+    applyBundle(bundle);
+  };
 
   const canContinue = () => {
     if (stepIndex === 0) return Boolean(categoryId);
@@ -208,6 +781,14 @@ export default function CreateCampaignPage() {
 
   const generateCaption = () => {
     const platformHint = platforms.length ? `on ${platforms[0]}` : "today";
+    if (categoryId === "music") {
+      setCaption(`New music alert: ${title || "this release"} is out now. Listen, share ${platformHint}, use the sound, and help more people discover the artist.`);
+      return;
+    }
+    if (categoryId === "creator") {
+      setCaption(`Discover ${title || "this creator campaign"}. Watch, engage, share ${platformHint}, and help the content reach the right audience.`);
+      return;
+    }
     setCaption(`Discover ${title || category.title}. Join the conversation ${platformHint}, share with your circle, and help more people see what is coming from ${business?.name || "this brand"}.`);
   };
 
@@ -279,8 +860,8 @@ export default function CreateCampaignPage() {
               <Image src="/icon-check-circle.svg" alt="" width={34} height={34} />
             </div>
             <p className="eyebrow">Campaign ready</p>
-            <h1>Your campaign is queued for growth.</h1>
-            <p className="launchCopy">Qeixova will distribute it to relevant contributors based on interests, platform activity, contributor level, and location relevance.</p>
+            <h1>{categoryFlow.launchHeadline}</h1>
+            <p className="launchCopy">{categoryFlow.launchSummary}</p>
             <div className="momentumGrid">
               <div><strong>0</strong><span>early participants</span></div>
               <div><strong>Pending</strong><span>approval status</span></div>
@@ -306,7 +887,7 @@ export default function CreateCampaignPage() {
           <div>
             <p className="eyebrow">Qeixova Tasks</p>
             <h1>Create Campaign</h1>
-            <p>Launch a guided growth campaign in minutes.</p>
+            <p>{categoryFlow.builderIntro}</p>
           </div>
           <div className="headerStats">
             <span>{steps.length} guided steps</span>
@@ -331,8 +912,8 @@ export default function CreateCampaignPage() {
               <div className="stepContent">
                 <div className="sectionTitle">
                   <p className="eyebrow">Step 1</p>
-                  <h2>What would you like to promote?</h2>
-                  <p>Choose the closest campaign type. Qeixova will use this to guide rewards, proof, and targeting.</p>
+                  <h2>{categoryFlow.contentHeadline}</h2>
+                  <p>{categoryFlow.contentHelp}</p>
                 </div>
                 <div className="categoryGrid">
                   {campaignCategories.map((item) => {
@@ -341,11 +922,7 @@ export default function CreateCampaignPage() {
                       <button
                         key={item.id}
                         type="button"
-                        onClick={() => {
-                          const previousDefault = `${category.title} Campaign`;
-                          setCategoryId(item.id);
-                          if (!title.trim() || title === previousDefault) setTitle(`${item.title} Campaign`);
-                        }}
+                        onClick={() => applyFlow(item.id)}
                         className={active ? "categoryCard selected" : "categoryCard"}
                         style={{ borderColor: active ? item.accent : "#202020" }}
                       >
@@ -366,12 +943,22 @@ export default function CreateCampaignPage() {
               <div className="stepContent">
                 <div className="sectionTitle">
                   <p className="eyebrow">Step 2</p>
-                  <h2>What should contributors help you achieve?</h2>
+                  <h2>{categoryFlow.goalsHeadline}</h2>
                   <p>Pick the main outcome. Keep it focused so contributors understand the mission quickly.</p>
                 </div>
                 <div className="goalGrid">
-                  {goals.map((item) => (
-                    <button key={item} type="button" onClick={() => setGoal(item)} className={goal === item ? "goalButton active" : "goalButton"}>{item}</button>
+                  {categoryFlow.goals.map((item) => (
+                    <button
+                      key={item}
+                      type="button"
+                      onClick={() => {
+                        setGoal(item);
+                        applyBundle(getRecommendedBundle(contentType, categoryId, item));
+                      }}
+                      className={goal === item ? "goalButton active" : "goalButton"}
+                    >
+                      {item}
+                    </button>
                   ))}
                 </div>
               </div>
@@ -382,13 +969,16 @@ export default function CreateCampaignPage() {
                 <div className="sectionTitle">
                   <p className="eyebrow">Step 3</p>
                   <h2>Upload campaign content</h2>
-                  <p>Keep the source material clear. Contributors should know exactly what to share, watch, test, or review.</p>
+                  <p>Keep the source material clear. Qeixova adapts the requirements to this campaign type.</p>
                 </div>
                 <div className="splitGrid">
                   <div className="uploadBox">
                     <Image src="/icon-content.svg" alt="" width={30} height={30} />
                     <strong>{fileName || "Drop your campaign asset here"}</strong>
-                    <span>Flyer, video, audio, product image, or brief PDF. JPG, PNG, MP4, MP3, PDF supported.</span>
+                    <span>{categoryFlow.contentHelp}</span>
+                    <div className="requirementList">
+                      {(categoryFlow.uploadRequirements[contentType] ?? []).map((requirement) => <small key={requirement}>{requirement}</small>)}
+                    </div>
                     <label className="fileButton">
                       Choose file
                       <input type="file" accept="image/*,video/*,audio/*,.pdf" onChange={(event) => setFileName(event.target.files?.[0]?.name || "")} />
@@ -397,13 +987,20 @@ export default function CreateCampaignPage() {
                   <div className="fieldStack">
                     <label>
                       Content type
-                      <select value={contentType} onChange={(event) => setContentType(event.target.value)}>
-                        {contentTypes.map((item) => <option key={item}>{item}</option>)}
+                      <select
+                        value={contentType}
+                        onChange={(event) => {
+                          const nextContentType = event.target.value;
+                          setContentType(nextContentType);
+                          applyBundle(getRecommendedBundle(nextContentType, categoryId, goal));
+                        }}
+                      >
+                        {categoryFlow.contentTypes.map((item) => <option key={item}>{item}</option>)}
                       </select>
                     </label>
                     <label>
-                      Campaign link
-                      <input value={contentLink} onChange={(event) => setContentLink(event.target.value)} placeholder="https://your-campaign-link.com" />
+                      {categoryFlow.linkLabel}
+                      <input value={contentLink} onChange={(event) => setContentLink(event.target.value)} placeholder={categoryFlow.linkPlaceholder} />
                     </label>
                     <div className="assistBox">
                       <div>
@@ -413,8 +1010,8 @@ export default function CreateCampaignPage() {
                       <button type="button" onClick={generateCaption}>Generate</button>
                     </div>
                     <label>
-                      Suggested caption
-                      <textarea value={caption} onChange={(event) => setCaption(event.target.value)} rows={4} placeholder="Optional caption contributors can use..." />
+                      {categoryFlow.captionLabel}
+                      <textarea value={caption} onChange={(event) => setCaption(event.target.value)} rows={4} placeholder={categoryFlow.captionPlaceholder} />
                     </label>
                   </div>
                 </div>
@@ -425,14 +1022,52 @@ export default function CreateCampaignPage() {
               <div className="stepContent">
                 <div className="sectionTitle">
                   <p className="eyebrow">Step 4</p>
-                  <h2>Describe the mission</h2>
-                  <p>Use structured choices first, then add only the notes that matter.</p>
+                  <h2>{categoryFlow.bundlesHeadline}</h2>
+                  <p>Qeixova recommends a bundle first, then you can customize the exact platforms and actions.</p>
                 </div>
                 <div className="fieldStack">
+                  <div className="recommendBox">
+                    <div className="recommendIcon">
+                      <Image src={recommendedBundle.icon} alt="" width={24} height={24} />
+                    </div>
+                    <div>
+                      <span>Recommended bundle</span>
+                      <strong>{recommendedBundle.name}</strong>
+                      <p>{contentType} campaigns perform best with {recommendedBundle.shortName.toLowerCase()} because the platforms, actions, and proof match how this audience behaves.</p>
+                    </div>
+                    <button type="button" onClick={() => applyBundle(recommendedBundle)}>Apply</button>
+                  </div>
+                  <div className="bundleGrid">
+                    {getBundlesForCategory(categoryId).map((bundle) => {
+                      const active = selectedBundle.id === bundle.id;
+                      return (
+                        <button
+                          key={bundle.id}
+                          type="button"
+                          onClick={() => applyBundle(bundle)}
+                          className={active ? "bundleCard selected" : "bundleCard"}
+                        >
+                          <span className="bundleIcon">
+                            <Image src={bundle.icon} alt="" width={22} height={22} />
+                          </span>
+                          <strong>{bundle.shortName}</strong>
+                          <small>{bundle.description}</small>
+                          <em>{bundle.verification.slice(0, 2).join(" + ")}</em>
+                        </button>
+                      );
+                    })}
+                  </div>
                   <label>
                     Mission title
                     <input value={title} onChange={(event) => setTitle(event.target.value)} placeholder="Restaurant Awareness Campaign" />
                   </label>
+                  <div>
+                    <div className="rowLabel">
+                      <p className="labelText">Distribution platforms</p>
+                      <span>{platforms.length} selected</span>
+                    </div>
+                    <ToggleGrid options={selectedBundle.platforms} selected={platforms} onChange={setPlatforms} />
+                  </div>
                   <div>
                     <p className="labelText">What should contributors do?</p>
                     <ToggleGrid options={actionOptions} selected={actions} onChange={setActions} />
@@ -449,13 +1084,13 @@ export default function CreateCampaignPage() {
               <div className="stepContent">
                 <div className="sectionTitle">
                   <p className="eyebrow">Step 5</p>
-                  <h2>Choose target contributors</h2>
-                  <p>Start broad, then add location or platform focus where it helps.</p>
+                  <h2>{categoryFlow.targetHeadline}</h2>
+                  <p>{categoryFlow.targetHelp}</p>
                 </div>
                 <div className="targetStack">
-                  <div><p className="labelText">Audience interests</p><ToggleGrid options={interestOptions} selected={interests} onChange={setInterests} /></div>
-                  <div><p className="labelText">Platform selection</p><ToggleGrid options={platformOptions} selected={platforms} onChange={setPlatforms} /></div>
-                  <div><p className="labelText">Contributor level</p><ToggleGrid options={levelOptions} selected={levels} onChange={setLevels} /></div>
+                  <div><p className="labelText">Audience interests</p><ToggleGrid options={categoryFlow.interests} selected={interests} onChange={setInterests} /></div>
+                  <div><p className="labelText">Extra platform focus</p><ToggleGrid options={categoryPlatforms.length ? categoryPlatforms : platformOptions} selected={platforms} onChange={setPlatforms} /></div>
+                  <div><p className="labelText">Contributor type</p><ToggleGrid options={categoryFlow.levels} selected={levels} onChange={setLevels} /></div>
                   <div><p className="labelText">Nigeria state targeting</p><ToggleGrid options={stateOptions} selected={states} onChange={setStates} /></div>
                   <div className="splitGrid compact">
                     <div><p className="labelText">City focus</p><ToggleGrid options={cityOptions} selected={cities} onChange={setCities} /></div>
@@ -469,11 +1104,11 @@ export default function CreateCampaignPage() {
               <div className="stepContent">
                 <div className="sectionTitle">
                   <p className="eyebrow">Step 6</p>
-                  <h2>Budget and reward setup</h2>
-                  <p>Choose a reach package. Advanced controls are available when you need exact limits.</p>
+                  <h2>Campaign reach package</h2>
+                  <p>Choose the momentum level. Advanced controls are available when you need exact limits.</p>
                 </div>
                 <div className="packageGrid">
-                  {packages.map((item) => (
+                  {categoryFlow.packages.map((item) => (
                     <button key={item.id} type="button" onClick={() => setPackageId(item.id)} className={packageId === item.id ? "packageCard selected" : "packageCard"}>
                       <span>{item.name}</span>
                       <strong>{item.reach}</strong>
@@ -500,10 +1135,25 @@ export default function CreateCampaignPage() {
               <div className="stepContent">
                 <div className="sectionTitle">
                   <p className="eyebrow">Step 7</p>
-                  <h2>Campaign preview</h2>
+                  <h2>{categoryFlow.previewLabel}</h2>
                   <p>This is the confidence check before launch. It mirrors what contributors need to understand.</p>
                 </div>
-                <PreviewCard category={category} title={title} goal={goal} reward={resolvedReward} contributors={resolvedContributors} platforms={platforms} interests={interests} instructions={previewInstructions} />
+                <PreviewCard
+                  category={category}
+                  bundle={selectedBundle}
+                  title={title}
+                  goal={goal}
+                  contributors={resolvedContributors}
+                  duration={resolvedDuration}
+                  platforms={platforms}
+                  interests={interests}
+                  actions={actions}
+                  instructions={previewInstructions}
+                  contentType={contentType}
+                  businessName={business.name}
+                  budget={estimatedBudget}
+                  previewLabel={categoryFlow.previewLabel}
+                />
               </div>
             )}
 
@@ -511,8 +1161,8 @@ export default function CreateCampaignPage() {
               <div className="stepContent">
                 <div className="sectionTitle">
                   <p className="eyebrow">Step 8</p>
-                  <h2>Your campaign is ready</h2>
-                  <p>Qeixova will route it to contributors by interests, platform activity, level, and location relevance.</p>
+                  <h2>{categoryFlow.launchHeadline}</h2>
+                  <p>{categoryFlow.launchSummary}</p>
                 </div>
                 <div className="readyPanel">
                   <div className="readyMetric"><span>Recommended platforms</span><strong>{recommended.platforms}</strong></div>
@@ -527,7 +1177,7 @@ export default function CreateCampaignPage() {
               {stepIndex < 7 ? (
                 <button type="button" className="primaryButton" onClick={nextStep}>Continue</button>
               ) : (
-                <button type="button" className="primaryButton" disabled={saving} onClick={handleSubmit}>{saving ? "Launching..." : "Launch campaign"}</button>
+                <button type="button" className="primaryButton" disabled={saving} onClick={handleSubmit}>{saving ? "Launching..." : categoryFlow.launchCta}</button>
               )}
             </div>
           </section>
@@ -554,28 +1204,141 @@ export default function CreateCampaignPage() {
   );
 }
 
-function PreviewCard({ category, title, goal, reward, contributors, platforms, interests, instructions }: { category: CampaignCategory; title: string; goal: string; reward: number; contributors: number; platforms: string[]; interests: string[]; instructions: string }) {
+function PreviewCard({
+  category,
+  bundle,
+  title,
+  goal,
+  contributors,
+  duration,
+  platforms,
+  interests,
+  actions,
+  instructions,
+  contentType,
+  businessName,
+  budget,
+  previewLabel,
+}: {
+  category: CampaignCategory;
+  bundle: CampaignBundle;
+  title: string;
+  goal: string;
+  contributors: number;
+  duration: string;
+  platforms: string[];
+  interests: string[];
+  actions: string[];
+  instructions: string;
+  contentType: string;
+  businessName: string;
+  budget: number;
+  previewLabel: string;
+}) {
+  const estimatedReach = `${Math.max(contributors * 50, 5000).toLocaleString()} - ${Math.max(contributors * 160, 12000).toLocaleString()}`;
+  const shownPlatforms = platforms.length ? platforms : bundle.platforms;
+
   return (
     <article className="previewCard">
-      <div className="previewTop">
-        <div className="previewThumb" style={{ background: `${category.accent}18` }}>
-          <Image src={category.icon} alt="" width={34} height={34} />
+      <div className="previewNav">
+        <button type="button" aria-label="Back to edit">{"<"}</button>
+        <div>
+          <strong>{previewLabel}</strong>
+          <span>Review and launch your campaign</span>
+        </div>
+        <button type="button">Edit</button>
+      </div>
+
+      <div className="readyBanner">
+        <Image src="/icon-check-circle.svg" alt="" width={28} height={28} />
+        <div>
+          <strong>Ready to Launch</strong>
+          <span>Your campaign bundle is all set.</span>
+        </div>
+      </div>
+
+      <div className="previewHero">
+        <div className="campaignBadge">
+          <Image src={category.icon} alt="" width={25} height={25} />
         </div>
         <div>
-          <span>{category.title}</span>
           <h3>{title}</h3>
-          <p>{goal}</p>
+          <p>{category.title} - {bundle.shortName}</p>
         </div>
       </div>
+
+      <div className="goalLine">
+        <span>Goal</span>
+        <p>{goal} for {businessName} using a guided {bundle.shortName.toLowerCase()} campaign.</p>
+      </div>
+
+      <section className="flyerPanel">
+        <div className="panelHeader">
+          <strong>Campaign {contentType}</strong>
+          <span>{bundle.shortName}</span>
+        </div>
+        <div className="mockFlyer">
+          <div>
+            <span>{businessName}</span>
+            <strong>{contentType === "Video" ? "VIDEO BOOST" : "AWARENESS PUSH"}</strong>
+            <p>{goal}</p>
+          </div>
+          <small>{bundle.platforms.slice(0, 3).join(" + ")}</small>
+        </div>
+      </section>
+
+      <section className="previewSection">
+        <div className="panelHeader">
+          <strong>Distribution Platforms</strong>
+          <span>{shownPlatforms.length} selected</span>
+        </div>
+        <div className="platformCards">
+          {shownPlatforms.slice(0, 4).map((platform, index) => (
+            <div key={platform} className="platformCard">
+              <b>{platform.split(" ").map((word) => word[0]).join("").slice(0, 2)}</b>
+              <div>
+                <strong>{platform}</strong>
+                <span>{index === 0 ? "Primary" : index === 1 ? "Secondary" : "Optional"}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="previewSection actionSection">
+        <div className="panelHeader">
+          <strong>Contributors Will</strong>
+          <span>{actions.length} actions</span>
+        </div>
+        <ul>
+          {actions.slice(0, 5).map((action) => (
+            <li key={action}><span>OK</span>{action}</li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="previewSection">
+        <div className="panelHeader">
+          <strong>Target Audience</strong>
+          <span>View Details</span>
+        </div>
+        <div className="audienceRows">
+          <div><span>Interests</span><p>{interests.length ? interests.join(", ") : "All interests"}</p></div>
+          <div><span>Verification</span><p>{bundle.verification.join(", ")}</p></div>
+        </div>
+      </section>
+
       <div className="previewStats">
-        <div><strong>{reward.toLocaleString()}</strong><span>QLT reward</span></div>
-        <div><strong>{contributors.toLocaleString()}</strong><span>participants</span></div>
-        <div><strong>{platforms.length || "All"}</strong><span>platforms</span></div>
+        <div><strong>{contributors.toLocaleString()}</strong><span>Est. Contributors</span></div>
+        <div><strong>{estimatedReach}</strong><span>Est. Reach</span></div>
+        <div><strong>{duration}</strong><span>Duration</span></div>
+        <div><strong>{budget.toLocaleString()} QLT</strong><span>Total Budget</span></div>
       </div>
-      <div className="previewTags">
-        {[...platforms, ...interests].slice(0, 10).map((item) => <span key={item}>{item}</span>)}
-      </div>
-      <pre>{instructions}</pre>
+
+      <details className="instructionDetails">
+        <summary>Verification and instruction details</summary>
+        <pre>{instructions}</pre>
+      </details>
     </article>
   );
 }
@@ -852,6 +1615,24 @@ const pageStyles = `
     line-height: 1.55;
     max-width: 320px;
   }
+  .requirementList {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+    width: 100%;
+    max-width: 360px;
+    margin: 2px auto 4px;
+  }
+  .requirementList small {
+    border: 1px solid rgba(245, 166, 35, 0.2);
+    background: rgba(245, 166, 35, 0.08);
+    color: #f5a623;
+    border-radius: 9px;
+    padding: 7px 8px;
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1.25;
+  }
   .fileButton {
     position: relative;
     overflow: hidden;
@@ -919,6 +1700,94 @@ const pageStyles = `
     cursor: pointer;
     white-space: nowrap;
   }
+  .recommendBox {
+    border: 1px solid rgba(245, 166, 35, 0.26);
+    background: linear-gradient(135deg, rgba(245, 166, 35, 0.14), rgba(245, 166, 35, 0.04));
+    border-radius: 16px;
+    padding: 14px;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 12px;
+    align-items: center;
+  }
+  .recommendIcon, .bundleIcon {
+    width: 46px;
+    height: 46px;
+    border-radius: 13px;
+    background: rgba(245, 166, 35, 0.14);
+    display: grid;
+    place-items: center;
+  }
+  .recommendBox span, .rowLabel span {
+    color: #f5a623;
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+  .recommendBox strong {
+    display: block;
+    color: #fff;
+    font-size: 17px;
+    margin: 3px 0;
+  }
+  .recommendBox p {
+    color: #aaa;
+    font-size: 12px;
+    line-height: 1.45;
+  }
+  .recommendBox button {
+    border: 0;
+    background: #f5a623;
+    color: #050505;
+    border-radius: 11px;
+    padding: 10px 13px;
+    font-weight: 900;
+    cursor: pointer;
+  }
+  .bundleGrid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .bundleCard {
+    border: 1px solid #242424;
+    background: #101010;
+    color: #f5f5f5;
+    border-radius: 14px;
+    padding: 13px;
+    text-align: left;
+    cursor: pointer;
+    min-height: 190px;
+  }
+  .bundleCard.selected {
+    border-color: rgba(245, 166, 35, 0.62);
+    background: rgba(245, 166, 35, 0.08);
+  }
+  .bundleCard strong {
+    display: block;
+    margin: 11px 0 7px;
+    font-size: 14px;
+    line-height: 1.2;
+  }
+  .bundleCard small, .bundleCard em {
+    display: block;
+    color: #999;
+    font-size: 11px;
+    line-height: 1.45;
+    font-style: normal;
+  }
+  .bundleCard em {
+    color: #f5a623;
+    margin-top: 10px;
+    font-weight: 800;
+  }
+  .rowLabel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
   .packageGrid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -955,9 +1824,255 @@ const pageStyles = `
   }
   .previewCard {
     border: 1px solid #202020;
-    background: #0f0f0f;
-    border-radius: 18px;
+    background:
+      radial-gradient(circle at 78% 0%, rgba(245, 166, 35, 0.14), transparent 28%),
+      linear-gradient(180deg, #090b14 0%, #080808 100%);
+    border-radius: 24px;
+    padding: 16px;
+    max-width: 560px;
+    margin: 0 auto;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.32);
+  }
+  .previewNav {
+    display: grid;
+    grid-template-columns: 48px 1fr 74px;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 13px;
+  }
+  .previewNav button {
+    border: 1px solid rgba(245, 166, 35, 0.22);
+    background: rgba(255, 255, 255, 0.04);
+    color: #f5a623;
+    border-radius: 12px;
+    height: 38px;
+    font-weight: 900;
+    cursor: pointer;
+  }
+  .previewNav div {
+    text-align: center;
+    min-width: 0;
+  }
+  .previewNav strong {
+    display: block;
+    font-size: 16px;
+    line-height: 1.2;
+  }
+  .previewNav span {
+    display: block;
+    color: #8e8e8e;
+    font-size: 12px;
+    margin-top: 2px;
+  }
+  .readyBanner {
+    border: 1px solid rgba(26, 239, 34, 0.22);
+    background: rgba(26, 239, 34, 0.08);
+    border-radius: 10px;
+    padding: 10px 12px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .readyBanner strong {
+    display: block;
+    color: #8dfb93;
+    font-size: 13px;
+  }
+  .readyBanner span {
+    color: #93d798;
+    font-size: 12px;
+  }
+  .previewHero {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .campaignBadge {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    background: rgba(245, 166, 35, 0.14);
+    flex-shrink: 0;
+  }
+  .previewHero h3 {
+    font-size: clamp(22px, 4vw, 30px);
+    line-height: 1.08;
+    margin: 0;
+  }
+  .previewHero p {
+    color: #f5a623;
+    font-size: 13px;
+    margin-top: 3px;
+  }
+  .goalLine {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+    align-items: start;
+    margin-bottom: 14px;
+  }
+  .goalLine span {
+    background: #f5a623;
+    color: #050505;
+    border-radius: 7px;
+    padding: 4px 7px;
+    font-size: 11px;
+    font-weight: 900;
+  }
+  .goalLine p {
+    color: #c9c9c9;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  .flyerPanel, .previewSection {
+    border: 1px solid #202333;
+    background: rgba(255, 255, 255, 0.035);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+  .panelHeader {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .panelHeader strong {
+    font-size: 13px;
+  }
+  .panelHeader span {
+    color: #f5a623;
+    font-size: 12px;
+    font-weight: 900;
+  }
+  .mockFlyer {
+    min-height: 210px;
+    border-radius: 11px;
+    overflow: hidden;
     padding: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background:
+      linear-gradient(135deg, rgba(0, 0, 0, 0.22), rgba(0, 0, 0, 0.68)),
+      radial-gradient(circle at 18% 22%, #f5a623 0 8%, transparent 9%),
+      radial-gradient(circle at 88% 28%, #1aef22 0 7%, transparent 8%),
+      linear-gradient(135deg, #7a1d11, #141414 48%, #3c2104);
+  }
+  .mockFlyer span {
+    color: #f5a623;
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+  .mockFlyer strong {
+    display: block;
+    max-width: 320px;
+    color: #fff;
+    font-size: clamp(28px, 9vw, 56px);
+    line-height: 0.95;
+    margin: 8px 0;
+  }
+  .mockFlyer p {
+    color: #f4f4f4;
+    font-size: 13px;
+    max-width: 280px;
+  }
+  .mockFlyer small {
+    align-self: flex-start;
+    background: rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(245, 166, 35, 0.45);
+    color: #f5a623;
+    border-radius: 999px;
+    padding: 7px 10px;
+    font-size: 11px;
+    font-weight: 900;
+  }
+  .platformCards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 9px;
+  }
+  .platformCard {
+    border: 1px solid #24283a;
+    background: rgba(0, 0, 0, 0.24);
+    border-radius: 10px;
+    padding: 9px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+  .platformCard b {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: #f5a623;
+    color: #050505;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+  .platformCard strong {
+    display: block;
+    font-size: 12px;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+  .platformCard span {
+    color: #f5a623;
+    font-size: 10px;
+  }
+  .actionSection ul {
+    list-style: none;
+    display: grid;
+    gap: 7px;
+  }
+  .actionSection li {
+    display: flex;
+    gap: 8px;
+    color: #e8e8e8;
+    font-size: 13px;
+    line-height: 1.3;
+  }
+  .actionSection li span {
+    width: 24px;
+    height: 18px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    background: #1aef22;
+    color: #050505;
+    font-size: 9px;
+    font-weight: 900;
+  }
+  .audienceRows {
+    display: grid;
+    gap: 8px;
+  }
+  .audienceRows div {
+    display: grid;
+    grid-template-columns: 92px 1fr;
+    gap: 10px;
+    border-top: 1px solid #1e2230;
+    padding-top: 8px;
+  }
+  .audienceRows span {
+    color: #aaa;
+    font-size: 12px;
+    font-weight: 800;
+  }
+  .audienceRows p {
+    color: #f5a623;
+    font-size: 12px;
+    line-height: 1.45;
   }
   .previewTop {
     display: flex;
@@ -991,6 +2106,9 @@ const pageStyles = `
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
     margin-bottom: 14px;
+  }
+  .previewStats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
   .previewStats div, .momentumGrid div, .readyMetric {
     border: 1px solid #1f1f1f;
@@ -1030,8 +2148,19 @@ const pageStyles = `
     font-size: 13px;
     line-height: 1.6;
   }
+  .instructionDetails {
+    border-top: 1px solid #1d2130;
+    padding-top: 4px;
+  }
+  .instructionDetails summary {
+    color: #f5a623;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 900;
+  }
   .readyPanel {
     margin-bottom: 0;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
   .wizardActions {
     border-top: 1px solid #181818;
@@ -1117,8 +2246,14 @@ const pageStyles = `
       position: static;
       order: -1;
     }
-    .packageGrid, .previewStats, .momentumGrid, .readyPanel {
+    .packageGrid, .momentumGrid, .readyPanel {
       grid-template-columns: 1fr;
+    }
+    .bundleGrid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .platformCards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
   @media (max-width: 720px) {
@@ -1134,8 +2269,31 @@ const pageStyles = `
       border-radius: 16px;
       min-height: auto;
     }
-    .categoryGrid, .splitGrid, .splitGrid.compact, .advancedGrid {
+    .categoryGrid, .splitGrid, .splitGrid.compact, .advancedGrid, .bundleGrid {
       grid-template-columns: 1fr;
+    }
+    .recommendBox {
+      grid-template-columns: 1fr;
+    }
+    .recommendIcon {
+      display: none;
+    }
+    .previewCard {
+      border-radius: 18px;
+      padding: 12px;
+    }
+    .previewNav {
+      grid-template-columns: 40px 1fr 62px;
+    }
+    .platformCards {
+      grid-template-columns: 1fr;
+    }
+    .previewStats {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .audienceRows div {
+      grid-template-columns: 1fr;
+      gap: 4px;
     }
     .uploadBox {
       min-height: 240px;
