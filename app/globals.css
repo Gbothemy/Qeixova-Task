@@ -82,8 +82,8 @@ input[type="number"] {
     flex-direction: column;
     width: 260px;
     min-height: 100vh;
-    background: #111111;
-    border-right: 1px solid #222222;
+    background: #080808;
+    border-right: 1px solid #1a1a1a;
     position: sticky;
     top: 0;
     height: 100vh;
@@ -166,31 +166,19 @@ input[type="number"] {
   }
 }
 
-/* ── Business portal desktop layout ── */
-@media (min-width: 1024px) {
-  .business-main {
-    padding: 40px 40px !important;
-  }
-}
-
+/* ── Business portal — dark theme, fully responsive ── */
 .business-sidebar {
-  background:
-    linear-gradient(180deg, rgba(245,166,35,0.08), rgba(245,166,35,0) 30%),
-    #080808 !important;
+  background: #080808 !important;
   border-right: 1px solid rgba(245,166,35,0.12) !important;
 }
 
+/* Remove all light theme overrides */
 .business-page-pro {
-  background:
-    linear-gradient(180deg, rgba(245,166,35,0.04), transparent 260px),
-    #f3f4f7;
-  color: #111827;
+  background: #000 !important;
+  color: #F5F5F5 !important;
 }
 
-.businessAdsSidebar {
-  display: none;
-}
-
+/* Mobile bottom nav — pill style */
 .businessMobileNav {
   position: fixed;
   left: 12px;
@@ -198,18 +186,18 @@ input[type="number"] {
   bottom: 12px;
   z-index: 80;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 4px;
-  background: rgba(12, 12, 12, 0.94);
-  border: 1px solid rgba(245, 166, 35, 0.22);
+  background: rgba(10, 10, 10, 0.96);
+  border: 1px solid rgba(245, 166, 35, 0.2);
   border-radius: 18px;
   padding: 8px;
-  box-shadow: 0 20px 45px rgba(0,0,0,0.35);
+  box-shadow: 0 20px 45px rgba(0,0,0,0.5);
   backdrop-filter: blur(18px);
 }
 
 .businessMobileNav a {
-  color: #8f8f8f;
+  color: #666;
   text-decoration: none;
   display: grid;
   place-items: center;
@@ -217,34 +205,40 @@ input[type="number"] {
   min-height: 48px;
   border-radius: 13px;
   font-size: 10px;
-  font-weight: 800;
+  font-weight: 700;
+  transition: all 0.15s;
 }
 
 .businessMobileNav a.active {
-  color: #050505;
+  color: #000;
   background: #F5A623;
 }
 
 .businessMobileNav img {
   object-fit: contain;
-  filter: invert(55%);
+  filter: invert(40%) brightness(60%);
 }
 
 .businessMobileNav a.active img {
   filter: brightness(0);
 }
 
+/* Desktop sidebar */
+.businessAdsSidebar {
+  display: none;
+}
+
+/* Topbar */
 .businessAdsTopbar {
   display: flex;
   justify-content: space-between;
   gap: 14px;
   align-items: center;
   margin-bottom: 18px;
-  background: rgba(255,255,255,0.82);
-  border: 1px solid #e7e8ec;
+  background: #0a0a0a;
+  border: 1px solid #1a1a1a;
   border-radius: 16px;
   padding: 12px;
-  box-shadow: 0 10px 28px rgba(17,24,39,0.06);
 }
 
 .businessAdsSearch {
@@ -253,13 +247,13 @@ input[type="number"] {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #6b7280;
-  background: #f8f9fb;
-  border: 1px solid #eceef2;
+  color: #666;
+  background: #111;
+  border: 1px solid #1a1a1a;
   border-radius: 12px;
   padding: 10px 12px;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .businessAdsActions {
@@ -270,20 +264,21 @@ input[type="number"] {
 
 .businessAdsActions a,
 .businessAdsActions button {
-  border: 1px solid #e5e7eb;
-  background: #fff;
-  color: #111827;
+  border: 1px solid #1a1a1a;
+  background: #0d0d0d;
+  color: #F5F5F5;
   border-radius: 11px;
   padding: 10px 13px;
   font-size: 12px;
-  font-weight: 900;
+  font-weight: 700;
   text-decoration: none;
+  cursor: pointer;
 }
 
 .businessAdsActions .primary {
   border-color: #F5A623;
   background: #F5A623;
-  color: #050505;
+  color: #000;
 }
 
 .businessWorkspace {
@@ -292,46 +287,46 @@ input[type="number"] {
 }
 
 .adsPanel {
-  background: #fff;
-  border: 1px solid #e5e7eb;
+  background: #0a0a0a;
+  border: 1px solid #1a1a1a;
   border-radius: 16px;
-  box-shadow: 0 12px 30px rgba(17,24,39,0.06);
 }
 
 .adsSectionTitle {
-  color: #111827;
+  color: #F5F5F5;
   font-size: 13px;
-  font-weight: 900;
+  font-weight: 800;
   letter-spacing: 0.2px;
 }
 
 .adsMuted {
-  color: #6b7280;
+  color: #888;
 }
 
 @media (min-width: 1024px) {
   .business-page-pro {
     min-height: 100vh;
+    background: #000 !important;
   }
 
   .businessAdsSidebar {
     display: flex;
     flex-direction: column;
-    width: 286px;
+    width: 260px;
     min-height: 100vh;
     height: 100vh;
     position: sticky;
     top: 0;
     flex-shrink: 0;
-    background: #090909;
-    border-right: 1px solid rgba(245,166,35,0.16);
-    color: #f5f5f5;
+    background: #080808;
+    border-right: 1px solid rgba(245,166,35,0.12);
+    color: #F5F5F5;
     overflow-y: auto;
   }
 
   .businessAdsBrand {
     padding: 20px 18px 16px;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
   }
 
   .businessAdsLogo {
@@ -343,19 +338,12 @@ input[type="number"] {
     margin-bottom: 16px;
   }
 
-  .businessAdsLogo img {
-    border-radius: 11px;
-  }
+  .businessAdsLogo img { border-radius: 11px; }
 
   .businessAdsLogo strong,
-  .businessAdsLogo span {
-    display: block;
-  }
+  .businessAdsLogo span { display: block; }
 
-  .businessAdsLogo strong {
-    font-size: 17px;
-    line-height: 1.1;
-  }
+  .businessAdsLogo strong { font-size: 17px; line-height: 1.1; }
 
   .businessAdsLogo span {
     color: #F5A623;
@@ -373,22 +361,20 @@ input[type="number"] {
     justify-content: center;
     gap: 8px;
     background: #F5A623;
-    color: #050505;
+    color: #000;
     text-decoration: none;
     border-radius: 12px;
     padding: 12px 13px;
     font-size: 13px;
-    font-weight: 950;
+    font-weight: 800;
   }
 
-  .businessCreateButton img {
-    filter: brightness(0);
-  }
+  .businessCreateButton img { filter: brightness(0); }
 
   .businessAccountBox {
     margin: 16px;
-    border: 1px solid rgba(245,166,35,0.16);
-    background: linear-gradient(135deg, rgba(245,166,35,0.14), rgba(255,255,255,0.03));
+    border: 1px solid rgba(245,166,35,0.15);
+    background: rgba(245,166,35,0.06);
     border-radius: 14px;
     padding: 12px;
     display: flex;
@@ -401,40 +387,25 @@ input[type="number"] {
     height: 38px;
     border-radius: 50%;
     background: #F5A623;
-    color: #050505;
+    color: #000;
     display: grid;
     place-items: center;
-    font-weight: 950;
+    font-weight: 900;
+    flex-shrink: 0;
   }
 
   .businessAccountBox span,
-  .businessAccountBox strong {
-    display: block;
-  }
+  .businessAccountBox strong { display: block; }
 
-  .businessAccountBox span {
-    color: #9ca3af;
-    font-size: 10px;
-    font-weight: 900;
-    text-transform: uppercase;
-  }
+  .businessAccountBox span { color: #666; font-size: 10px; font-weight: 700; text-transform: uppercase; }
+  .businessAccountBox strong { color: #F5F5F5; font-size: 13px; line-height: 1.2; overflow-wrap: anywhere; }
 
-  .businessAccountBox strong {
-    color: #fff;
-    font-size: 13px;
-    line-height: 1.2;
-    overflow-wrap: anywhere;
-  }
-
-  .businessAdsNav {
-    padding: 2px 12px;
-    flex: 1;
-  }
+  .businessAdsNav { padding: 2px 12px; flex: 1; }
 
   .businessAdsNav p {
-    color: #777;
+    color: #333;
     font-size: 10px;
-    font-weight: 900;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1.4px;
     padding: 0 8px 10px;
@@ -444,17 +415,18 @@ input[type="number"] {
     display: flex;
     gap: 11px;
     align-items: center;
-    color: #d7d7d7;
+    color: #aaa;
     text-decoration: none;
     border: 1px solid transparent;
     border-radius: 12px;
     padding: 10px;
     margin-bottom: 4px;
+    transition: all 0.15s;
   }
 
   .businessAdsNav a.active {
-    border-color: rgba(245,166,35,0.24);
-    background: rgba(245,166,35,0.12);
+    border-color: rgba(245,166,35,0.2);
+    background: rgba(245,166,35,0.08);
     color: #F5A623;
   }
 
@@ -464,42 +436,24 @@ input[type="number"] {
     border-radius: 10px;
     display: grid;
     place-items: center;
-    background: #151515;
+    background: #111;
     flex-shrink: 0;
   }
 
-  .businessAdsNav a.active .navIcon {
-    background: #F5A623;
-  }
-
-  .businessAdsNav img {
-    filter: invert(42%);
-  }
-
-  .businessAdsNav a.active img {
-    filter: brightness(0);
-  }
+  .businessAdsNav a.active .navIcon { background: #F5A623; }
+  .businessAdsNav img { filter: invert(40%) brightness(60%); }
+  .businessAdsNav a.active img { filter: brightness(0); }
 
   .businessAdsNav strong,
-  .businessAdsNav small {
-    display: block;
-  }
+  .businessAdsNav small { display: block; }
 
-  .businessAdsNav strong {
-    font-size: 13px;
-    line-height: 1.2;
-  }
-
-  .businessAdsNav small {
-    color: #8f8f8f;
-    font-size: 11px;
-    margin-top: 2px;
-  }
+  .businessAdsNav strong { font-size: 13px; line-height: 1.2; }
+  .businessAdsNav small { color: #555; font-size: 11px; margin-top: 2px; }
 
   .businessSidebarFoot {
     margin: 14px;
     padding-top: 14px;
-    border-top: 1px solid rgba(255,255,255,0.08);
+    border-top: 1px solid rgba(255,255,255,0.06);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -507,39 +461,28 @@ input[type="number"] {
   }
 
   .businessSidebarFoot span,
-  .businessSidebarFoot strong {
-    display: block;
-  }
+  .businessSidebarFoot strong { display: block; }
 
-  .businessSidebarFoot span {
-    color: #777;
-    font-size: 10px;
-    font-weight: 900;
-    text-transform: uppercase;
-  }
-
-  .businessSidebarFoot strong {
-    color: #1AEF22;
-    font-size: 12px;
-  }
+  .businessSidebarFoot span { color: #555; font-size: 10px; font-weight: 700; text-transform: uppercase; }
+  .businessSidebarFoot strong { color: #1AEF22; font-size: 12px; }
 
   .businessSidebarFoot button {
-    border: 1px solid rgba(255,255,255,0.12);
-    background: #111;
-    color: #ddd;
+    border: 1px solid rgba(229,62,62,0.15);
+    background: rgba(229,62,62,0.06);
+    color: #e53e3e;
     border-radius: 10px;
     padding: 8px 10px;
     font-size: 11px;
-    font-weight: 900;
+    font-weight: 700;
     cursor: pointer;
   }
 
-  .businessMobileNav {
-    display: none !important;
-  }
+  .businessMobileNav { display: none !important; }
 
   .page-body.business-page-pro {
-    padding: 22px 24px 36px !important;
+    padding: 28px 32px 40px !important;
+    background: #000 !important;
+    color: #F5F5F5 !important;
   }
 }
 
