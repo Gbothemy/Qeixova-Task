@@ -724,21 +724,36 @@ const steps = [
   "Launch",
 ];
 
-function ToggleGrid({ options, selected, onChange }: { options: string[]; selected: string[]; onChange: (next: string[]) => void }) {
+function MultiSelectDropdown({ options, selected, onChange, placeholder = "Select options" }: { options: string[]; selected: string[]; onChange: (next: string[]) => void; placeholder?: string }) {
   const toggle = (option: string) => onChange(selected.includes(option) ? selected.filter((item) => item !== option) : [...selected, option]);
+  const preview = selected.length ? selected.slice(0, 3).join(", ") : placeholder;
 
   return (
-    <div className="toggleGrid">
-      {options.map((option) => {
-        const active = selected.includes(option);
-        return (
-          <button key={option} type="button" onClick={() => toggle(option)} className={active ? "pill active" : "pill"}>
-            {active && <span className="checkMark">OK</span>}
-            {option}
-          </button>
-        );
-      })}
-    </div>
+    <details className="multiSelectDropdown">
+      <summary>
+        <span>
+          <strong>{selected.length ? `${selected.length} selected` : "Choose"}</strong>
+          <small>{preview}{selected.length > 3 ? ` +${selected.length - 3} more` : ""}</small>
+        </span>
+        <em>v</em>
+      </summary>
+      {selected.length > 0 && (
+        <div className="selectedPreview">
+          {selected.slice(0, 6).map((item) => <span key={item}>{item}</span>)}
+        </div>
+      )}
+      <div className="multiSelectMenu">
+        {options.map((option) => {
+          const active = selected.includes(option);
+          return (
+            <button key={option} type="button" onClick={() => toggle(option)} className={active ? "selected" : ""}>
+              <span>{active ? "OK" : ""}</span>
+              <strong>{option}</strong>
+            </button>
+          );
+        })}
+      </div>
+    </details>
   );
 }
 
@@ -1260,7 +1275,7 @@ export default function CreateCampaignPage() {
                   </div>
                   <div>
                     <p className="labelText">What should contributors do?</p>
-                    <ToggleGrid options={actionOptions} selected={actions} onChange={setActions} />
+                    <MultiSelectDropdown options={actionOptions} selected={actions} onChange={setActions} placeholder="Choose contributor actions" />
                   </div>
                   <label>
                     Important instructions
@@ -1278,13 +1293,13 @@ export default function CreateCampaignPage() {
                   <p>{categoryFlow.targetHelp}</p>
                 </div>
                 <div className="targetStack">
-                  <div><p className="labelText">Audience interests</p><ToggleGrid options={categoryFlow.interests} selected={interests} onChange={setInterests} /></div>
-                  <div><p className="labelText">Extra platform focus</p><ToggleGrid options={categoryPlatforms.length ? categoryPlatforms : platformOptions} selected={platforms} onChange={setPlatforms} /></div>
-                  <div><p className="labelText">Contributor type</p><ToggleGrid options={categoryFlow.levels} selected={levels} onChange={setLevels} /></div>
-                  <div><p className="labelText">Nigeria state targeting</p><ToggleGrid options={stateOptions} selected={states} onChange={setStates} /></div>
+                  <div><p className="labelText">Audience interests</p><MultiSelectDropdown options={categoryFlow.interests} selected={interests} onChange={setInterests} placeholder="Choose audience interests" /></div>
+                  <div><p className="labelText">Extra platform focus</p><MultiSelectDropdown options={categoryPlatforms.length ? categoryPlatforms : platformOptions} selected={platforms} onChange={setPlatforms} placeholder="Choose extra platforms" /></div>
+                  <div><p className="labelText">Contributor type</p><MultiSelectDropdown options={categoryFlow.levels} selected={levels} onChange={setLevels} placeholder="Choose contributor types" /></div>
+                  <div><p className="labelText">Nigeria state targeting</p><MultiSelectDropdown options={stateOptions} selected={states} onChange={setStates} placeholder="Choose states" /></div>
                   <div className="splitGrid compact">
-                    <div><p className="labelText">City focus</p><ToggleGrid options={cityOptions} selected={cities} onChange={setCities} /></div>
-                    <div><p className="labelText">Campus focus</p><ToggleGrid options={campusOptions} selected={campuses} onChange={setCampuses} /></div>
+                    <div><p className="labelText">City focus</p><MultiSelectDropdown options={cityOptions} selected={cities} onChange={setCities} placeholder="Choose cities" /></div>
+                    <div><p className="labelText">Campus focus</p><MultiSelectDropdown options={campusOptions} selected={campuses} onChange={setCampuses} placeholder="Choose campuses" /></div>
                   </div>
                 </div>
               </div>
@@ -1828,12 +1843,12 @@ const pageStyles = `
     margin-top: 10px;
     overflow-wrap: anywhere;
   }
-  .goalGrid, .toggleGrid, .previewTags {
+  .goalGrid, .previewTags {
     display: flex;
     gap: 9px;
     flex-wrap: wrap;
   }
-  .goalButton, .pill {
+  .goalButton {
     border: 1px solid #282828;
     background: #101010;
     color: #ccc;
@@ -1843,13 +1858,130 @@ const pageStyles = `
     font-weight: 700;
     cursor: pointer;
   }
-  .goalButton.active, .pill.active {
+  .goalButton.active {
     border-color: rgba(26, 239, 34, 0.55);
     background: rgba(26, 239, 34, 0.1);
     color: #1aef22;
   }
-  .checkMark {
-    margin-right: 6px;
+  .multiSelectDropdown {
+    border: 1px solid #292929;
+    background: #101010;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .multiSelectDropdown[open] {
+    border-color: rgba(245, 166, 35, 0.5);
+    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.2);
+  }
+  .multiSelectDropdown summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    padding: 13px 14px;
+  }
+  .multiSelectDropdown summary::-webkit-details-marker {
+    display: none;
+  }
+  .multiSelectDropdown summary span,
+  .multiSelectDropdown summary strong,
+  .multiSelectDropdown summary small {
+    display: block;
+    min-width: 0;
+  }
+  .multiSelectDropdown summary strong {
+    color: #f5f5f5;
+    font-size: 13px;
+    font-weight: 900;
+    margin-bottom: 3px;
+  }
+  .multiSelectDropdown summary small {
+    color: #8d8d8d;
+    font-size: 12px;
+    line-height: 1.35;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .multiSelectDropdown summary em {
+    width: 30px;
+    height: 30px;
+    border-radius: 9px;
+    background: rgba(245, 166, 35, 0.1);
+    color: #f5a623;
+    display: grid;
+    place-items: center;
+    font-style: normal;
+    font-size: 12px;
+    font-weight: 950;
+    flex-shrink: 0;
+  }
+  .selectedPreview {
+    border-top: 1px solid #1f1f1f;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    padding: 10px 12px;
+  }
+  .selectedPreview span {
+    border: 1px solid rgba(26, 239, 34, 0.3);
+    background: rgba(26, 239, 34, 0.09);
+    color: #1aef22;
+    border-radius: 999px;
+    padding: 6px 9px;
+    font-size: 11px;
+    font-weight: 900;
+  }
+  .multiSelectMenu {
+    border-top: 1px solid #1f1f1f;
+    max-height: 310px;
+    overflow-y: auto;
+    padding: 8px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+  }
+  .multiSelectMenu button {
+    border: 1px solid #242424;
+    background: #0b0b0b;
+    color: #d7d7d7;
+    border-radius: 11px;
+    min-height: 44px;
+    padding: 9px 10px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    text-align: left;
+    cursor: pointer;
+  }
+  .multiSelectMenu button.selected {
+    border-color: rgba(26, 239, 34, 0.48);
+    background: rgba(26, 239, 34, 0.09);
+    color: #1aef22;
+  }
+  .multiSelectMenu button span {
+    width: 22px;
+    height: 22px;
+    border: 1px solid #363636;
+    border-radius: 7px;
+    display: grid;
+    place-items: center;
+    color: #1aef22;
+    font-size: 9px;
+    font-weight: 950;
+    flex-shrink: 0;
+  }
+  .multiSelectMenu button.selected span {
+    border-color: #1aef22;
+    background: rgba(26, 239, 34, 0.1);
+  }
+  .multiSelectMenu button strong {
+    color: inherit;
+    font-size: 12px;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
   }
   .splitGrid {
     display: grid;
@@ -2569,6 +2701,9 @@ const pageStyles = `
     .platformCards, .choicePlatformGrid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+    .multiSelectMenu {
+      grid-template-columns: 1fr;
+    }
   }
   @media (max-width: 720px) {
     .campaignHeader {
@@ -2604,6 +2739,9 @@ const pageStyles = `
     }
     .platformCards, .choicePlatformGrid {
       grid-template-columns: 1fr;
+    }
+    .multiSelectMenu {
+      max-height: 260px;
     }
     .previewStats {
       grid-template-columns: repeat(2, minmax(0, 1fr));
