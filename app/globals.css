@@ -182,8 +182,365 @@ input[type="number"] {
 
 .business-page-pro {
   background:
-    radial-gradient(circle at top right, rgba(245,166,35,0.07), transparent 34%),
-    linear-gradient(180deg, #080808 0%, #030303 100%);
+    linear-gradient(180deg, rgba(245,166,35,0.04), transparent 260px),
+    #f3f4f7;
+  color: #111827;
+}
+
+.businessAdsSidebar {
+  display: none;
+}
+
+.businessMobileNav {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  z-index: 80;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+  background: rgba(12, 12, 12, 0.94);
+  border: 1px solid rgba(245, 166, 35, 0.22);
+  border-radius: 18px;
+  padding: 8px;
+  box-shadow: 0 20px 45px rgba(0,0,0,0.35);
+  backdrop-filter: blur(18px);
+}
+
+.businessMobileNav a {
+  color: #8f8f8f;
+  text-decoration: none;
+  display: grid;
+  place-items: center;
+  gap: 4px;
+  min-height: 48px;
+  border-radius: 13px;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.businessMobileNav a.active {
+  color: #050505;
+  background: #F5A623;
+}
+
+.businessMobileNav img {
+  object-fit: contain;
+  filter: invert(55%);
+}
+
+.businessMobileNav a.active img {
+  filter: brightness(0);
+}
+
+.businessAdsTopbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 18px;
+  background: rgba(255,255,255,0.82);
+  border: 1px solid #e7e8ec;
+  border-radius: 16px;
+  padding: 12px;
+  box-shadow: 0 10px 28px rgba(17,24,39,0.06);
+}
+
+.businessAdsSearch {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #6b7280;
+  background: #f8f9fb;
+  border: 1px solid #eceef2;
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.businessAdsActions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.businessAdsActions a,
+.businessAdsActions button {
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #111827;
+  border-radius: 11px;
+  padding: 10px 13px;
+  font-size: 12px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.businessAdsActions .primary {
+  border-color: #F5A623;
+  background: #F5A623;
+  color: #050505;
+}
+
+.businessWorkspace {
+  width: min(100%, 1440px);
+  margin: 0 auto;
+}
+
+.adsPanel {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(17,24,39,0.06);
+}
+
+.adsSectionTitle {
+  color: #111827;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.2px;
+}
+
+.adsMuted {
+  color: #6b7280;
+}
+
+@media (min-width: 1024px) {
+  .business-page-pro {
+    min-height: 100vh;
+  }
+
+  .businessAdsSidebar {
+    display: flex;
+    flex-direction: column;
+    width: 286px;
+    min-height: 100vh;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    flex-shrink: 0;
+    background: #090909;
+    border-right: 1px solid rgba(245,166,35,0.16);
+    color: #f5f5f5;
+    overflow-y: auto;
+  }
+
+  .businessAdsBrand {
+    padding: 20px 18px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .businessAdsLogo {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    color: #fff;
+    text-decoration: none;
+    margin-bottom: 16px;
+  }
+
+  .businessAdsLogo img {
+    border-radius: 11px;
+  }
+
+  .businessAdsLogo strong,
+  .businessAdsLogo span {
+    display: block;
+  }
+
+  .businessAdsLogo strong {
+    font-size: 17px;
+    line-height: 1.1;
+  }
+
+  .businessAdsLogo span {
+    color: #F5A623;
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-top: 2px;
+  }
+
+  .businessCreateButton {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: #F5A623;
+    color: #050505;
+    text-decoration: none;
+    border-radius: 12px;
+    padding: 12px 13px;
+    font-size: 13px;
+    font-weight: 950;
+  }
+
+  .businessCreateButton img {
+    filter: brightness(0);
+  }
+
+  .businessAccountBox {
+    margin: 16px;
+    border: 1px solid rgba(245,166,35,0.16);
+    background: linear-gradient(135deg, rgba(245,166,35,0.14), rgba(255,255,255,0.03));
+    border-radius: 14px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .businessAvatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #F5A623;
+    color: #050505;
+    display: grid;
+    place-items: center;
+    font-weight: 950;
+  }
+
+  .businessAccountBox span,
+  .businessAccountBox strong {
+    display: block;
+  }
+
+  .businessAccountBox span {
+    color: #9ca3af;
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .businessAccountBox strong {
+    color: #fff;
+    font-size: 13px;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+
+  .businessAdsNav {
+    padding: 2px 12px;
+    flex: 1;
+  }
+
+  .businessAdsNav p {
+    color: #777;
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    padding: 0 8px 10px;
+  }
+
+  .businessAdsNav a {
+    display: flex;
+    gap: 11px;
+    align-items: center;
+    color: #d7d7d7;
+    text-decoration: none;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    padding: 10px;
+    margin-bottom: 4px;
+  }
+
+  .businessAdsNav a.active {
+    border-color: rgba(245,166,35,0.24);
+    background: rgba(245,166,35,0.12);
+    color: #F5A623;
+  }
+
+  .businessAdsNav .navIcon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    background: #151515;
+    flex-shrink: 0;
+  }
+
+  .businessAdsNav a.active .navIcon {
+    background: #F5A623;
+  }
+
+  .businessAdsNav img {
+    filter: invert(42%);
+  }
+
+  .businessAdsNav a.active img {
+    filter: brightness(0);
+  }
+
+  .businessAdsNav strong,
+  .businessAdsNav small {
+    display: block;
+  }
+
+  .businessAdsNav strong {
+    font-size: 13px;
+    line-height: 1.2;
+  }
+
+  .businessAdsNav small {
+    color: #8f8f8f;
+    font-size: 11px;
+    margin-top: 2px;
+  }
+
+  .businessSidebarFoot {
+    margin: 14px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .businessSidebarFoot span,
+  .businessSidebarFoot strong {
+    display: block;
+  }
+
+  .businessSidebarFoot span {
+    color: #777;
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .businessSidebarFoot strong {
+    color: #1AEF22;
+    font-size: 12px;
+  }
+
+  .businessSidebarFoot button {
+    border: 1px solid rgba(255,255,255,0.12);
+    background: #111;
+    color: #ddd;
+    border-radius: 10px;
+    padding: 8px 10px;
+    font-size: 11px;
+    font-weight: 900;
+    cursor: pointer;
+  }
+
+  .businessMobileNav {
+    display: none !important;
+  }
+
+  .page-body.business-page-pro {
+    padding: 22px 24px 36px !important;
+  }
 }
 
 /* ── Landing page animations ── */
