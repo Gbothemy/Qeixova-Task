@@ -16,14 +16,14 @@ function MetricCard({ label, value, sub, icon, accent }: { label: string; value:
     <article className="adsPanel" style={{ padding: 16 }}>
       <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "flex-start", marginBottom: 18 }}>
         <div>
-          <p style={{ color: "#6b7280", fontSize: 11, fontWeight: 900, textTransform: "uppercase", letterSpacing: 0.5 }}>{label}</p>
-          <strong style={{ display: "block", color: "#111827", fontSize: 30, marginTop: 7, lineHeight: 1 }}>{value.toLocaleString()}</strong>
+          <p style={{ color: "#bbb", fontSize: 11, fontWeight: 900, textTransform: "uppercase", letterSpacing: 0.5 }}>{label}</p>
+          <strong style={{ display: "block", color: "#F5F5F5", fontSize: 30, marginTop: 7, lineHeight: 1 }}>{value.toLocaleString()}</strong>
         </div>
         <span style={{ width: 38, height: 38, borderRadius: 11, background: `${accent}18`, display: "grid", placeItems: "center" }}>
           <Image src={icon} alt="" width={18} height={18} />
         </span>
       </div>
-      <p style={{ color: "#6b7280", fontSize: 12 }}>{sub}</p>
+      <p style={{ color: "#bbb", fontSize: 12 }}>{sub}</p>
     </article>
   );
 }
@@ -51,7 +51,7 @@ export default function BusinessDashboard() {
 
   if (!business) {
     return (
-      <div style={{ minHeight: "100vh", background: "#f3f4f7", display: "grid", placeItems: "center" }}>
+      <div style={{ minHeight: "100vh", background: "#000", display: "grid", placeItems: "center" }}>
         <div style={{ width: 42, height: 42, border: "3px solid #e5e7eb", borderTopColor: "#F5A623", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
@@ -84,13 +84,13 @@ export default function BusinessDashboard() {
           <section className="adsPanel" style={{ padding: 20, marginBottom: 16, display: "grid", gridTemplateColumns: "minmax(0, 1fr) auto", gap: 16, alignItems: "center" }}>
             <div>
               <p style={{ color: "#F5A623", fontSize: 11, fontWeight: 950, textTransform: "uppercase", letterSpacing: 1 }}>Business Manager</p>
-              <h1 style={{ color: "#111827", fontSize: "clamp(30px, 4vw, 46px)", lineHeight: 1.02, marginTop: 5 }}>Campaign overview</h1>
-              <p style={{ color: "#6b7280", marginTop: 8, fontSize: 14 }}>{business.name} · {business.industry || "Business"} · {business.email}</p>
+              <h1 style={{ color: "#F5F5F5", fontSize: "clamp(30px, 4vw, 46px)", lineHeight: 1.02, marginTop: 5 }}>Campaign overview</h1>
+              <p style={{ color: "#bbb", marginTop: 8, fontSize: 14 }}>{business.name} · {business.industry || "Business"} · {business.email}</p>
             </div>
-            <div style={{ minWidth: 230, border: "1px solid #f1d6a0", background: "#fff8eb", borderRadius: 14, padding: 16 }}>
-              <span style={{ color: "#6b7280", fontSize: 11, fontWeight: 900, textTransform: "uppercase" }}>Available balance</span>
-              <strong style={{ display: "block", color: "#111827", fontSize: 26, marginTop: 6 }}>{Number(business.balance ?? 0).toLocaleString()} QLT</strong>
-              <Link href="/business/wallet" style={{ display: "inline-block", marginTop: 10, color: "#111827", fontSize: 12, fontWeight: 900 }}>Add funds</Link>
+            <div style={{ minWidth: 230, border: "1px solid #f1d6a0", background: "rgba(245,166,35,0.08)", borderRadius: 14, padding: 16 }}>
+              <span style={{ color: "#bbb", fontSize: 11, fontWeight: 900, textTransform: "uppercase" }}>Available balance</span>
+              <strong style={{ display: "block", color: "#F5F5F5", fontSize: 26, marginTop: 6 }}>{Number(business.balance ?? 0).toLocaleString()} QLT</strong>
+              <Link href="/business/wallet" style={{ display: "inline-block", marginTop: 10, color: "#F5A623", fontSize: 12, fontWeight: 700 }}>Add funds →</Link>
             </div>
           </section>
 
@@ -115,8 +115,8 @@ export default function BusinessDashboard() {
               ].map(([title, sub, icon]) => (
                 <Link key={title} href="/business/tasks/new" className="adsPanel" style={{ padding: 14, textDecoration: "none", boxShadow: "none" }}>
                   <Image src={icon} alt="" width={24} height={24} />
-                  <strong style={{ display: "block", color: "#111827", marginTop: 10, fontSize: 14 }}>{title}</strong>
-                  <span style={{ color: "#6b7280", fontSize: 12 }}>{sub}</span>
+                  <strong style={{ display: "block", color: "#F5F5F5", marginTop: 10, fontSize: 14 }}>{title}</strong>
+                  <span style={{ color: "#bbb", fontSize: 12 }}>{sub}</span>
                 </Link>
               ))}
             </div>
