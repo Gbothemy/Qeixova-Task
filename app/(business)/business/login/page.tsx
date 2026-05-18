@@ -92,7 +92,7 @@ export default function BusinessLoginPage() {
                 ) : "Login →"}
               </button>
             </form>
-            <p style={{ textAlign: "center", fontSize: 13, color: "#999", marginTop: 20 }}>
+            <p style={{ textAlign: "center", fontSize: 13, color: "#bbb", marginTop: 20 }}>
               No account?{" "}
               <Link href="/register" style={{ color: "#F5A623", fontWeight: 700, textDecoration: "none" }}>Create one</Link>
             </p>
