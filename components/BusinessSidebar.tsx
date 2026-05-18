@@ -1,15 +1,21 @@
 "use client";
-import Link from "next/link";
+
 import Image from "next/image";
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
 const nav = [
-  { href: "/business/dashboard", label: "Dashboard",    icon: "/icon-home.svg",    desc: "Overview & stats" },
-  { href: "/business/tasks",     label: "Campaigns",    icon: "/icon-task.svg",    desc: "Manage missions" },
-  { href: "/business/tasks/new", label: "Create",       icon: "/icon-content.svg", desc: "Launch campaign" },
-  { href: "/business/wallet",    label: "Funding",      icon: "/icon-wallet.svg",  desc: "Credits & receipts" },
-  { href: "/business/growth",    label: "Growth",       icon: "/icon-analytics.svg", desc: "Ecosystem flows" },
+  { href: "/business/dashboard", label: "Overview", icon: "/icon-home.svg", desc: "Account health" },
+  { href: "/business/tasks", label: "Campaigns", icon: "/icon-task.svg", desc: "Campaign manager" },
+  { href: "/business/tasks/new", label: "Create", icon: "/icon-content.svg", desc: "Guided campaign setup" },
+  { href: "/business/wallet", label: "Billing", icon: "/icon-wallet.svg", desc: "Credits and spend" },
+  { href: "/business/growth", label: "Growth Hub", icon: "/icon-analytics.svg", desc: "Strategy map" },
 ];
+
+function isActivePath(path: string, href: string) {
+  if (href === "/business/tasks") return path === href || (path.startsWith("/business/tasks/") && path !== "/business/tasks/new");
+  return path === href;
+}
 
 export default function BusinessSidebar({ name }: { name: string }) {
   const path = usePathname();
@@ -21,66 +27,53 @@ export default function BusinessSidebar({ name }: { name: string }) {
   };
 
   return (
-    <aside className="sidebar business-sidebar">
-      {/* Brand */}
-      <div style={{ padding: "28px 22px 22px", borderBottom: "1px solid rgba(245,166,35,0.12)" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 11 }}>
-          <Image src="/qeixova-icon.png" alt="Qeixova" width={40} height={40} style={{ borderRadius: 12, objectFit: "contain" }} />
+    <aside className="businessAdsSidebar">
+      <div className="businessAdsBrand">
+        <Link href="/business/dashboard" className="businessAdsLogo">
+          <Image src="/qeixova-icon.png" alt="Qeixova" width={36} height={36} />
           <div>
-            <p style={{ fontWeight: 800, fontSize: 16, color: "#F5F5F5", letterSpacing: -0.5, lineHeight: 1.2 }}>Qeixova</p>
-            <p style={{ fontSize: 10, color: "#F5A623", fontWeight: 700, letterSpacing: 1, textTransform: "uppercase" }}>Business</p>
+            <strong>Qeixova</strong>
+            <span>Business Manager</span>
           </div>
+        </Link>
+        <Link href="/business/tasks/new" className="businessCreateButton">
+          <Image src="/icon-create-mission.svg" alt="" width={15} height={15} />
+          Create Campaign
+        </Link>
+      </div>
+
+      <div className="businessAccountBox">
+        <div className="businessAvatar">{name.slice(0, 1).toUpperCase()}</div>
+        <div>
+          <span>Ad account</span>
+          <strong>{name}</strong>
         </div>
       </div>
 
-      {/* Nav */}
-      <nav style={{ padding: "16px 12px", flex: 1 }}>
-        <p style={{ fontSize: 10, fontWeight: 800, color: "#777", letterSpacing: 1.5, textTransform: "uppercase", padding: "0 10px 10px" }}>Navigation</p>
-        {nav.map(item => {
-          const isActive = path === item.href || (item.href === "/business/tasks" && path.startsWith("/business/tasks/") && path !== "/business/tasks/new");
+      <nav className="businessAdsNav" aria-label="Business navigation">
+        <p>Manage</p>
+        {nav.map((item) => {
+          const active = isActivePath(path, item.href);
           return (
-            <Link key={item.href} href={item.href} style={{
-              display: "flex", alignItems: "center", gap: 12,
-              padding: "10px 12px", borderRadius: 12, textDecoration: "none",
-              background: isActive ? "rgba(245,166,35,0.12)" : "transparent",
-              marginBottom: 3,
-              border: isActive ? "1px solid rgba(245,166,35,0.18)" : "1px solid transparent",
-              transition: "all 0.15s",
-            }}>
-              <div style={{
-                width: 36, height: 36, borderRadius: 10, flexShrink: 0,
-                background: isActive ? "linear-gradient(135deg, #F5A623, #d89420)" : "#151515",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                boxShadow: isActive ? "0 4px 12px rgba(245,166,35,0.25)" : "none",
-              }}>
-                <Image src={item.icon} alt={item.label} width={18} height={18}
-                  style={{ objectFit: "contain", filter: isActive ? "brightness(0)" : "invert(40%) brightness(60%)" }} />
-              </div>
-              <div style={{ flex: 1 }}>
-                <p style={{ fontSize: 13, fontWeight: isActive ? 800 : 600, color: isActive ? "#F5A623" : "#d7d7d7", lineHeight: 1.2 }}>{item.label}</p>
-                <p style={{ fontSize: 10, color: "#8d8d8d", marginTop: 1 }}>{item.desc}</p>
-              </div>
-              {isActive && <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#F5A623", flexShrink: 0 }} />}
+            <Link key={item.href} href={item.href} className={active ? "active" : ""}>
+              <span className="navIcon">
+                <Image src={item.icon} alt="" width={18} height={18} />
+              </span>
+              <span className="navCopy">
+                <strong>{item.label}</strong>
+                <small>{item.desc}</small>
+              </span>
             </Link>
           );
         })}
       </nav>
 
-      {/* User footer */}
-      <div style={{ padding: "14px 16px 22px", borderTop: "1px solid #1a1a1a" }}>
-        <div style={{ background: "#0d0d0d", borderRadius: 12, padding: "12px 14px", border: "1px solid #1a1a1a", display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ width: 34, height: 34, borderRadius: "50%", background: "linear-gradient(135deg, #F5A623, #d89420)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-            <Image src="/icon-profile.svg" alt="Business" width={18} height={18} style={{ objectFit: "contain", filter: "brightness(0)" }} />
-          </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <p style={{ fontSize: 12, fontWeight: 700, color: "#F5F5F5", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{name}</p>
-            <p style={{ fontSize: 10, color: "#aaa" }}>Business account</p>
-          </div>
-          <button onClick={logout} title="Log out"
-            style={{ background: "rgba(229,62,62,0.08)", border: "1px solid rgba(229,62,62,0.12)", borderRadius: 8, width: 30, height: 30, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", flexShrink: 0 }}>
-            <Image src="/icon-password.svg" alt="Logout" width={14} height={14} style={{ opacity: 0.6, filter: "invert(40%) sepia(100%) saturate(500%) hue-rotate(320deg)" }} />
-          </button>
+      <div className="businessSidebarFoot">
+        <div>
+          <span>Status</span>
+          <strong>Ready to launch</strong>
         </div>
+        <button type="button" onClick={logout}>Logout</button>
       </div>
     </aside>
   );
