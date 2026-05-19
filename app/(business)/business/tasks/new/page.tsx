@@ -155,6 +155,18 @@ const actionOptions = [
   "Download app",
   "Test onboarding",
   "Submit feedback",
+  "Create test account",
+  "Complete onboarding flow",
+  "Test specific feature",
+  "Record issues encountered",
+  "Submit screenshots or screen recording",
+  "Explain reproduction steps",
+  "Complete assigned user journey",
+  "Use the product before reviewing",
+  "Rate the product experience",
+  "Submit honest experience-based review",
+  "Suggest improvements",
+  "Report confusing steps",
   "Upload testimonial video",
   "Share flyer in groups",
   "Use provided caption",
@@ -182,6 +194,13 @@ const platformMeta: Record<string, PlatformMeta> = {
   "Telegram Groups": { icon: "TG", recommendedFor: "Groups, communities", visibility: "Focused community reach", audience: "Community members" },
   "X/Twitter": { icon: "X", recommendedFor: "Links, updates", visibility: "Public feed reach", audience: "Public audiences" },
   "YouTube Shorts": { icon: "YS", recommendedFor: "Short video", visibility: "Video discovery", audience: "Shorts viewers" },
+  Android: { icon: "AN", recommendedFor: "Android app testing", visibility: "Mobile device access", audience: "Android users" },
+  "iPhone/iOS": { icon: "iOS", recommendedFor: "iOS app testing", visibility: "Apple device access", audience: "iPhone users" },
+  "Desktop Users": { icon: "DT", recommendedFor: "Web product testing", visibility: "Desktop browser access", audience: "Laptop and desktop users" },
+  "Tablet Users": { icon: "TB", recommendedFor: "Tablet layout testing", visibility: "Tablet access", audience: "Tablet users" },
+  "Web Browser": { icon: "WB", recommendedFor: "Website testing", visibility: "Browser access", audience: "Web users" },
+  "App Store": { icon: "AS", recommendedFor: "iOS install flow", visibility: "Store listing access", audience: "iOS testers" },
+  "Play Store": { icon: "PS", recommendedFor: "Android install flow", visibility: "Store listing access", audience: "Android testers" },
 };
 
 const campaignBundles: CampaignBundle[] = [
@@ -433,6 +452,71 @@ const campaignBundles: CampaignBundle[] = [
     icon: "/icon-target.svg",
   },
   {
+    id: "apps-quick-onboarding",
+    name: "Quick Onboarding Test Bundle",
+    shortName: "Quick Onboarding Test",
+    description: "Guide real users through install, account creation, onboarding, and first-impression feedback.",
+    bestFor: ["Signup testing", "First-time user experience", "Onboarding validation"],
+    contentTypes: ["App Download & Onboarding", "Multi-Step Testing Campaign"],
+    platforms: ["Android", "iPhone/iOS", "Play Store", "App Store"],
+    actions: ["Download app", "Create test account", "Complete onboarding flow", "Submit feedback", "Report confusing steps"],
+    verification: ["Install screenshot", "Account/onboarding proof", "Structured feedback"],
+    accent: "#14b8a6",
+    icon: "/icon-app-testing.svg",
+  },
+  {
+    id: "apps-user-feedback",
+    name: "User Feedback Bundle",
+    shortName: "User Feedback",
+    description: "Collect structured product opinions, experience ratings, and improvement suggestions.",
+    bestFor: ["Customer opinions", "Experience reviews", "Usability feedback", "Market validation"],
+    contentTypes: ["User Feedback Campaign", "Website Testing"],
+    platforms: ["Android", "iPhone/iOS", "Desktop Users", "Web Browser"],
+    actions: ["Complete assigned user journey", "Submit feedback", "Rate the product experience", "Suggest improvements"],
+    verification: ["Feedback response", "Experience rating", "Usage proof"],
+    accent: "#14b8a6",
+    icon: "/icon-survey.svg",
+  },
+  {
+    id: "apps-feature-validation",
+    name: "Feature Validation Bundle",
+    shortName: "Feature Validation",
+    description: "Send testers through a guided feature flow with issue notes and proof of interaction.",
+    bestFor: ["New feature releases", "Payment systems", "Workflow testing", "Functionality checks"],
+    contentTypes: ["Feature Testing", "Website Testing"],
+    platforms: ["Android", "iPhone/iOS", "Desktop Users", "Web Browser"],
+    actions: ["Test specific feature", "Complete assigned user journey", "Record issues encountered", "Submit screenshots or screen recording"],
+    verification: ["Feature interaction proof", "Issue notes", "Screenshot/video proof"],
+    accent: "#14b8a6",
+    icon: "/icon-target.svg",
+  },
+  {
+    id: "apps-review-trust",
+    name: "Review & Trust Bundle",
+    shortName: "Review & Trust",
+    description: "Gather honest experience-based reviews and testimonials after real product usage.",
+    bestFor: ["Authentic user reviews", "Trust-building campaigns", "Experience ratings"],
+    contentTypes: ["Review & Rating Campaign", "User Feedback Campaign"],
+    platforms: ["Play Store", "App Store", "Web Browser", "Android", "iPhone/iOS"],
+    actions: ["Use the product before reviewing", "Rate the product experience", "Submit honest experience-based review", "Submit feedback"],
+    verification: ["Experience proof", "Review screenshot or link", "Feedback quality check"],
+    accent: "#14b8a6",
+    icon: "/icon-verified.svg",
+  },
+  {
+    id: "apps-deep-testing",
+    name: "Deep Testing Bundle",
+    shortName: "Deep Testing",
+    description: "Run a multi-step user journey test with detailed reporting and bug reproduction notes.",
+    bestFor: ["Advanced testing", "Bug hunting", "Complete user journey analysis", "Beta testing"],
+    contentTypes: ["Bug Reporting Campaign", "Multi-Step Testing Campaign", "Feature Testing"],
+    platforms: ["Android", "iPhone/iOS", "Desktop Users", "Tablet Users", "Web Browser"],
+    actions: ["Complete assigned user journey", "Test specific feature", "Record issues encountered", "Explain reproduction steps", "Submit screenshots or screen recording"],
+    verification: ["Detailed report", "Reproduction steps", "Screenshot/video proof"],
+    accent: "#14b8a6",
+    icon: "/icon-analytics.svg",
+  },
+  {
     id: "story-status",
     name: "Story & Status Distribution Bundle",
     shortName: "Story & Status",
@@ -517,6 +601,13 @@ const contentPackages: Package[] = [
   { id: "starter-distribution", name: "Starter Distribution", reach: "Up to 100 contributors", description: "A clean first push for flyers, posts, and announcements.", reward: 1200, contributors: 100, duration: "3 days" },
   { id: "growth-distribution", name: "Growth Distribution", reach: "Up to 500 contributors", description: "Balanced distribution across selected platforms and interests.", reward: 1500, contributors: 500, duration: "5 days" },
   { id: "viral-content-push", name: "Viral Push", reach: "High-volume awareness distribution", description: "Built for mass content exposure and repeated visibility.", reward: 2100, contributors: 1200, duration: "7 days" },
+];
+
+const appTestingPackages: Package[] = [
+  { id: "quick-test", name: "Quick Test", reach: "Up to 60 testers", description: "Light onboarding participation with short structured feedback.", reward: 1800, contributors: 60, duration: "3 days" },
+  { id: "feedback-collection", name: "Feedback Collection", reach: "Up to 150 testers", description: "Focused user insight collection for product, website, or app experience.", reward: 2400, contributors: 150, duration: "5 days" },
+  { id: "product-validation", name: "Product Validation", reach: "Up to 300 testers", description: "Structured testing campaign for onboarding, features, and trust signals.", reward: 3200, contributors: 300, duration: "7 days" },
+  { id: "advanced-testing", name: "Advanced Testing", reach: "Deep product participation", description: "High-detail testing with reports, screenshots, reproduction steps, and review quality checks.", reward: 5000, contributors: 120, duration: "10 days" },
 ];
 
 const defaultFlow: CategoryFlow = {
@@ -711,6 +802,45 @@ const categoryFlows: Record<string, CategoryFlow> = {
     defaultLevels: ["All Contributors"],
     defaultBundleId: "business-story-status",
   },
+  apps: {
+    ...defaultFlow,
+    id: "apps",
+    builderIntro: "Run structured product testing campaigns with real users, device-aware targeting, and meaningful feedback.",
+    contentHeadline: "What would you like users to test?",
+    contentHelp: "Choose the testing type first so Qeixova can shape the verification method, tester requirements, proof system, and completion flow.",
+    contentTypes: ["App Download & Onboarding", "Feature Testing", "Website Testing", "User Feedback Campaign", "Review & Rating Campaign", "Bug Reporting Campaign", "Multi-Step Testing Campaign"],
+    goalsHeadline: "What would you like this testing campaign to achieve?",
+    goals: ["Test User Experience", "Identify Bugs & Issues", "Improve Onboarding", "Gather Real Feedback", "Increase Product Adoption", "Improve Product Trust", "Test Feature Performance"],
+    uploadRequirements: {
+      "App Download & Onboarding": ["App Store / Play Store link", "App description", "Signup instructions", "Test account optional", "Key onboarding steps"],
+      "Feature Testing": ["Feature explanation", "Access instructions", "Expected user flow", "Feature screenshots optional"],
+      "Website Testing": ["Website URL", "Testing instructions", "Important pages/features", "Goal of test"],
+      "User Feedback Campaign": ["Product/app link", "Questions for users", "Feedback form optional", "Areas needing review"],
+      "Review & Rating Campaign": ["Product/app link", "Review guidance", "Experience requirements", "Honest feedback policy"],
+      "Bug Reporting Campaign": ["Platform access link", "Testing scope", "Known issues optional", "Reporting guidelines"],
+      "Multi-Step Testing Campaign": ["Full user journey", "Step-by-step test script", "Required screenshots/videos", "Feedback questions"],
+    },
+    linkLabel: "App, website, or product access link",
+    linkPlaceholder: "Paste Play Store, App Store, TestFlight, APK, staging, website, or product link",
+    captionLabel: "Testing brief for contributors",
+    captionPlaceholder: "Explain what testers should do, what feedback matters, and any access credentials or limits.",
+    bundlesHeadline: "Recommended testing bundle",
+    targetHeadline: "Choose target testers",
+    targetHelp: "Testing quality depends on device compatibility, product experience, tester reliability, and the depth of feedback you need.",
+    interests: ["Technology", "Startups", "Mobile Apps", "Gaming", "Ecommerce", "Productivity", "Finance", "Education"],
+    levels: ["All Contributors", "Verified Testers", "Premium Contributors", "Experienced Reviewers", "Beta Test Participants"],
+    packages: appTestingPackages,
+    launchHeadline: "Your testing campaign is ready",
+    launchSummary: "Qeixova will distribute your campaign by testing experience, device compatibility, contributor quality, audience interests, and participation reliability.",
+    launchCta: "Launch Testing Campaign",
+    previewLabel: "Product Testing Preview",
+    defaultContentType: "App Download & Onboarding",
+    defaultGoal: "Improve Onboarding",
+    defaultTitle: "App Onboarding Test Campaign",
+    defaultInterests: ["Technology", "Mobile Apps", "Startups"],
+    defaultLevels: ["Verified Testers"],
+    defaultBundleId: "apps-quick-onboarding",
+  },
 };
 
 const steps = [
@@ -793,7 +923,8 @@ function getBundlesForCategory(categoryId: string) {
   if (categoryId === "music") return campaignBundles.filter((bundle) => bundle.id.startsWith("music-"));
   if (categoryId === "creator") return campaignBundles.filter((bundle) => bundle.id.startsWith("creator-"));
   if (categoryId === "business") return campaignBundles.filter((bundle) => bundle.id.startsWith("business-"));
-  return campaignBundles.filter((bundle) => !bundle.id.startsWith("content-") && !bundle.id.startsWith("music-") && !bundle.id.startsWith("creator-") && !bundle.id.startsWith("business-"));
+  if (categoryId === "apps") return campaignBundles.filter((bundle) => bundle.id.startsWith("apps-"));
+  return campaignBundles.filter((bundle) => !bundle.id.startsWith("content-") && !bundle.id.startsWith("music-") && !bundle.id.startsWith("creator-") && !bundle.id.startsWith("business-") && !bundle.id.startsWith("apps-"));
 }
 
 function getRecommendedBundle(contentType: string, categoryId: string, goal = "") {
@@ -823,6 +954,14 @@ function getRecommendedBundle(contentType: string, categoryId: string, goal = ""
     if (contentType === "Store / Brand Awareness" || goal === "Build Brand Visibility") return campaignBundles.find((bundle) => bundle.id === "business-social-feed") ?? campaignBundles[0];
     if (contentType === "Product Promotion" && goal === "Promote A Product") return campaignBundles.find((bundle) => bundle.id === "business-short-form") ?? campaignBundles[0];
     return campaignBundles.find((bundle) => bundle.id === "business-story-status") ?? campaignBundles[0];
+  }
+  if (categoryId === "apps") {
+    if (contentType === "Bug Reporting Campaign" || goal === "Identify Bugs & Issues") return campaignBundles.find((bundle) => bundle.id === "apps-deep-testing") ?? campaignBundles[0];
+    if (contentType === "Feature Testing" || goal === "Test Feature Performance") return campaignBundles.find((bundle) => bundle.id === "apps-feature-validation") ?? campaignBundles[0];
+    if (contentType === "Website Testing" || contentType === "User Feedback Campaign" || goal === "Gather Real Feedback" || goal === "Test User Experience") return campaignBundles.find((bundle) => bundle.id === "apps-user-feedback") ?? campaignBundles[0];
+    if (contentType === "Review & Rating Campaign" || goal === "Improve Product Trust") return campaignBundles.find((bundle) => bundle.id === "apps-review-trust") ?? campaignBundles[0];
+    if (contentType === "Multi-Step Testing Campaign") return campaignBundles.find((bundle) => bundle.id === "apps-deep-testing") ?? campaignBundles[0];
+    return campaignBundles.find((bundle) => bundle.id === "apps-quick-onboarding") ?? campaignBundles[0];
   }
   if (categoryId === "community") return campaignBundles.find((bundle) => bundle.id === "community-growth") ?? campaignBundles[0];
   if (categoryId === "video" || categoryId === "music" || contentType === "Video") return campaignBundles.find((bundle) => bundle.id === "video-distribution") ?? campaignBundles[0];
@@ -868,6 +1007,13 @@ export default function CreateCampaignPage() {
   const selectedBundle = campaignBundles.find((item) => item.id === bundleId) ?? recommendedBundle;
   const selectedPackage = categoryFlow.packages.find((item) => item.id === packageId) ?? categoryFlow.packages[0];
   const categoryPlatforms = useMemo(() => Array.from(new Set(getBundlesForCategory(categoryId).flatMap((bundle) => bundle.platforms))), [categoryId]);
+  const isTestingFlow = categoryId === "apps";
+  const flowSteps = isTestingFlow ? ["Test Type", "Goal", "Assets", "Bundle", "Testers", "Package", "Preview", "Launch"] : steps;
+  const platformLabel = isTestingFlow ? "Testing platforms and devices" : "Distribution platforms";
+  const actionLabel = isTestingFlow ? "What should testers do?" : "What should contributors do?";
+  const packageHeadline = isTestingFlow ? "Campaign participation package" : "Campaign reach package";
+  const packageHelp = isTestingFlow ? "Choose the testing depth. Higher-value product participation needs stronger rewards and clearer review expectations." : "Choose the momentum level. Advanced controls are available when you need exact limits.";
+  const previewHelp = isTestingFlow ? "This product testing preview shows objectives, tester actions, proof, and feedback expectations before launch." : "This is the confidence check before launch. It mirrors what contributors need to understand.";
   const resolvedReward = advancedOpen && Number(customReward) > 0 ? Number(customReward) : selectedPackage.reward;
   const resolvedContributors = advancedOpen && Number(customContributors) > 0 ? Number(customContributors) : selectedPackage.contributors;
   const resolvedDuration = advancedOpen && customDuration.trim() ? customDuration.trim() : selectedPackage.duration;
@@ -897,12 +1043,12 @@ export default function CreateCampaignPage() {
       caption ? `Suggested caption: ${caption}` : "",
       instructions ? `Important instructions: ${instructions}` : "",
       `Audience: ${interests.length ? interests.join(", ") : "All interests"}.`,
-      `Platforms: ${platforms.length ? platforms.join(", ") : "All platforms"}.`,
+      `${isTestingFlow ? "Testing platforms/devices" : "Platforms"}: ${platforms.length ? platforms.join(", ") : "All platforms"}.`,
       `Contributor level: ${levels.join(", ")}.`,
       cities.length || campuses.length ? `Local focus: ${[...cities, ...campuses].join(", ")}.` : "",
       advancedOpen ? `Campaign pacing: ${customPacing}.` : "",
     ].filter(Boolean).join("\n");
-  }, [actions, advancedOpen, campuses, caption, cities, contentLink, contentType, customPacing, fileName, goal, instructions, interests, levels, platforms, selectedBundle]);
+  }, [actions, advancedOpen, campuses, caption, cities, contentLink, contentType, customPacing, fileName, goal, instructions, interests, isTestingFlow, levels, platforms, selectedBundle]);
 
   const proofLabel = useMemo(() => {
     if (actions.some((action) => action.toLowerCase().includes("feedback"))) return "Submit your feedback and attach proof if requested";
@@ -911,17 +1057,19 @@ export default function CreateCampaignPage() {
   }, [actions]);
 
   const recommended = useMemo(() => {
-    const recommendedPlatforms = platforms.length ? platforms.slice(0, 3).join(", ") : "WhatsApp, Instagram, TikTok";
-    const quality = category.missionType === "premium" ? "high-touch participation" : category.missionType === "participation" ? "useful feedback quality" : "fast visibility";
+    const recommendedPlatforms = platforms.length ? platforms.slice(0, 3).join(", ") : isTestingFlow ? "Android, iPhone/iOS, Desktop Users" : "WhatsApp, Instagram, TikTok";
+    const quality = isTestingFlow ? "structured tester feedback" : category.missionType === "premium" ? "high-touch participation" : category.missionType === "participation" ? "useful feedback quality" : "fast visibility";
     return { platforms: recommendedPlatforms, quality };
-  }, [category.missionType, platforms]);
+  }, [category.missionType, isTestingFlow, platforms]);
 
   const applyBundle = (bundle: CampaignBundle) => {
     setBundleId(bundle.id);
     setPlatforms(bundle.platforms);
     setActions(bundle.actions);
     setInstructions(
-      bundle.id === "story-status"
+      bundle.id.startsWith("apps-")
+        ? "Complete the assigned testing flow carefully. Submit clear proof, honest feedback, issues encountered, and improvement suggestions. Do not submit fake or manipulated reviews."
+        : bundle.id === "story-status"
         ? "Use the provided caption, keep the story/status visible for 24 hours, and upload screenshots with timestamps."
         : bundle.id === "video-distribution"
           ? "Use the provided caption and hashtags, keep the video public during the campaign, and submit repost links or screenshots."
@@ -941,7 +1089,7 @@ export default function CreateCampaignPage() {
     setInterests(flow.defaultInterests);
     setLevels(flow.defaultLevels);
     setPackageId(flow.packages[0]?.id ?? "starter");
-    setCustomPacing(nextCategoryId === "music" ? "Fast launch burst" : nextCategoryId === "creator" ? "Weekend push" : "Steady distribution");
+    setCustomPacing(nextCategoryId === "apps" ? "Manual review first" : nextCategoryId === "music" ? "Fast launch burst" : nextCategoryId === "creator" ? "Weekend push" : "Steady distribution");
     applyBundle(bundle);
   };
 
@@ -953,7 +1101,7 @@ export default function CreateCampaignPage() {
   const canContinue = () => {
     if (stepIndex === 0) return Boolean(categoryId) && Boolean(contentType);
     if (stepIndex === 1) return Boolean(goal);
-    if (stepIndex === 2) return Boolean(contentType) && (contentLink.trim() || fileName || contentType !== "Link");
+    if (stepIndex === 2) return Boolean(contentType) && (contentLink.trim() || fileName || (!isTestingFlow && contentType !== "Link"));
     if (stepIndex === 3) return Boolean(title.trim()) && actions.length > 0;
     if (stepIndex === 4) return platforms.length > 0 && levels.length > 0;
     if (stepIndex === 5) return resolvedReward >= 1000 && resolvedContributors > 0;
@@ -984,6 +1132,10 @@ export default function CreateCampaignPage() {
       setCaption(`Discover ${title || "this creator campaign"}. Watch, engage, share ${platformHint}, and help the content reach the right audience.`);
       return;
     }
+    if (isTestingFlow) {
+      setCaption(`Test ${title || "this product"} with care. Complete the assigned flow, note any friction or bugs, and submit honest feedback based on your real experience.`);
+      return;
+    }
     setCaption(`Discover ${title || category.title}. Join the conversation ${platformHint}, share with your circle, and help more people see what is coming from ${business?.name || "this brand"}.`);
   };
 
@@ -1011,7 +1163,7 @@ export default function CreateCampaignPage() {
       mission_type: category.missionType,
       verification_type: actions.some((action) => action.toLowerCase().includes("feedback")) ? "text" : "screenshot",
       difficulty: category.missionType === "premium" ? "hard" : category.missionType === "participation" ? "medium" : "easy",
-      min_level: levels.includes("Premium Promoters") || levels.includes("Community Influencers") ? 2 : 1,
+      min_level: levels.some((level) => ["Premium Promoters", "Community Influencers", "Premium Contributors", "Experienced Reviewers", "Beta Test Participants"].includes(level)) ? 2 : 1,
       target_professions: levels,
       target_interests: interests,
       target_platforms: platforms,
@@ -1085,13 +1237,13 @@ export default function CreateCampaignPage() {
             <p>{categoryFlow.builderIntro}</p>
           </div>
           <div className="headerStats">
-            <span>{steps.length} guided steps</span>
-            <strong>{Math.round(((stepIndex + 1) / steps.length) * 100)}%</strong>
+            <span>{flowSteps.length} guided steps</span>
+            <strong>{Math.round(((stepIndex + 1) / flowSteps.length) * 100)}%</strong>
           </div>
         </header>
 
         <nav className="stepper" aria-label="Campaign steps">
-          {steps.map((step, index) => (
+          {flowSteps.map((step, index) => (
             <button key={step} type="button" onClick={() => index <= stepIndex && setStepIndex(index)} className={index === stepIndex ? "step active" : index < stepIndex ? "step done" : "step"}>
               <span>{index + 1}</span>
               {step}
@@ -1228,7 +1380,7 @@ export default function CreateCampaignPage() {
                 <div className="sectionTitle">
                   <p className="eyebrow">Step 4</p>
                   <h2>{categoryFlow.bundlesHeadline}</h2>
-                  <p>Qeixova recommends a bundle first, then you can customize the exact platforms and actions.</p>
+                  <p>{isTestingFlow ? "Qeixova recommends a testing bundle first, then you can customize devices, tester actions, proof checks, and review depth." : "Qeixova recommends a bundle first, then you can customize the exact platforms and actions."}</p>
                 </div>
                 <div className="fieldStack">
                   <div className="recommendBox">
@@ -1238,7 +1390,7 @@ export default function CreateCampaignPage() {
                     <div>
                       <span>Recommended bundle</span>
                       <strong>{recommendedBundle.name}</strong>
-                      <p>{contentType} campaigns perform best with {recommendedBundle.shortName.toLowerCase()} because the platforms, actions, and proof match how this audience behaves.</p>
+                      <p>{contentType} campaigns perform best with {recommendedBundle.shortName.toLowerCase()} because the {isTestingFlow ? "testing depth, proof, and feedback structure" : "platforms, actions, and proof"} match how this audience behaves.</p>
                     </div>
                     <button type="button" onClick={() => applyBundle(recommendedBundle)}>Apply</button>
                   </div>
@@ -1268,14 +1420,14 @@ export default function CreateCampaignPage() {
                   </label>
                   <div>
                     <div className="rowLabel">
-                      <p className="labelText">Distribution platforms</p>
+                      <p className="labelText">{platformLabel}</p>
                       <span>{platforms.length} selected</span>
                     </div>
                     <PlatformChoiceGrid options={selectedBundle.platforms} selected={platforms} onChange={setPlatforms} />
                   </div>
                   <div>
-                    <p className="labelText">What should contributors do?</p>
-                    <MultiSelectDropdown options={actionOptions} selected={actions} onChange={setActions} placeholder="Choose contributor actions" />
+                    <p className="labelText">{actionLabel}</p>
+                    <MultiSelectDropdown options={actionOptions} selected={actions} onChange={setActions} placeholder={isTestingFlow ? "Choose tester actions" : "Choose contributor actions"} />
                   </div>
                   <label>
                     Important instructions
@@ -1294,8 +1446,8 @@ export default function CreateCampaignPage() {
                 </div>
                 <div className="targetStack">
                   <div><p className="labelText">Audience interests</p><MultiSelectDropdown options={categoryFlow.interests} selected={interests} onChange={setInterests} placeholder="Choose audience interests" /></div>
-                  <div><p className="labelText">Extra platform focus</p><MultiSelectDropdown options={categoryPlatforms.length ? categoryPlatforms : platformOptions} selected={platforms} onChange={setPlatforms} placeholder="Choose extra platforms" /></div>
-                  <div><p className="labelText">Contributor type</p><MultiSelectDropdown options={categoryFlow.levels} selected={levels} onChange={setLevels} placeholder="Choose contributor types" /></div>
+                  <div><p className="labelText">{isTestingFlow ? "Device / platform targeting" : "Extra platform focus"}</p><MultiSelectDropdown options={categoryPlatforms.length ? categoryPlatforms : platformOptions} selected={platforms} onChange={setPlatforms} placeholder={isTestingFlow ? "Choose devices and platforms" : "Choose extra platforms"} /></div>
+                  <div><p className="labelText">{isTestingFlow ? "Tester type" : "Contributor type"}</p><MultiSelectDropdown options={categoryFlow.levels} selected={levels} onChange={setLevels} placeholder={isTestingFlow ? "Choose tester types" : "Choose contributor types"} /></div>
                   <div><p className="labelText">Nigeria state targeting</p><MultiSelectDropdown options={stateOptions} selected={states} onChange={setStates} placeholder="Choose states" /></div>
                   <div className="splitGrid compact">
                     <div><p className="labelText">City focus</p><MultiSelectDropdown options={cityOptions} selected={cities} onChange={setCities} placeholder="Choose cities" /></div>
@@ -1309,8 +1461,8 @@ export default function CreateCampaignPage() {
               <div className="stepContent">
                 <div className="sectionTitle">
                   <p className="eyebrow">Step 6</p>
-                  <h2>Campaign reach package</h2>
-                  <p>Choose the momentum level. Advanced controls are available when you need exact limits.</p>
+                  <h2>{packageHeadline}</h2>
+                  <p>{packageHelp}</p>
                 </div>
                 <div className="packageGrid">
                   {categoryFlow.packages.map((item) => (
@@ -1341,7 +1493,7 @@ export default function CreateCampaignPage() {
                 <div className="sectionTitle">
                   <p className="eyebrow">Step 7</p>
                   <h2>{categoryFlow.previewLabel}</h2>
-                  <p>This is the confidence check before launch. It mirrors what contributors need to understand.</p>
+                  <p>{previewHelp}</p>
                 </div>
                 <PreviewCard
                   category={category}
@@ -1370,7 +1522,7 @@ export default function CreateCampaignPage() {
                   <p>{categoryFlow.launchSummary}</p>
                 </div>
                 <div className="readyPanel">
-                  <div className="readyMetric"><span>Recommended platforms</span><strong>{recommended.platforms}</strong></div>
+                  <div className="readyMetric"><span>{isTestingFlow ? "Recommended devices" : "Recommended platforms"}</span><strong>{recommended.platforms}</strong></div>
                   <div className="readyMetric"><span>Expected quality</span><strong>{recommended.quality}</strong></div>
                   <div className="readyMetric"><span>Estimated participation</span><strong>{resolvedContributors.toLocaleString()} contributors</strong></div>
                 </div>
@@ -1442,6 +1594,7 @@ function PreviewCard({
 }) {
   const estimatedReach = `${Math.max(contributors * 50, 5000).toLocaleString()} - ${Math.max(contributors * 160, 12000).toLocaleString()}`;
   const shownPlatforms = platforms.length ? platforms : bundle.platforms;
+  const isTestingPreview = category.id === "apps";
 
   return (
     <article className="previewCard">
@@ -1458,7 +1611,7 @@ function PreviewCard({
         <Image src="/icon-check-circle.svg" alt="" width={28} height={28} />
         <div>
           <strong>Ready to Launch</strong>
-          <span>Your campaign bundle is all set.</span>
+          <span>{isTestingPreview ? "Your testing workflow is structured and ready." : "Your campaign bundle is all set."}</span>
         </div>
       </div>
 
@@ -1474,18 +1627,18 @@ function PreviewCard({
 
       <div className="goalLine">
         <span>Goal</span>
-        <p>{goal} for {businessName} using a guided {bundle.shortName.toLowerCase()} campaign.</p>
+        <p>{goal} for {businessName} using a guided {bundle.shortName.toLowerCase()} {isTestingPreview ? "workflow" : "campaign"}.</p>
       </div>
 
       <section className="flyerPanel">
         <div className="panelHeader">
-          <strong>Campaign {contentType}</strong>
+          <strong>{isTestingPreview ? "Testing Objective" : "Campaign"} {contentType}</strong>
           <span>{bundle.shortName}</span>
         </div>
         <div className="mockFlyer">
           <div>
             <span>{businessName}</span>
-            <strong>{contentType === "Video" ? "VIDEO BOOST" : "AWARENESS PUSH"}</strong>
+            <strong>{isTestingPreview ? "USER TESTING" : contentType === "Video" ? "VIDEO BOOST" : "AWARENESS PUSH"}</strong>
             <p>{goal}</p>
           </div>
           <small>{bundle.platforms.slice(0, 3).join(" + ")}</small>
@@ -1494,7 +1647,7 @@ function PreviewCard({
 
       <section className="previewSection">
         <div className="panelHeader">
-          <strong>Distribution Platforms</strong>
+          <strong>{isTestingPreview ? "Testing Platforms & Devices" : "Distribution Platforms"}</strong>
           <span>{shownPlatforms.length} selected</span>
         </div>
         <div className="platformCards">
@@ -1515,7 +1668,7 @@ function PreviewCard({
 
       <section className="previewSection actionSection">
         <div className="panelHeader">
-          <strong>Contributors Will</strong>
+          <strong>{isTestingPreview ? "Testers Will" : "Contributors Will"}</strong>
           <span>{actions.length} actions</span>
         </div>
         <ul>
@@ -1537,8 +1690,8 @@ function PreviewCard({
       </section>
 
       <div className="previewStats">
-        <div><strong>{contributors.toLocaleString()}</strong><span>Est. Contributors</span></div>
-        <div><strong>{estimatedReach}</strong><span>Est. Reach</span></div>
+        <div><strong>{contributors.toLocaleString()}</strong><span>{isTestingPreview ? "Est. Testers" : "Est. Contributors"}</span></div>
+        <div><strong>{isTestingPreview ? bundle.verification.length : estimatedReach}</strong><span>{isTestingPreview ? "Proof Checks" : "Est. Reach"}</span></div>
         <div><strong>{duration}</strong><span>Duration</span></div>
         <div><strong>{budget.toLocaleString()} QLT</strong><span>Total Budget</span></div>
       </div>
@@ -1556,6 +1709,8 @@ const pageStyles = `
     max-width: 1180px;
     margin: 0 auto;
     color: #f5f5f5;
+    width: 100%;
+    overflow-x: hidden;
   }
   .loadingScreen {
     min-height: 100vh;
@@ -1582,6 +1737,10 @@ const pageStyles = `
     gap: 16px;
     align-items: flex-start;
     margin-bottom: 18px;
+    min-width: 0;
+  }
+  .campaignHeader > div {
+    min-width: 0;
   }
   .campaignHeader h1 {
     font-size: clamp(28px, 5vw, 42px);
@@ -1625,6 +1784,11 @@ const pageStyles = `
     overflow-x: auto;
     padding: 6px 0 16px;
     margin-bottom: 8px;
+    max-width: 100%;
+    scrollbar-width: none;
+  }
+  .stepper::-webkit-scrollbar {
+    display: none;
   }
   .step {
     border: 1px solid #202020;
@@ -1662,6 +1826,7 @@ const pageStyles = `
     grid-template-columns: minmax(0, 1fr) 320px;
     gap: 18px;
     align-items: start;
+    min-width: 0;
   }
   .builderPanel, .summaryPanel, .launchScreen {
     border: 1px solid #191919;
@@ -1671,11 +1836,14 @@ const pageStyles = `
   .builderPanel {
     min-height: 620px;
     padding: 22px;
+    min-width: 0;
+    overflow: hidden;
   }
   .summaryPanel {
     position: sticky;
     top: 24px;
     padding: 18px;
+    min-width: 0;
   }
   .summaryPanel h3 {
     font-size: 20px;
@@ -1713,6 +1881,7 @@ const pageStyles = `
   .sectionTitle {
     max-width: 650px;
     margin-bottom: 20px;
+    min-width: 0;
   }
   .sectionTitle h2 {
     font-size: clamp(24px, 4vw, 34px);
@@ -1731,6 +1900,13 @@ const pageStyles = `
     overflow-x: auto;
     padding: 2px 0 14px;
     margin-bottom: 12px;
+    max-width: 100%;
+    min-width: 0;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+  .categoryRail::-webkit-scrollbar {
+    display: none;
   }
   .categoryChip {
     min-width: 190px;
@@ -1765,9 +1941,11 @@ const pageStyles = `
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
     gap: 12px;
+    min-width: 0;
   }
   .contentTypeCard {
     min-height: 156px;
+    min-width: 0;
     border: 1px solid #202020;
     background: #0f0f0f;
     color: #f5f5f5;
@@ -1791,12 +1969,14 @@ const pageStyles = `
     margin: 10px 0 8px;
     font-size: 18px;
     line-height: 1.15;
+    overflow-wrap: anywhere;
   }
   .contentTypeCard small {
     display: block;
     color: #aaa;
     font-size: 12px;
     line-height: 1.45;
+    overflow-wrap: anywhere;
   }
   .categoryCard, .packageCard {
     text-align: left;
@@ -2706,6 +2886,11 @@ const pageStyles = `
     }
   }
   @media (max-width: 720px) {
+    .campaignPage {
+      padding-left: 12px !important;
+      padding-right: 12px !important;
+      padding-bottom: 116px !important;
+    }
     .campaignHeader {
       display: block;
     }
@@ -2714,15 +2899,40 @@ const pageStyles = `
       text-align: left;
     }
     .builderPanel {
-      padding: 16px;
+      padding: 14px;
       border-radius: 16px;
       min-height: auto;
+    }
+    .summaryPanel {
+      border-radius: 16px;
+      padding: 14px;
+    }
+    .stepContent {
+      min-width: 0;
     }
     .categoryGrid, .contentTypeGrid, .splitGrid, .splitGrid.compact, .advancedGrid, .bundleGrid {
       grid-template-columns: 1fr;
     }
+    .categoryRail {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      overflow-x: visible;
+      padding-bottom: 12px;
+    }
     .categoryChip {
-      min-width: 170px;
+      min-width: 0;
+      max-width: none;
+      width: 100%;
+      flex: initial;
+      align-items: flex-start;
+      min-height: 58px;
+    }
+    .categoryChip strong {
+      overflow-wrap: anywhere;
+    }
+    .contentTypeCard {
+      min-height: 136px;
+      padding: 14px;
     }
     .recommendBox {
       grid-template-columns: 1fr;

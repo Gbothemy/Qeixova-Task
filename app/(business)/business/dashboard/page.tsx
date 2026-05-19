@@ -81,32 +81,32 @@ export default function BusinessDashboard() {
             </div>
           </div>
 
-          <section className="adsPanel" style={{ padding: 20, marginBottom: 16, display: "grid", gridTemplateColumns: "minmax(0, 1fr) auto", gap: 16, alignItems: "center" }}>
+          <section className="adsPanel businessHeroPanel" style={{ padding: 20, marginBottom: 16, display: "grid", gridTemplateColumns: "minmax(0, 1fr) auto", gap: 16, alignItems: "center" }}>
             <div>
               <p style={{ color: "#F5A623", fontSize: 11, fontWeight: 950, textTransform: "uppercase", letterSpacing: 1 }}>Business Manager</p>
-              <h1 style={{ color: "#F5F5F5", fontSize: "clamp(30px, 4vw, 46px)", lineHeight: 1.02, marginTop: 5 }}>Campaign overview</h1>
-              <p style={{ color: "#bbb", marginTop: 8, fontSize: 14 }}>{business.name} · {business.industry || "Business"} · {business.email}</p>
+              <h1 className="businessPageTitle" style={{ color: "#fff", fontSize: "clamp(30px, 4vw, 46px)", lineHeight: 1.02, marginTop: 5 }}>Campaign overview</h1>
+              <p className="businessIdentityLine" style={{ color: "#bbb", marginTop: 8, fontSize: 14 }}>{business.name} · {business.industry || "Business"} · {business.email}</p>
             </div>
-            <div style={{ minWidth: 230, border: "1px solid #f1d6a0", background: "rgba(245,166,35,0.08)", borderRadius: 14, padding: 16 }}>
+            <div className="businessBalancePanel" style={{ minWidth: 230, border: "1px solid #f1d6a0", background: "rgba(245,166,35,0.08)", borderRadius: 14, padding: 16 }}>
               <span style={{ color: "#bbb", fontSize: 11, fontWeight: 900, textTransform: "uppercase" }}>Available balance</span>
               <strong style={{ display: "block", color: "#F5F5F5", fontSize: 26, marginTop: 6 }}>{Number(business.balance ?? 0).toLocaleString()} QLT</strong>
               <Link href="/business/wallet" style={{ display: "inline-block", marginTop: 10, color: "#F5A623", fontSize: 12, fontWeight: 700 }}>Add funds →</Link>
             </div>
           </section>
 
-          <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: 12, marginBottom: 16 }}>
+          <section className="businessMetricGrid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: 12, marginBottom: 16 }}>
             {cards.map((card) => <MetricCard key={card.label} {...card} />)}
           </section>
 
           <section className="adsPanel" style={{ padding: 18, marginBottom: 16 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", marginBottom: 14 }}>
+            <div className="businessSectionHead" style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", marginBottom: 14 }}>
               <div>
                 <p className="adsSectionTitle">Campaign setup shortcuts</p>
                 <p className="adsMuted" style={{ fontSize: 13, marginTop: 3 }}>Pick a common business objective and jump into the guided campaign builder.</p>
               </div>
               <Link href="/business/tasks/new" style={{ background: "#F5A623", color: "#050505", borderRadius: 11, padding: "10px 13px", textDecoration: "none", fontSize: 12, fontWeight: 950 }}>Create</Link>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: 10 }}>
+            <div className="businessShortcutGrid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: 10 }}>
               {[
                 ["Content Distribution", "Flyers, posts, announcements", "/icon-human-distribution.svg"],
                 ["Business Awareness", "Products, services, offers", "/icon-local-business.svg"],

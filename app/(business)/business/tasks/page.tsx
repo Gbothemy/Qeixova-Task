@@ -58,10 +58,10 @@ export default function BusinessTasksPage() {
   return (
     <>
       <BusinessSidebar name={business.name} />
-      <main className="page-body" style={{ background:"#000" }}>
+      <main className="page-body business-page-pro" style={{ background:"#000" }}>
 
         {/* Topbar */}
-        <div style={{ display:"flex", justifyContent:"space-between", gap:12, alignItems:"center", marginBottom:20, background:"#0a0a0a", border:"1px solid #1a1a1a", borderRadius:14, padding:"12px 16px", flexWrap:"wrap" }}>
+        <div className="businessAdsTopbar">
           <div style={{ display:"flex", alignItems:"center", gap:10, flex:1, minWidth:0 }}>
             <Image src="/icon-task.svg" alt="" width={16} height={16} style={{ opacity:0.5 }} />
             <span style={{ fontSize:13, color:"#666" }}>Campaign Manager</span>
@@ -74,11 +74,11 @@ export default function BusinessTasksPage() {
         </div>
 
         {/* Header */}
-        <div style={{ background:"#0a0a0a", border:"1px solid #1a1a1a", borderRadius:14, padding:"20px 20px", marginBottom:14 }}>
-          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:12 }}>
+        <div className="adsPanel businessListHeader" style={{ padding:"20px 20px", marginBottom:14 }}>
+          <div className="businessSectionHead" style={{ display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:12 }}>
             <div>
               <p style={{ color:"#F5A623", fontSize:11, fontWeight:700, textTransform:"uppercase", letterSpacing:1, marginBottom:4 }}>Ads Manager</p>
-              <h1 style={{ color:"#F5F5F5", fontSize:"clamp(22px, 4vw, 36px)", fontWeight:900, lineHeight:1.05, letterSpacing:-0.5 }}>Campaigns</h1>
+              <h1 className="businessPageTitle" style={{ color:"#fff", fontSize:"clamp(22px, 4vw, 36px)", fontWeight:900, lineHeight:1.05, letterSpacing:0 }}>Campaigns</h1>
               <p style={{ color:"#bbb", fontSize:13, marginTop:6 }}>{tasks.length} campaigns · {totals.active} active · {totals.pending} pending submissions</p>
             </div>
             <Link href="/business/tasks/new" style={{ background:"linear-gradient(135deg, #F5A623, #d89420)", color:"#000", textDecoration:"none", borderRadius:11, padding:"11px 18px", fontSize:13, fontWeight:800, whiteSpace:"nowrap" }}>
@@ -88,7 +88,7 @@ export default function BusinessTasksPage() {
         </div>
 
         {/* Stats */}
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit, minmax(150px, 1fr))", gap:10, marginBottom:14 }}>
+        <div className="businessMetricGrid" style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit, minmax(150px, 1fr))", gap:10, marginBottom:14 }}>
           {[
             { label:"All Campaigns",    value:tasks.length,       color:"#F5A623" },
             { label:"Active",           value:totals.active,      color:"#1AEF22" },
@@ -103,9 +103,9 @@ export default function BusinessTasksPage() {
         </div>
 
         {/* Table */}
-        <div style={{ background:"#0a0a0a", border:"1px solid #1a1a1a", borderRadius:14, overflow:"hidden" }}>
+        <div className="businessCampaignTable" style={{ background:"#0a0a0a", border:"1px solid #1a1a1a", borderRadius:14, overflow:"hidden" }}>
           {/* Table header */}
-          <div style={{ display:"grid", gridTemplateColumns:"minmax(200px, 1.5fr) 130px 110px 110px 160px", gap:12, padding:"12px 16px", borderBottom:"1px solid #111", color:"#555", fontSize:11, fontWeight:700, textTransform:"uppercase", letterSpacing:0.5 }}>
+          <div className="businessCampaignTableHead" style={{ display:"grid", gridTemplateColumns:"minmax(200px, 1.5fr) 130px 110px 110px 160px", gap:12, padding:"12px 16px", borderBottom:"1px solid #111", color:"#555", fontSize:11, fontWeight:700, textTransform:"uppercase", letterSpacing:0.5 }}>
             <span>Campaign</span><span>Status</span><span>Reward</span><span>Results</span><span>Actions</span>
           </div>
 
@@ -126,14 +126,14 @@ export default function BusinessTasksPage() {
             tasks.map((task, i) => {
               const s = task.status === "pending_review" ? statusCopy.pending_review : task.is_active ? statusCopy.active : statusCopy.paused;
               return (
-                <article key={task.id} style={{ display:"grid", gridTemplateColumns:"minmax(200px, 1.5fr) 130px 110px 110px 160px", gap:12, alignItems:"center", padding:"14px 16px", borderBottom:i < tasks.length-1 ? "1px solid #111" : "none" }}>
+                <article key={task.id} className="businessCampaignRow" style={{ display:"grid", gridTemplateColumns:"minmax(200px, 1.5fr) 130px 110px 110px 160px", gap:12, alignItems:"center", padding:"14px 16px", borderBottom:i < tasks.length-1 ? "1px solid #111" : "none" }}>
                   <div style={{ minWidth:0 }}>
                     <Link href={`/business/tasks/${task.id}`} style={{ color:"#F5F5F5", fontSize:14, fontWeight:700, textDecoration:"none", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", display:"block" }}>{task.title}</Link>
                     <p style={{ color:"#bbb", fontSize:12, marginTop:3 }}>{task.category} · {task.mission_type ?? "engagement"}</p>
                   </div>
-                  <span style={{ justifySelf:"start", color:s.color, background:s.bg, borderRadius:20, padding:"4px 10px", fontSize:11, fontWeight:700, whiteSpace:"nowrap" }}>{s.label}</span>
-                  <strong style={{ color:"#F5F5F5", fontSize:13, fontWeight:700 }}>{task.reward.toLocaleString()} QLT</strong>
-                  <span style={{ color:"#F5F5F5", fontSize:13 }}>{task.approved_completions}/{task.total_completions}</span>
+                  <span className="campaignStatus" style={{ justifySelf:"start", color:s.color, background:s.bg, borderRadius:20, padding:"4px 10px", fontSize:11, fontWeight:700, whiteSpace:"nowrap" }}>{s.label}</span>
+                  <strong className="campaignReward" style={{ color:"#F5F5F5", fontSize:13, fontWeight:700 }}>{task.reward.toLocaleString()} QLT</strong>
+                  <span className="campaignResults" style={{ color:"#F5F5F5", fontSize:13 }}>{task.approved_completions}/{task.total_completions}</span>
                   <div style={{ display:"flex", gap:7 }}>
                     <Link href={`/business/tasks/${task.id}`} style={{ color:"#F5F5F5", background:"#111", border:"1px solid #1a1a1a", borderRadius:9, padding:"7px 12px", textDecoration:"none", fontSize:12, fontWeight:600 }}>View</Link>
                     {task.status !== "pending_review" && (

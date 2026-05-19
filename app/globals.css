@@ -186,7 +186,7 @@ input[type="number"] {
   bottom: 12px;
   z-index: 80;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 4px;
   background: rgba(10, 10, 10, 0.96);
   border: 1px solid rgba(245, 166, 35, 0.2);
@@ -206,7 +206,16 @@ input[type="number"] {
   border-radius: 13px;
   font-size: 10px;
   font-weight: 700;
+  line-height: 1.1;
+  min-width: 0;
   transition: all 0.15s;
+}
+
+.businessMobileNav span {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .businessMobileNav a.active {
@@ -301,6 +310,141 @@ input[type="number"] {
 
 .adsMuted {
   color: #888;
+}
+
+.businessPageTitle,
+.business-page-pro h1 {
+  color: #fff !important;
+  overflow-wrap: anywhere;
+}
+
+.businessIdentityLine {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 767px) {
+  .page-body.business-page-pro {
+    width: 100%;
+    padding: 16px 12px 104px !important;
+    overflow-x: hidden;
+  }
+
+  .businessWorkspace {
+    width: 100%;
+  }
+
+  .businessAdsTopbar {
+    align-items: stretch;
+    border-radius: 14px;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 14px;
+    padding: 10px;
+  }
+
+  .businessAdsSearch {
+    width: 100%;
+    min-height: 42px;
+    font-size: 12px;
+  }
+
+  .businessAdsActions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+  }
+
+  .businessAdsActions a,
+  .businessAdsActions button {
+    min-width: 0;
+    padding: 10px 8px;
+    text-align: center;
+    white-space: normal;
+  }
+
+  .businessHeroPanel {
+    grid-template-columns: 1fr !important;
+    padding: 16px !important;
+  }
+
+  .businessPageTitle {
+    font-size: clamp(28px, 12vw, 38px) !important;
+    line-height: 1.05 !important;
+  }
+
+  .businessBalancePanel {
+    min-width: 0 !important;
+    width: 100%;
+  }
+
+  .businessMetricGrid,
+  .businessShortcutGrid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .businessSectionHead {
+    align-items: stretch !important;
+    flex-direction: column;
+  }
+
+  .businessSectionHead a {
+    text-align: center;
+  }
+
+  .businessCampaignTable {
+    border-radius: 14px !important;
+    overflow: visible !important;
+  }
+
+  .businessCampaignTableHead {
+    display: none !important;
+  }
+
+  .businessCampaignRow {
+    border-bottom: 1px solid #161616 !important;
+    display: grid !important;
+    gap: 12px !important;
+    grid-template-columns: 1fr !important;
+    padding: 14px !important;
+  }
+
+  .businessCampaignRow > div:first-child a {
+    white-space: normal !important;
+    overflow-wrap: anywhere;
+  }
+
+  .businessCampaignRow > div:last-child {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+  }
+
+  .businessCampaignRow > div:last-child a,
+  .businessCampaignRow > div:last-child button {
+    text-align: center;
+    width: 100%;
+  }
+
+  .campaignStatus,
+  .campaignReward,
+  .campaignResults {
+    justify-self: start !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .businessMobileNav {
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    gap: 2px;
+    padding: 6px;
+  }
+
+  .businessMobileNav a {
+    font-size: 9px;
+    min-height: 46px;
+  }
 }
 
 @media (min-width: 1024px) {
