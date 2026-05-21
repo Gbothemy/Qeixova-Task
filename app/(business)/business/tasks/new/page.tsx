@@ -203,6 +203,8 @@ const platformMeta: Record<string, PlatformMeta> = {
   "Play Store": { icon: "PS", recommendedFor: "Android install flow", visibility: "Store listing access", audience: "Android testers" },
 };
 
+const steps = ["Promote", "Goal", "Content", "Mission", "Target", "Budget", "Preview", "Launch"];
+
 const campaignBundles: CampaignBundle[] = [
   {
     id: "content-flyer-status",
@@ -843,17 +845,6 @@ const categoryFlows: Record<string, CategoryFlow> = {
   },
 };
 
-const steps = [
-  "Promote",
-  "Goal",
-  "Content",
-  "Mission",
-  "Target",
-  "Budget",
-  "Preview",
-  "Launch",
-];
-
 function MultiSelectDropdown({ options, selected, onChange, placeholder = "Select options" }: { options: string[]; selected: string[]; onChange: (next: string[]) => void; placeholder?: string }) {
   const toggle = (option: string) => onChange(selected.includes(option) ? selected.filter((item) => item !== option) : [...selected, option]);
   const preview = selected.length ? selected.slice(0, 3).join(", ") : placeholder;
@@ -1098,22 +1089,13 @@ export default function CreateCampaignPage() {
     applyBundle(getRecommendedBundle(nextContentType, categoryId, goal));
   };
 
-  const canContinue = () => {
-    if (stepIndex === 0) return Boolean(categoryId) && Boolean(contentType);
-    if (stepIndex === 1) return Boolean(goal);
-    if (stepIndex === 2) return Boolean(contentType) && (contentLink.trim() || fileName || (!isTestingFlow && contentType !== "Link"));
-    if (stepIndex === 3) return Boolean(title.trim()) && actions.length > 0;
-    if (stepIndex === 4) return platforms.length > 0 && levels.length > 0;
-    if (stepIndex === 5) return resolvedReward >= 1000 && resolvedContributors > 0;
-    return true;
+  const canLaunch = () => {
+    const hasRequiredAsset = contentLink.trim() || fileName || (!isTestingFlow && contentType !== "Link");
+    return Boolean(categoryId) && Boolean(goal) && Boolean(contentType) && hasRequiredAsset && Boolean(title.trim()) && actions.length > 0 && platforms.length > 0 && levels.length > 0 && resolvedReward >= 1000 && resolvedContributors > 0;
   };
 
   const nextStep = () => {
     setError("");
-    if (!canContinue()) {
-      setError("Complete the highlighted choices so Qeixova can shape the campaign properly.");
-      return;
-    }
     setStepIndex((current) => Math.min(current + 1, steps.length - 1));
   };
 
@@ -1140,8 +1122,8 @@ export default function CreateCampaignPage() {
   };
 
   const handleSubmit = async () => {
-    if (!canContinue()) {
-      setError("Review the campaign details before launch.");
+    if (!canLaunch()) {
+      setError("Add a campaign title, content source, platform, audience, reward, and contributor limit before launching.");
       return;
     }
 
@@ -1180,7 +1162,6 @@ export default function CreateCampaignPage() {
     const data = await res.json().catch(() => ({}));
     if (res.ok) {
       setSuccess(true);
-      setStepIndex(7);
     } else {
       setError(data.error || "Failed to launch campaign");
     }
@@ -1232,13 +1213,13 @@ export default function CreateCampaignPage() {
       <main className="page-body campaignPage business-page-pro">
         <header className="campaignHeader">
           <div>
-            <p className="eyebrow">Qeixova Tasks</p>
-            <h1>Create Campaign</h1>
-            <p>{categoryFlow.builderIntro}</p>
+            <p className="eyebrow">Boost-style launch</p>
+            <h1>Launch a Campaign</h1>
+            <p>Start with the essentials, then open targeting, creative, proof, and budget controls only when you need more precision.</p>
           </div>
           <div className="headerStats">
-            <span>{flowSteps.length} guided steps</span>
-            <strong>{Math.round(((stepIndex + 1) / flowSteps.length) * 100)}%</strong>
+            <span>Estimated spend</span>
+            <strong>{estimatedBudget.toLocaleString()} QLT</strong>
           </div>
         </header>
 
@@ -1255,6 +1236,222 @@ export default function CreateCampaignPage() {
 
         <div className="builderShell">
           <section className="builderPanel">
+            <div className="quickLaunchSurface">
+              <div className="quickLaunchHero">
+                <div>
+                  <p className="eyebrow">Campaign essentials</p>
+                  <h2>What do you want to boost?</h2>
+                  <p>{categoryFlow.builderIntro}</p>
+                </div>
+                <div className="boostBadge">
+                  <strong>{resolvedContributors.toLocaleString()}</strong>
+                  <span>contributors</span>
+                </div>
+              </div>
+
+              <div className="boostGrid">
+                <div className="fieldStack">
+                  <label>
+                    Campaign title
+                    <input value={title} onChange={(event) => setTitle(event.target.value)} placeholder="Restaurant Awareness Campaign" />
+                  </label>
+                  <label>
+                    Campaign type
+                    <select value={categoryId} onChange={(event) => applyFlow(event.target.value)}>
+                      {campaignCategories.map((item) => <option key={item.id} value={item.id}>{item.title}</option>)}
+                    </select>
+                  </label>
+                  <label>
+                    Goal
+                    <select
+                      value={goal}
+                      onChange={(event) => {
+                        const nextGoal = event.target.value;
+                        setGoal(nextGoal);
+                        applyBundle(getRecommendedBundle(contentType, categoryId, nextGoal));
+                      }}
+                    >
+                      {categoryFlow.goals.map((item) => <option key={item}>{item}</option>)}
+                    </select>
+                  </label>
+                </div>
+                <div className="fieldStack">
+                  <label>
+                    Content type
+                    <select value={contentType} onChange={(event) => applyContentType(event.target.value)}>
+                      {categoryFlow.contentTypes.map((item) => <option key={item}>{item}</option>)}
+                    </select>
+                  </label>
+                  <label>
+                    {categoryFlow.linkLabel}
+                    <input value={contentLink} onChange={(event) => setContentLink(event.target.value)} placeholder={categoryFlow.linkPlaceholder} />
+                  </label>
+                  <label className="fileButton slimFileButton">
+                    {fileName || "Attach asset"}
+                    <input type="file" accept="image/*,video/*,audio/*,.pdf" onChange={(event) => setFileName(event.target.files?.[0]?.name || "")} />
+                  </label>
+                </div>
+              </div>
+
+              <div className="recommendBox boostRecommend">
+                <div className="recommendIcon">
+                  <Image src={recommendedBundle.icon} alt="" width={24} height={24} />
+                </div>
+                <div>
+                  <span>Recommended setup</span>
+                  <strong>{recommendedBundle.name}</strong>
+                  <p>{contentType} campaigns are prefilled with {recommendedBundle.shortName.toLowerCase()}, {recommended.platforms}, and {recommended.quality}.</p>
+                </div>
+                <button type="button" onClick={() => applyBundle(recommendedBundle)}>Use setup</button>
+              </div>
+
+              <div className="packageGrid boostPackages">
+                {categoryFlow.packages.map((item) => (
+                  <button key={item.id} type="button" onClick={() => setPackageId(item.id)} className={packageId === item.id ? "packageCard selected" : "packageCard"}>
+                    <span>{item.name}</span>
+                    <strong>{item.reach}</strong>
+                    <small>{item.description}</small>
+                    <em>{item.reward.toLocaleString()} QLT each</em>
+                  </button>
+                ))}
+              </div>
+
+              <div className="disclosureStack">
+                <details className="boostDisclosure">
+                  <summary>
+                    <span><strong>Creative and caption</strong><small>{caption || "Add a contributor-facing caption and asset requirements."}</small></span>
+                    <em>Open</em>
+                  </summary>
+                  <div className="splitGrid">
+                    <div className="uploadBox">
+                      <Image src="/icon-content.svg" alt="" width={30} height={30} />
+                      <strong>{fileName || "Campaign asset"}</strong>
+                      <span>{categoryFlow.contentHelp}</span>
+                      <div className="requirementList">
+                        {(categoryFlow.uploadRequirements[contentType] ?? []).map((requirement) => <small key={requirement}>{requirement}</small>)}
+                      </div>
+                    </div>
+                    <div className="fieldStack">
+                      <div className="assistBox">
+                        <div>
+                          <strong>Need help with your caption?</strong>
+                          <span>Generate a simple promotional caption from your campaign choices.</span>
+                        </div>
+                        <button type="button" onClick={generateCaption}>Generate</button>
+                      </div>
+                      <label>
+                        {categoryFlow.captionLabel}
+                        <textarea value={caption} onChange={(event) => setCaption(event.target.value)} rows={4} placeholder={categoryFlow.captionPlaceholder} />
+                      </label>
+                    </div>
+                  </div>
+                </details>
+
+                <details className="boostDisclosure" open>
+                  <summary>
+                    <span><strong>{categoryFlow.bundlesHeadline}</strong><small>{selectedBundle.shortName} controls platforms, actions, and proof style.</small></span>
+                    <em>Open</em>
+                  </summary>
+                  <div className="fieldStack">
+                    <div className="bundleGrid compactBundles">
+                      {getBundlesForCategory(categoryId).map((bundle) => {
+                        const active = selectedBundle.id === bundle.id;
+                        return (
+                          <button key={bundle.id} type="button" onClick={() => applyBundle(bundle)} className={active ? "bundleCard selected" : "bundleCard"}>
+                            <span className="bundleIcon"><Image src={bundle.icon} alt="" width={22} height={22} /></span>
+                            <strong>{bundle.shortName}</strong>
+                            <small>{bundle.description}</small>
+                            <em>{bundle.verification.slice(0, 2).join(" + ")}</em>
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <div>
+                      <div className="rowLabel">
+                        <p className="labelText">{platformLabel}</p>
+                        <span>{platforms.length} selected</span>
+                      </div>
+                      <PlatformChoiceGrid options={selectedBundle.platforms} selected={platforms} onChange={setPlatforms} />
+                    </div>
+                    <div>
+                      <p className="labelText">{actionLabel}</p>
+                      <MultiSelectDropdown options={actionOptions} selected={actions} onChange={setActions} placeholder={isTestingFlow ? "Choose tester actions" : "Choose contributor actions"} />
+                    </div>
+                    <label>
+                      Important instructions
+                      <textarea value={instructions} onChange={(event) => setInstructions(event.target.value)} rows={4} placeholder="Leave post for 24 hours. Use the hashtag provided. Avoid deleting repost early." />
+                    </label>
+                  </div>
+                </details>
+
+                <details className="boostDisclosure">
+                  <summary>
+                    <span><strong>{categoryFlow.targetHeadline}</strong><small>{interests.length} interests, {levels.length} contributor type, {[...states, ...cities, ...campuses].length} locations.</small></span>
+                    <em>Open</em>
+                  </summary>
+                  <div className="targetStack">
+                    <div><p className="labelText">Audience interests</p><MultiSelectDropdown options={categoryFlow.interests} selected={interests} onChange={setInterests} placeholder="Choose audience interests" /></div>
+                    <div><p className="labelText">{isTestingFlow ? "Device / platform targeting" : "Extra platform focus"}</p><MultiSelectDropdown options={categoryPlatforms.length ? categoryPlatforms : platformOptions} selected={platforms} onChange={setPlatforms} placeholder={isTestingFlow ? "Choose devices and platforms" : "Choose extra platforms"} /></div>
+                    <div><p className="labelText">{isTestingFlow ? "Tester type" : "Contributor type"}</p><MultiSelectDropdown options={categoryFlow.levels} selected={levels} onChange={setLevels} placeholder={isTestingFlow ? "Choose tester types" : "Choose contributor types"} /></div>
+                    <div><p className="labelText">Nigeria state targeting</p><MultiSelectDropdown options={stateOptions} selected={states} onChange={setStates} placeholder="Choose states" /></div>
+                    <div className="splitGrid compact">
+                      <div><p className="labelText">City focus</p><MultiSelectDropdown options={cityOptions} selected={cities} onChange={setCities} placeholder="Choose cities" /></div>
+                      <div><p className="labelText">Campus focus</p><MultiSelectDropdown options={campusOptions} selected={campuses} onChange={setCampuses} placeholder="Choose campuses" /></div>
+                    </div>
+                  </div>
+                </details>
+
+                <details className="boostDisclosure">
+                  <summary>
+                    <span><strong>Advanced budget controls</strong><small>{packageHeadline}. {packageHelp}</small></span>
+                    <em>Open</em>
+                  </summary>
+                  <button type="button" className="advancedToggle" onClick={() => setAdvancedOpen((open) => !open)}>
+                    {advancedOpen ? "Use package defaults" : "Customize reward, limit, duration"}
+                  </button>
+                  {advancedOpen && (
+                    <div className="advancedGrid">
+                      <label>Reward per contributor<input type="number" min={1000} value={customReward} onChange={(event) => setCustomReward(event.target.value)} placeholder="1500" /></label>
+                      <label>Contributor limit<input type="number" min={1} value={customContributors} onChange={(event) => setCustomContributors(event.target.value)} placeholder="500" /></label>
+                      <label>Campaign duration<input value={customDuration} onChange={(event) => setCustomDuration(event.target.value)} placeholder="7 days" /></label>
+                      <label>Campaign pacing<select value={customPacing} onChange={(event) => setCustomPacing(event.target.value)}><option>Steady distribution</option><option>Fast launch burst</option><option>Weekend push</option><option>Manual review first</option></select></label>
+                    </div>
+                  )}
+                </details>
+
+                <details className="boostDisclosure">
+                  <summary>
+                    <span><strong>{categoryFlow.previewLabel}</strong><small>{previewHelp}</small></span>
+                    <em>Open</em>
+                  </summary>
+                  <PreviewCard
+                    category={category}
+                    bundle={selectedBundle}
+                    title={title}
+                    goal={goal}
+                    contributors={resolvedContributors}
+                    duration={resolvedDuration}
+                    platforms={platforms}
+                    interests={interests}
+                    actions={actions}
+                    instructions={previewInstructions}
+                    contentType={contentType}
+                    businessName={business.name}
+                    budget={estimatedBudget}
+                    previewLabel={categoryFlow.previewLabel}
+                  />
+                </details>
+              </div>
+
+              <div className="boostActions">
+                <div>
+                  <strong>{categoryFlow.launchHeadline}</strong>
+                  <span>{resolvedContributors.toLocaleString()} contributors / {estimatedBudget.toLocaleString()} QLT total / {resolvedDuration}</span>
+                </div>
+                <button type="button" className="primaryButton" disabled={saving} onClick={handleSubmit}>{saving ? "Launching..." : categoryFlow.launchCta}</button>
+              </div>
+            </div>
+
             {stepIndex === 0 && (
               <div className="stepContent">
                 <div className="sectionTitle">
@@ -1779,7 +1976,7 @@ const pageStyles = `
     font-size: 22px;
   }
   .stepper {
-    display: flex;
+    display: none;
     gap: 8px;
     overflow-x: auto;
     padding: 6px 0 16px;
@@ -1838,6 +2035,167 @@ const pageStyles = `
     padding: 22px;
     min-width: 0;
     overflow: hidden;
+  }
+  .builderPanel > .stepContent,
+  .builderPanel > .wizardActions {
+    display: none;
+  }
+  .quickLaunchSurface {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-width: 0;
+  }
+  .quickLaunchHero {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    align-items: flex-start;
+    padding-bottom: 4px;
+    min-width: 0;
+  }
+  .quickLaunchHero h2 {
+    font-size: clamp(25px, 4vw, 36px);
+    line-height: 1.08;
+    margin: 5px 0 8px;
+    letter-spacing: 0;
+  }
+  .quickLaunchHero p {
+    color: #aaa;
+    font-size: 14px;
+    line-height: 1.55;
+    max-width: 620px;
+  }
+  .boostBadge {
+    border: 1px solid rgba(26, 239, 34, 0.22);
+    background: rgba(26, 239, 34, 0.08);
+    border-radius: 14px;
+    padding: 12px 14px;
+    text-align: right;
+    min-width: 132px;
+  }
+  .boostBadge strong {
+    display: block;
+    color: #1aef22;
+    font-size: 20px;
+    line-height: 1.1;
+  }
+  .boostBadge span {
+    display: block;
+    color: #9cd99f;
+    font-size: 11px;
+    font-weight: 800;
+    margin-top: 4px;
+  }
+  .boostGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .slimFileButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 45px;
+    margin-top: 0;
+  }
+  .boostRecommend {
+    margin-top: 2px;
+  }
+  .boostPackages {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .boostPackages .packageCard {
+    min-height: 156px;
+  }
+  .disclosureStack {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .boostDisclosure {
+    border: 1px solid #222;
+    background: #0c0c0c;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .boostDisclosure[open] {
+    border-color: rgba(245, 166, 35, 0.36);
+  }
+  .boostDisclosure summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 15px;
+  }
+  .boostDisclosure summary::-webkit-details-marker {
+    display: none;
+  }
+  .boostDisclosure summary span,
+  .boostDisclosure summary strong,
+  .boostDisclosure summary small {
+    display: block;
+    min-width: 0;
+  }
+  .boostDisclosure summary strong {
+    color: #f5f5f5;
+    font-size: 15px;
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+  .boostDisclosure summary small {
+    color: #8f8f8f;
+    font-size: 12px;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+  .boostDisclosure summary em {
+    border: 1px solid rgba(245, 166, 35, 0.26);
+    background: rgba(245, 166, 35, 0.08);
+    color: #f5a623;
+    border-radius: 999px;
+    padding: 7px 10px;
+    font-size: 11px;
+    font-weight: 900;
+    font-style: normal;
+    flex-shrink: 0;
+  }
+  .boostDisclosure > div,
+  .boostDisclosure > button,
+  .boostDisclosure > .advancedGrid,
+  .boostDisclosure > .previewCard {
+    margin: 0 15px 15px;
+  }
+  .compactBundles {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .compactBundles .bundleCard {
+    min-height: 160px;
+  }
+  .boostActions {
+    border-top: 1px solid #181818;
+    padding-top: 18px;
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    align-items: center;
+  }
+  .boostActions strong,
+  .boostActions span {
+    display: block;
+  }
+  .boostActions strong {
+    color: #f5f5f5;
+    font-size: 15px;
+    margin-bottom: 4px;
+  }
+  .boostActions span {
+    color: #999;
+    font-size: 12px;
+    line-height: 1.4;
   }
   .summaryPanel {
     position: sticky;
@@ -2878,6 +3236,9 @@ const pageStyles = `
     .bundleGrid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+    .boostGrid, .boostPackages, .compactBundles {
+      grid-template-columns: 1fr;
+    }
     .platformCards, .choicePlatformGrid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -2893,6 +3254,13 @@ const pageStyles = `
     }
     .campaignHeader {
       display: block;
+    }
+    .quickLaunchHero, .boostActions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .boostBadge {
+      text-align: left;
     }
     .headerStats {
       margin-top: 14px;
@@ -2910,7 +3278,7 @@ const pageStyles = `
     .stepContent {
       min-width: 0;
     }
-    .categoryGrid, .contentTypeGrid, .splitGrid, .splitGrid.compact, .advancedGrid, .bundleGrid {
+    .categoryGrid, .contentTypeGrid, .splitGrid, .splitGrid.compact, .advancedGrid, .bundleGrid, .boostGrid, .boostPackages, .compactBundles {
       grid-template-columns: 1fr;
     }
     .categoryRail {
