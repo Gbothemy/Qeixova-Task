@@ -97,6 +97,30 @@ type FeedbackGoalConfig = {
   defaultQuestions: string[];
 };
 
+type PlatformRate = {
+  qlt: number;
+  naira: number;
+};
+
+type PricingBreakdown = {
+  platformRates: Array<{ platform: string; qlt: number; naira: number }>;
+  rewardPerParticipantQlt: number;
+  rewardPerParticipantNaira: number;
+  contributorPoolQlt: number;
+  contributorPoolNaira: number;
+  businessPaymentQlt: number;
+  businessPaymentNaira: number;
+  commissionQlt: number;
+  commissionNaira: number;
+  reserveQlt: number;
+  reserveNaira: number;
+};
+
+type LaunchStep = {
+  label: string;
+  complete: boolean;
+};
+
 const campaignCategories: CampaignCategory[] = [
   { id: "content", title: "Content Distribution", description: "Spread flyers, videos, announcements, and promotional content across social channels.", bestFor: "WhatsApp status, Facebook reposts, Instagram stories, Telegram, X, YouTube Shorts, TikTok", icon: "/icon-human-distribution.svg", accent: "#4a9eff", category: "Content Distribution", missionType: "engagement" },
   { id: "music", title: "Music Promotion", description: "Launch dedicated entertainment campaigns for artists, songs, sounds, and releases.", bestFor: "Music teasers, TikTok sounds, album flyers, song reviews, dance or reaction challenges", icon: "/icon-music.svg", accent: "#F5A623", category: "Music Promotion", missionType: "engagement" },
@@ -222,6 +246,45 @@ const platformMeta: Record<string, PlatformMeta> = {
 };
 
 const steps = ["Promote", "Goal", "Content", "Mission", "Target", "Budget", "Preview", "Launch"];
+const QLT_PER_NAIRA = 10;
+const CONTRIBUTOR_POOL_SHARE = 0.7;
+const PLATFORM_COMMISSION_SHARE = 0.25;
+const DEFAULT_PLATFORM_RATE_QLT = 500;
+const platformPricing: Record<string, PlatformRate> = {
+  "WhatsApp Status": { qlt: 500, naira: 50 },
+  "WhatsApp Groups": { qlt: 500, naira: 50 },
+  "WhatsApp Communities": { qlt: 500, naira: 50 },
+  "Facebook Story": { qlt: 500, naira: 50 },
+  "Facebook Groups": { qlt: 500, naira: 50 },
+  "Facebook Feed": { qlt: 500, naira: 50 },
+  "Facebook": { qlt: 500, naira: 50 },
+  "Facebook repost": { qlt: 500, naira: 50 },
+  "Facebook Reels": { qlt: 500, naira: 50 },
+  "Instagram Story": { qlt: 700, naira: 70 },
+  "Instagram Feed": { qlt: 700, naira: 70 },
+  "Instagram": { qlt: 700, naira: 70 },
+  "Instagram story share": { qlt: 700, naira: 70 },
+  "Instagram Reels": { qlt: 700, naira: 70 },
+  TikTok: { qlt: 900, naira: 90 },
+  Snapchat: { qlt: 600, naira: 60 },
+  "Telegram Channels": { qlt: 500, naira: 50 },
+  "Telegram Groups": { qlt: 500, naira: 50 },
+  "Telegram Communities": { qlt: 500, naira: 50 },
+  Telegram: { qlt: 500, naira: 50 },
+  "X/Twitter": { qlt: 500, naira: 50 },
+  "X/Twitter repost": { qlt: 500, naira: 50 },
+  "YouTube Shorts": { qlt: 700, naira: 70 },
+  Android: { qlt: 1000, naira: 100 },
+  "iPhone/iOS": { qlt: 1200, naira: 120 },
+  iOS: { qlt: 1200, naira: 120 },
+  "Web App": { qlt: 900, naira: 90 },
+  "Web Browser": { qlt: 900, naira: 90 },
+  "Desktop Users": { qlt: 900, naira: 90 },
+  "Tablet Users": { qlt: 900, naira: 90 },
+  "Play Store": { qlt: 1000, naira: 100 },
+  "App Store": { qlt: 1200, naira: 120 },
+};
+
 const feedbackGoals = [
   "Product Feedback",
   "App Testing Feedback",
@@ -1085,11 +1148,12 @@ function PlatformChoiceGrid({ options, selected, onChange }: { options: string[]
           visibility: "Platform visibility",
           audience: "Relevant audiences",
         };
+        const rate = getPlatformRate(option);
         return (
           <button key={option} type="button" onClick={() => toggle(option)} className={active ? "choicePlatformCard selected" : "choicePlatformCard"}>
             <b>{meta.icon}</b>
             <span>{option}</span>
-            <strong>{meta.visibility}</strong>
+            <strong>{rate.qlt.toLocaleString()} QLT ({formatNaira(rate.naira)})</strong>
             <small>{meta.recommendedFor}</small>
             <em>{meta.audience}</em>
           </button>
@@ -1097,6 +1161,55 @@ function PlatformChoiceGrid({ options, selected, onChange }: { options: string[]
       })}
     </div>
   );
+}
+
+function getPlatformRate(platform: string): PlatformRate {
+  const direct = platformPricing[platform];
+  if (direct) return direct;
+  const lower = platform.toLowerCase();
+  if (lower.includes("instagram")) return platformPricing.Instagram;
+  if (lower.includes("facebook")) return platformPricing.Facebook;
+  if (lower.includes("whatsapp")) return platformPricing["WhatsApp Status"];
+  if (lower.includes("telegram")) return platformPricing.Telegram;
+  if (lower.includes("tiktok")) return platformPricing.TikTok;
+  const qlt = DEFAULT_PLATFORM_RATE_QLT;
+  return { qlt, naira: qlt / QLT_PER_NAIRA };
+}
+
+function formatNaira(amount: number) {
+  return `₦${Math.round(amount).toLocaleString()}`;
+}
+
+function getPricingBreakdown(platforms: string[], participants: number): PricingBreakdown {
+  const uniquePlatforms = Array.from(new Set(platforms));
+  const platformRates = uniquePlatforms.map((platform) => {
+    const rate = getPlatformRate(platform);
+    return { platform, qlt: rate.qlt, naira: rate.naira };
+  });
+  const rewardPerParticipantQlt = platformRates.reduce((total, item) => total + item.qlt, 0);
+  const rewardPerParticipantNaira = rewardPerParticipantQlt / QLT_PER_NAIRA;
+  const contributorPoolQlt = rewardPerParticipantQlt * participants;
+  const contributorPoolNaira = contributorPoolQlt / QLT_PER_NAIRA;
+  const businessPaymentQlt = contributorPoolQlt > 0 ? Math.ceil(contributorPoolQlt / CONTRIBUTOR_POOL_SHARE) : 0;
+  const businessPaymentNaira = businessPaymentQlt / QLT_PER_NAIRA;
+  const commissionQlt = Math.round(businessPaymentQlt * PLATFORM_COMMISSION_SHARE);
+  const commissionNaira = commissionQlt / QLT_PER_NAIRA;
+  const reserveQlt = Math.max(0, businessPaymentQlt - contributorPoolQlt - commissionQlt);
+  const reserveNaira = reserveQlt / QLT_PER_NAIRA;
+
+  return {
+    platformRates,
+    rewardPerParticipantQlt,
+    rewardPerParticipantNaira,
+    contributorPoolQlt,
+    contributorPoolNaira,
+    businessPaymentQlt,
+    businessPaymentNaira,
+    commissionQlt,
+    commissionNaira,
+    reserveQlt,
+    reserveNaira,
+  };
 }
 
 function FeedbackAdaptiveFields({
@@ -1294,14 +1407,13 @@ export default function CreateCampaignPage() {
   const [actions, setActions] = useState<string[]>(["Post flyer to WhatsApp status", "Post to Facebook story", "Post to Instagram story", "Use provided caption", "Keep post active for 24 hours"]);
   const [instructions, setInstructions] = useState("Leave the post visible for at least 24 hours.");
   const [interests, setInterests] = useState<string[]>(["Local Communities", "Shopping"]);
-  const [platforms, setPlatforms] = useState<string[]>(["WhatsApp Status"]);
+  const [platforms, setPlatforms] = useState<string[]>(["WhatsApp Status", "Facebook Story", "Instagram Story"]);
   const [levels, setLevels] = useState<string[]>(["All Contributors"]);
   const [states, setStates] = useState<string[]>(["Lagos"]);
   const [cities, setCities] = useState<string[]>([]);
   const [campuses, setCampuses] = useState<string[]>([]);
   const [packageId, setPackageId] = useState("starter-distribution");
   const [advancedOpen, setAdvancedOpen] = useState(false);
-  const [customReward, setCustomReward] = useState("");
   const [customContributors, setCustomContributors] = useState("");
   const [customDuration, setCustomDuration] = useState("");
   const [customPacing, setCustomPacing] = useState("Steady distribution");
@@ -1330,10 +1442,22 @@ export default function CreateCampaignPage() {
   const packageHeadline = isFeedbackFlow ? "Recommended feedback setup" : isTestingFlow ? "Campaign participation package" : "Campaign reach package";
   const packageHelp = isFeedbackFlow ? "Choose a contributor count and reward level that fits the depth of feedback you need." : isTestingFlow ? "Choose the testing depth. Higher-value product participation needs stronger rewards and clearer review expectations." : "Choose the momentum level. Advanced controls are available when you need exact limits.";
   const previewHelp = isFeedbackFlow ? "Preview the participant journey before launch so the feedback mission feels clear and focused." : isTestingFlow ? "This product testing preview shows objectives, tester actions, proof, and feedback expectations before launch." : "This is the confidence check before launch. It mirrors what contributors need to understand.";
-  const resolvedReward = advancedOpen && Number(customReward) > 0 ? Number(customReward) : selectedPackage.reward;
   const resolvedContributors = advancedOpen && Number(customContributors) > 0 ? Number(customContributors) : selectedPackage.contributors;
   const resolvedDuration = advancedOpen && customDuration.trim() ? customDuration.trim() : selectedPackage.duration;
-  const estimatedBudget = resolvedReward * resolvedContributors;
+  const pricingBreakdown = useMemo(() => getPricingBreakdown(platforms, resolvedContributors), [platforms, resolvedContributors]);
+  const resolvedReward = pricingBreakdown.rewardPerParticipantQlt;
+  const estimatedBudget = pricingBreakdown.businessPaymentQlt;
+  const hasCampaignSource = Boolean(contentLink.trim() || fileName || isFeedbackFlow);
+  const launchSteps: LaunchStep[] = [
+    { label: "Category", complete: Boolean(categoryId) },
+    { label: "Goal", complete: Boolean(goal) },
+    { label: isFeedbackFlow ? "Questions" : "Asset", complete: hasCampaignSource },
+    { label: "Platforms", complete: platforms.length > 0 },
+    { label: "Audience", complete: interests.length > 0 && levels.length > 0 },
+    { label: "Budget", complete: resolvedContributors > 0 && estimatedBudget > 0 },
+  ];
+  const completedLaunchSteps = launchSteps.filter((item) => item.complete).length;
+  const launchProgress = Math.round((completedLaunchSteps / launchSteps.length) * 100);
 
   useEffect(() => {
     fetch("/api/business/me")
@@ -1361,6 +1485,9 @@ export default function CreateCampaignPage() {
       isFeedbackFlow && feedbackConfig.contentFormats ? `Content format: ${feedbackContentFormat}.` : "",
       isFeedbackFlow ? `Feedback questions: ${feedbackQuestions.filter(Boolean).join(" | ")}.` : "",
       actions.length ? `Contributor actions: ${actions.join(", ")}.` : "",
+      pricingBreakdown.platformRates.length ? `Platform reward rates: ${pricingBreakdown.platformRates.map((item) => `${item.platform}: ${item.qlt.toLocaleString()} QLT (${formatNaira(item.naira)})`).join(", ")}.` : "",
+      pricingBreakdown.rewardPerParticipantQlt ? `Potential earning per participant: ${pricingBreakdown.rewardPerParticipantQlt.toLocaleString()} QLT (${formatNaira(pricingBreakdown.rewardPerParticipantNaira)}).` : "",
+      pricingBreakdown.contributorPoolQlt ? `Contributor pool: ${pricingBreakdown.contributorPoolQlt.toLocaleString()} QLT (${formatNaira(pricingBreakdown.contributorPoolNaira)}). Business payment includes 70% contributor pool, 25% platform commission, and 5% reserve.` : "",
       caption ? `Suggested caption: ${caption}` : "",
       instructions ? `Important instructions: ${instructions}` : "",
       `Audience: ${interests.length ? interests.join(", ") : "All interests"}.`,
@@ -1369,7 +1496,7 @@ export default function CreateCampaignPage() {
       cities.length || campuses.length ? `Local focus: ${[...cities, ...campuses].join(", ")}.` : "",
       advancedOpen ? `Campaign pacing: ${customPacing}.` : "",
     ].filter(Boolean).join("\n");
-  }, [actions, advancedOpen, campuses, caption, cities, contentLink, contentType, customPacing, feedbackConfig.contentFormats, feedbackConfig.platforms, feedbackConfig.surveyMethods, feedbackContentFormat, feedbackContributorType, feedbackDuration, feedbackObjectives, feedbackPlatform, feedbackQuestions, feedbackRequiredActions, feedbackResponseType, feedbackSurveyMethod, fileName, goal, instructions, interests, isFeedbackFlow, isTestingFlow, levels, platforms, selectedBundle]);
+  }, [actions, advancedOpen, campuses, caption, cities, contentLink, contentType, customPacing, feedbackConfig.contentFormats, feedbackConfig.platforms, feedbackConfig.surveyMethods, feedbackContentFormat, feedbackContributorType, feedbackDuration, feedbackObjectives, feedbackPlatform, feedbackQuestions, feedbackRequiredActions, feedbackResponseType, feedbackSurveyMethod, fileName, goal, instructions, interests, isFeedbackFlow, isTestingFlow, levels, platforms, pricingBreakdown, selectedBundle]);
 
   const proofLabel = useMemo(() => {
     if (actions.some((action) => action.toLowerCase().includes("feedback"))) return "Submit your feedback and attach proof if requested";
@@ -1445,8 +1572,7 @@ export default function CreateCampaignPage() {
   };
 
   const canLaunch = () => {
-    const hasRequiredAsset = contentLink.trim() || fileName || (!isTestingFlow && contentType !== "Link");
-    return Boolean(categoryId) && Boolean(goal) && Boolean(contentType) && hasRequiredAsset && Boolean(title.trim()) && actions.length > 0 && platforms.length > 0 && levels.length > 0 && resolvedReward >= 1000 && resolvedContributors > 0;
+    return Boolean(categoryId) && Boolean(goal) && Boolean(contentType) && hasCampaignSource && Boolean(title.trim()) && actions.length > 0 && platforms.length > 0 && levels.length > 0 && resolvedReward > 0 && resolvedContributors > 0;
   };
 
   const nextStep = () => {
@@ -1572,13 +1698,14 @@ export default function CreateCampaignPage() {
       <main className="page-body campaignPage business-page-pro">
         <header className="campaignHeader">
           <div>
-            <p className="eyebrow">Boost-style launch</p>
+            <p className="eyebrow">Campaign launch console</p>
             <h1>Launch a Campaign</h1>
-            <p>Start with the essentials, then open targeting, creative, proof, and budget controls only when you need more precision.</p>
+            <p>Choose a bundle, pick the platforms, set the participant quantity, and Qeixova calculates the contributor pool, platform commission, reserve, and contributor earning automatically.</p>
           </div>
           <div className="headerStats">
             <span>Estimated spend</span>
             <strong>{estimatedBudget.toLocaleString()} QLT</strong>
+            <small>{formatNaira(pricingBreakdown.businessPaymentNaira)}</small>
           </div>
         </header>
 
@@ -1596,15 +1723,31 @@ export default function CreateCampaignPage() {
         <div className="builderShell">
           <section className="builderPanel">
             <div className="quickLaunchSurface">
+              <div className="launchProgressPanel">
+                <div className="progressHeader">
+                  <div>
+                    <p className="eyebrow">Setup progress</p>
+                    <strong>{completedLaunchSteps} of {launchSteps.length} essentials ready</strong>
+                  </div>
+                  <span>{launchProgress}%</span>
+                </div>
+                <div className="progressTrack"><span style={{ width: `${launchProgress}%` }} /></div>
+                <div className="progressChecklist">
+                  {launchSteps.map((item) => (
+                    <span key={item.label} className={item.complete ? "complete" : ""}>{item.complete ? "OK" : "Add"} {item.label}</span>
+                  ))}
+                </div>
+              </div>
+
               <div className="quickLaunchHero">
                 <div>
                   <p className="eyebrow">Campaign essentials</p>
-                  <h2>What do you want to boost?</h2>
+                  <h2>Build the mission structure</h2>
                   <p>{categoryFlow.builderIntro}</p>
                 </div>
                 <div className="boostBadge">
-                  <strong>{resolvedContributors.toLocaleString()}</strong>
-                  <span>contributors</span>
+                  <strong>{resolvedReward.toLocaleString()}</strong>
+                  <span>QLT potential earning</span>
                 </div>
               </div>
 
@@ -1674,9 +1817,33 @@ export default function CreateCampaignPage() {
                     <span>{item.name}</span>
                     <strong>{item.reach}</strong>
                     <small>{item.description}</small>
-                    <em>{item.reward.toLocaleString()} QLT each</em>
+                    <em>{item.contributors.toLocaleString()} participants / {item.duration}</em>
                   </button>
                 ))}
+              </div>
+
+              <div className="pricingPanel">
+                <div className="pricingHeader">
+                  <div>
+                    <p className="eyebrow">V1 pricing engine</p>
+                    <strong>Platform-based contributor pool</strong>
+                    <small>Contributor pool is 70% of the business payment. Qeixova keeps 25%; 5% stays in reserve.</small>
+                  </div>
+                  <span>{resolvedContributors.toLocaleString()} participants</span>
+                </div>
+                <div className="pricingRows">
+                  {pricingBreakdown.platformRates.map((item) => (
+                    <div key={item.platform}>
+                      <span>{item.platform}</span>
+                      <strong>{item.qlt.toLocaleString()} QLT <em>({formatNaira(item.naira)})</em></strong>
+                    </div>
+                  ))}
+                </div>
+                <div className="pricingSplit">
+                  <div><span>Potential earning</span><strong>{pricingBreakdown.rewardPerParticipantQlt.toLocaleString()} QLT</strong><small>{formatNaira(pricingBreakdown.rewardPerParticipantNaira)}</small></div>
+                  <div><span>Contributor pool</span><strong>{pricingBreakdown.contributorPoolQlt.toLocaleString()} QLT</strong><small>{formatNaira(pricingBreakdown.contributorPoolNaira)}</small></div>
+                  <div><span>Business payment</span><strong>{pricingBreakdown.businessPaymentQlt.toLocaleString()} QLT</strong><small>{formatNaira(pricingBreakdown.businessPaymentNaira)}</small></div>
+                </div>
               </div>
 
               <div className="disclosureStack">
@@ -1772,7 +1939,10 @@ export default function CreateCampaignPage() {
                     </div>
                     <div>
                       <div className="rowLabel">
-                        <p className="labelText">{platformLabel}</p>
+                        <div>
+                          <p className="labelText">{platformLabel}</p>
+                          <small>Pick the exact places contributors can complete this mission. Each selected platform adds to the contributor earning.</small>
+                        </div>
                         <span>{platforms.length} selected</span>
                       </div>
                       <PlatformChoiceGrid options={selectedBundle.platforms} selected={platforms} onChange={setPlatforms} />
@@ -1811,11 +1981,10 @@ export default function CreateCampaignPage() {
                     <em>Open</em>
                   </summary>
                   <button type="button" className="advancedToggle" onClick={() => setAdvancedOpen((open) => !open)}>
-                    {advancedOpen ? "Use package defaults" : "Customize reward, limit, duration"}
+                    {advancedOpen ? "Use package defaults" : "Customize quantity, duration, pacing"}
                   </button>
                   {advancedOpen && (
                     <div className="advancedGrid">
-                      <label>Reward per contributor<input type="number" min={1000} value={customReward} onChange={(event) => setCustomReward(event.target.value)} placeholder="1500" /></label>
                       <label>Contributor limit<input type="number" min={1} value={customContributors} onChange={(event) => setCustomContributors(event.target.value)} placeholder="500" /></label>
                       <label>Campaign duration<input value={customDuration} onChange={(event) => setCustomDuration(event.target.value)} placeholder="7 days" /></label>
                       <label>Campaign pacing<select value={customPacing} onChange={(event) => setCustomPacing(event.target.value)}><option>Steady distribution</option><option>Fast launch burst</option><option>Weekend push</option><option>Manual review first</option></select></label>
@@ -1842,6 +2011,7 @@ export default function CreateCampaignPage() {
                     contentType={contentType}
                     businessName={business.name}
                     budget={estimatedBudget}
+                    pricing={pricingBreakdown}
                     previewLabel={categoryFlow.previewLabel}
                   />
                 </details>
@@ -1850,7 +2020,7 @@ export default function CreateCampaignPage() {
               <div className="boostActions">
                 <div>
                   <strong>{categoryFlow.launchHeadline}</strong>
-                  <span>{resolvedContributors.toLocaleString()} contributors / {estimatedBudget.toLocaleString()} QLT total / {resolvedDuration}</span>
+                  <span>{resolvedContributors.toLocaleString()} contributors / {resolvedReward.toLocaleString()} QLT potential earning / {estimatedBudget.toLocaleString()} QLT total / {resolvedDuration}</span>
                 </div>
                 <button type="button" className="primaryButton" disabled={saving} onClick={handleSubmit}>{saving ? "Launching..." : categoryFlow.launchCta}</button>
               </div>
@@ -2110,21 +2280,34 @@ export default function CreateCampaignPage() {
                       <span>{item.name}</span>
                       <strong>{item.reach}</strong>
                       <small>{item.description}</small>
-                      <em>{item.reward.toLocaleString()} QLT per contributor</em>
+                      <em>{item.contributors.toLocaleString()} participants / {item.duration}</em>
                     </button>
                   ))}
                 </div>
                 <button type="button" className="advancedToggle" onClick={() => setAdvancedOpen((open) => !open)}>
-                  {advancedOpen ? "Hide advanced mode" : "Customize advanced mode"}
+                  {advancedOpen ? "Hide advanced mode" : "Customize quantity, duration, pacing"}
                 </button>
                 {advancedOpen && (
                   <div className="advancedGrid">
-                    <label>Reward per contributor<input type="number" min={1000} value={customReward} onChange={(event) => setCustomReward(event.target.value)} placeholder="1500" /></label>
                     <label>Contributor limit<input type="number" min={1} value={customContributors} onChange={(event) => setCustomContributors(event.target.value)} placeholder="500" /></label>
                     <label>Campaign duration<input value={customDuration} onChange={(event) => setCustomDuration(event.target.value)} placeholder="7 days" /></label>
                     <label>Campaign pacing<select value={customPacing} onChange={(event) => setCustomPacing(event.target.value)}><option>Steady distribution</option><option>Fast launch burst</option><option>Weekend push</option><option>Manual review first</option></select></label>
                   </div>
                 )}
+                <div className="pricingPanel">
+                  <div className="pricingHeader">
+                    <div>
+                      <p className="eyebrow">Budget calculation</p>
+                      <strong>70% contributors / 25% Qeixova / 5% reserve</strong>
+                    </div>
+                    <span>{pricingBreakdown.businessPaymentQlt.toLocaleString()} QLT</span>
+                  </div>
+                  <div className="pricingSplit">
+                    <div><span>Contributor pool</span><strong>{pricingBreakdown.contributorPoolQlt.toLocaleString()} QLT</strong><small>{formatNaira(pricingBreakdown.contributorPoolNaira)}</small></div>
+                    <div><span>Platform commission</span><strong>{pricingBreakdown.commissionQlt.toLocaleString()} QLT</strong><small>{formatNaira(pricingBreakdown.commissionNaira)}</small></div>
+                    <div><span>Reserve</span><strong>{pricingBreakdown.reserveQlt.toLocaleString()} QLT</strong><small>{formatNaira(pricingBreakdown.reserveNaira)}</small></div>
+                  </div>
+                </div>
               </div>
             )}
 
@@ -2149,6 +2332,7 @@ export default function CreateCampaignPage() {
                   contentType={contentType}
                   businessName={business.name}
                   budget={estimatedBudget}
+                  pricing={pricingBreakdown}
                   previewLabel={categoryFlow.previewLabel}
                 />
               </div>
@@ -2163,7 +2347,7 @@ export default function CreateCampaignPage() {
                 </div>
                 <div className="readyPanel">
                   <div className="readyMetric"><span>{isFeedbackFlow ? "Recommended setup" : isTestingFlow ? "Recommended devices" : "Recommended platforms"}</span><strong>{recommended.platforms}</strong></div>
-                  <div className="readyMetric"><span>Expected quality</span><strong>{recommended.quality}</strong></div>
+                  <div className="readyMetric"><span>Potential earning</span><strong>{pricingBreakdown.rewardPerParticipantQlt.toLocaleString()} QLT ({formatNaira(pricingBreakdown.rewardPerParticipantNaira)})</strong></div>
                   <div className="readyMetric"><span>Estimated participation</span><strong>{resolvedContributors.toLocaleString()} {isFeedbackFlow ? "participants" : "contributors"}</strong></div>
                 </div>
               </div>
@@ -2185,12 +2369,17 @@ export default function CreateCampaignPage() {
             <div className="summaryIcon" style={{ background: `${category.accent}18` }}>
               <Image src={category.icon} alt="" width={26} height={26} />
             </div>
+            <div className="summaryReadiness">
+              <span>{launchProgress}% ready</span>
+              <div><b style={{ width: `${launchProgress}%` }} /></div>
+            </div>
             <dl>
               <div><dt>Goal</dt><dd>{goal}</dd></div>
               <div><dt>Platforms</dt><dd>{platforms.length ? platforms.join(", ") : "All platforms"}</dd></div>
               <div><dt>Audience</dt><dd>{interests.length ? interests.join(", ") : "All interests"}</dd></div>
-              <div><dt>Reward</dt><dd>{resolvedReward.toLocaleString()} QLT</dd></div>
-              <div><dt>Budget</dt><dd>{estimatedBudget.toLocaleString()} QLT</dd></div>
+              <div><dt>Potential earning</dt><dd>{resolvedReward.toLocaleString()} QLT ({formatNaira(pricingBreakdown.rewardPerParticipantNaira)})</dd></div>
+              <div><dt>Contributor pool</dt><dd>{pricingBreakdown.contributorPoolQlt.toLocaleString()} QLT ({formatNaira(pricingBreakdown.contributorPoolNaira)})</dd></div>
+              <div><dt>Business payment</dt><dd>{estimatedBudget.toLocaleString()} QLT ({formatNaira(pricingBreakdown.businessPaymentNaira)})</dd></div>
             </dl>
           </aside>
         </div>
@@ -2215,6 +2404,7 @@ function PreviewCard({
   contentType,
   businessName,
   budget,
+  pricing,
   previewLabel,
 }: {
   category: CampaignCategory;
@@ -2230,6 +2420,7 @@ function PreviewCard({
   contentType: string;
   businessName: string;
   budget: number;
+  pricing: PricingBreakdown;
   previewLabel: string;
 }) {
   const estimatedReach = `${Math.max(contributors * 50, 5000).toLocaleString()} - ${Math.max(contributors * 160, 12000).toLocaleString()}`;
@@ -2297,16 +2488,29 @@ function PreviewCard({
         <div className="platformCards">
           {shownPlatforms.slice(0, 4).map((platform, index) => {
             const meta = platformMeta[platform];
+            const rate = getPlatformRate(platform);
             return (
               <div key={platform} className="platformCard">
                 <b>{meta?.icon ?? platform.split(" ").map((word) => word[0]).join("").slice(0, 2)}</b>
                 <div>
                   <strong>{platform}</strong>
-                  <span>{index === 0 ? "Primary" : meta?.visibility ?? "Optional"}</span>
+                  <span>{index === 0 ? "Primary" : meta?.visibility ?? "Optional"} - {rate.qlt.toLocaleString()} QLT ({formatNaira(rate.naira)})</span>
                 </div>
               </div>
             );
           })}
+        </div>
+      </section>
+
+      <section className="previewSection">
+        <div className="panelHeader">
+          <strong>Contributor Earnings</strong>
+          <span>Up to {pricing.rewardPerParticipantQlt.toLocaleString()} QLT</span>
+        </div>
+        <div className="audienceRows">
+          <div><span>Potential earning</span><p>{pricing.rewardPerParticipantQlt.toLocaleString()} QLT ({formatNaira(pricing.rewardPerParticipantNaira)})</p></div>
+          <div><span>Contributor pool</span><p>{pricing.contributorPoolQlt.toLocaleString()} QLT ({formatNaira(pricing.contributorPoolNaira)})</p></div>
+          <div><span>Business payment</span><p>{pricing.businessPaymentQlt.toLocaleString()} QLT ({formatNaira(pricing.businessPaymentNaira)})</p></div>
         </div>
       </section>
 
@@ -2351,7 +2555,7 @@ function PreviewCard({
         <div><strong>{contributors.toLocaleString()}</strong><span>{isFeedbackPreview ? "Participants" : isTestingPreview ? "Est. Testers" : "Est. Contributors"}</span></div>
         <div><strong>{isTestingPreview || isFeedbackPreview ? bundle.verification.length : estimatedReach}</strong><span>{isTestingPreview || isFeedbackPreview ? "Proof Checks" : "Est. Reach"}</span></div>
         <div><strong>{duration}</strong><span>Duration</span></div>
-        <div><strong>{budget.toLocaleString()} QLT</strong><span>Total Budget</span></div>
+        <div><strong>{budget.toLocaleString()} QLT</strong><span>Total Budget ({formatNaira(pricing.businessPaymentNaira)})</span></div>
       </div>
 
       <details className="instructionDetails">
@@ -2433,8 +2637,15 @@ const pageStyles = `
     margin-bottom: 6px;
   }
   .headerStats strong {
+    display: block;
     color: #1aef22;
     font-size: 22px;
+  }
+  .headerStats small {
+    display: block;
+    color: #aaa;
+    font-size: 11px;
+    margin-top: 3px;
   }
   .stepper {
     display: none;
@@ -2553,6 +2764,66 @@ const pageStyles = `
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 16px;
   }
+  .launchProgressPanel {
+    border: 1px solid rgba(245, 166, 35, 0.24);
+    background: #0c0c0c;
+    border-radius: 16px;
+    padding: 14px;
+    display: grid;
+    gap: 12px;
+  }
+  .progressHeader {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .progressHeader strong {
+    display: block;
+    color: #f5f5f5;
+    font-size: 15px;
+    line-height: 1.25;
+  }
+  .progressHeader span {
+    color: #1aef22;
+    font-size: 16px;
+    font-weight: 950;
+  }
+  .progressTrack,
+  .summaryReadiness div {
+    height: 8px;
+    border-radius: 999px;
+    background: #171717;
+    overflow: hidden;
+  }
+  .progressTrack span,
+  .summaryReadiness b {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #f5a623, #1aef22);
+  }
+  .progressChecklist {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 7px;
+  }
+  .progressChecklist span {
+    border: 1px solid #242424;
+    background: #080808;
+    color: #888;
+    border-radius: 10px;
+    padding: 8px 9px;
+    font-size: 11px;
+    font-weight: 900;
+    line-height: 1.2;
+    text-align: center;
+  }
+  .progressChecklist span.complete {
+    border-color: rgba(26, 239, 34, 0.26);
+    background: rgba(26, 239, 34, 0.08);
+    color: #8dfb93;
+  }
   .slimFileButton {
     display: inline-flex;
     align-items: center;
@@ -2568,6 +2839,82 @@ const pageStyles = `
   }
   .boostPackages .packageCard {
     min-height: 156px;
+  }
+  .pricingPanel {
+    border: 1px solid rgba(26, 239, 34, 0.24);
+    background: rgba(26, 239, 34, 0.06);
+    border-radius: 16px;
+    padding: 14px;
+    display: grid;
+    gap: 12px;
+  }
+  .pricingHeader {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .pricingHeader strong {
+    display: block;
+    color: #f5f5f5;
+    font-size: 16px;
+    line-height: 1.25;
+  }
+  .pricingHeader small {
+    display: block;
+    color: #aaa;
+    font-size: 12px;
+    line-height: 1.4;
+    margin-top: 5px;
+    max-width: 560px;
+  }
+  .pricingHeader span {
+    color: #1aef22;
+    font-size: 12px;
+    font-weight: 900;
+    white-space: nowrap;
+  }
+  .pricingRows {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .pricingRows div,
+  .pricingSplit div {
+    border: 1px solid #202020;
+    background: #090909;
+    border-radius: 12px;
+    padding: 11px;
+    min-width: 0;
+  }
+  .pricingRows span,
+  .pricingSplit span {
+    display: block;
+    color: #909090;
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+  }
+  .pricingRows strong,
+  .pricingSplit strong {
+    display: block;
+    color: #f5f5f5;
+    font-size: 14px;
+    line-height: 1.25;
+    margin-top: 5px;
+    overflow-wrap: anywhere;
+  }
+  .pricingRows em,
+  .pricingSplit small {
+    color: #1aef22;
+    font-size: 11px;
+    font-style: normal;
+  }
+  .pricingSplit {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
   }
   .disclosureStack {
     display: flex;
@@ -2708,6 +3055,20 @@ const pageStyles = `
     display: grid;
     place-items: center;
     margin-bottom: 14px;
+  }
+  .summaryReadiness {
+    border: 1px solid #202020;
+    background: #0c0c0c;
+    border-radius: 12px;
+    padding: 10px;
+    margin-bottom: 14px;
+  }
+  .summaryReadiness span {
+    display: block;
+    color: #1aef22;
+    font-size: 12px;
+    font-weight: 900;
+    margin-bottom: 8px;
   }
   .summaryPanel dl {
     display: flex;
@@ -3261,9 +3622,16 @@ const pageStyles = `
   .rowLabel {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     gap: 12px;
     margin-bottom: 8px;
+  }
+  .rowLabel small {
+    display: block;
+    color: #8d8d8d;
+    font-size: 12px;
+    line-height: 1.4;
+    margin-top: 4px;
   }
   .packageGrid {
     display: grid;
@@ -3723,7 +4091,7 @@ const pageStyles = `
       position: static;
       order: -1;
     }
-    .packageGrid, .momentumGrid, .readyPanel {
+    .packageGrid, .momentumGrid, .readyPanel, .pricingRows, .pricingSplit, .progressChecklist {
       grid-template-columns: 1fr;
     }
     .bundleGrid {
