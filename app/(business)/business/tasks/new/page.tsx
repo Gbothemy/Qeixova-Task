@@ -79,6 +79,24 @@ type PlatformMeta = {
   audience: string;
 };
 
+type FeedbackGoalConfig = {
+  assetHeading: string;
+  nameLabel: string;
+  descriptionLabel: string;
+  linkLabel: string;
+  linkPlaceholder: string;
+  objectives: string[];
+  contributorTypes: string[];
+  responseTypes: string[];
+  platforms?: string[];
+  testAreas?: string[];
+  requiredActions?: string[];
+  durations?: string[];
+  surveyMethods?: string[];
+  contentFormats?: string[];
+  defaultQuestions: string[];
+};
+
 const campaignCategories: CampaignCategory[] = [
   { id: "content", title: "Content Distribution", description: "Spread flyers, videos, announcements, and promotional content across social channels.", bestFor: "WhatsApp status, Facebook reposts, Instagram stories, Telegram, X, YouTube Shorts, TikTok", icon: "/icon-human-distribution.svg", accent: "#4a9eff", category: "Content Distribution", missionType: "engagement" },
   { id: "music", title: "Music Promotion", description: "Launch dedicated entertainment campaigns for artists, songs, sounds, and releases.", bestFor: "Music teasers, TikTok sounds, album flyers, song reviews, dance or reaction challenges", icon: "/icon-music.svg", accent: "#F5A623", category: "Music Promotion", missionType: "engagement" },
@@ -86,7 +104,7 @@ const campaignCategories: CampaignCategory[] = [
   { id: "creator", title: "Creator Campaigns", description: "Amplify influencers, skit makers, streamers, creators, and personal brands.", bestFor: "Creator reposts, engagement support, livestream awareness, page awareness, collaborations", icon: "/icon-creator.svg", accent: "#c084fc", category: "Creator Campaigns", missionType: "engagement" },
   { id: "apps", title: "App Testing & Reviews", description: "Get real participants to download, test, review, and report app experiences.", bestFor: "App downloads, onboarding tests, bug reports, feature testing, review submissions", icon: "/icon-app-testing.svg", accent: "#14b8a6", category: "App Testing", missionType: "participation" },
   { id: "referral", title: "Referral Missions", description: "Run performance-based growth campaigns tied to signups, invites, or ambassadors.", bestFor: "Invite campaigns, signup referrals, ambassador programs, user acquisition campaigns", icon: "/icon-target.svg", accent: "#f87171", category: "Referral Missions", missionType: "premium" },
-  { id: "surveys", title: "Surveys & Feedback", description: "Collect market insight, customer opinions, product feedback, and structured responses.", bestFor: "Surveys, polls, feedback forms, customer opinion missions, product experience reviews", icon: "/icon-survey.svg", accent: "#fb7185", category: "Surveys & Feedback", missionType: "participation" },
+  { id: "surveys", title: "Feedback Campaign", description: "Collect useful product, app, website, service, content, event, and market feedback.", bestFor: "Product feedback, app testing feedback, surveys, UX testing, feature validation, market research", icon: "/icon-survey.svg", accent: "#fb7185", category: "Feedback Campaign", missionType: "participation" },
   { id: "event", title: "Event Promotion", description: "Drive awareness for events, programs, campus activities, and local gatherings.", bestFor: "Church programs, concerts, conferences, campus events, local gathering awareness", icon: "/icon-events.svg", accent: "#f97316", category: "Event Promotion", missionType: "engagement" },
   { id: "community", title: "Community Growth", description: "Grow active brand communities and invite relevant people into social spaces.", bestFor: "Telegram joins, WhatsApp community joins, Discord joins, Facebook group participation", icon: "/icon-community.svg", accent: "#22c55e", category: "Community Growth", missionType: "participation" },
   { id: "video", title: "Video Engagement", description: "Improve visibility for short-form and long-form video content through real participation.", bestFor: "Watch campaigns, save campaigns, repost video campaigns, short-form content engagement", icon: "/icon-content.svg", accent: "#e879f9", category: "Video Engagement", missionType: "engagement" },
@@ -204,6 +222,140 @@ const platformMeta: Record<string, PlatformMeta> = {
 };
 
 const steps = ["Promote", "Goal", "Content", "Mission", "Target", "Budget", "Preview", "Launch"];
+const feedbackGoals = [
+  "Product Feedback",
+  "App Testing Feedback",
+  "Website Feedback",
+  "Service Experience Feedback",
+  "Survey & Opinions",
+  "Content Feedback",
+  "Feature Validation",
+  "Market Research",
+  "User Experience Testing",
+  "Event Feedback",
+];
+
+const defaultFeedbackObjectives = ["First impression", "Ease of use", "Improvement suggestions"];
+const feedbackGoalConfigs: Record<string, FeedbackGoalConfig> = {
+  "Product Feedback": {
+    assetHeading: "Product Information",
+    nameLabel: "Product name",
+    descriptionLabel: "Product description",
+    linkLabel: "Product link",
+    linkPlaceholder: "Paste store, product page, catalog, or demo link",
+    objectives: ["First impression", "Product quality", "Ease of use", "Pricing perception", "Improvement suggestions", "Purchase interest"],
+    contributorTypes: ["General audience", "Existing customers", "Tech users", "Students", "Local users"],
+    responseTypes: ["Rating only", "Short text", "Detailed review", "Multiple choice", "Mixed"],
+    defaultQuestions: ["What is your first impression?", "How clear is the product value?", "What would make you more likely to buy?"],
+  },
+  "App Testing Feedback": {
+    assetHeading: "App Information",
+    nameLabel: "App name",
+    descriptionLabel: "App description",
+    linkLabel: "App link",
+    linkPlaceholder: "Paste Play Store, App Store, APK, TestFlight, or web app link",
+    objectives: ["Installation experience", "Signup process", "Navigation", "Performance", "Bugs", "UI experience", "Feature usability"],
+    contributorTypes: ["Tech users", "Existing customers", "Students", "Beta testers", "General audience"],
+    responseTypes: ["Detailed review", "Rating only", "Short text", "Mixed"],
+    platforms: ["Android", "iOS", "Web App"],
+    testAreas: ["Installation experience", "Signup process", "Navigation", "Performance", "Bugs", "UI experience", "Feature usability"],
+    requiredActions: ["Install app", "Create account", "Use for 10 minutes", "Complete onboarding"],
+    durations: ["5 mins", "10 mins", "20 mins", "Custom"],
+    defaultQuestions: ["Was installation smooth?", "Where did you feel friction?", "Which bugs or confusing moments did you notice?"],
+  },
+  "Website Feedback": {
+    assetHeading: "Website Information",
+    nameLabel: "Website or page name",
+    descriptionLabel: "What should contributors review?",
+    linkLabel: "Website link",
+    linkPlaceholder: "Paste the website, landing page, or product page URL",
+    objectives: ["First impression", "Navigation", "Page clarity", "Trust signals", "Conversion interest", "Improvement suggestions"],
+    contributorTypes: ["General audience", "Tech users", "Existing customers", "Local users"],
+    responseTypes: ["Short text", "Detailed review", "Rating only", "Mixed"],
+    defaultQuestions: ["What is the page about?", "What feels confusing?", "What would make you take action?"],
+  },
+  "Service Experience Feedback": {
+    assetHeading: "Service Information",
+    nameLabel: "Service name",
+    descriptionLabel: "Service description",
+    linkLabel: "Booking or contact link",
+    linkPlaceholder: "Paste booking, WhatsApp, Instagram, or service page link",
+    objectives: ["Service clarity", "Pricing perception", "Trust level", "Customer support expectations", "Improvement suggestions"],
+    contributorTypes: ["General audience", "Existing customers", "Local users", "Students"],
+    responseTypes: ["Short text", "Detailed review", "Rating only", "Mixed"],
+    defaultQuestions: ["Is the service easy to understand?", "Would you contact this business?", "What would improve the service offer?"],
+  },
+  "Survey & Opinions": {
+    assetHeading: "Survey Setup",
+    nameLabel: "Survey title",
+    descriptionLabel: "Survey context",
+    linkLabel: "Optional survey link",
+    linkPlaceholder: "Paste an existing form link if you have one",
+    objectives: ["Opinion collection", "Preference ranking", "Market insight", "Customer sentiment", "Decision support"],
+    contributorTypes: ["General audience", "Students", "Existing customers", "Local users"],
+    responseTypes: ["Multiple choice", "Open questions", "Rating system", "Mixed"],
+    surveyMethods: ["Multiple choice", "Open questions", "Rating system", "Mixed"],
+    defaultQuestions: ["What option do you prefer?", "Why did you choose that option?", "How strongly do you feel about it?"],
+  },
+  "Content Feedback": {
+    assetHeading: "Content Upload",
+    nameLabel: "Content title",
+    descriptionLabel: "Content context",
+    linkLabel: "Content link",
+    linkPlaceholder: "Paste video, post, article, audio, or campaign content link",
+    objectives: ["Clarity", "Design quality", "Interest level", "Emotional reaction", "Share likelihood", "Improvement suggestions"],
+    contributorTypes: ["General audience", "Students", "Content viewers", "Local users"],
+    responseTypes: ["Short text", "Detailed review", "Rating only", "Mixed"],
+    contentFormats: ["Video", "Flyer", "Post", "Article", "Audio"],
+    defaultQuestions: ["What message did you take from this content?", "How interesting is it?", "What would improve it?"],
+  },
+  "Feature Validation": {
+    assetHeading: "Feature Information",
+    nameLabel: "Feature name",
+    descriptionLabel: "Feature description",
+    linkLabel: "Feature link",
+    linkPlaceholder: "Paste prototype, product, screenshot, or demo link",
+    objectives: ["Usefulness", "Adoption likelihood", "Ease of use", "Missing expectations", "Improvement suggestions"],
+    contributorTypes: ["Tech users", "Existing customers", "Beta testers", "General audience"],
+    responseTypes: ["Short text", "Detailed review", "Rating only", "Mixed"],
+    defaultQuestions: ["Would you use this feature?", "How useful is it?", "What would improve it?"],
+  },
+  "Market Research": {
+    assetHeading: "Research Topic",
+    nameLabel: "Research topic",
+    descriptionLabel: "What decision are you researching?",
+    linkLabel: "Reference link",
+    linkPlaceholder: "Paste product, competitor, concept, or optional reference link",
+    objectives: ["Preference discovery", "Pricing perception", "Audience needs", "Competitor comparison", "Purchase interest"],
+    contributorTypes: ["General audience", "Students", "Local users", "Existing customers"],
+    responseTypes: ["Multiple choice", "Open questions", "Rating system", "Mixed"],
+    defaultQuestions: ["What matters most to you in this category?", "Which option would you choose?", "What price feels reasonable?"],
+  },
+  "User Experience Testing": {
+    assetHeading: "Experience Test",
+    nameLabel: "Product or flow name",
+    descriptionLabel: "User journey to test",
+    linkLabel: "Product or prototype link",
+    linkPlaceholder: "Paste website, app, prototype, or flow link",
+    objectives: ["Navigation", "Task completion", "Confusing steps", "UI experience", "Improvement suggestions"],
+    contributorTypes: ["Tech users", "Existing customers", "Beta testers", "General audience"],
+    responseTypes: ["Detailed review", "Short text", "Rating only", "Mixed"],
+    requiredActions: ["Open mission", "Access product", "Complete assigned user journey", "Submit feedback"],
+    durations: ["5 mins", "10 mins", "20 mins", "Custom"],
+    defaultQuestions: ["Could you complete the task?", "Where did you slow down?", "What should be clearer?"],
+  },
+  "Event Feedback": {
+    assetHeading: "Event Information",
+    nameLabel: "Event name",
+    descriptionLabel: "Event description",
+    linkLabel: "Event link",
+    linkPlaceholder: "Paste event page, registration, flyer, or recap link",
+    objectives: ["Event clarity", "Interest level", "Experience rating", "Attendance likelihood", "Improvement suggestions"],
+    contributorTypes: ["General audience", "Students", "Local users", "Existing attendees"],
+    responseTypes: ["Short text", "Detailed review", "Rating only", "Mixed"],
+    defaultQuestions: ["Would you attend or recommend this event?", "What is unclear?", "What would improve the experience?"],
+  },
+};
 
 const campaignBundles: CampaignBundle[] = [
   {
@@ -804,6 +956,48 @@ const categoryFlows: Record<string, CategoryFlow> = {
     defaultLevels: ["All Contributors"],
     defaultBundleId: "business-story-status",
   },
+  surveys: {
+    ...defaultFlow,
+    id: "surveys",
+    builderIntro: "Answer a few smart questions and Qeixova builds a feedback campaign structure around the insight you need.",
+    contentHeadline: "What kind of feedback do you need?",
+    contentHelp: "Choose the feedback goal first. The setup will adapt to only show fields that help collect useful responses.",
+    contentTypes: feedbackGoals,
+    goalsHeadline: "What kind of feedback do you need?",
+    goals: feedbackGoals,
+    uploadRequirements: {
+      "Product Feedback": ["Product name", "Product description", "Images optional", "Product link optional"],
+      "App Testing Feedback": ["App name", "App link", "Platform", "Required actions", "Testing duration"],
+      "Website Feedback": ["Website link", "Review focus", "Target page or flow"],
+      "Service Experience Feedback": ["Service name", "Service description", "Booking/contact link optional"],
+      "Survey & Opinions": ["Survey method", "Question builder", "Response format"],
+      "Content Feedback": ["Video, flyer, post, article, or audio", "Feedback objectives"],
+      "Feature Validation": ["Feature name", "Description", "Screenshot/video optional", "Validation questions"],
+      "Market Research": ["Research topic", "Audience type", "Opinion questions"],
+      "User Experience Testing": ["Journey to test", "Required actions", "Testing duration"],
+      "Event Feedback": ["Event name", "Event details", "Event link or media optional"],
+    },
+    linkLabel: "Feedback target link",
+    linkPlaceholder: "Paste the product, app, website, content, event, or survey link",
+    captionLabel: "Participant brief",
+    captionPlaceholder: "Explain what contributors should review and what kind of feedback matters.",
+    bundlesHeadline: "Recommended feedback structure",
+    targetHeadline: "Target feedback contributors",
+    targetHelp: "Match the feedback goal to the people most likely to give useful responses.",
+    interests: ["Technology", "Business", "Students", "Lifestyle", "Local Communities", "Shopping", "Entertainment", "Startups", "Education"],
+    levels: ["General audience", "Existing customers", "Tech users", "Students", "Local users", "Verified Contributors"],
+    packages: appTestingPackages,
+    launchHeadline: "Your feedback campaign is ready",
+    launchSummary: "Qeixova will guide contributors through the right actions, questions, response format, and verification checks for this feedback goal.",
+    launchCta: "Launch Feedback Campaign",
+    previewLabel: "Feedback Experience Preview",
+    defaultContentType: "Product Feedback",
+    defaultGoal: "Product Feedback",
+    defaultTitle: "Product Feedback Campaign",
+    defaultInterests: ["Business", "Shopping", "Local Communities"],
+    defaultLevels: ["General audience"],
+    defaultBundleId: "apps-user-feedback",
+  },
   apps: {
     ...defaultFlow,
     id: "apps",
@@ -905,6 +1099,119 @@ function PlatformChoiceGrid({ options, selected, onChange }: { options: string[]
   );
 }
 
+function FeedbackAdaptiveFields({
+  config,
+  title,
+  setTitle,
+  contentLink,
+  setContentLink,
+  fileName,
+  setFileName,
+  instructions,
+  setInstructions,
+  objectives,
+  setObjectives,
+  contributorType,
+  setContributorType,
+  responseType,
+  setResponseType,
+  platform,
+  setPlatform,
+  requiredActions,
+  setRequiredActions,
+  duration,
+  setDuration,
+  surveyMethod,
+  setSurveyMethod,
+  contentFormat,
+  setContentFormat,
+  questions,
+  setQuestions,
+}: {
+  config: FeedbackGoalConfig;
+  title: string;
+  setTitle: (value: string) => void;
+  contentLink: string;
+  setContentLink: (value: string) => void;
+  fileName: string;
+  setFileName: (value: string) => void;
+  instructions: string;
+  setInstructions: (value: string) => void;
+  objectives: string[];
+  setObjectives: (value: string[]) => void;
+  contributorType: string;
+  setContributorType: (value: string) => void;
+  responseType: string;
+  setResponseType: (value: string) => void;
+  platform: string;
+  setPlatform: (value: string) => void;
+  requiredActions: string[];
+  setRequiredActions: (value: string[]) => void;
+  duration: string;
+  setDuration: (value: string) => void;
+  surveyMethod: string;
+  setSurveyMethod: (value: string) => void;
+  contentFormat: string;
+  setContentFormat: (value: string) => void;
+  questions: string[];
+  setQuestions: (value: string[]) => void;
+}) {
+  const updateQuestion = (index: number, value: string) => setQuestions(questions.map((question, questionIndex) => questionIndex === index ? value : question));
+
+  return (
+    <div className="feedbackFlow">
+      <details className="feedbackSection" open>
+        <summary>{config.assetHeading}</summary>
+        <div className="splitGrid compact">
+          <label>{config.nameLabel}<input value={title} onChange={(event) => setTitle(event.target.value)} placeholder={config.nameLabel} /></label>
+          <label>{config.linkLabel}<input value={contentLink} onChange={(event) => setContentLink(event.target.value)} placeholder={config.linkPlaceholder} /></label>
+        </div>
+        <label>{config.descriptionLabel}<textarea value={instructions} onChange={(event) => setInstructions(event.target.value)} rows={4} placeholder="Give contributors the context they need before answering." /></label>
+        <label className="fileButton slimFileButton">
+          {fileName || "Upload images, screenshot, video, audio, or PDF"}
+          <input type="file" accept="image/*,video/*,audio/*,.pdf" onChange={(event) => setFileName(event.target.files?.[0]?.name || "")} />
+        </label>
+      </details>
+
+      <details className="feedbackSection" open>
+        <summary>What should contributors help you understand?</summary>
+        <MultiSelectDropdown options={config.objectives} selected={objectives} onChange={setObjectives} placeholder="Choose feedback objectives" />
+      </details>
+
+      <details className="feedbackSection" open>
+        <summary>Audience and response format</summary>
+        <div className="splitGrid compact">
+          <label>Contributor type<select value={contributorType} onChange={(event) => setContributorType(event.target.value)}>{config.contributorTypes.map((item) => <option key={item}>{item}</option>)}</select></label>
+          <label>Response type<select value={responseType} onChange={(event) => setResponseType(event.target.value)}>{config.responseTypes.map((item) => <option key={item}>{item}</option>)}</select></label>
+        </div>
+      </details>
+
+      {(config.platforms || config.requiredActions || config.durations || config.surveyMethods || config.contentFormats) && (
+        <details className="feedbackSection" open>
+          <summary>Goal-specific setup</summary>
+          <div className="splitGrid compact">
+            {config.platforms && <label>Platform<select value={platform} onChange={(event) => setPlatform(event.target.value)}>{config.platforms.map((item) => <option key={item}>{item}</option>)}</select></label>}
+            {config.durations && <label>Testing duration<select value={duration} onChange={(event) => setDuration(event.target.value)}>{config.durations.map((item) => <option key={item}>{item}</option>)}</select></label>}
+            {config.surveyMethods && <label>Survey method<select value={surveyMethod} onChange={(event) => setSurveyMethod(event.target.value)}>{config.surveyMethods.map((item) => <option key={item}>{item}</option>)}</select></label>}
+            {config.contentFormats && <label>Content type<select value={contentFormat} onChange={(event) => setContentFormat(event.target.value)}>{config.contentFormats.map((item) => <option key={item}>{item}</option>)}</select></label>}
+          </div>
+          {config.requiredActions && <div><p className="labelText">Required actions</p><MultiSelectDropdown options={config.requiredActions} selected={requiredActions} onChange={setRequiredActions} placeholder="Choose required actions" /></div>}
+        </details>
+      )}
+
+      <details className="feedbackSection" open>
+        <summary>Questions</summary>
+        <div className="questionBuilder">
+          {questions.map((question, index) => (
+            <label key={`${index}-${question}`}>Question {index + 1}<input value={question} onChange={(event) => updateQuestion(index, event.target.value)} placeholder="Ask a focused feedback question" /></label>
+          ))}
+          <button type="button" className="secondaryButton" onClick={() => setQuestions([...questions, ""])}>Add Question +</button>
+        </div>
+      </details>
+    </div>
+  );
+}
+
 function getCategoryFlow(categoryId: string) {
   return categoryFlows[categoryId] ?? defaultFlow;
 }
@@ -915,6 +1222,7 @@ function getBundlesForCategory(categoryId: string) {
   if (categoryId === "creator") return campaignBundles.filter((bundle) => bundle.id.startsWith("creator-"));
   if (categoryId === "business") return campaignBundles.filter((bundle) => bundle.id.startsWith("business-"));
   if (categoryId === "apps") return campaignBundles.filter((bundle) => bundle.id.startsWith("apps-"));
+  if (categoryId === "surveys") return campaignBundles.filter((bundle) => ["apps-user-feedback", "apps-feature-validation", "apps-quick-onboarding", "guided-engagement"].includes(bundle.id));
   return campaignBundles.filter((bundle) => !bundle.id.startsWith("content-") && !bundle.id.startsWith("music-") && !bundle.id.startsWith("creator-") && !bundle.id.startsWith("business-") && !bundle.id.startsWith("apps-"));
 }
 
@@ -954,6 +1262,12 @@ function getRecommendedBundle(contentType: string, categoryId: string, goal = ""
     if (contentType === "Multi-Step Testing Campaign") return campaignBundles.find((bundle) => bundle.id === "apps-deep-testing") ?? campaignBundles[0];
     return campaignBundles.find((bundle) => bundle.id === "apps-quick-onboarding") ?? campaignBundles[0];
   }
+  if (categoryId === "surveys") {
+    if (contentType === "App Testing Feedback" || goal === "App Testing Feedback" || contentType === "User Experience Testing") return campaignBundles.find((bundle) => bundle.id === "apps-quick-onboarding") ?? campaignBundles[0];
+    if (contentType === "Feature Validation" || goal === "Feature Validation") return campaignBundles.find((bundle) => bundle.id === "apps-feature-validation") ?? campaignBundles[0];
+    if (contentType === "Survey & Opinions" || goal === "Survey & Opinions" || contentType === "Market Research") return campaignBundles.find((bundle) => bundle.id === "guided-engagement") ?? campaignBundles[0];
+    return campaignBundles.find((bundle) => bundle.id === "apps-user-feedback") ?? campaignBundles[0];
+  }
   if (categoryId === "community") return campaignBundles.find((bundle) => bundle.id === "community-growth") ?? campaignBundles[0];
   if (categoryId === "video" || categoryId === "music" || contentType === "Video") return campaignBundles.find((bundle) => bundle.id === "video-distribution") ?? campaignBundles[0];
   if (contentType === "Link" || categoryId === "apps" || categoryId === "surveys") return campaignBundles.find((bundle) => bundle.id === "guided-engagement") ?? campaignBundles[0];
@@ -991,20 +1305,31 @@ export default function CreateCampaignPage() {
   const [customContributors, setCustomContributors] = useState("");
   const [customDuration, setCustomDuration] = useState("");
   const [customPacing, setCustomPacing] = useState("Steady distribution");
+  const [feedbackObjectives, setFeedbackObjectives] = useState<string[]>(defaultFeedbackObjectives);
+  const [feedbackContributorType, setFeedbackContributorType] = useState("General audience");
+  const [feedbackResponseType, setFeedbackResponseType] = useState("Mixed");
+  const [feedbackPlatform, setFeedbackPlatform] = useState("Android");
+  const [feedbackRequiredActions, setFeedbackRequiredActions] = useState<string[]>(["Access product", "Submit feedback"]);
+  const [feedbackDuration, setFeedbackDuration] = useState("10 mins");
+  const [feedbackSurveyMethod, setFeedbackSurveyMethod] = useState("Mixed");
+  const [feedbackContentFormat, setFeedbackContentFormat] = useState("Video");
+  const [feedbackQuestions, setFeedbackQuestions] = useState<string[]>(feedbackGoalConfigs["Product Feedback"].defaultQuestions);
 
   const category = campaignCategories.find((item) => item.id === categoryId) ?? campaignCategories[0];
   const categoryFlow = getCategoryFlow(categoryId);
+  const isFeedbackFlow = categoryId === "surveys";
+  const feedbackConfig = feedbackGoalConfigs[goal] ?? feedbackGoalConfigs[contentType] ?? feedbackGoalConfigs["Product Feedback"];
   const recommendedBundle = getRecommendedBundle(contentType, categoryId, goal);
   const selectedBundle = campaignBundles.find((item) => item.id === bundleId) ?? recommendedBundle;
   const selectedPackage = categoryFlow.packages.find((item) => item.id === packageId) ?? categoryFlow.packages[0];
   const categoryPlatforms = useMemo(() => Array.from(new Set(getBundlesForCategory(categoryId).flatMap((bundle) => bundle.platforms))), [categoryId]);
   const isTestingFlow = categoryId === "apps";
-  const flowSteps = isTestingFlow ? ["Test Type", "Goal", "Assets", "Bundle", "Testers", "Package", "Preview", "Launch"] : steps;
-  const platformLabel = isTestingFlow ? "Testing platforms and devices" : "Distribution platforms";
-  const actionLabel = isTestingFlow ? "What should testers do?" : "What should contributors do?";
-  const packageHeadline = isTestingFlow ? "Campaign participation package" : "Campaign reach package";
-  const packageHelp = isTestingFlow ? "Choose the testing depth. Higher-value product participation needs stronger rewards and clearer review expectations." : "Choose the momentum level. Advanced controls are available when you need exact limits.";
-  const previewHelp = isTestingFlow ? "This product testing preview shows objectives, tester actions, proof, and feedback expectations before launch." : "This is the confidence check before launch. It mirrors what contributors need to understand.";
+  const flowSteps = isFeedbackFlow ? ["Category", "Feedback Goal", "Smart Details", "Structure", "Audience", "Budget", "Preview", "Launch"] : isTestingFlow ? ["Test Type", "Goal", "Assets", "Bundle", "Testers", "Package", "Preview", "Launch"] : steps;
+  const platformLabel = isFeedbackFlow ? "Feedback access points" : isTestingFlow ? "Testing platforms and devices" : "Distribution platforms";
+  const actionLabel = isFeedbackFlow ? "What should participants do?" : isTestingFlow ? "What should testers do?" : "What should contributors do?";
+  const packageHeadline = isFeedbackFlow ? "Recommended feedback setup" : isTestingFlow ? "Campaign participation package" : "Campaign reach package";
+  const packageHelp = isFeedbackFlow ? "Choose a contributor count and reward level that fits the depth of feedback you need." : isTestingFlow ? "Choose the testing depth. Higher-value product participation needs stronger rewards and clearer review expectations." : "Choose the momentum level. Advanced controls are available when you need exact limits.";
+  const previewHelp = isFeedbackFlow ? "Preview the participant journey before launch so the feedback mission feels clear and focused." : isTestingFlow ? "This product testing preview shows objectives, tester actions, proof, and feedback expectations before launch." : "This is the confidence check before launch. It mirrors what contributors need to understand.";
   const resolvedReward = advancedOpen && Number(customReward) > 0 ? Number(customReward) : selectedPackage.reward;
   const resolvedContributors = advancedOpen && Number(customContributors) > 0 ? Number(customContributors) : selectedPackage.contributors;
   const resolvedDuration = advancedOpen && customDuration.trim() ? customDuration.trim() : selectedPackage.duration;
@@ -1030,6 +1355,11 @@ export default function CreateCampaignPage() {
       `Goal: ${goal}.`,
       selectedBundle ? `Campaign bundle: ${selectedBundle.name}. Verification: ${selectedBundle.verification.join(", ")}.` : "",
       contentType ? `Campaign content: ${contentType}${contentLink ? ` - ${contentLink}` : fileName ? ` - ${fileName}` : ""}.` : "",
+      isFeedbackFlow ? `Feedback goal: ${goal}. Objectives: ${feedbackObjectives.join(", ")}. Response format: ${feedbackResponseType}. Contributor type: ${feedbackContributorType}.` : "",
+      isFeedbackFlow && feedbackConfig.platforms ? `Platform: ${feedbackPlatform}. Test duration: ${feedbackDuration}. Required actions: ${feedbackRequiredActions.join(", ")}.` : "",
+      isFeedbackFlow && feedbackConfig.surveyMethods ? `Survey method: ${feedbackSurveyMethod}.` : "",
+      isFeedbackFlow && feedbackConfig.contentFormats ? `Content format: ${feedbackContentFormat}.` : "",
+      isFeedbackFlow ? `Feedback questions: ${feedbackQuestions.filter(Boolean).join(" | ")}.` : "",
       actions.length ? `Contributor actions: ${actions.join(", ")}.` : "",
       caption ? `Suggested caption: ${caption}` : "",
       instructions ? `Important instructions: ${instructions}` : "",
@@ -1039,7 +1369,7 @@ export default function CreateCampaignPage() {
       cities.length || campuses.length ? `Local focus: ${[...cities, ...campuses].join(", ")}.` : "",
       advancedOpen ? `Campaign pacing: ${customPacing}.` : "",
     ].filter(Boolean).join("\n");
-  }, [actions, advancedOpen, campuses, caption, cities, contentLink, contentType, customPacing, fileName, goal, instructions, interests, isTestingFlow, levels, platforms, selectedBundle]);
+  }, [actions, advancedOpen, campuses, caption, cities, contentLink, contentType, customPacing, feedbackConfig.contentFormats, feedbackConfig.platforms, feedbackConfig.surveyMethods, feedbackContentFormat, feedbackContributorType, feedbackDuration, feedbackObjectives, feedbackPlatform, feedbackQuestions, feedbackRequiredActions, feedbackResponseType, feedbackSurveyMethod, fileName, goal, instructions, interests, isFeedbackFlow, isTestingFlow, levels, platforms, selectedBundle]);
 
   const proofLabel = useMemo(() => {
     if (actions.some((action) => action.toLowerCase().includes("feedback"))) return "Submit your feedback and attach proof if requested";
@@ -1048,10 +1378,10 @@ export default function CreateCampaignPage() {
   }, [actions]);
 
   const recommended = useMemo(() => {
-    const recommendedPlatforms = platforms.length ? platforms.slice(0, 3).join(", ") : isTestingFlow ? "Android, iPhone/iOS, Desktop Users" : "WhatsApp, Instagram, TikTok";
-    const quality = isTestingFlow ? "structured tester feedback" : category.missionType === "premium" ? "high-touch participation" : category.missionType === "participation" ? "useful feedback quality" : "fast visibility";
+    const recommendedPlatforms = platforms.length ? platforms.slice(0, 3).join(", ") : isFeedbackFlow ? "Feedback form, product link, manual review" : isTestingFlow ? "Android, iPhone/iOS, Desktop Users" : "WhatsApp, Instagram, TikTok";
+    const quality = isFeedbackFlow ? `${feedbackResponseType.toLowerCase()} with ${feedbackObjectives.slice(0, 2).join(" and ").toLowerCase()}` : isTestingFlow ? "structured tester feedback" : category.missionType === "premium" ? "high-touch participation" : category.missionType === "participation" ? "useful feedback quality" : "fast visibility";
     return { platforms: recommendedPlatforms, quality };
-  }, [category.missionType, isTestingFlow, platforms]);
+  }, [category.missionType, feedbackObjectives, feedbackResponseType, isFeedbackFlow, isTestingFlow, platforms]);
 
   const applyBundle = (bundle: CampaignBundle) => {
     setBundleId(bundle.id);
@@ -1070,6 +1400,26 @@ export default function CreateCampaignPage() {
     );
   };
 
+  const applyFeedbackGoal = (nextGoal: string) => {
+    const config = feedbackGoalConfigs[nextGoal] ?? feedbackGoalConfigs["Product Feedback"];
+    setGoal(nextGoal);
+    setContentType(nextGoal);
+    setTitle(`${nextGoal} Campaign`);
+    setFeedbackObjectives(config.objectives.slice(0, 3));
+    setFeedbackContributorType(config.contributorTypes[0]);
+    setLevels([config.contributorTypes[0]]);
+    setFeedbackResponseType(config.responseTypes[0]);
+    setFeedbackPlatform(config.platforms?.[0] ?? "Android");
+    setFeedbackRequiredActions(config.requiredActions ?? ["Open mission", "Review target", "Submit feedback"]);
+    setFeedbackDuration(config.durations?.[1] ?? "10 mins");
+    setFeedbackSurveyMethod(config.surveyMethods?.[0] ?? config.responseTypes[0]);
+    setFeedbackContentFormat(config.contentFormats?.[0] ?? "Video");
+    setFeedbackQuestions(config.defaultQuestions);
+    setInstructions(`Help us understand: ${config.objectives.slice(0, 3).join(", ")}. Submit honest feedback using the selected response format.`);
+    setCaption(`Review this ${nextGoal.toLowerCase()} mission carefully, complete the required actions, and submit honest feedback based on your real experience.`);
+    applyBundle(getRecommendedBundle(nextGoal, "surveys", nextGoal));
+  };
+
   const applyFlow = (nextCategoryId: string) => {
     const flow = getCategoryFlow(nextCategoryId);
     const bundle = campaignBundles.find((item) => item.id === flow.defaultBundleId) ?? getRecommendedBundle(flow.defaultContentType, nextCategoryId, flow.defaultGoal);
@@ -1080,11 +1430,16 @@ export default function CreateCampaignPage() {
     setInterests(flow.defaultInterests);
     setLevels(flow.defaultLevels);
     setPackageId(flow.packages[0]?.id ?? "starter");
-    setCustomPacing(nextCategoryId === "apps" ? "Manual review first" : nextCategoryId === "music" ? "Fast launch burst" : nextCategoryId === "creator" ? "Weekend push" : "Steady distribution");
+    setCustomPacing(nextCategoryId === "apps" || nextCategoryId === "surveys" ? "Manual review first" : nextCategoryId === "music" ? "Fast launch burst" : nextCategoryId === "creator" ? "Weekend push" : "Steady distribution");
     applyBundle(bundle);
+    if (nextCategoryId === "surveys") applyFeedbackGoal(flow.defaultGoal);
   };
 
   const applyContentType = (nextContentType: string) => {
+    if (categoryId === "surveys") {
+      applyFeedbackGoal(nextContentType);
+      return;
+    }
     setContentType(nextContentType);
     applyBundle(getRecommendedBundle(nextContentType, categoryId, goal));
   };
@@ -1118,6 +1473,10 @@ export default function CreateCampaignPage() {
       setCaption(`Test ${title || "this product"} with care. Complete the assigned flow, note any friction or bugs, and submit honest feedback based on your real experience.`);
       return;
     }
+    if (isFeedbackFlow) {
+      setCaption(`Review ${title || "this feedback mission"} with care. Focus on ${feedbackObjectives.slice(0, 3).join(", ").toLowerCase()}, then submit ${feedbackResponseType.toLowerCase()} feedback from your real experience.`);
+      return;
+    }
     setCaption(`Discover ${title || category.title}. Join the conversation ${platformHint}, share with your circle, and help more people see what is coming from ${business?.name || "this brand"}.`);
   };
 
@@ -1136,14 +1495,14 @@ export default function CreateCampaignPage() {
       duration: resolvedDuration,
       instructions: previewInstructions,
       steps: actions,
-      proof_type: actions.some((action) => action.toLowerCase().includes("feedback")) ? "text" : "screenshot",
+      proof_type: isFeedbackFlow || actions.some((action) => action.toLowerCase().includes("feedback")) ? "text" : "screenshot",
       proof_label: proofLabel,
       max_screenshots: 2,
       task_link: contentLink.trim(),
       total_budget: String(estimatedBudget),
       target_completion_count: String(resolvedContributors),
       mission_type: category.missionType,
-      verification_type: actions.some((action) => action.toLowerCase().includes("feedback")) ? "text" : "screenshot",
+      verification_type: isFeedbackFlow || actions.some((action) => action.toLowerCase().includes("feedback")) ? "text" : "screenshot",
       difficulty: category.missionType === "premium" ? "hard" : category.missionType === "participation" ? "medium" : "easy",
       min_level: levels.some((level) => ["Premium Promoters", "Community Influencers", "Premium Contributors", "Experienced Reviewers", "Beta Test Participants"].includes(level)) ? 2 : 1,
       target_professions: levels,
@@ -1267,6 +1626,10 @@ export default function CreateCampaignPage() {
                       value={goal}
                       onChange={(event) => {
                         const nextGoal = event.target.value;
+                        if (isFeedbackFlow) {
+                          applyFeedbackGoal(nextGoal);
+                          return;
+                        }
                         setGoal(nextGoal);
                         applyBundle(getRecommendedBundle(contentType, categoryId, nextGoal));
                       }}
@@ -1317,6 +1680,47 @@ export default function CreateCampaignPage() {
               </div>
 
               <div className="disclosureStack">
+                {isFeedbackFlow && (
+                  <details className="boostDisclosure" open>
+                    <summary>
+                      <span><strong>Smart feedback setup</strong><small>{goal} fields are tailored to the response you need.</small></span>
+                      <em>Open</em>
+                    </summary>
+                    <FeedbackAdaptiveFields
+                      config={feedbackConfig}
+                      title={title}
+                      setTitle={setTitle}
+                      contentLink={contentLink}
+                      setContentLink={setContentLink}
+                      fileName={fileName}
+                      setFileName={setFileName}
+                      instructions={instructions}
+                      setInstructions={setInstructions}
+                      objectives={feedbackObjectives}
+                      setObjectives={setFeedbackObjectives}
+                      contributorType={feedbackContributorType}
+                      setContributorType={(value) => {
+                        setFeedbackContributorType(value);
+                        setLevels([value]);
+                      }}
+                      responseType={feedbackResponseType}
+                      setResponseType={setFeedbackResponseType}
+                      platform={feedbackPlatform}
+                      setPlatform={setFeedbackPlatform}
+                      requiredActions={feedbackRequiredActions}
+                      setRequiredActions={setFeedbackRequiredActions}
+                      duration={feedbackDuration}
+                      setDuration={setFeedbackDuration}
+                      surveyMethod={feedbackSurveyMethod}
+                      setSurveyMethod={setFeedbackSurveyMethod}
+                      contentFormat={feedbackContentFormat}
+                      setContentFormat={setFeedbackContentFormat}
+                      questions={feedbackQuestions}
+                      setQuestions={setFeedbackQuestions}
+                    />
+                  </details>
+                )}
+
                 <details className="boostDisclosure">
                   <summary>
                     <span><strong>Creative and caption</strong><small>{caption || "Add a contributor-facing caption and asset requirements."}</small></span>
@@ -1507,6 +1911,10 @@ export default function CreateCampaignPage() {
                       key={item}
                       type="button"
                       onClick={() => {
+                        if (isFeedbackFlow) {
+                          applyFeedbackGoal(item);
+                          return;
+                        }
                         setGoal(item);
                         applyBundle(getRecommendedBundle(contentType, categoryId, item));
                       }}
@@ -1523,9 +1931,43 @@ export default function CreateCampaignPage() {
               <div className="stepContent">
                 <div className="sectionTitle">
                   <p className="eyebrow">Step 3</p>
-                  <h2>Upload campaign content</h2>
-                  <p>Keep the source material clear. Qeixova adapts the requirements to this campaign type.</p>
+                  <h2>{isFeedbackFlow ? `${goal} setup` : "Upload campaign content"}</h2>
+                  <p>{isFeedbackFlow ? "Qeixova only shows the details needed for this feedback goal." : "Keep the source material clear. Qeixova adapts the requirements to this campaign type."}</p>
                 </div>
+                {isFeedbackFlow ? (
+                  <FeedbackAdaptiveFields
+                    config={feedbackConfig}
+                    title={title}
+                    setTitle={setTitle}
+                    contentLink={contentLink}
+                    setContentLink={setContentLink}
+                    fileName={fileName}
+                    setFileName={setFileName}
+                    instructions={instructions}
+                    setInstructions={setInstructions}
+                    objectives={feedbackObjectives}
+                    setObjectives={setFeedbackObjectives}
+                    contributorType={feedbackContributorType}
+                    setContributorType={(value) => {
+                      setFeedbackContributorType(value);
+                      setLevels([value]);
+                    }}
+                    responseType={feedbackResponseType}
+                    setResponseType={setFeedbackResponseType}
+                    platform={feedbackPlatform}
+                    setPlatform={setFeedbackPlatform}
+                    requiredActions={feedbackRequiredActions}
+                    setRequiredActions={setFeedbackRequiredActions}
+                    duration={feedbackDuration}
+                    setDuration={setFeedbackDuration}
+                    surveyMethod={feedbackSurveyMethod}
+                    setSurveyMethod={setFeedbackSurveyMethod}
+                    contentFormat={feedbackContentFormat}
+                    setContentFormat={setFeedbackContentFormat}
+                    questions={feedbackQuestions}
+                    setQuestions={setFeedbackQuestions}
+                  />
+                ) : (
                 <div className="splitGrid">
                   <div className="uploadBox">
                     <Image src="/icon-content.svg" alt="" width={30} height={30} />
@@ -1569,6 +2011,7 @@ export default function CreateCampaignPage() {
                     </label>
                   </div>
                 </div>
+                )}
               </div>
             )}
 
@@ -1719,9 +2162,9 @@ export default function CreateCampaignPage() {
                   <p>{categoryFlow.launchSummary}</p>
                 </div>
                 <div className="readyPanel">
-                  <div className="readyMetric"><span>{isTestingFlow ? "Recommended devices" : "Recommended platforms"}</span><strong>{recommended.platforms}</strong></div>
+                  <div className="readyMetric"><span>{isFeedbackFlow ? "Recommended setup" : isTestingFlow ? "Recommended devices" : "Recommended platforms"}</span><strong>{recommended.platforms}</strong></div>
                   <div className="readyMetric"><span>Expected quality</span><strong>{recommended.quality}</strong></div>
-                  <div className="readyMetric"><span>Estimated participation</span><strong>{resolvedContributors.toLocaleString()} contributors</strong></div>
+                  <div className="readyMetric"><span>Estimated participation</span><strong>{resolvedContributors.toLocaleString()} {isFeedbackFlow ? "participants" : "contributors"}</strong></div>
                 </div>
               </div>
             )}
@@ -1792,6 +2235,10 @@ function PreviewCard({
   const estimatedReach = `${Math.max(contributors * 50, 5000).toLocaleString()} - ${Math.max(contributors * 160, 12000).toLocaleString()}`;
   const shownPlatforms = platforms.length ? platforms : bundle.platforms;
   const isTestingPreview = category.id === "apps";
+  const isFeedbackPreview = category.id === "surveys";
+  const participantJourney = isFeedbackPreview
+    ? ["Open mission", "Read instructions", "Access app/content", "Complete required actions", "Submit feedback", "Verification review", "Receive participation reward"]
+    : [];
 
   return (
     <article className="previewCard">
@@ -1808,7 +2255,7 @@ function PreviewCard({
         <Image src="/icon-check-circle.svg" alt="" width={28} height={28} />
         <div>
           <strong>Ready to Launch</strong>
-          <span>{isTestingPreview ? "Your testing workflow is structured and ready." : "Your campaign bundle is all set."}</span>
+          <span>{isFeedbackPreview ? "Your feedback workflow is structured and ready." : isTestingPreview ? "Your testing workflow is structured and ready." : "Your campaign bundle is all set."}</span>
         </div>
       </div>
 
@@ -1824,18 +2271,18 @@ function PreviewCard({
 
       <div className="goalLine">
         <span>Goal</span>
-        <p>{goal} for {businessName} using a guided {bundle.shortName.toLowerCase()} {isTestingPreview ? "workflow" : "campaign"}.</p>
+        <p>{goal} for {businessName} using a guided {bundle.shortName.toLowerCase()} {isTestingPreview || isFeedbackPreview ? "workflow" : "campaign"}.</p>
       </div>
 
       <section className="flyerPanel">
         <div className="panelHeader">
-          <strong>{isTestingPreview ? "Testing Objective" : "Campaign"} {contentType}</strong>
+          <strong>{isFeedbackPreview ? "Feedback Objective" : isTestingPreview ? "Testing Objective" : "Campaign"} {contentType}</strong>
           <span>{bundle.shortName}</span>
         </div>
         <div className="mockFlyer">
           <div>
             <span>{businessName}</span>
-            <strong>{isTestingPreview ? "USER TESTING" : contentType === "Video" ? "VIDEO BOOST" : "AWARENESS PUSH"}</strong>
+            <strong>{isFeedbackPreview ? "FEEDBACK FLOW" : isTestingPreview ? "USER TESTING" : contentType === "Video" ? "VIDEO BOOST" : "AWARENESS PUSH"}</strong>
             <p>{goal}</p>
           </div>
           <small>{bundle.platforms.slice(0, 3).join(" + ")}</small>
@@ -1844,7 +2291,7 @@ function PreviewCard({
 
       <section className="previewSection">
         <div className="panelHeader">
-          <strong>{isTestingPreview ? "Testing Platforms & Devices" : "Distribution Platforms"}</strong>
+          <strong>{isFeedbackPreview ? "Feedback Access Points" : isTestingPreview ? "Testing Platforms & Devices" : "Distribution Platforms"}</strong>
           <span>{shownPlatforms.length} selected</span>
         </div>
         <div className="platformCards">
@@ -1865,7 +2312,7 @@ function PreviewCard({
 
       <section className="previewSection actionSection">
         <div className="panelHeader">
-          <strong>{isTestingPreview ? "Testers Will" : "Contributors Will"}</strong>
+          <strong>{isFeedbackPreview ? "Participants Will" : isTestingPreview ? "Testers Will" : "Contributors Will"}</strong>
           <span>{actions.length} actions</span>
         </div>
         <ul>
@@ -1874,6 +2321,20 @@ function PreviewCard({
           ))}
         </ul>
       </section>
+
+      {isFeedbackPreview && (
+        <section className="previewSection actionSection">
+          <div className="panelHeader">
+            <strong>Participant Journey</strong>
+            <span>{participantJourney.length} steps</span>
+          </div>
+          <ul>
+            {participantJourney.map((step, index) => (
+              <li key={step}><span>{index + 1}</span>{step}</li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <section className="previewSection">
         <div className="panelHeader">
@@ -1887,8 +2348,8 @@ function PreviewCard({
       </section>
 
       <div className="previewStats">
-        <div><strong>{contributors.toLocaleString()}</strong><span>{isTestingPreview ? "Est. Testers" : "Est. Contributors"}</span></div>
-        <div><strong>{isTestingPreview ? bundle.verification.length : estimatedReach}</strong><span>{isTestingPreview ? "Proof Checks" : "Est. Reach"}</span></div>
+        <div><strong>{contributors.toLocaleString()}</strong><span>{isFeedbackPreview ? "Participants" : isTestingPreview ? "Est. Testers" : "Est. Contributors"}</span></div>
+        <div><strong>{isTestingPreview || isFeedbackPreview ? bundle.verification.length : estimatedReach}</strong><span>{isTestingPreview || isFeedbackPreview ? "Proof Checks" : "Est. Reach"}</span></div>
         <div><strong>{duration}</strong><span>Duration</span></div>
         <div><strong>{budget.toLocaleString()} QLT</strong><span>Total Budget</span></div>
       </div>
@@ -2168,6 +2629,38 @@ const pageStyles = `
   .boostDisclosure > .advancedGrid,
   .boostDisclosure > .previewCard {
     margin: 0 15px 15px;
+  }
+  .feedbackFlow {
+    display: grid;
+    gap: 12px;
+  }
+  .feedbackSection {
+    border: 1px solid #202020;
+    background: #090909;
+    border-radius: 14px;
+    padding: 13px;
+  }
+  .feedbackSection summary {
+    color: #f5f5f5;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 900;
+    margin-bottom: 12px;
+  }
+  .feedbackSection label + label,
+  .feedbackSection .splitGrid + label,
+  .feedbackSection label + .fileButton,
+  .feedbackSection .splitGrid + .fileButton,
+  .feedbackSection .splitGrid + div {
+    margin-top: 12px;
+  }
+  .questionBuilder {
+    display: grid;
+    gap: 11px;
+  }
+  .questionBuilder .secondaryButton {
+    justify-self: start;
+    min-width: 150px;
   }
   .compactBundles {
     grid-template-columns: repeat(3, minmax(0, 1fr));
