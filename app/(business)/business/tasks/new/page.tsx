@@ -116,11 +116,6 @@ type PricingBreakdown = {
   reserveNaira: number;
 };
 
-type LaunchStep = {
-  label: string;
-  complete: boolean;
-};
-
 const campaignCategories: CampaignCategory[] = [
   { id: "content", title: "Content Distribution", description: "Spread flyers, videos, announcements, and promotional content across social channels.", bestFor: "WhatsApp status, Facebook reposts, Instagram stories, Telegram, X, YouTube Shorts, TikTok", icon: "/icon-human-distribution.svg", accent: "#4a9eff", category: "Content Distribution", missionType: "engagement" },
   { id: "music", title: "Music Promotion", description: "Launch dedicated entertainment campaigns for artists, songs, sounds, and releases.", bestFor: "Music teasers, TikTok sounds, album flyers, song reviews, dance or reaction challenges", icon: "/icon-music.svg", accent: "#F5A623", category: "Music Promotion", missionType: "engagement" },
@@ -1448,16 +1443,6 @@ export default function CreateCampaignPage() {
   const resolvedReward = pricingBreakdown.rewardPerParticipantQlt;
   const estimatedBudget = pricingBreakdown.businessPaymentQlt;
   const hasCampaignSource = Boolean(contentLink.trim() || fileName || isFeedbackFlow);
-  const launchSteps: LaunchStep[] = [
-    { label: "Category", complete: Boolean(categoryId) },
-    { label: "Goal", complete: Boolean(goal) },
-    { label: isFeedbackFlow ? "Questions" : "Asset", complete: hasCampaignSource },
-    { label: "Platforms", complete: platforms.length > 0 },
-    { label: "Audience", complete: interests.length > 0 && levels.length > 0 },
-    { label: "Budget", complete: resolvedContributors > 0 && estimatedBudget > 0 },
-  ];
-  const completedLaunchSteps = launchSteps.filter((item) => item.complete).length;
-  const launchProgress = Math.round((completedLaunchSteps / launchSteps.length) * 100);
 
   useEffect(() => {
     fetch("/api/business/me")
@@ -1723,22 +1708,6 @@ export default function CreateCampaignPage() {
         <div className="builderShell">
           <section className="builderPanel">
             <div className="quickLaunchSurface">
-              <div className="launchProgressPanel">
-                <div className="progressHeader">
-                  <div>
-                    <p className="eyebrow">Setup progress</p>
-                    <strong>{completedLaunchSteps} of {launchSteps.length} essentials ready</strong>
-                  </div>
-                  <span>{launchProgress}%</span>
-                </div>
-                <div className="progressTrack"><span style={{ width: `${launchProgress}%` }} /></div>
-                <div className="progressChecklist">
-                  {launchSteps.map((item) => (
-                    <span key={item.label} className={item.complete ? "complete" : ""}>{item.complete ? "OK" : "Add"} {item.label}</span>
-                  ))}
-                </div>
-              </div>
-
               <div className="quickLaunchHero">
                 <div>
                   <p className="eyebrow">Campaign essentials</p>
@@ -2369,10 +2338,6 @@ export default function CreateCampaignPage() {
             <div className="summaryIcon" style={{ background: `${category.accent}18` }}>
               <Image src={category.icon} alt="" width={26} height={26} />
             </div>
-            <div className="summaryReadiness">
-              <span>{launchProgress}% ready</span>
-              <div><b style={{ width: `${launchProgress}%` }} /></div>
-            </div>
             <dl>
               <div><dt>Goal</dt><dd>{goal}</dd></div>
               <div><dt>Platforms</dt><dd>{platforms.length ? platforms.join(", ") : "All platforms"}</dd></div>
@@ -2764,66 +2729,6 @@ const pageStyles = `
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 16px;
   }
-  .launchProgressPanel {
-    border: 1px solid rgba(245, 166, 35, 0.24);
-    background: #0c0c0c;
-    border-radius: 16px;
-    padding: 14px;
-    display: grid;
-    gap: 12px;
-  }
-  .progressHeader {
-    display: flex;
-    justify-content: space-between;
-    gap: 14px;
-    align-items: flex-start;
-  }
-  .progressHeader strong {
-    display: block;
-    color: #f5f5f5;
-    font-size: 15px;
-    line-height: 1.25;
-  }
-  .progressHeader span {
-    color: #1aef22;
-    font-size: 16px;
-    font-weight: 950;
-  }
-  .progressTrack,
-  .summaryReadiness div {
-    height: 8px;
-    border-radius: 999px;
-    background: #171717;
-    overflow: hidden;
-  }
-  .progressTrack span,
-  .summaryReadiness b {
-    display: block;
-    height: 100%;
-    border-radius: inherit;
-    background: linear-gradient(90deg, #f5a623, #1aef22);
-  }
-  .progressChecklist {
-    display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: 7px;
-  }
-  .progressChecklist span {
-    border: 1px solid #242424;
-    background: #080808;
-    color: #888;
-    border-radius: 10px;
-    padding: 8px 9px;
-    font-size: 11px;
-    font-weight: 900;
-    line-height: 1.2;
-    text-align: center;
-  }
-  .progressChecklist span.complete {
-    border-color: rgba(26, 239, 34, 0.26);
-    background: rgba(26, 239, 34, 0.08);
-    color: #8dfb93;
-  }
   .slimFileButton {
     display: inline-flex;
     align-items: center;
@@ -3055,20 +2960,6 @@ const pageStyles = `
     display: grid;
     place-items: center;
     margin-bottom: 14px;
-  }
-  .summaryReadiness {
-    border: 1px solid #202020;
-    background: #0c0c0c;
-    border-radius: 12px;
-    padding: 10px;
-    margin-bottom: 14px;
-  }
-  .summaryReadiness span {
-    display: block;
-    color: #1aef22;
-    font-size: 12px;
-    font-weight: 900;
-    margin-bottom: 8px;
   }
   .summaryPanel dl {
     display: flex;
@@ -4091,7 +3982,7 @@ const pageStyles = `
       position: static;
       order: -1;
     }
-    .packageGrid, .momentumGrid, .readyPanel, .pricingRows, .pricingSplit, .progressChecklist {
+    .packageGrid, .momentumGrid, .readyPanel, .pricingRows, .pricingSplit {
       grid-template-columns: 1fr;
     }
     .bundleGrid {
