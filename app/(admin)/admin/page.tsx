@@ -1,3 +1,5 @@
+import Link from "next/link";
+import type { CSSProperties } from "react";
 import { getAdminSession } from "@/lib/adminAuth";
 import { redirect } from "next/navigation";
 import { sql } from "@/lib/db";
@@ -41,25 +43,33 @@ async function getStats() {
 }
 
 function fmt(n: number) {
-  if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + "M";
-  if (n >= 1_000) return (n / 1_000).toFixed(0) + "k";
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000) return `${(n / 1_000).toFixed(0)}k`;
   return n.toLocaleString();
 }
 
-function StatCard({ label, value, sub, color, alert }: { label: string; value: string; sub?: string; color: string; alert?: boolean }) {
+function currencyFromKobo(amount: number) {
+  return `N${(amount / 100).toLocaleString()}`;
+}
+
+function StatCard({
+  label,
+  value,
+  sub,
+  accent,
+  alert,
+}: {
+  label: string;
+  value: string;
+  sub?: string;
+  accent: string;
+  alert?: boolean;
+}) {
   return (
-    <div style={{
-      background: "#fff", borderRadius: 14, padding: "22px 24px",
-      borderLeft: `4px solid ${color}`,
-      boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-      position: "relative",
-    }}>
-      {alert && (
-        <div style={{ position: "absolute", top: 14, right: 14, width: 10, height: 10, borderRadius: "50%", background: "#e67e22", boxShadow: "0 0 6px rgba(230,126,34,0.6)" }} />
-      )}
-      <p style={{ fontSize: 12, color: "#ccc", fontWeight: 600, marginBottom: 10, textTransform: "uppercase", letterSpacing: 0.5 }}>{label}</p>
-      <p style={{ fontSize: 26, fontWeight: 800, color: "#1A1A1A", letterSpacing: -0.5 }}>{value}</p>
-      {sub && <p style={{ fontSize: 12, color: "#aaa", marginTop: 4 }}>{sub}</p>}
+    <div className={`adminStatCard${alert ? " alert" : ""}`} style={{ "--accent": accent } as CSSProperties}>
+      <span>{label}</span>
+      <strong>{value}</strong>
+      {sub && <p>{sub}</p>}
     </div>
   );
 }
@@ -69,50 +79,126 @@ export default async function AdminDashboard() {
   if (!isAdmin) redirect("/admin-login");
 
   const s = await getStats();
+  const pendingActions = s.pendingCompletions + s.withdrawalsPending;
+  const reviewLoad = s.completionsTotal > 0 ? Math.min(100, Math.round((s.pendingCompletions / s.completionsTotal) * 100)) : 0;
+  const payoutLoad = s.withdrawalsPending + s.withdrawalsProcessing;
 
   return (
-    <div>
-      <h1 style={{ margin: "0 0 4px", fontSize: 26, fontWeight: 700, color: "#1A1A1A" }}>Dashboard</h1>
-      <p style={{ margin: "0 0 28px", color: "#ccc", fontSize: 14 }}>Platform overview — live data</p>
+    <div className="adminPage">
+      <section className="adminPageHeader">
+        <div className="adminHero">
+          <p className="adminEyebrow">Platform operations</p>
+          <h1>Admin Command Center</h1>
+          <p>
+            Monitor Qeixova contributors, campaign activity, proof reviews, rewards, withdrawals,
+            and operational controls from one focused workspace.
+          </p>
+        </div>
 
-      {/* Alert bar */}
-      {(s.pendingCompletions > 0 || s.withdrawalsPending > 0) && (
-        <div style={{ background: "#fff8e1", border: "1px solid #f5a623", borderRadius: 12, padding: "12px 18px", marginBottom: 24, display: "flex", gap: 20, flexWrap: "wrap" }}>
+        <aside className="adminStatusCard">
+          <span>Pending actions</span>
+          <strong>{pendingActions.toLocaleString()}</strong>
+          <p>
+            {pendingActions > 0
+              ? "Review queues need attention before the platform can run cleanly."
+              : "All critical review queues are clear right now."}
+          </p>
+        </aside>
+      </section>
+
+      {pendingActions > 0 && (
+        <div className="adminAlert">
           {s.pendingCompletions > 0 && (
-            <span style={{ fontSize: 13, color: "#e67e22", fontWeight: 600 }}>
-              {s.pendingCompletions} task submission{s.pendingCompletions !== 1 ? "s" : ""} awaiting review
-            </span>
+            <span>{s.pendingCompletions} submission{s.pendingCompletions !== 1 ? "s" : ""} awaiting proof review</span>
           )}
           {s.withdrawalsPending > 0 && (
-            <span style={{ fontSize: 13, color: "#e67e22", fontWeight: 600 }}>
-              {s.withdrawalsPending} withdrawal{s.withdrawalsPending !== 1 ? "s" : ""} pending (₦{(s.withdrawalsPendingAmount / 100).toLocaleString()})
-            </span>
+            <span>{s.withdrawalsPending} withdrawal{s.withdrawalsPending !== 1 ? "s" : ""} pending ({currencyFromKobo(s.withdrawalsPendingAmount)})</span>
           )}
         </div>
       )}
 
-      {/* Users */}
-      <p style={{ fontSize: 11, fontWeight: 700, color: "#aaa", letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 12 }}>Users</p>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 16, marginBottom: 28 }}>
-        <StatCard label="Total Users" value={s.totalUsers.toLocaleString()} sub={`+${s.newUsersToday} today`} color="#1AEF22" />
-        <StatCard label="Active Tasks" value={s.activeTasks.toLocaleString()} color="#1AEF22" />
-      </div>
+      <section>
+        <div className="adminSectionTitle">
+          <div>
+            <h2>Live Overview</h2>
+            <p>Current platform health across contributors, missions, and payout movement.</p>
+          </div>
+        </div>
+        <div className="adminGrid">
+          <StatCard label="Total Contributors" value={s.totalUsers.toLocaleString()} sub={`+${s.newUsersToday} joined today`} accent="#1AEF22" />
+          <StatCard label="Active Missions" value={s.activeTasks.toLocaleString()} sub="Visible to contributors" accent="#F5A623" />
+          <StatCard label="Total Submissions" value={s.completionsTotal.toLocaleString()} sub={`${s.completionsToday} submitted today`} accent="#3B82F6" />
+          <StatCard label="Pending Review" value={s.pendingCompletions.toLocaleString()} sub="Proofs needing action" accent="#F97316" alert={s.pendingCompletions > 0} />
+          <StatCard label="QLT Awarded" value={`${fmt(s.qltAwarded)} QLT`} sub={`${fmt(s.qltToday)} QLT approved today`} accent="#22C55E" />
+          <StatCard label="Pending Withdrawals" value={s.withdrawalsPending.toLocaleString()} sub={currencyFromKobo(s.withdrawalsPendingAmount)} accent="#EF4444" alert={s.withdrawalsPending > 0} />
+          <StatCard label="Processing Payouts" value={s.withdrawalsProcessing.toLocaleString()} sub={`${payoutLoad} total payout items open`} accent="#8B5CF6" />
+          <StatCard label="Total Paid Out" value={currencyFromKobo(s.withdrawalsTotal)} sub="Completed withdrawal value" accent="#0EA5E9" />
+        </div>
+      </section>
 
-      {/* Tasks */}
-      <p style={{ fontSize: 11, fontWeight: 700, color: "#aaa", letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 12 }}>Tasks</p>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 16, marginBottom: 28 }}>
-        <StatCard label="Total Completions" value={s.completionsTotal.toLocaleString()} sub={`${s.completionsToday} today`} color="#4a9eff" />
-        <StatCard label="Pending Review" value={s.pendingCompletions.toLocaleString()} color="#e67e22" alert={s.pendingCompletions > 0} />
-        <StatCard label="QLT Awarded" value={fmt(s.qltAwarded) + " QLT"} sub={`${fmt(s.qltToday)} QLT today`} color="#F5A623" />
-      </div>
+      <section className="adminGrid">
+        <div className="adminPanel wide">
+          <div className="adminSectionTitle">
+            <div>
+              <h2>Operations Pulse</h2>
+              <p>Quick read on the queues that affect trust, reward release, and campaign quality.</p>
+            </div>
+          </div>
+          <div className="adminList">
+            <div className="adminListItem">
+              <div>
+                <strong>Proof review load</strong>
+                <span>{s.pendingCompletions} pending from {s.completionsTotal} total submissions</span>
+              </div>
+              <strong>{reviewLoad}%</strong>
+            </div>
+            <div className="adminBar" aria-label="Proof review load">
+              <span style={{ width: `${reviewLoad}%` }} />
+            </div>
+            <div className="adminListItem">
+              <div>
+                <strong>Today&apos;s approved reward movement</strong>
+                <span>Rewards connected to approved contributor participation today</span>
+              </div>
+              <strong>{fmt(s.qltToday)} QLT</strong>
+            </div>
+            <div className="adminListItem">
+              <div>
+                <strong>Withdrawal queue</strong>
+                <span>Pending and processing payout requests</span>
+              </div>
+              <strong>{payoutLoad.toLocaleString()}</strong>
+            </div>
+          </div>
+        </div>
 
-      {/* Withdrawals */}
-      <p style={{ fontSize: 11, fontWeight: 700, color: "#aaa", letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 12 }}>Withdrawals</p>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 16, marginBottom: 32 }}>
-        <StatCard label="Pending" value={s.withdrawalsPending.toLocaleString()} sub={`₦${(s.withdrawalsPendingAmount / 100).toLocaleString()}`} color="#e67e22" alert={s.withdrawalsPending > 0} />
-        <StatCard label="Processing" value={s.withdrawalsProcessing.toLocaleString()} color="#4a9eff" />
-        <StatCard label="Total Paid Out" value={"₦" + (s.withdrawalsTotal / 100).toLocaleString()} color="#1AEF22" />
-      </div>
+        <div className="adminPanel side">
+          <div className="adminSectionTitle">
+            <div>
+              <h2>Fast Actions</h2>
+              <p>Jump into the areas that usually need admin attention.</p>
+            </div>
+          </div>
+          <div className="adminQuickActions">
+            <Link href="/admin/completions" className="adminActionCard">
+              <strong>Review submissions</strong>
+              <span>Approve, reject, or request correction for proof.</span>
+            </Link>
+            <Link href="/admin/withdrawals" className="adminActionCard">
+              <strong>Manage withdrawals</strong>
+              <span>Process pending contributor payout requests.</span>
+            </Link>
+            <Link href="/admin/tasks" className="adminActionCard">
+              <strong>Audit missions</strong>
+              <span>Check active campaign inventory and availability.</span>
+            </Link>
+            <Link href="/admin/config" className="adminActionCard">
+              <strong>Economy controls</strong>
+              <span>Adjust reward and platform configuration values.</span>
+            </Link>
+          </div>
+        </div>
+      </section>
 
       <DataManagement />
     </div>

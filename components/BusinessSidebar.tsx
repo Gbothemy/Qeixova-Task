@@ -9,7 +9,7 @@ const nav = [
   { href: "/business/tasks", label: "Campaigns", icon: "/icon-task.svg", desc: "Campaign manager" },
   { href: "/business/tasks/new", label: "Create", icon: "/icon-content.svg", desc: "Guided campaign setup" },
   { href: "/business/wallet", label: "Billing", icon: "/icon-wallet.svg", desc: "Credits and spend" },
-  { href: "/business/growth", label: "Growth Hub", icon: "/icon-analytics.svg", desc: "Strategy map" },
+  { href: "/business/growth", label: "Notifications", icon: "/icon-analytics.svg", desc: "Campaign updates" },
 ];
 
 function isActivePath(path: string, href: string) {

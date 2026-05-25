@@ -1,47 +1,616 @@
 .admin-shell {
-  display: flex;
   min-height: 100vh;
   background:
-    radial-gradient(circle at top right, rgba(245, 166, 35, 0.08), transparent 32%),
-    linear-gradient(180deg, #f7f8fb 0%, #eef1f6 100%);
-  color: #111827;
+    radial-gradient(circle at 88% 0%, rgba(245, 166, 35, 0.13), transparent 28%),
+    linear-gradient(180deg, #f5f6f8 0%, #eceff3 100%);
+  color: #10141c;
 }
 
 .admin-sidebar {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 260px;
+  inset: 0 auto 0 0;
+  width: 284px;
   height: 100vh;
   background:
-    linear-gradient(180deg, rgba(245, 166, 35, 0.12), rgba(245, 166, 35, 0) 34%),
-    #0f172a;
+    linear-gradient(180deg, rgba(245, 166, 35, 0.13), rgba(245, 166, 35, 0) 32%),
+    #080a0f;
   border-right: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 14px 0 36px rgba(15, 23, 42, 0.14);
+  box-shadow: 18px 0 42px rgba(10, 14, 24, 0.18);
   display: flex;
   flex-direction: column;
   z-index: 100;
-  transition: transform 0.25s ease;
+  transition: transform 0.22s ease;
 }
 
 .admin-main {
-  margin-left: 260px;
-  flex: 1;
-  padding: 36px 42px;
+  margin-left: 284px;
   min-height: 100vh;
   min-width: 0;
+  padding: 34px;
+}
+
+.adminBrand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 24px 22px 18px;
+}
+
+.adminBrandMark {
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #1aef22, #f5a623);
+  color: #05070b;
+  font-size: 17px;
+  font-weight: 900;
+  box-shadow: 0 12px 28px rgba(26, 239, 34, 0.2);
+}
+
+.adminBrand strong {
+  display: block;
+  color: #fff;
+  font-size: 18px;
+  line-height: 1.1;
+}
+
+.adminBrand span {
+  display: block;
+  margin-top: 4px;
+  color: #f5a623;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.adminCloseButton {
+  display: none;
+  margin-left: auto;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  cursor: pointer;
+}
+
+.adminNav {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 7px;
+  padding: 14px 14px 20px;
+}
+
+.adminNav p {
+  margin: 4px 8px 8px;
+  color: rgba(255, 255, 255, 0.36);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1.9px;
+  text-transform: uppercase;
+}
+
+.adminNav a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 60px;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: 16px;
+  color: rgba(255, 255, 255, 0.72);
+  text-decoration: none;
+  transition: border-color 0.18s ease, background 0.18s ease, color 0.18s ease;
+}
+
+.adminNav a:hover {
+  background: rgba(255, 255, 255, 0.055);
+  color: #fff;
+}
+
+.adminNav a.active {
+  background: rgba(245, 166, 35, 0.15);
+  border-color: rgba(245, 166, 35, 0.42);
+  color: #fff;
+}
+
+.adminNavIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  background: rgba(255, 255, 255, 0.07);
+  color: #f5a623;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.adminNavCopy {
+  min-width: 0;
+}
+
+.adminNavCopy strong,
+.adminNavCopy small {
+  display: block;
+}
+
+.adminNavCopy strong {
+  font-size: 14px;
+}
+
+.adminNavCopy small {
+  margin-top: 3px;
+  color: rgba(255, 255, 255, 0.42);
+  font-size: 11px;
+}
+
+.adminSidebarFooter {
+  margin: 0 14px 16px;
+  padding: 14px;
+  border: 1px solid rgba(245, 166, 35, 0.18);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.adminSidebarFooter span,
+.adminSidebarFooter strong {
+  display: block;
+}
+
+.adminSidebarFooter span {
+  color: rgba(255, 255, 255, 0.42);
+  font-size: 11px;
+}
+
+.adminSidebarFooter strong {
+  margin-top: 3px;
+  color: #fff;
+  font-size: 13px;
+}
+
+.adminSidebarFooter button {
+  width: 100%;
+  margin-top: 13px;
+  padding: 10px;
+  border: 1px solid rgba(255, 91, 91, 0.32);
+  border-radius: 12px;
+  background: rgba(255, 91, 91, 0.1);
+  color: #ffb1b1;
+  font-weight: 800;
+  cursor: pointer;
 }
 
 .admin-topbar {
   display: none;
 }
 
-.admin-main h1 {
+.adminPage {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.adminPageHeader {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 18px;
+  align-items: stretch;
+}
+
+.adminHero,
+.adminPanel,
+.adminStatusCard,
+.adminStatCard,
+.adminActionCard {
+  border: 1px solid rgba(16, 20, 28, 0.08);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 18px 46px rgba(16, 20, 28, 0.08);
+}
+
+.adminHero {
+  padding: 30px;
+}
+
+.adminEyebrow {
+  margin: 0 0 10px;
+  color: #b77608;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 1.7px;
+  text-transform: uppercase;
+}
+
+.adminHero h1,
+.adminPanel h2 {
+  margin: 0;
+  color: #0d1118;
   letter-spacing: 0;
 }
 
+.adminHero h1 {
+  max-width: 760px;
+  font-size: clamp(34px, 5vw, 58px);
+  line-height: 0.98;
+}
+
+.adminHero p {
+  max-width: 680px;
+  margin: 18px 0 0;
+  color: #58606f;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.adminStatusCard {
+  padding: 22px;
+  background:
+    linear-gradient(180deg, rgba(8, 10, 15, 0.95), rgba(8, 10, 15, 0.9)),
+    #080a0f;
+  color: #fff;
+}
+
+.adminStatusCard span {
+  color: rgba(255, 255, 255, 0.52);
+  font-size: 12px;
+}
+
+.adminStatusCard strong {
+  display: block;
+  margin-top: 9px;
+  font-size: 34px;
+  line-height: 1;
+}
+
+.adminStatusCard p {
+  margin: 10px 0 0;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.adminAlert {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  padding: 14px 16px;
+  border: 1px solid rgba(245, 166, 35, 0.34);
+  border-radius: 16px;
+  background: #fff7e6;
+  color: #8b5706;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.adminSectionTitle {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 0 12px;
+}
+
+.adminSectionTitle h2 {
+  margin: 0;
+  color: #10141c;
+  font-size: 18px;
+}
+
+.adminSectionTitle p {
+  margin: 4px 0 0;
+  color: #697282;
+  font-size: 13px;
+}
+
+.adminGrid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.adminStatCard {
+  grid-column: span 3;
+  min-height: 154px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.adminStatCard::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: var(--accent, #f5a623);
+}
+
+.adminStatCard.alert::after {
+  content: "";
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #f5a623;
+  box-shadow: 0 0 0 6px rgba(245, 166, 35, 0.14);
+}
+
+.adminStatCard span {
+  color: #7a8291;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+}
+
+.adminStatCard strong {
+  display: block;
+  margin-top: 15px;
+  color: #0d1118;
+  font-size: 33px;
+  line-height: 1;
+}
+
+.adminStatCard p {
+  margin: 10px 0 0;
+  color: #687180;
+  font-size: 13px;
+}
+
+.adminPanel {
+  padding: 22px;
+}
+
+.adminPanel.wide {
+  grid-column: span 8;
+}
+
+.adminPanel.side {
+  grid-column: span 4;
+}
+
+.adminPanel h2 {
+  font-size: 18px;
+}
+
+.adminList {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.adminListItem {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid rgba(16, 20, 28, 0.08);
+  border-radius: 14px;
+  background: #fff;
+}
+
+.adminListItem span {
+  color: #6a7280;
+  font-size: 12px;
+}
+
+.adminListItem strong {
+  color: #10141c;
+  font-size: 14px;
+}
+
+.adminBar {
+  height: 9px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e7eaf0;
+}
+
+.adminBar span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #1aef22, #f5a623);
+}
+
+.adminQuickActions {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.adminActionCard {
+  display: block;
+  padding: 15px;
+  color: #10141c;
+  text-decoration: none;
+  box-shadow: none;
+}
+
+.adminActionCard strong,
+.adminActionCard span {
+  display: block;
+}
+
+.adminActionCard span {
+  margin-top: 5px;
+  color: #697282;
+  font-size: 12px;
+}
+
+.adminDataZone {
+  margin-top: 6px;
+}
+
+.adminDataHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.adminDataHeader h2 {
+  margin: 0;
+  color: #10141c;
+  font-size: 18px;
+}
+
+.adminDangerBadge {
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: #ffe8e8;
+  color: #b42318;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.adminDangerGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+.adminDangerCard {
+  padding: 18px;
+  border: 1px solid rgba(180, 35, 24, 0.2);
+  border-radius: 16px;
+  background: #fff;
+}
+
+.adminDangerCard.high,
+.adminDangerCard.critical {
+  border-color: rgba(180, 35, 24, 0.32);
+  background: #fffafa;
+}
+
+.adminDangerLevel {
+  display: inline-flex;
+  margin-bottom: 9px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #fff1dc;
+  color: #8b5706;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.adminDangerCard.high .adminDangerLevel,
+.adminDangerCard.critical .adminDangerLevel {
+  background: #ffe8e8;
+  color: #b42318;
+}
+
+.adminDangerCard h3 {
+  margin: 0;
+  color: #10141c;
+  font-size: 15px;
+}
+
+.adminDangerCard p {
+  margin: 8px 0 14px;
+  color: #687180;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.adminDangerCard button {
+  width: 100%;
+  min-height: 40px;
+  border: 0;
+  border-radius: 11px;
+  background: #b42318;
+  color: #fff;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.adminDangerConfirm {
+  padding: 12px;
+  border: 1px solid rgba(16, 20, 28, 0.09);
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.adminDangerConfirm code {
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: #eceff3;
+  color: #10141c;
+}
+
+.adminDangerConfirm input {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 8px 0 10px;
+  padding: 10px 11px;
+  border: 1px solid #d5dbe5;
+  border-radius: 10px;
+  font-family: monospace;
+}
+
+.adminDangerActions {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 8px;
+}
+
+.adminDangerActions button:first-child {
+  background: #fff;
+  color: #10141c;
+  border: 1px solid #d5dbe5;
+}
+
+.adminResult {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  border-radius: 13px;
+  background: #ecfdf3;
+  color: #027a48;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.adminResult.error {
+  background: #fff1f3;
+  color: #b42318;
+}
+
+.adminResult button {
+  margin-left: auto;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.admin-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid rgba(16, 20, 28, 0.08);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 18px 46px rgba(16, 20, 28, 0.08);
+}
+
 .admin-main table {
-  background: #ffffff;
+  background: #fff;
 }
 
 .admin-main button:focus-visible,
@@ -53,14 +622,27 @@
   outline-offset: 2px;
 }
 
-/* Tablet */
-@media (max-width: 1024px) {
-  .admin-main {
-    padding: 24px 24px;
+@media (max-width: 1180px) {
+  .adminPageHeader {
+    grid-template-columns: 1fr;
+  }
+
+  .adminStatCard {
+    grid-column: span 6;
+  }
+
+  .adminPanel.wide,
+  .adminPanel.side {
+    grid-column: span 12;
   }
 }
 
-/* Mobile */
+@media (max-width: 1024px) {
+  .admin-main {
+    padding: 24px;
+  }
+}
+
 @media (max-width: 768px) {
   .admin-sidebar {
     transform: translateX(-100%);
@@ -68,12 +650,16 @@
 
   .admin-sidebar.open {
     transform: translateX(0);
-    box-shadow: 4px 0 24px rgba(0,0,0,0.3);
+    box-shadow: 4px 0 26px rgba(0, 0, 0, 0.3);
+  }
+
+  .adminCloseButton {
+    display: block;
   }
 
   .admin-main {
     margin-left: 0;
-    padding: 16px;
+    padding: 18px;
   }
 
   .admin-topbar {
@@ -81,40 +667,49 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    background: rgba(15, 23, 42, 0.97);
-    border-bottom: 1px solid rgba(245, 166, 35, 0.16);
-    padding: 13px 16px;
     position: sticky;
     top: 0;
     z-index: 90;
-    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.16);
+    padding: 13px 16px;
+    background: rgba(8, 10, 15, 0.96);
+    border-bottom: 1px solid rgba(245, 166, 35, 0.2);
+    box-shadow: 0 12px 30px rgba(16, 20, 28, 0.2);
+    color: #fff;
+  }
+
+  .admin-topbar button {
+    padding: 8px 11px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    font-weight: 800;
   }
 
   .admin-overlay {
     display: block;
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
     z-index: 99;
+  }
+
+  .adminHero {
+    padding: 24px;
+  }
+
+  .adminHero h1 {
+    font-size: 38px;
+  }
+
+  .adminStatCard {
+    grid-column: span 12;
   }
 }
 
 @media (min-width: 769px) {
-  .admin-overlay { display: none !important; }
-  .admin-topbar { display: none !important; }
-}
-
-/* Table responsiveness */
-.admin-table-wrap {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  border-radius: 16px;
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  box-shadow: 0 18px 46px rgba(15, 23, 42, 0.08);
-}
-
-@media (max-width: 768px) {
-  .admin-close-btn {
-    display: block !important;
+  .admin-overlay,
+  .admin-topbar {
+    display: none !important;
   }
 }

@@ -5,6 +5,7 @@ import { checkMilestones, creditQLTAndUpdateLevel, updateTrustScore } from "@/li
 import { log } from "@/lib/auditLog";
 import { sendMissionApprovedEmail, sendMissionRejectedEmail } from "@/lib/email";
 import { ensureBusinessWalletTables } from "@/lib/businessWallet";
+import { refundUnusedCampaignBudget, reviewCampaignSubmission, transitionCampaignStatus } from "@/lib/universalCampaignEngine";
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await getBusinessSession();
@@ -73,6 +74,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 
     if (action === "approve") {
       await sql`UPDATE completions SET status = 'approved', rejection_reason = NULL WHERE id = ${Number(completionId)}`;
+      await reviewCampaignSubmission({ completionId: Number(completionId), action: "approve" });
 
       const reward = Number(completion.reward);
       await sql`
@@ -110,6 +112,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 
     const reason = rejectionReason?.trim() || "Mission proof did not meet the campaign requirements";
     await sql`UPDATE completions SET status = 'rejected', rejection_reason = ${reason} WHERE id = ${Number(completionId)}`;
+    await reviewCampaignSubmission({ completionId: Number(completionId), action: "reject", reviewNote: reason });
     await sql`UPDATE users SET rejected_count = rejected_count + 1 WHERE id = ${completion.user_id}`;
     await sql`
       UPDATE tasks
@@ -131,11 +134,15 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 
   if (action === "pause") {
     await sql`UPDATE tasks SET is_active = false, task_status = 'paused' WHERE id = ${Number(id)}`;
+    const campaignRows = await sql`SELECT id FROM campaigns WHERE task_id = ${Number(id)} LIMIT 1`;
+    if (campaignRows.length) await transitionCampaignStatus({ campaignId: Number(campaignRows[0].id), nextStatus: "paused" });
   } else if (action === "resume") {
     if (rows[0].task_status === "pending_review" || rows[0].task_status === "deleted") {
       return NextResponse.json({ error: "This campaign cannot be resumed yet" }, { status: 409 });
     }
     await sql`UPDATE tasks SET is_active = true, task_status = 'active' WHERE id = ${Number(id)}`;
+    const campaignRows = await sql`SELECT id FROM campaigns WHERE task_id = ${Number(id)} LIMIT 1`;
+    if (campaignRows.length) await transitionCampaignStatus({ campaignId: Number(campaignRows[0].id), nextStatus: "live" });
   } else if (action === "delete") {
     await ensureBusinessWalletTables();
     const refund = Math.max(0, Number(rows[0].total_budget ?? 0) - Number(rows[0].budget_used ?? 0));
@@ -150,6 +157,11 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
         )
         ON CONFLICT (reference) DO NOTHING
       `;
+    }
+    const campaignRows = await sql`SELECT id FROM campaigns WHERE task_id = ${Number(id)} LIMIT 1`;
+    if (campaignRows.length) {
+      await refundUnusedCampaignBudget({ campaignId: Number(campaignRows[0].id), businessId: session.businessId, reason: "campaign_deleted" });
+      await sql`UPDATE campaigns SET status = 'closed', updated_at = NOW() WHERE id = ${Number(campaignRows[0].id)}`;
     }
     await sql`UPDATE tasks SET is_active = false, task_status = 'deleted' WHERE id = ${Number(id)}`;
   } else {

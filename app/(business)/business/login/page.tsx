@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -9,113 +10,454 @@ export default function BusinessLoginPage() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showPass, setShowPass] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true); setError("");
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setLoading(true);
+    setError("");
+
     const res = await fetch("/api/business/login", {
-      method: "POST", headers: { "Content-Type": "application/json" },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form),
     });
-    const data = await res.json();
+    const data = await res.json().catch(() => ({}));
+
     if (res.ok) router.push("/business/dashboard");
     else setError(data.error || "Login failed");
     setLoading(false);
   };
 
-  const inp: React.CSSProperties = {
-    width: "100%", marginTop: 7, padding: "13px 14px",
-    borderRadius: 11, border: "1.5px solid #1e1e1e",
-    fontSize: 14, outline: "none", color: "#F5F5F5", background: "#0d0d0d",
-    transition: "border-color 0.15s",
-  };
-
   return (
-    <div style={{ minHeight: "100vh", background: "#050505", display: "flex", flexDirection: "column" }}>
-      {/* Nav */}
-      <nav style={{ padding: "0 24px", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid #111" }}>
-        <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
-          <Image src="/qeixova-icon.png" alt="Qeixova" width={30} height={30} style={{ borderRadius: 8, objectFit: "contain" }} />
-          <span style={{ fontWeight: 800, fontSize: 15, color: "#F5F5F5" }}>Qeixova</span>
-          <span style={{ fontSize: 10, color: "#F5A623", background: "rgba(245,166,35,0.1)", border: "1px solid rgba(245,166,35,0.2)", borderRadius: 6, padding: "2px 8px", fontWeight: 700, letterSpacing: 0.5 }}>BUSINESS</span>
+    <main className="businessLoginPage">
+      <nav className="loginNav">
+        <Link href="/" className="brandLink">
+          <Image src="/qeixova-icon.png" alt="Qeixova" width={32} height={32} />
+          <span>Qeixova</span>
+          <strong>Business</strong>
         </Link>
-        <Link href="/register" style={{ fontSize: 13, color: "#F5A623", fontWeight: 700, textDecoration: "none" }}>Create account →</Link>
+        <Link href="/register" className="navAction">Create account</Link>
       </nav>
 
-      <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "32px 20px" }}>
-        <div style={{ width: "100%", maxWidth: 400 }}>
-
-          {/* Header */}
-          <div style={{ textAlign: "center", marginBottom: 36 }}>
-            <div style={{ width: 64, height: 64, borderRadius: 20, background: "linear-gradient(135deg, #F5A623, #d89420)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px", boxShadow: "0 8px 28px rgba(245,166,35,0.3)" }}>
-              <Image src="/qeixova-icon.png" alt="Qeixova" width={36} height={36} style={{ objectFit: "contain", filter: "brightness(0)" }} />
+      <section className="loginStage">
+        <div className="loginWrap">
+          <header className="loginHeader">
+            <div className="brandMark">
+              <Image src="/qeixova-icon.png" alt="" width={36} height={36} />
             </div>
-            <h1 style={{ fontSize: 24, fontWeight: 900, color: "#F5F5F5", marginBottom: 6, letterSpacing: -0.5 }}>Business Portal</h1>
-            <p style={{ fontSize: 14, color: "#bbb" }}>Sign in to manage your campaigns</p>
-          </div>
+            <p>Business Manager</p>
+            <h1>Welcome back</h1>
+            <span>Sign in to manage campaigns, billing, submissions, and growth activity.</span>
+          </header>
 
-          {/* Card */}
-          <div style={{ background: "#0a0a0a", borderRadius: 20, padding: "28px 24px", border: "1px solid #161616" }}>
-            {error && (
-              <div style={{ background: "rgba(229,62,62,0.07)", border: "1px solid rgba(229,62,62,0.2)", borderRadius: 10, padding: "11px 14px", marginBottom: 20, fontSize: 13, color: "#e53e3e", display: "flex", alignItems: "center", gap: 8 }}>
-                <span>⚠️</span> {error}
-              </div>
-            )}
-            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-              <div>
-                <label style={{ fontSize: 11, fontWeight: 700, color: "#aaa", letterSpacing: 0.8, textTransform: "uppercase" }}>Email</label>
-                <input type="email" placeholder="business@company.com" value={form.email}
-                  onChange={e => setForm(p => ({ ...p, email: e.target.value }))} required style={inp}
-                  onFocus={e => (e.target.style.borderColor = "#F5A623")} onBlur={e => (e.target.style.borderColor = "#1e1e1e")} />
-              </div>
-              <div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <label style={{ fontSize: 11, fontWeight: 700, color: "#aaa", letterSpacing: 0.8, textTransform: "uppercase" }}>Password</label>
-                </div>
-                <input type="password" placeholder="Your password" value={form.password}
-                  onChange={e => setForm(p => ({ ...p, password: e.target.value }))} required style={inp}
-                  onFocus={e => (e.target.style.borderColor = "#F5A623")} onBlur={e => (e.target.style.borderColor = "#1e1e1e")} />
-              </div>
-              <button type="submit" disabled={loading} style={{
-                background: loading ? "#111" : "linear-gradient(135deg, #F5A623, #d89420)",
-                color: loading ? "#aaa" : "#000", border: "none", borderRadius: 12,
-                padding: "14px", fontWeight: 800, fontSize: 15,
-                cursor: loading ? "not-allowed" : "pointer", marginTop: 4,
-                boxShadow: loading ? "none" : "0 6px 20px rgba(245,166,35,0.28)",
-                display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-              }}>
+          <section className="loginCard">
+            {error && <div className="errorBox"><span>!</span>{error}</div>}
+
+            <form onSubmit={handleSubmit} className="loginForm">
+              <label>
+                Email
+                <input
+                  type="email"
+                  placeholder="business@company.com"
+                  value={form.email}
+                  onChange={(event) => setForm((prev) => ({ ...prev, email: event.target.value }))}
+                  required
+                />
+              </label>
+
+              <label>
+                <span className="labelLine">
+                  Password
+                  <button type="button" onClick={() => setShowPass((value) => !value)}>
+                    {showPass ? "Hide" : "Show"}
+                  </button>
+                </span>
+                <input
+                  type={showPass ? "text" : "password"}
+                  placeholder="Your password"
+                  value={form.password}
+                  onChange={(event) => setForm((prev) => ({ ...prev, password: event.target.value }))}
+                  required
+                />
+              </label>
+
+              <button type="submit" disabled={loading} className="submitButton">
                 {loading ? (
                   <>
-                    <span style={{ width: 16, height: 16, border: "2px solid #444", borderTopColor: "#ccc", borderRadius: "50%", display: "inline-block", animation: "spin 0.8s linear infinite" }} />
+                    <span className="spinner" />
                     Signing in...
                   </>
-                ) : "Login →"}
+                ) : "Login"}
               </button>
             </form>
-            <p style={{ textAlign: "center", fontSize: 13, color: "#bbb", marginTop: 20 }}>
-              No account?{" "}
-              <Link href="/register" style={{ color: "#F5A623", fontWeight: 700, textDecoration: "none" }}>Create one</Link>
-            </p>
-          </div>
 
-          {/* Account type switcher */}
-          <div style={{ marginTop: 20, background: "#0a0a0a", border: "1px solid #1a1a1a", borderRadius: 14, padding: "14px 18px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <div style={{ width: 28, height: 28, borderRadius: 8, background: "rgba(245,166,35,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <img src="/icon-task.svg" width={14} height={14} style={{ filter: "invert(72%) sepia(60%) saturate(500%) hue-rotate(5deg)" }} alt="" />
-              </div>
-              <span style={{ fontSize: 12, color: "#bbb" }}>Business Login</span>
+            <p className="createText">
+              No account? <Link href="/register">Create one</Link>
+            </p>
+          </section>
+
+          <section className="switchCard">
+            <div>
+              <span className="switchIcon">
+                <img src="/icon-task.svg" width={14} height={14} alt="" />
+              </span>
+              <span>Business Login</span>
             </div>
-            <Link href="/login" style={{ fontSize: 12, color: "#1AEF22", fontWeight: 700, textDecoration: "none", display: "flex", alignItems: "center", gap: 6 }}>
-              <div style={{ width: 24, height: 24, borderRadius: 6, background: "rgba(26,239,34,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <img src="/icon-profile.svg" width={12} height={12} style={{ filter: "invert(58%) sepia(98%) saturate(400%) hue-rotate(83deg) brightness(110%)" }} alt="" />
-              </div>
-              Contributor Login →
+            <Link href="/login">
+              <span className="switchIcon green">
+                <img src="/icon-profile.svg" width={12} height={12} alt="" />
+              </span>
+              Contributor Login
             </Link>
-          </div>
+          </section>
         </div>
-      </div>
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-    </div>
+      </section>
+
+      <style jsx>{styles}</style>
+    </main>
   );
 }
+
+const styles = `
+  .businessLoginPage {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background:
+      radial-gradient(circle at 50% 16%, rgba(245, 166, 35, 0.16), transparent 28%),
+      radial-gradient(circle at 16% 82%, rgba(26, 239, 34, 0.06), transparent 24%),
+      #050505;
+    color: #F5F5F5;
+  }
+
+  .loginNav {
+    height: 66px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    background: rgba(5, 5, 5, 0.72);
+    backdrop-filter: blur(18px);
+  }
+
+  .brandLink,
+  .navAction,
+  .switchCard a {
+    text-decoration: none;
+  }
+
+  .brandLink {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .brandLink img {
+    border-radius: 9px;
+  }
+
+  .brandLink span {
+    color: #F5F5F5;
+    font-size: 15px;
+    font-weight: 850;
+  }
+
+  .brandLink strong {
+    padding: 4px 9px;
+    border: 1px solid rgba(245, 166, 35, 0.22);
+    border-radius: 999px;
+    background: rgba(245, 166, 35, 0.1);
+    color: #F5A623;
+    font-size: 10px;
+    font-weight: 950;
+    text-transform: uppercase;
+    letter-spacing: .7px;
+  }
+
+  .navAction {
+    color: #F5A623;
+    font-size: 13px;
+    font-weight: 850;
+  }
+
+  .loginStage {
+    flex: 1;
+    display: grid;
+    place-items: center;
+    padding: 36px 20px;
+  }
+
+  .loginWrap {
+    width: min(100%, 420px);
+  }
+
+  .loginHeader {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  .brandMark {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 18px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(245, 166, 35, 0.28);
+    border-radius: 22px;
+    background: linear-gradient(135deg, #F5A623, #d89420);
+    box-shadow: 0 20px 46px rgba(245, 166, 35, 0.24);
+  }
+
+  .brandMark img {
+    filter: brightness(0);
+    object-fit: contain;
+  }
+
+  .loginHeader p {
+    margin: 0 0 8px;
+    color: #F5A623;
+    font-size: 11px;
+    font-weight: 950;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+  }
+
+  .loginHeader h1 {
+    margin: 0;
+    color: #fff;
+    font-size: 34px;
+    line-height: 1;
+    letter-spacing: 0;
+  }
+
+  .loginHeader span {
+    display: block;
+    max-width: 360px;
+    margin: 10px auto 0;
+    color: #a8a8a8;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .loginCard,
+  .switchCard {
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(10, 10, 10, 0.86);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
+    backdrop-filter: blur(18px);
+  }
+
+  .loginCard {
+    border-radius: 24px;
+    padding: 26px;
+  }
+
+  .errorBox {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 18px;
+    padding: 12px 14px;
+    border: 1px solid rgba(229, 62, 62, 0.24);
+    border-radius: 13px;
+    background: rgba(229, 62, 62, 0.08);
+    color: #ff9a9a;
+    font-size: 13px;
+    font-weight: 750;
+  }
+
+  .errorBox span {
+    width: 20px;
+    height: 20px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: rgba(229, 62, 62, 0.16);
+    color: #ff9a9a;
+    font-weight: 950;
+  }
+
+  .loginForm {
+    display: grid;
+    gap: 16px;
+  }
+
+  .loginForm label {
+    display: grid;
+    gap: 8px;
+    color: #b8b8b8;
+    font-size: 11px;
+    font-weight: 850;
+    letter-spacing: .75px;
+    text-transform: uppercase;
+  }
+
+  .labelLine {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .labelLine button {
+    border: 0;
+    background: transparent;
+    color: #F5A623;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 850;
+    padding: 0;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  .loginForm input {
+    width: 100%;
+    border: 1px solid #252525;
+    border-radius: 14px;
+    background: #070707;
+    color: #F5F5F5;
+    padding: 14px 15px;
+    font: inherit;
+    outline: none;
+    transition: border-color .16s ease, box-shadow .16s ease, background .16s ease;
+  }
+
+  .loginForm input:focus {
+    border-color: rgba(245, 166, 35, .8);
+    background: #0d0d0d;
+    box-shadow: 0 0 0 4px rgba(245, 166, 35, .12);
+  }
+
+  .submitButton {
+    min-height: 49px;
+    margin-top: 4px;
+    border: 0;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    background: linear-gradient(135deg, #F5A623, #d89420);
+    color: #050505;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 950;
+    box-shadow: 0 14px 34px rgba(245, 166, 35, 0.2);
+  }
+
+  .submitButton:disabled {
+    opacity: .58;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  .spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(0,0,0,.24);
+    border-top-color: #050505;
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+  }
+
+  .createText {
+    margin: 20px 0 0;
+    text-align: center;
+    color: #b8b8b8;
+    font-size: 13px;
+  }
+
+  .createText a {
+    color: #F5A623;
+    font-weight: 850;
+    text-decoration: none;
+  }
+
+  .switchCard {
+    margin-top: 16px;
+    padding: 13px 15px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .switchCard div,
+  .switchCard a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .switchCard span,
+  .switchCard a {
+    color: #b8b8b8;
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .switchCard a {
+    color: #1AEF22;
+  }
+
+  .switchIcon {
+    width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    border-radius: 9px;
+    background: rgba(245, 166, 35, 0.11);
+  }
+
+  .switchIcon.green {
+    background: rgba(26, 239, 34, 0.1);
+  }
+
+  .switchIcon img {
+    filter: invert(72%) sepia(60%) saturate(500%) hue-rotate(5deg);
+  }
+
+  .switchIcon.green img {
+    filter: invert(58%) sepia(98%) saturate(400%) hue-rotate(83deg) brightness(110%);
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  @media (max-width: 520px) {
+    .loginNav {
+      padding: 0 16px;
+    }
+
+    .brandLink strong {
+      display: none;
+    }
+
+    .loginStage {
+      padding: 28px 14px;
+      align-items: start;
+    }
+
+    .loginHeader h1 {
+      font-size: 30px;
+    }
+
+    .loginCard {
+      padding: 20px;
+      border-radius: 20px;
+    }
+
+    .switchCard {
+      align-items: stretch;
+      flex-direction: column;
+    }
+  }
+`;

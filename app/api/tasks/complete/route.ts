@@ -5,6 +5,7 @@ import { verifyProof } from "@/lib/verifyProof";
 import { checkDailyCap, updateStreak, QLT_PROGRESS_REWARDS } from "@/lib/missionEngine";
 import { checkRateLimit, incrementRateLimit, checkDuplicate, checkTrustScore } from "@/lib/antiFraud";
 import { log } from "@/lib/auditLog";
+import { syncCampaignSubmissionFromCompletion } from "@/lib/universalCampaignEngine";
 
 export async function POST(req: NextRequest) {
   try {
@@ -105,10 +106,18 @@ export async function POST(req: NextRequest) {
 
     // ── Insert completion (DB UNIQUE constraint is final guard) ───────────
     try {
-      await sql`
+      const completionRows = await sql`
         INSERT INTO completions (user_id, task_id, proof_value, status, xp_awarded, qlt_awarded)
         VALUES (${session.userId}, ${taskId}, ${storedProof}, 'pending', ${qltProgressReward}, ${task.reward})
+        RETURNING id
       `;
+      await syncCampaignSubmissionFromCompletion({
+        taskId: Number(taskId),
+        completionId: Number(completionRows[0].id),
+        contributorId: session.userId,
+        proofValue: storedProof,
+        rewardAmount: Number(task.reward),
+      });
     } catch (err: unknown) {
       // Catch DB unique violation
       if (err && typeof err === "object" && "code" in err && (err as { code: string }).code === "23505") {

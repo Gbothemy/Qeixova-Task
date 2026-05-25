@@ -39,7 +39,6 @@ export default function LoginPage() {
       display: "flex", alignItems: "center", justifyContent: "center",
       padding: "24px 16px",
     }}>
-      {/* Decorative blobs */}
       <div style={{
         position: "fixed", top: -80, right: -80,
         width: 320, height: 320, borderRadius: "50%",
@@ -52,16 +51,14 @@ export default function LoginPage() {
       }} />
 
       <div style={{ width: "100%", maxWidth: 440 }}>
-
-        {/* Logo */}
         <div style={{ textAlign: "center", marginBottom: 32 }}>
           <Link href="/" style={{ textDecoration: "none", display: "inline-flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
-            <img 
-              src="/qeixova-icon.png" 
-              alt="Qeixova" 
+            <img
+              src="/qeixova-icon.png"
+              alt="Qeixova"
               style={{
-                width: 56, 
-                height: 56, 
+                width: 56,
+                height: 56,
                 borderRadius: 16,
                 objectFit: "contain",
                 boxShadow: "0 8px 24px rgba(26,239,34,0.4)",
@@ -74,7 +71,6 @@ export default function LoginPage() {
           </p>
         </div>
 
-        {/* Card */}
         <div style={{
           background: "#111111",
           borderRadius: 24,
@@ -98,13 +94,11 @@ export default function LoginPage() {
               borderRadius: 10, padding: "11px 14px", marginBottom: 20,
               fontSize: 13, color: "#e53e3e", fontWeight: 500,
             }}>
-              ⚠️ {error}
+              ! {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-
-            {/* Email */}
             <div>
               <label style={{ fontSize: 12, fontWeight: 700, color: "#bbbbbb", letterSpacing: 0.5 }}>
                 EMAIL ADDRESS
@@ -133,15 +127,19 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {/* Password */}
             <div>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <label style={{ fontSize: 12, fontWeight: 700, color: "#bbbbbb", letterSpacing: 0.5 }}>
                   PASSWORD
                 </label>
-                <Link href="/forgot-password" style={{ fontSize: 12, color: "#1AEF22", fontWeight: 600, textDecoration: "none" }}>
-                  Forgot password?
-                </Link>
+                <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                  <Link href="/forgot-password" style={{ fontSize: 12, color: "#1AEF22", fontWeight: 600, textDecoration: "none" }}>
+                    Forgot password?
+                  </Link>
+                  <button type="button" onClick={() => setShowPass(!showPass)} style={{ background: "none", border: "none", color: "#1AEF22", cursor: "pointer", fontSize: 12, fontWeight: 700, padding: 0 }}>
+                    {showPass ? "Hide" : "Show"}
+                  </button>
+                </div>
               </div>
               <div style={{ position: "relative", marginTop: 8 }}>
                 <span style={{
@@ -156,7 +154,7 @@ export default function LoginPage() {
                   value={form.password}
                   onChange={(e) => setForm({ ...form, password: e.target.value })}
                   style={{
-                    width: "100%", padding: "13px 44px 13px 42px",
+                    width: "100%", padding: "13px 14px 13px 42px",
                     borderRadius: 12, border: "1.5px solid #333333",
                     fontSize: 14, outline: "none", color: "#F5F5F5",
                     background: "#1a1a1a", transition: "border-color 0.2s",
@@ -164,20 +162,9 @@ export default function LoginPage() {
                   onFocus={(e) => (e.target.style.borderColor = "#1AEF22")}
                   onBlur={(e) => (e.target.style.borderColor = "#999999")}
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPass(!showPass)}
-                  style={{
-                    position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)",
-                    background: "none", border: "none", cursor: "pointer", fontSize: 16, padding: 0,
-                  }}
-                >
-                  {showPass ? "🙈" : "👁️"}
-                </button>
               </div>
             </div>
 
-            {/* Submit */}
             <button
               type="submit"
               disabled={loading}
@@ -191,24 +178,17 @@ export default function LoginPage() {
                 display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
               }}
             >
-              {loading ? (
-                <>
-                  <span style={{ display: "inline-block", animation: "spin 1s linear infinite" }}>⏳</span>
-                  Signing in...
-                </>
-              ) : "Login →"}
+              {loading ? "Signing in..." : "Login →"}
             </button>
           </form>
         </div>
 
-        {/* Footer note */}
         <p style={{ textAlign: "center", fontSize: 12, color: "rgba(255,255,255,0.5)", marginTop: 20 }}>
           By signing in you agree to our{" "}
           <span style={{ color: "rgba(255,255,255,0.8)", cursor: "pointer" }}>Terms</span> &amp;{" "}
           <span style={{ color: "rgba(255,255,255,0.8)", cursor: "pointer" }}>Privacy Policy</span>
         </p>
 
-        {/* Account type switcher */}
         <div style={{ marginTop: 20, background: "#0d0d0d", border: "1px solid #1a1a1a", borderRadius: 14, padding: "14px 18px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <div style={{ width: 28, height: 28, borderRadius: 8, background: "rgba(26,239,34,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -227,4 +207,3 @@ export default function LoginPage() {
     </div>
   );
 }
-

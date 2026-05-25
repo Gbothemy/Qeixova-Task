@@ -4,6 +4,7 @@ import { sql } from "@/lib/db";
 import { checkMilestones, updateTrustScore, creditQLTAndUpdateLevel } from "@/lib/missionEngine";
 import { log } from "@/lib/auditLog";
 import { sendMissionApprovedEmail, sendMissionRejectedEmail } from "@/lib/email";
+import { reviewCampaignSubmission } from "@/lib/universalCampaignEngine";
 
 export async function GET(req: NextRequest) {
   if (!await checkAdminAuth(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -71,6 +72,7 @@ export async function PATCH(req: NextRequest) {
     }
 
     await sql`UPDATE completions SET status = 'approved', rejection_reason = NULL WHERE id = ${completionId}`;
+    await reviewCampaignSubmission({ completionId: Number(completionId), action: "approve" });
 
     const reward = Number(completion.reward);
       // 1. Credit QLT balance + daily_earned
@@ -149,6 +151,7 @@ export async function PATCH(req: NextRequest) {
 
     const reason = rejectionReason?.trim() || "Mission not completed correctly";
     await sql`UPDATE completions SET status = 'rejected', rejection_reason = ${reason} WHERE id = ${completionId}`;
+    await reviewCampaignSubmission({ completionId: Number(completionId), action: "reject", reviewNote: reason });
     await sql`UPDATE users SET rejected_count = rejected_count + 1 WHERE id = ${completion.user_id}`;
     await sql`
       UPDATE tasks

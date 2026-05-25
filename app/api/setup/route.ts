@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { sql } from "@/lib/db";
+import { ensureUniversalCampaignTables } from "@/lib/universalCampaignEngine";
 
 function setupAllowed(req: Request) {
   if (process.env.NODE_ENV !== "production") return true;
@@ -93,6 +94,11 @@ export async function GET(req: Request) {
     await sql`ALTER TABLE tasks ADD COLUMN IF NOT EXISTS total_budget INT NOT NULL DEFAULT 0`;
     await sql`ALTER TABLE tasks ADD COLUMN IF NOT EXISTS budget_used INT NOT NULL DEFAULT 0`;
     await sql`ALTER TABLE tasks ADD COLUMN IF NOT EXISTS task_link TEXT NOT NULL DEFAULT ''`;
+    await sql`ALTER TABLE tasks ADD COLUMN IF NOT EXISTS campaign_status TEXT NOT NULL DEFAULT 'pending_review'`;
+    await sql`ALTER TABLE tasks ADD COLUMN IF NOT EXISTS campaign_goal TEXT NOT NULL DEFAULT ''`;
+    await sql`ALTER TABLE tasks ADD COLUMN IF NOT EXISTS campaign_pricing JSONB NOT NULL DEFAULT '{}'::jsonb`;
+    await sql`ALTER TABLE tasks ADD COLUMN IF NOT EXISTS campaign_metadata JSONB NOT NULL DEFAULT '{}'::jsonb`;
+    await ensureUniversalCampaignTables();
 
     await sql`
       CREATE TABLE IF NOT EXISTS bank_accounts (

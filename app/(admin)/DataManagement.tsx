@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 
 interface ClearOption {
@@ -6,59 +7,46 @@ interface ClearOption {
   label: string;
   description: string;
   danger: "medium" | "high" | "critical";
-  icon: string;
 }
 
 const OPTIONS: ClearOption[] = [
   {
     scope: "completions",
-    label: "Clear Task Completions",
-    description: "Removes all task completion records and resets task budgets. User balances are NOT affected.",
+    label: "Clear Mission Submissions",
+    description: "Removes all submission records and resets campaign usage counters. User balances are not affected.",
     danger: "medium",
-    icon: "📋",
   },
   {
     scope: "transactions",
     label: "Clear Transactions & Balances",
-    description: "Deletes all transaction history and resets every user's QLT balance to 0.",
+    description: "Deletes transaction history and resets every contributor QLT balance to zero.",
     danger: "high",
-    icon: "💰",
   },
   {
     scope: "tasks",
-    label: "Deactivate All Tasks",
-    description: "Soft-disables all tasks so users can't see them. Tasks can be re-activated individually.",
+    label: "Deactivate All Missions",
+    description: "Soft-disables all missions so contributors cannot discover them. They can be reactivated later.",
     danger: "medium",
-    icon: "🔒",
   },
   {
     scope: "tasks_hard",
-    label: "Delete All Tasks",
-    description: "Permanently deletes all tasks and their completion records. This cannot be undone.",
+    label: "Delete All Missions",
+    description: "Permanently deletes all missions and their submission records. This cannot be undone.",
     danger: "high",
-    icon: "🗑️",
   },
   {
     scope: "users",
     label: "Delete All Users",
-    description: "Permanently deletes all user accounts, their balances, completions, and transactions. Tasks are kept.",
+    description: "Permanently deletes user accounts, balances, submissions, and transactions. Missions are kept.",
     danger: "critical",
-    icon: "👥",
   },
   {
     scope: "all",
     label: "Wipe All App Data",
-    description: "Nuclear option. Deletes ALL users, tasks, completions, and transactions. The database will be empty.",
+    description: "Deletes users, missions, submissions, and transactions. Use only when resetting a test environment.",
     danger: "critical",
-    icon: "☢️",
   },
 ];
-
-const DANGER_STYLES = {
-  medium:   { bg: "#fff8e1", border: "#f0c040", btn: "#e67e22", badge: "#fff3cd", badgeText: "#856404" },
-  high:     { bg: "#fff0f0", border: "#f5a0a0", btn: "#cc0000", badge: "#ffe0e0", badgeText: "#cc0000" },
-  critical: { bg: "#1a0000", border: "#cc0000", btn: "#8b0000", badge: "#cc0000", badgeText: "#fff" },
-};
 
 export default function DataManagement() {
   const [confirming, setConfirming] = useState<string | null>(null);
@@ -87,113 +75,77 @@ export default function DataManagement() {
   };
 
   return (
-    <div style={{ marginTop: 48 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
-        <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: "#1A1A1A" }}>Data Management</h2>
-        <span style={{ background: "#ffebeb", color: "#cc0000", fontSize: 11, fontWeight: 700, padding: "2px 10px", borderRadius: 20, letterSpacing: 0.5 }}>
-          DANGER ZONE
-        </span>
+    <section className="adminPanel adminDataZone">
+      <div className="adminDataHeader">
+        <div>
+          <h2>Data Management</h2>
+          <p>Controlled reset tools for test data and operational recovery.</p>
+        </div>
+        <span className="adminDangerBadge">Restricted</span>
       </div>
-      <p style={{ margin: "0 0 24px", color: "#ccc", fontSize: 14 }}>
-        These actions are irreversible. Use with extreme caution.
-      </p>
 
       {result && (
-        <div style={{
-          background: result.ok ? "#e8f5e9" : "#ffebeb",
-          border: `1px solid ${result.ok ? "#b3f5b6" : "#f5a0a0"}`,
-          borderRadius: 10, padding: "12px 16px", marginBottom: 20,
-          display: "flex", alignItems: "center", gap: 10,
-        }}>
-          <span style={{ fontSize: 18 }}>{result.ok ? "✅" : "❌"}</span>
-          <p style={{ margin: 0, fontSize: 14, fontWeight: 600, color: result.ok ? "#2e7d32" : "#cc0000" }}>
-            {result.message}
-          </p>
-          <button onClick={() => setResult(null)} style={{ marginLeft: "auto", background: "none", border: "none", cursor: "pointer", fontSize: 18, color: "#aaa" }}>×</button>
+        <div className={`adminResult${result.ok ? "" : " error"}`}>
+          <span>{result.ok ? "Completed" : "Failed"}</span>
+          <strong>{result.message}</strong>
+          <button onClick={() => setResult(null)} aria-label="Dismiss result">x</button>
         </div>
       )}
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 16 }}>
+      <div className="adminDangerGrid">
         {OPTIONS.map((opt) => {
-          const s = DANGER_STYLES[opt.danger];
           const isConfirming = confirming === opt.scope;
-          const CONFIRM_PHRASE = `DELETE ${opt.scope.toUpperCase()}`;
+          const confirmPhrase = `DELETE ${opt.scope.toUpperCase()}`;
 
           return (
-            <div key={opt.scope} style={{
-              background: opt.danger === "critical" ? "#fff8f8" : "#fff",
-              border: `1.5px solid ${s.border}`,
-              borderRadius: 12, padding: "20px",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
-            }}>
-              <div style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 12 }}>
-                <span style={{ fontSize: 24 }}>{opt.icon}</span>
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-                    <p style={{ margin: 0, fontWeight: 700, fontSize: 14, color: "#1A1A1A" }}>{opt.label}</p>
-                    <span style={{ fontSize: 10, fontWeight: 700, padding: "1px 7px", borderRadius: 10, background: s.badge, color: s.badgeText, textTransform: "uppercase" }}>
-                      {opt.danger}
-                    </span>
-                  </div>
-                  <p style={{ margin: 0, fontSize: 12, color: "#ccc", lineHeight: 1.5 }}>{opt.description}</p>
-                </div>
-              </div>
+            <article key={opt.scope} className={`adminDangerCard ${opt.danger}`}>
+              <span className="adminDangerLevel">{opt.danger}</span>
+              <h3>{opt.label}</h3>
+              <p>{opt.description}</p>
 
               {!isConfirming ? (
                 <button
-                  onClick={() => { setConfirming(opt.scope); setConfirmText(""); setResult(null); }}
-                  style={{
-                    width: "100%", padding: "9px", borderRadius: 8, border: "none",
-                    background: s.btn, color: "#fff", cursor: "pointer",
-                    fontSize: 13, fontWeight: 600,
+                  onClick={() => {
+                    setConfirming(opt.scope);
+                    setConfirmText("");
+                    setResult(null);
                   }}
                 >
-                  {opt.icon} {opt.label}
+                  Start confirmation
                 </button>
               ) : (
-                <div style={{ background: "#f9f9f9", borderRadius: 8, padding: 14, border: "1px solid #eee" }}>
-                  <p style={{ margin: "0 0 8px", fontSize: 12, color: "#bbb", fontWeight: 600 }}>
-                    Type <code style={{ background: "#f0f0f0", padding: "1px 6px", borderRadius: 4, fontSize: 11 }}>{CONFIRM_PHRASE}</code> to confirm:
+                <div className="adminDangerConfirm">
+                  <p>
+                    Type <code>{confirmPhrase}</code> to confirm.
                   </p>
                   <input
                     type="text"
                     value={confirmText}
-                    onChange={(e) => setConfirmText(e.target.value)}
-                    placeholder={CONFIRM_PHRASE}
-                    style={{
-                      width: "100%", padding: "8px 10px", borderRadius: 6,
-                      border: "1.5px solid #ddd", fontSize: 13, outline: "none",
-                      boxSizing: "border-box", marginBottom: 10,
-                      fontFamily: "monospace",
-                    }}
+                    onChange={(event) => setConfirmText(event.target.value)}
+                    placeholder={confirmPhrase}
                   />
-                  <div style={{ display: "flex", gap: 8 }}>
+                  <div className="adminDangerActions">
                     <button
-                      onClick={() => { setConfirming(null); setConfirmText(""); }}
-                      style={{ flex: 1, padding: "8px", borderRadius: 6, border: "1px solid #ddd", background: "#fff", cursor: "pointer", fontSize: 13 }}
+                      onClick={() => {
+                        setConfirming(null);
+                        setConfirmText("");
+                      }}
                     >
                       Cancel
                     </button>
                     <button
                       onClick={() => handleClear(opt.scope)}
-                      disabled={confirmText !== CONFIRM_PHRASE || loading}
-                      style={{
-                        flex: 2, padding: "8px", borderRadius: 6, border: "none",
-                        background: confirmText === CONFIRM_PHRASE ? s.btn : "#ccc",
-                        color: "#fff", cursor: confirmText === CONFIRM_PHRASE ? "pointer" : "not-allowed",
-                        fontSize: 13, fontWeight: 700,
-                      }}
+                      disabled={confirmText !== confirmPhrase || loading}
                     >
-                      {loading ? "Processing..." : "Confirm & Execute"}
+                      {loading ? "Processing..." : "Confirm"}
                     </button>
                   </div>
                 </div>
               )}
-            </div>
+            </article>
           );
         })}
       </div>
-    </div>
+    </section>
   );
 }
-

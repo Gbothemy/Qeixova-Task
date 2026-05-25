@@ -1,1448 +1,276 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import BusinessSidebar from "@/components/BusinessSidebar";
 import BusinessBottomNav from "@/components/BusinessBottomNav";
 
-type CampaignCategory = {
-  id: string;
-  title: string;
-  description: string;
-  bestFor: string;
-  icon: string;
-  accent: string;
-  category: string;
-  missionType: "engagement" | "participation" | "premium";
-};
-
-type Package = {
+type MissionCategory = {
   id: string;
   name: string;
-  reach: string;
+  apiCategory: string;
+  missionType: "engagement" | "participation" | "premium";
   description: string;
-  reward: number;
-  contributors: number;
-  duration: string;
+  goals: string[];
+  contentLabel: string;
+  contentPlaceholder: string;
+  contentTypes: string[];
+  defaultActions: string[];
+  defaultAudience: string[];
 };
 
 type CampaignBundle = {
   id: string;
   name: string;
-  shortName: string;
   description: string;
-  bestFor: string[];
-  contentTypes: string[];
+  bestFor: string;
   platforms: string[];
-  actions: string[];
-  verification: string[];
-  accent: string;
-  icon: string;
+  actionHint: string[];
 };
 
-type CategoryFlow = {
+type ReachPackage = {
   id: string;
-  builderIntro: string;
-  contentHeadline: string;
-  contentHelp: string;
-  contentTypes: string[];
-  goalsHeadline: string;
-  goals: string[];
-  uploadRequirements: Record<string, string[]>;
-  linkLabel: string;
-  linkPlaceholder: string;
-  captionLabel: string;
-  captionPlaceholder: string;
-  bundlesHeadline: string;
-  targetHeadline: string;
-  targetHelp: string;
-  interests: string[];
-  levels: string[];
-  packages: Package[];
-  launchHeadline: string;
-  launchSummary: string;
-  launchCta: string;
-  previewLabel: string;
-  defaultContentType: string;
-  defaultGoal: string;
-  defaultTitle: string;
-  defaultInterests: string[];
-  defaultLevels: string[];
-  defaultBundleId: string;
+  name: string;
+  contributors: number;
+  duration: string;
 };
 
-type PlatformMeta = {
-  icon: string;
-  recommendedFor: string;
-  visibility: string;
-  audience: string;
+type Business = {
+  id: number;
+  name: string;
+  balance: number;
 };
 
-type FeedbackGoalConfig = {
-  assetHeading: string;
-  nameLabel: string;
-  descriptionLabel: string;
-  linkLabel: string;
-  linkPlaceholder: string;
-  objectives: string[];
-  contributorTypes: string[];
-  responseTypes: string[];
-  platforms?: string[];
-  testAreas?: string[];
-  requiredActions?: string[];
-  durations?: string[];
-  surveyMethods?: string[];
-  contentFormats?: string[];
-  defaultQuestions: string[];
-};
-
-type PlatformRate = {
-  qlt: number;
-  naira: number;
-};
-
-type PricingBreakdown = {
-  platformRates: Array<{ platform: string; qlt: number; naira: number }>;
-  rewardPerParticipantQlt: number;
-  rewardPerParticipantNaira: number;
-  contributorPoolQlt: number;
-  contributorPoolNaira: number;
-  businessPaymentQlt: number;
-  businessPaymentNaira: number;
-  commissionQlt: number;
-  commissionNaira: number;
-  reserveQlt: number;
-  reserveNaira: number;
-};
-
-const campaignCategories: CampaignCategory[] = [
-  { id: "content", title: "Content Distribution", description: "Spread flyers, videos, announcements, and promotional content across social channels.", bestFor: "WhatsApp status, Facebook reposts, Instagram stories, Telegram, X, YouTube Shorts, TikTok", icon: "/icon-human-distribution.svg", accent: "#4a9eff", category: "Content Distribution", missionType: "engagement" },
-  { id: "music", title: "Music Promotion", description: "Launch dedicated entertainment campaigns for artists, songs, sounds, and releases.", bestFor: "Music teasers, TikTok sounds, album flyers, song reviews, dance or reaction challenges", icon: "/icon-music.svg", accent: "#F5A623", category: "Music Promotion", missionType: "engagement" },
-  { id: "business", title: "Business Awareness", description: "Build visibility for SMEs, local stores, products, services, and offers.", bestFor: "Product promotion, store awareness, promo campaigns, service awareness, local distribution", icon: "/icon-local-business.svg", accent: "#1AEF22", category: "Business Awareness", missionType: "engagement" },
-  { id: "creator", title: "Creator Campaigns", description: "Amplify influencers, skit makers, streamers, creators, and personal brands.", bestFor: "Creator reposts, engagement support, livestream awareness, page awareness, collaborations", icon: "/icon-creator.svg", accent: "#c084fc", category: "Creator Campaigns", missionType: "engagement" },
-  { id: "apps", title: "App Testing & Reviews", description: "Get real participants to download, test, review, and report app experiences.", bestFor: "App downloads, onboarding tests, bug reports, feature testing, review submissions", icon: "/icon-app-testing.svg", accent: "#14b8a6", category: "App Testing", missionType: "participation" },
-  { id: "referral", title: "Referral Missions", description: "Run performance-based growth campaigns tied to signups, invites, or ambassadors.", bestFor: "Invite campaigns, signup referrals, ambassador programs, user acquisition campaigns", icon: "/icon-target.svg", accent: "#f87171", category: "Referral Missions", missionType: "premium" },
-  { id: "surveys", title: "Feedback Campaign", description: "Collect useful product, app, website, service, content, event, and market feedback.", bestFor: "Product feedback, app testing feedback, surveys, UX testing, feature validation, market research", icon: "/icon-survey.svg", accent: "#fb7185", category: "Feedback Campaign", missionType: "participation" },
-  { id: "event", title: "Event Promotion", description: "Drive awareness for events, programs, campus activities, and local gatherings.", bestFor: "Church programs, concerts, conferences, campus events, local gathering awareness", icon: "/icon-events.svg", accent: "#f97316", category: "Event Promotion", missionType: "engagement" },
-  { id: "community", title: "Community Growth", description: "Grow active brand communities and invite relevant people into social spaces.", bestFor: "Telegram joins, WhatsApp community joins, Discord joins, Facebook group participation", icon: "/icon-community.svg", accent: "#22c55e", category: "Community Growth", missionType: "participation" },
-  { id: "video", title: "Video Engagement", description: "Improve visibility for short-form and long-form video content through real participation.", bestFor: "Watch campaigns, save campaigns, repost video campaigns, short-form content engagement", icon: "/icon-content.svg", accent: "#e879f9", category: "Video Engagement", missionType: "engagement" },
-  { id: "ambassador", title: "Brand Ambassador Missions", description: "Create longer-term contributor partnerships for recurring brand representation.", bestFor: "Recurring promotions, monthly campaigns, niche representation, campus ambassador activities", icon: "/icon-verified.svg", accent: "#60a5fa", category: "Brand Ambassador Missions", missionType: "premium" },
-  { id: "digital", title: "AI & Digital Work", description: "Prepare scalable digital work campaigns beyond social growth and awareness.", bestFor: "AI training tasks, image labeling, transcription, moderation, simple online work", icon: "/icon-analytics.svg", accent: "#38bdf8", category: "AI & Digital Work", missionType: "participation" },
-  { id: "local", title: "Local Discovery Missions", description: "Activate geo-targeted participation for physical locations and local discovery.", bestFor: "Store visits, local awareness, QR scan campaigns, neighborhood promotion, physical-to-digital activation", icon: "/icon-grassroots.svg", accent: "#10b981", category: "Local Discovery Missions", missionType: "participation" },
-  { id: "trend", title: "Trend Missions", description: "Launch time-sensitive campaigns around viral sounds, hashtags, memes, and challenges.", bestFor: "Trending sound participation, hashtag waves, viral challenge support, meme participation", icon: "/icon-fire.svg", accent: "#fb7185", category: "Trend Missions", missionType: "engagement" },
-  { id: "premium", title: "Premium Missions", description: "Reserve higher-quality, higher-paying work for verified contributors.", bestFor: "Influencer-level participation, UGC creation, testimonial videos, premium reviews, creator collaborations", icon: "/icon-trophy.svg", accent: "#facc15", category: "Premium Missions", missionType: "premium" },
-];
-
-const goals = [
-  "Increase visibility",
-  "Spread awareness",
-  "Promote a launch",
-  "Grow a community",
-  "Get feedback",
-  "Boost content reach",
-  "Drive app downloads",
-  "Encourage referrals",
-  "Promote an event",
-  "Generate conversations",
-];
-
-const defaultContentTypes = ["Flyer", "Video", "Audio", "Product image", "Link"];
-const actionOptions = [
-  "Post flyer to WhatsApp status",
-  "Post song artwork to WhatsApp status",
-  "Post product flyer to WhatsApp status",
-  "Post to Facebook story",
-  "Post to Instagram story",
-  "Share to WhatsApp groups",
-  "Repost social media post",
-  "Share announcement banner",
-  "Share product/store link",
-  "Share in relevant groups",
-  "Mention business handle",
-  "Encourage page visits",
-  "Add call-to-action text",
-  "Repost TikTok video",
-  "Share Instagram Reel",
-  "Upload or repost Facebook Reel",
-  "Repost video",
-  "Use provided hashtags",
-  "Add provided caption",
-  "Tag campaign account",
-  "Use campaign sound",
-  "Use provided sound",
-  "Upload short-form video",
-  "Add required hashtag",
-  "Tag artist page",
-  "Include streaming link",
-  "Stream song from provided link",
-  "Repost creator video",
-  "Tag creator page",
-  "Encourage comments",
-  "Join creator community",
-  "Stay active for required duration",
-  "Share invite link",
-  "Invite relevant users",
-  "Share livestream reminder",
-  "Repost on X/Twitter",
-  "Share YouTube Short",
-  "Join Telegram community",
-  "Join WhatsApp community",
-  "Invite friends",
-  "Download app",
-  "Test onboarding",
-  "Submit feedback",
-  "Create test account",
-  "Complete onboarding flow",
-  "Test specific feature",
-  "Record issues encountered",
-  "Submit screenshots or screen recording",
-  "Explain reproduction steps",
-  "Complete assigned user journey",
-  "Use the product before reviewing",
-  "Rate the product experience",
-  "Submit honest experience-based review",
-  "Suggest improvements",
-  "Report confusing steps",
-  "Upload testimonial video",
-  "Share flyer in groups",
-  "Use provided caption",
-  "Keep post active for 24 hours",
-];
-const interestOptions = ["Music", "Business", "Entertainment", "Tech", "Students", "Fashion", "Gaming", "Lifestyle", "Local Communities"];
-const platformOptions = ["WhatsApp Status", "Facebook Story", "Instagram Story", "Facebook Groups", "Telegram Channels", "TikTok", "Instagram Reels", "Facebook Reels", "X/Twitter repost", "Facebook repost", "Instagram story share", "Telegram Groups", "X/Twitter", "YouTube Shorts"];
-const levelOptions = ["All Contributors", "Verified Contributors", "Premium Promoters", "Community Influencers"];
-const stateOptions = ["Lagos", "Abuja (FCT)", "Kano", "Rivers", "Oyo", "Kaduna", "Anambra", "Delta", "Edo", "Ogun", "Enugu", "Imo"];
-const cityOptions = ["Lagos Mainland", "Lekki", "Ikeja", "Abuja Central", "Port Harcourt", "Ibadan", "Kano City", "Benin City"];
-const campusOptions = ["University of Lagos", "University of Ibadan", "Covenant University", "Ahmadu Bello University", "University of Nigeria", "Yaba College of Technology"];
-
-const platformMeta: Record<string, PlatformMeta> = {
-  "WhatsApp Status": { icon: "WS", recommendedFor: "Flyers, announcements", visibility: "High local visibility", audience: "Contacts and nearby communities" },
-  "Facebook Story": { icon: "FS", recommendedFor: "Flyers, launches", visibility: "Strong social visibility", audience: "Friends and page followers" },
-  "Instagram Story": { icon: "IS", recommendedFor: "Flyers, creator content", visibility: "Fast visual exposure", audience: "Lifestyle and social audiences" },
-  "Facebook Groups": { icon: "FG", recommendedFor: "Community notices", visibility: "High group reach", audience: "Interest and local groups" },
-  "Telegram Channels": { icon: "TC", recommendedFor: "Announcements", visibility: "Community broadcast", audience: "Group and channel members" },
-  TikTok: { icon: "TT", recommendedFor: "Videos, viral clips", visibility: "High viral potential", audience: "Short-form viewers" },
-  "Instagram Reels": { icon: "IR", recommendedFor: "Promo videos", visibility: "Strong discovery", audience: "Visual and creator audiences" },
-  "Facebook Reels": { icon: "FR", recommendedFor: "Promo videos", visibility: "Broad video reach", audience: "Facebook video viewers" },
-  "X/Twitter repost": { icon: "XR", recommendedFor: "Posts, announcements", visibility: "Fast public spread", audience: "Public conversation" },
-  "Facebook repost": { icon: "FP", recommendedFor: "Social posts", visibility: "Feed exposure", audience: "Friends and followers" },
-  "Instagram story share": { icon: "SS", recommendedFor: "Social posts", visibility: "Quick visual lift", audience: "Story viewers" },
-  "Telegram Groups": { icon: "TG", recommendedFor: "Groups, communities", visibility: "Focused community reach", audience: "Community members" },
-  "X/Twitter": { icon: "X", recommendedFor: "Links, updates", visibility: "Public feed reach", audience: "Public audiences" },
-  "YouTube Shorts": { icon: "YS", recommendedFor: "Short video", visibility: "Video discovery", audience: "Shorts viewers" },
-  Android: { icon: "AN", recommendedFor: "Android app testing", visibility: "Mobile device access", audience: "Android users" },
-  "iPhone/iOS": { icon: "iOS", recommendedFor: "iOS app testing", visibility: "Apple device access", audience: "iPhone users" },
-  "Desktop Users": { icon: "DT", recommendedFor: "Web product testing", visibility: "Desktop browser access", audience: "Laptop and desktop users" },
-  "Tablet Users": { icon: "TB", recommendedFor: "Tablet layout testing", visibility: "Tablet access", audience: "Tablet users" },
-  "Web Browser": { icon: "WB", recommendedFor: "Website testing", visibility: "Browser access", audience: "Web users" },
-  "App Store": { icon: "AS", recommendedFor: "iOS install flow", visibility: "Store listing access", audience: "iOS testers" },
-  "Play Store": { icon: "PS", recommendedFor: "Android install flow", visibility: "Store listing access", audience: "Android testers" },
-};
-
-const steps = ["Promote", "Goal", "Content", "Mission", "Target", "Budget", "Preview", "Launch"];
 const QLT_PER_NAIRA = 10;
-const CONTRIBUTOR_POOL_SHARE = 0.7;
-const PLATFORM_COMMISSION_SHARE = 0.25;
-const DEFAULT_PLATFORM_RATE_QLT = 500;
-const platformPricing: Record<string, PlatformRate> = {
-  "WhatsApp Status": { qlt: 500, naira: 50 },
-  "WhatsApp Groups": { qlt: 500, naira: 50 },
-  "WhatsApp Communities": { qlt: 500, naira: 50 },
-  "Facebook Story": { qlt: 500, naira: 50 },
-  "Facebook Groups": { qlt: 500, naira: 50 },
-  "Facebook Feed": { qlt: 500, naira: 50 },
-  "Facebook": { qlt: 500, naira: 50 },
-  "Facebook repost": { qlt: 500, naira: 50 },
-  "Facebook Reels": { qlt: 500, naira: 50 },
-  "Instagram Story": { qlt: 700, naira: 70 },
-  "Instagram Feed": { qlt: 700, naira: 70 },
-  "Instagram": { qlt: 700, naira: 70 },
-  "Instagram story share": { qlt: 700, naira: 70 },
-  "Instagram Reels": { qlt: 700, naira: 70 },
-  TikTok: { qlt: 900, naira: 90 },
-  Snapchat: { qlt: 600, naira: 60 },
-  "Telegram Channels": { qlt: 500, naira: 50 },
-  "Telegram Groups": { qlt: 500, naira: 50 },
-  "Telegram Communities": { qlt: 500, naira: 50 },
-  Telegram: { qlt: 500, naira: 50 },
-  "X/Twitter": { qlt: 500, naira: 50 },
-  "X/Twitter repost": { qlt: 500, naira: 50 },
-  "YouTube Shorts": { qlt: 700, naira: 70 },
-  Android: { qlt: 1000, naira: 100 },
-  "iPhone/iOS": { qlt: 1200, naira: 120 },
-  iOS: { qlt: 1200, naira: 120 },
-  "Web App": { qlt: 900, naira: 90 },
-  "Web Browser": { qlt: 900, naira: 90 },
-  "Desktop Users": { qlt: 900, naira: 90 },
-  "Tablet Users": { qlt: 900, naira: 90 },
-  "Play Store": { qlt: 1000, naira: 100 },
-  "App Store": { qlt: 1200, naira: 120 },
-};
+const MIN_REWARD_NAIRA = 30;
+const COMMISSION_RATE = 0.2;
+const VERIFICATION_RATE = 0.1;
 
-const feedbackGoals = [
-  "Product Feedback",
-  "App Testing Feedback",
-  "Website Feedback",
-  "Service Experience Feedback",
-  "Survey & Opinions",
-  "Content Feedback",
-  "Feature Validation",
-  "Market Research",
-  "User Experience Testing",
-  "Event Feedback",
+const missionCategories: MissionCategory[] = [
+  {
+    id: "content",
+    name: "Content Distribution",
+    apiCategory: "Content Distribution",
+    missionType: "engagement",
+    description: "Promote flyers, announcements, videos, and posts through real human distribution.",
+    goals: ["Brand awareness", "Event awareness", "Product promotion", "Creator content promotion", "Local visibility"],
+    contentLabel: "Content or campaign link",
+    contentPlaceholder: "Paste a flyer, post, video, or landing page link",
+    contentTypes: ["Flyer", "Social post", "Announcement", "Promo video", "Offer"],
+    defaultActions: ["Post the campaign content", "Keep it visible for the required duration", "Submit screenshot proof"],
+    defaultAudience: ["Local Promoters", "Students", "Community Influencers", "General Contributors"],
+  },
+  {
+    id: "music",
+    name: "Music Promotion",
+    apiCategory: "Music Promotion",
+    missionType: "engagement",
+    description: "Promote songs, snippets, albums, sounds, and artist visibility.",
+    goals: ["New song awareness", "Streaming awareness", "Snippet promotion", "Music video promotion", "Artist visibility"],
+    contentLabel: "Song, snippet, or streaming link",
+    contentPlaceholder: "Paste Spotify, Audiomack, Boomplay, Apple Music, TikTok, or YouTube link",
+    contentTypes: ["Song link", "Snippet", "Cover art", "Music video", "Sound challenge"],
+    defaultActions: ["Listen or view the music content", "Share the selected music asset", "Submit screenshot and short reaction"],
+    defaultAudience: ["Music Supporters", "Creators", "Students", "Verified Contributors"],
+  },
+  {
+    id: "community",
+    name: "Community Growth",
+    apiCategory: "Community Growth",
+    missionType: "participation",
+    description: "Grow Telegram, WhatsApp, Discord, and online communities with structured participation.",
+    goals: ["New community launch", "Increase members", "Targeted member acquisition", "Retention campaign"],
+    contentLabel: "Community invite link",
+    contentPlaceholder: "Paste WhatsApp, Telegram, Discord, or Facebook Group link",
+    contentTypes: ["WhatsApp community", "Telegram group", "Discord server", "Facebook group"],
+    defaultActions: ["Join the community", "Read the community rules", "Submit join proof"],
+    defaultAudience: ["Community Builders", "Verified Contributors", "Local Promoters", "Students"],
+  },
+  {
+    id: "apps",
+    name: "App Testing & Reviews",
+    apiCategory: "App Testing",
+    missionType: "participation",
+    description: "Run app installs, onboarding tests, bug discovery, feature testing, and review missions.",
+    goals: ["Install and open test", "Signup/onboarding test", "Bug discovery", "Feature testing", "App review"],
+    contentLabel: "App or test link",
+    contentPlaceholder: "Paste Play Store, App Store, web app, APK, or test instructions link",
+    contentTypes: ["Android app", "iOS app", "Web app", "APK test", "Feature prototype"],
+    defaultActions: ["Open or install the app", "Complete the test steps", "Submit feedback and proof"],
+    defaultAudience: ["Tech Testers", "Verified Contributors", "Beta Test Participants", "Premium Contributors"],
+  },
+  {
+    id: "feedback",
+    name: "Surveys & Feedback",
+    apiCategory: "Feedback Campaign",
+    missionType: "participation",
+    description: "Collect product feedback, opinions, content feedback, market research, and validation insights.",
+    goals: ["Product feedback", "Content feedback", "Survey and opinions", "Feature validation", "Market research"],
+    contentLabel: "Product, content, survey, or context link",
+    contentPlaceholder: "Paste product, website, article, video, form, or research context link",
+    contentTypes: ["Short survey", "Product feedback", "Content feedback", "Feature validation", "Detailed review"],
+    defaultActions: ["Review the campaign context", "Answer the feedback questions", "Submit honest feedback"],
+    defaultAudience: ["Verified Contributors", "Experienced Reviewers", "Students", "General Contributors"],
+  },
 ];
 
-const defaultFeedbackObjectives = ["First impression", "Ease of use", "Improvement suggestions"];
-const feedbackGoalConfigs: Record<string, FeedbackGoalConfig> = {
-  "Product Feedback": {
-    assetHeading: "Product Information",
-    nameLabel: "Product name",
-    descriptionLabel: "Product description",
-    linkLabel: "Product link",
-    linkPlaceholder: "Paste store, product page, catalog, or demo link",
-    objectives: ["First impression", "Product quality", "Ease of use", "Pricing perception", "Improvement suggestions", "Purchase interest"],
-    contributorTypes: ["General audience", "Existing customers", "Tech users", "Students", "Local users"],
-    responseTypes: ["Rating only", "Short text", "Detailed review", "Multiple choice", "Mixed"],
-    defaultQuestions: ["What is your first impression?", "How clear is the product value?", "What would make you more likely to buy?"],
-  },
-  "App Testing Feedback": {
-    assetHeading: "App Information",
-    nameLabel: "App name",
-    descriptionLabel: "App description",
-    linkLabel: "App link",
-    linkPlaceholder: "Paste Play Store, App Store, APK, TestFlight, or web app link",
-    objectives: ["Installation experience", "Signup process", "Navigation", "Performance", "Bugs", "UI experience", "Feature usability"],
-    contributorTypes: ["Tech users", "Existing customers", "Students", "Beta testers", "General audience"],
-    responseTypes: ["Detailed review", "Rating only", "Short text", "Mixed"],
-    platforms: ["Android", "iOS", "Web App"],
-    testAreas: ["Installation experience", "Signup process", "Navigation", "Performance", "Bugs", "UI experience", "Feature usability"],
-    requiredActions: ["Install app", "Create account", "Use for 10 minutes", "Complete onboarding"],
-    durations: ["5 mins", "10 mins", "20 mins", "Custom"],
-    defaultQuestions: ["Was installation smooth?", "Where did you feel friction?", "Which bugs or confusing moments did you notice?"],
-  },
-  "Website Feedback": {
-    assetHeading: "Website Information",
-    nameLabel: "Website or page name",
-    descriptionLabel: "What should contributors review?",
-    linkLabel: "Website link",
-    linkPlaceholder: "Paste the website, landing page, or product page URL",
-    objectives: ["First impression", "Navigation", "Page clarity", "Trust signals", "Conversion interest", "Improvement suggestions"],
-    contributorTypes: ["General audience", "Tech users", "Existing customers", "Local users"],
-    responseTypes: ["Short text", "Detailed review", "Rating only", "Mixed"],
-    defaultQuestions: ["What is the page about?", "What feels confusing?", "What would make you take action?"],
-  },
-  "Service Experience Feedback": {
-    assetHeading: "Service Information",
-    nameLabel: "Service name",
-    descriptionLabel: "Service description",
-    linkLabel: "Booking or contact link",
-    linkPlaceholder: "Paste booking, WhatsApp, Instagram, or service page link",
-    objectives: ["Service clarity", "Pricing perception", "Trust level", "Customer support expectations", "Improvement suggestions"],
-    contributorTypes: ["General audience", "Existing customers", "Local users", "Students"],
-    responseTypes: ["Short text", "Detailed review", "Rating only", "Mixed"],
-    defaultQuestions: ["Is the service easy to understand?", "Would you contact this business?", "What would improve the service offer?"],
-  },
-  "Survey & Opinions": {
-    assetHeading: "Survey Setup",
-    nameLabel: "Survey title",
-    descriptionLabel: "Survey context",
-    linkLabel: "Optional survey link",
-    linkPlaceholder: "Paste an existing form link if you have one",
-    objectives: ["Opinion collection", "Preference ranking", "Market insight", "Customer sentiment", "Decision support"],
-    contributorTypes: ["General audience", "Students", "Existing customers", "Local users"],
-    responseTypes: ["Multiple choice", "Open questions", "Rating system", "Mixed"],
-    surveyMethods: ["Multiple choice", "Open questions", "Rating system", "Mixed"],
-    defaultQuestions: ["What option do you prefer?", "Why did you choose that option?", "How strongly do you feel about it?"],
-  },
-  "Content Feedback": {
-    assetHeading: "Content Upload",
-    nameLabel: "Content title",
-    descriptionLabel: "Content context",
-    linkLabel: "Content link",
-    linkPlaceholder: "Paste video, post, article, audio, or campaign content link",
-    objectives: ["Clarity", "Design quality", "Interest level", "Emotional reaction", "Share likelihood", "Improvement suggestions"],
-    contributorTypes: ["General audience", "Students", "Content viewers", "Local users"],
-    responseTypes: ["Short text", "Detailed review", "Rating only", "Mixed"],
-    contentFormats: ["Video", "Flyer", "Post", "Article", "Audio"],
-    defaultQuestions: ["What message did you take from this content?", "How interesting is it?", "What would improve it?"],
-  },
-  "Feature Validation": {
-    assetHeading: "Feature Information",
-    nameLabel: "Feature name",
-    descriptionLabel: "Feature description",
-    linkLabel: "Feature link",
-    linkPlaceholder: "Paste prototype, product, screenshot, or demo link",
-    objectives: ["Usefulness", "Adoption likelihood", "Ease of use", "Missing expectations", "Improvement suggestions"],
-    contributorTypes: ["Tech users", "Existing customers", "Beta testers", "General audience"],
-    responseTypes: ["Short text", "Detailed review", "Rating only", "Mixed"],
-    defaultQuestions: ["Would you use this feature?", "How useful is it?", "What would improve it?"],
-  },
-  "Market Research": {
-    assetHeading: "Research Topic",
-    nameLabel: "Research topic",
-    descriptionLabel: "What decision are you researching?",
-    linkLabel: "Reference link",
-    linkPlaceholder: "Paste product, competitor, concept, or optional reference link",
-    objectives: ["Preference discovery", "Pricing perception", "Audience needs", "Competitor comparison", "Purchase interest"],
-    contributorTypes: ["General audience", "Students", "Local users", "Existing customers"],
-    responseTypes: ["Multiple choice", "Open questions", "Rating system", "Mixed"],
-    defaultQuestions: ["What matters most to you in this category?", "Which option would you choose?", "What price feels reasonable?"],
-  },
-  "User Experience Testing": {
-    assetHeading: "Experience Test",
-    nameLabel: "Product or flow name",
-    descriptionLabel: "User journey to test",
-    linkLabel: "Product or prototype link",
-    linkPlaceholder: "Paste website, app, prototype, or flow link",
-    objectives: ["Navigation", "Task completion", "Confusing steps", "UI experience", "Improvement suggestions"],
-    contributorTypes: ["Tech users", "Existing customers", "Beta testers", "General audience"],
-    responseTypes: ["Detailed review", "Short text", "Rating only", "Mixed"],
-    requiredActions: ["Open mission", "Access product", "Complete assigned user journey", "Submit feedback"],
-    durations: ["5 mins", "10 mins", "20 mins", "Custom"],
-    defaultQuestions: ["Could you complete the task?", "Where did you slow down?", "What should be clearer?"],
-  },
-  "Event Feedback": {
-    assetHeading: "Event Information",
-    nameLabel: "Event name",
-    descriptionLabel: "Event description",
-    linkLabel: "Event link",
-    linkPlaceholder: "Paste event page, registration, flyer, or recap link",
-    objectives: ["Event clarity", "Interest level", "Experience rating", "Attendance likelihood", "Improvement suggestions"],
-    contributorTypes: ["General audience", "Students", "Local users", "Existing attendees"],
-    responseTypes: ["Short text", "Detailed review", "Rating only", "Mixed"],
-    defaultQuestions: ["Would you attend or recommend this event?", "What is unclear?", "What would improve the experience?"],
-  },
-};
-
-const campaignBundles: CampaignBundle[] = [
-  {
-    id: "content-flyer-status",
-    name: "Flyer Story & Status Distribution",
-    shortName: "Flyer Status Push",
-    description: "Distribute flyers through WhatsApp Status, Facebook Story, Instagram Story, and nearby social circles.",
-    bestFor: ["Business awareness", "Events", "Church programs", "Product promos"],
-    contentTypes: ["Flyer Promotion", "Announcement Campaign"],
-    platforms: ["WhatsApp Status", "Facebook Story", "Instagram Story"],
-    actions: ["Post flyer to WhatsApp status", "Post to Facebook story", "Post to Instagram story", "Use provided caption", "Keep post active for 24 hours"],
-    verification: ["Screenshot proof", "Timestamp check", "24 hour duration"],
-    accent: "#F5A623",
-    icon: "/icon-human-distribution.svg",
-  },
-  {
-    id: "content-video-distribution",
-    name: "Video Distribution Bundle",
-    shortName: "Video Distribution",
-    description: "Push promo videos and awareness clips through short-form video platforms and status channels.",
-    bestFor: ["Promo videos", "Short-form content", "Creator clips", "Awareness campaigns"],
-    contentTypes: ["Video Distribution"],
-    platforms: ["TikTok", "Instagram Reels", "Facebook Reels", "WhatsApp Status"],
-    actions: ["Repost video", "Use provided hashtags", "Add provided caption", "Tag campaign account"],
-    verification: ["Repost link", "Caption check", "Hashtag check", "Visibility check"],
-    accent: "#F5A623",
-    icon: "/icon-content.svg",
-  },
-  {
-    id: "content-social-post",
-    name: "Social Post Distribution Bundle",
-    shortName: "Social Post Push",
-    description: "Amplify existing posts through reposts, story shares, and public social distribution.",
-    bestFor: ["Engagement campaigns", "Creator posts", "Public announcements"],
-    contentTypes: ["Social Media Post"],
-    platforms: ["X/Twitter repost", "Facebook repost", "Instagram story share"],
-    actions: ["Repost social media post", "Use provided caption", "Tag campaign account", "Encourage comments"],
-    verification: ["Repost link", "Story screenshot", "Caption check"],
-    accent: "#F5A623",
-    icon: "/icon-social-media.svg",
-  },
-  {
-    id: "content-community-announcement",
-    name: "Community Announcement Distribution",
-    shortName: "Community Notice",
-    description: "Spread announcements, launches, updates, and notices through relevant community spaces.",
-    bestFor: ["Launches", "Updates", "Public awareness", "Community notices"],
-    contentTypes: ["Announcement Campaign", "Multi-Content Campaign"],
-    platforms: ["Facebook Groups", "Telegram Channels", "WhatsApp Status"],
-    actions: ["Share announcement banner", "Use provided caption", "Share to WhatsApp groups", "Share in relevant groups"],
-    verification: ["Group screenshot", "Timestamp check", "Community relevance"],
-    accent: "#F5A623",
-    icon: "/icon-community.svg",
-  },
-  {
-    id: "content-traffic-push",
-    name: "Link Traffic Distribution Bundle",
-    shortName: "Traffic Distribution",
-    description: "Distribute content while guiding audiences toward a website, profile, landing page, or streaming platform.",
-    bestFor: ["Website traffic", "Profile visits", "Landing pages", "Streaming platforms"],
-    contentTypes: ["Flyer Promotion", "Social Media Post", "Multi-Content Campaign"],
-    platforms: ["WhatsApp Status", "X/Twitter", "Facebook Groups", "Instagram Story"],
-    actions: ["Share product/store link", "Use provided caption", "Encourage page visits", "Add call-to-action text"],
-    verification: ["Shared link proof", "Screenshot proof", "CTA check"],
-    accent: "#F5A623",
-    icon: "/icon-target.svg",
-  },
-  {
-    id: "music-story-status",
-    name: "Story & Status Music Push",
-    shortName: "Music Status Push",
-    description: "Push cover art, snippets, and artist announcements through temporary story/status channels.",
-    bestFor: ["Song awareness", "Local buzz", "Artist visibility", "Quick distribution"],
-    contentTypes: ["Song Release", "Artist Awareness Campaign", "Album / EP Launch"],
-    platforms: ["WhatsApp Status", "Facebook Story", "Instagram Story"],
-    actions: ["Post song artwork to WhatsApp status", "Post to Facebook story", "Post to Instagram story", "Use provided caption", "Include streaming link", "Keep post active for 24 hours"],
-    verification: ["Screenshot proof", "Timestamp check", "24 hour duration"],
-    accent: "#F5A623",
-    icon: "/icon-music.svg",
-  },
-  {
-    id: "music-short-video",
-    name: "Short-Form Video Boost",
-    shortName: "Video Boost",
-    description: "Drive viral momentum for sounds, snippets, teasers, and music-video clips.",
-    bestFor: ["Viral momentum", "Trend creation", "Sound promotion", "Teaser campaigns"],
-    contentTypes: ["Song Snippet / Teaser", "TikTok Sound Campaign", "Music Video"],
-    platforms: ["TikTok", "Instagram Reels", "Facebook Reels"],
-    actions: ["Use provided sound", "Upload short-form video", "Add required hashtag", "Tag artist page", "Use provided caption"],
-    verification: ["Video link", "Caption check", "Hashtag check", "Sound usage check"],
-    accent: "#F5A623",
-    icon: "/icon-fire.svg",
-  },
-  {
-    id: "music-streaming",
-    name: "Streaming Awareness Bundle",
-    shortName: "Streaming Push",
-    description: "Route contributors toward streaming links and release discovery.",
-    bestFor: ["Increasing streams", "Listener traffic", "Release promotion"],
-    contentTypes: ["Song Release", "Streaming Campaign", "Album / EP Launch"],
-    platforms: ["Audiomack", "Spotify", "Boomplay", "Apple Music"],
-    actions: ["Stream song from provided link", "Include streaming link", "Use provided caption", "Share flyer in groups"],
-    verification: ["Streaming screenshot", "Link proof", "Platform check"],
-    accent: "#F5A623",
-    icon: "/icon-content.svg",
-  },
-  {
-    id: "music-fan-engagement",
-    name: "Fan Engagement Bundle",
-    shortName: "Fan Activation",
-    description: "Activate music communities, artist mentions, and fanbase interaction.",
-    bestFor: ["Artist fanbase growth", "Community interaction", "Fan activation"],
-    contentTypes: ["Artist Awareness Campaign", "Album / EP Launch"],
-    platforms: ["Telegram Groups", "WhatsApp Communities", "Instagram", "TikTok"],
-    actions: ["Join Telegram community", "Join WhatsApp community", "Tag artist page", "Submit feedback", "Share in relevant groups"],
-    verification: ["Membership validation", "Interaction proof", "Screenshot proof"],
-    accent: "#F5A623",
-    icon: "/icon-community.svg",
-  },
-  {
-    id: "creator-story-status",
-    name: "Story & Status Creator Push",
-    shortName: "Creator Status Push",
-    description: "Quick visibility for creator posts, livestream flyers, and personal brand announcements.",
-    bestFor: ["Creator visibility", "Livestream awareness", "Quick content exposure"],
-    contentTypes: ["Content Awareness Campaign", "Livestream Promotion", "Personal Brand Awareness"],
-    platforms: ["WhatsApp Status", "Instagram Story", "Facebook Story"],
-    actions: ["Post to Instagram story", "Post to Facebook story", "Post flyer to WhatsApp status", "Use provided caption", "Tag creator page"],
-    verification: ["Screenshot proof", "Timestamp check", "Story visibility"],
-    accent: "#F5A623",
-    icon: "/icon-creator.svg",
-  },
-  {
-    id: "creator-short-form",
-    name: "Short-Form Visibility Boost",
-    shortName: "Short-Form Boost",
-    description: "Amplify Reels, TikToks, clips, and creator videos for algorithm momentum.",
-    bestFor: ["Viral content", "Creator clips", "Algorithm momentum"],
-    contentTypes: ["Short-Form Video Promotion"],
-    platforms: ["TikTok", "Instagram Reels", "Facebook Reels"],
-    actions: ["Repost creator video", "Use provided caption", "Add required hashtag", "Tag creator page", "Encourage comments"],
-    verification: ["Repost link", "Caption check", "Hashtag check", "Visibility check"],
-    accent: "#F5A623",
-    icon: "/icon-fire.svg",
-  },
-  {
-    id: "creator-community",
-    name: "Community Growth Bundle",
-    shortName: "Community Growth",
-    description: "Grow fan spaces, broadcast groups, and creator communities with retention checks.",
-    bestFor: ["Fanbase growth", "Audience retention", "Creator community building"],
-    contentTypes: ["Community Growth Campaign"],
-    platforms: ["Telegram", "WhatsApp Communities", "Discord"],
-    actions: ["Join creator community", "Stay active for required duration", "Share invite link", "Invite relevant users"],
-    verification: ["Membership validation", "Retention duration", "Participation check"],
-    accent: "#F5A623",
-    icon: "/icon-community.svg",
-  },
-  {
-    id: "creator-engagement",
-    name: "Creator Engagement Boost",
-    shortName: "Engagement Boost",
-    description: "Support content visibility through real reactions, comments, reposts, and social discovery.",
-    bestFor: ["Engagement activity", "Comment momentum", "Content visibility"],
-    contentTypes: ["Content Awareness Campaign", "Personal Brand Awareness", "Podcast / Long-Form Content Promotion"],
-    platforms: ["TikTok", "Instagram", "X/Twitter", "Facebook"],
-    actions: ["Use provided caption", "Tag creator page", "Encourage comments", "Repost on X/Twitter"],
-    verification: ["Engagement screenshot", "Comment proof", "Repost link"],
-    accent: "#F5A623",
-    icon: "/icon-social-media.svg",
-  },
-  {
-    id: "creator-livestream",
-    name: "Livestream Awareness Bundle",
-    shortName: "Livestream Push",
-    description: "Drive reminders and attendance for live sessions across story and community channels.",
-    bestFor: ["Live session awareness", "Viewer reminders", "Stream attendance"],
-    contentTypes: ["Livestream Promotion"],
-    platforms: ["WhatsApp Status", "Telegram Groups", "Instagram Story", "Facebook Story"],
-    actions: ["Share livestream reminder", "Use provided caption", "Post to Instagram story", "Post to Facebook story", "Join Telegram community"],
-    verification: ["Reminder screenshot", "Timestamp check", "Community proof"],
-    accent: "#F5A623",
-    icon: "/icon-events.svg",
-  },
-  {
-    id: "business-story-status",
-    name: "Story & Status Awareness Bundle",
-    shortName: "Awareness Push",
-    description: "Simple local visibility through WhatsApp Status, Facebook Story, and Instagram Story.",
-    bestFor: ["Local awareness", "Promo visibility", "Event awareness", "Product promotion"],
-    contentTypes: ["Product Promotion", "Service Awareness", "Offer / Discount Campaign", "Event Awareness"],
-    platforms: ["WhatsApp Status", "Facebook Story", "Instagram Story"],
-    actions: ["Post product flyer to WhatsApp status", "Post to Facebook story", "Post to Instagram story", "Use provided caption", "Keep post active for 24 hours"],
-    verification: ["Screenshot proof", "Timestamp check", "24 hour duration"],
-    accent: "#F5A623",
-    icon: "/icon-local-business.svg",
-  },
-  {
-    id: "business-social-feed",
-    name: "Social Feed Distribution Bundle",
-    shortName: "Feed Distribution",
-    description: "Longer-lasting exposure for product posts, announcements, and business updates.",
-    bestFor: ["Product visibility", "Announcements", "Long-term exposure"],
-    contentTypes: ["Product Promotion", "Store / Brand Awareness", "Multi-Promotion Campaign"],
-    platforms: ["Facebook Feed", "X/Twitter", "Instagram Feed"],
-    actions: ["Use provided caption", "Mention business handle", "Share product/store link", "Repost on X/Twitter"],
-    verification: ["Post link", "Caption check", "Screenshot proof"],
-    accent: "#F5A623",
-    icon: "/icon-social-media.svg",
-  },
-  {
-    id: "business-short-form",
-    name: "Short-Form Business Visibility Bundle",
-    shortName: "Business Reels",
-    description: "Showcase promos, restaurants, fashion, products, and visual offers through short video.",
-    bestFor: ["Promo videos", "Restaurant visuals", "Fashion showcases", "Lifestyle branding"],
-    contentTypes: ["Product Promotion", "Offer / Discount Campaign", "Store / Brand Awareness"],
-    platforms: ["TikTok", "Instagram Reels", "Facebook Reels"],
-    actions: ["Repost TikTok video", "Share Instagram Reel", "Upload or repost Facebook Reel", "Use provided caption"],
-    verification: ["Repost link", "Caption check", "Visibility check"],
-    accent: "#F5A623",
-    icon: "/icon-content.svg",
-  },
-  {
-    id: "business-community",
-    name: "Community Distribution Bundle",
-    shortName: "Community Blast",
-    description: "Distribute offers and awareness in relevant local groups and communities.",
-    bestFor: ["Local community reach", "Neighborhood awareness", "Event promotion"],
-    contentTypes: ["Event Awareness", "Offer / Discount Campaign", "Service Awareness"],
-    platforms: ["WhatsApp Groups", "Telegram Communities", "Facebook Groups"],
-    actions: ["Share in relevant groups", "Use provided caption", "Mention business handle", "Share product/store link"],
-    verification: ["Group screenshot", "Timestamp check", "Community relevance"],
-    accent: "#F5A623",
-    icon: "/icon-community.svg",
-  },
-  {
-    id: "business-traffic",
-    name: "Traffic Push Bundle",
-    shortName: "Traffic Push",
-    description: "Send attention toward websites, online stores, booking pages, and catalog links.",
-    bestFor: ["Website visits", "Ecommerce traffic", "Booking pages", "Landing pages"],
-    contentTypes: ["Website / Online Store Traffic", "Product Promotion"],
-    platforms: ["Facebook", "X/Twitter", "WhatsApp Status", "Instagram Bio Traffic"],
-    actions: ["Share product/store link", "Use provided caption", "Encourage page visits", "Add call-to-action text"],
-    verification: ["Shared link proof", "Caption check", "Screenshot proof"],
-    accent: "#F5A623",
-    icon: "/icon-target.svg",
-  },
-  {
-    id: "apps-quick-onboarding",
-    name: "Quick Onboarding Test Bundle",
-    shortName: "Quick Onboarding Test",
-    description: "Guide real users through install, account creation, onboarding, and first-impression feedback.",
-    bestFor: ["Signup testing", "First-time user experience", "Onboarding validation"],
-    contentTypes: ["App Download & Onboarding", "Multi-Step Testing Campaign"],
-    platforms: ["Android", "iPhone/iOS", "Play Store", "App Store"],
-    actions: ["Download app", "Create test account", "Complete onboarding flow", "Submit feedback", "Report confusing steps"],
-    verification: ["Install screenshot", "Account/onboarding proof", "Structured feedback"],
-    accent: "#14b8a6",
-    icon: "/icon-app-testing.svg",
-  },
-  {
-    id: "apps-user-feedback",
-    name: "User Feedback Bundle",
-    shortName: "User Feedback",
-    description: "Collect structured product opinions, experience ratings, and improvement suggestions.",
-    bestFor: ["Customer opinions", "Experience reviews", "Usability feedback", "Market validation"],
-    contentTypes: ["User Feedback Campaign", "Website Testing"],
-    platforms: ["Android", "iPhone/iOS", "Desktop Users", "Web Browser"],
-    actions: ["Complete assigned user journey", "Submit feedback", "Rate the product experience", "Suggest improvements"],
-    verification: ["Feedback response", "Experience rating", "Usage proof"],
-    accent: "#14b8a6",
-    icon: "/icon-survey.svg",
-  },
-  {
-    id: "apps-feature-validation",
-    name: "Feature Validation Bundle",
-    shortName: "Feature Validation",
-    description: "Send testers through a guided feature flow with issue notes and proof of interaction.",
-    bestFor: ["New feature releases", "Payment systems", "Workflow testing", "Functionality checks"],
-    contentTypes: ["Feature Testing", "Website Testing"],
-    platforms: ["Android", "iPhone/iOS", "Desktop Users", "Web Browser"],
-    actions: ["Test specific feature", "Complete assigned user journey", "Record issues encountered", "Submit screenshots or screen recording"],
-    verification: ["Feature interaction proof", "Issue notes", "Screenshot/video proof"],
-    accent: "#14b8a6",
-    icon: "/icon-target.svg",
-  },
-  {
-    id: "apps-review-trust",
-    name: "Review & Trust Bundle",
-    shortName: "Review & Trust",
-    description: "Gather honest experience-based reviews and testimonials after real product usage.",
-    bestFor: ["Authentic user reviews", "Trust-building campaigns", "Experience ratings"],
-    contentTypes: ["Review & Rating Campaign", "User Feedback Campaign"],
-    platforms: ["Play Store", "App Store", "Web Browser", "Android", "iPhone/iOS"],
-    actions: ["Use the product before reviewing", "Rate the product experience", "Submit honest experience-based review", "Submit feedback"],
-    verification: ["Experience proof", "Review screenshot or link", "Feedback quality check"],
-    accent: "#14b8a6",
-    icon: "/icon-verified.svg",
-  },
-  {
-    id: "apps-deep-testing",
-    name: "Deep Testing Bundle",
-    shortName: "Deep Testing",
-    description: "Run a multi-step user journey test with detailed reporting and bug reproduction notes.",
-    bestFor: ["Advanced testing", "Bug hunting", "Complete user journey analysis", "Beta testing"],
-    contentTypes: ["Bug Reporting Campaign", "Multi-Step Testing Campaign", "Feature Testing"],
-    platforms: ["Android", "iPhone/iOS", "Desktop Users", "Tablet Users", "Web Browser"],
-    actions: ["Complete assigned user journey", "Test specific feature", "Record issues encountered", "Explain reproduction steps", "Submit screenshots or screen recording"],
-    verification: ["Detailed report", "Reproduction steps", "Screenshot/video proof"],
-    accent: "#14b8a6",
-    icon: "/icon-analytics.svg",
-  },
+const bundles: CampaignBundle[] = [
   {
     id: "story-status",
-    name: "Story & Status Distribution Bundle",
-    shortName: "Story & Status",
-    description: "Temporary awareness posts across WhatsApp Status, Facebook Story, and Instagram Story.",
-    bestFor: ["Flyer", "Product image", "Event announcement"],
-    contentTypes: ["Flyer", "Product image"],
+    name: "Story & Status Awareness",
+    description: "WhatsApp Status, Facebook Story, and Instagram Story visibility.",
+    bestFor: "flyers, event visibility, local awareness, creator awareness",
     platforms: ["WhatsApp Status", "Facebook Story", "Instagram Story"],
-    actions: ["Post flyer to WhatsApp status", "Post to Facebook story", "Post to Instagram story", "Use provided caption", "Keep post active for 24 hours"],
-    verification: ["Screenshot proof", "Timestamp check", "24 hour duration"],
-    accent: "#F5A623",
-    icon: "/icon-human-distribution.svg",
+    actionHint: ["Post to story/status", "Keep visible for 24 hours", "Submit screenshot proof"],
   },
   {
-    id: "video-distribution",
-    name: "Short-Form Video Distribution Bundle",
-    shortName: "Video Boost",
-    description: "Push short videos through TikTok, Instagram Reels, Facebook Reels, and Shorts-style channels.",
-    bestFor: ["Short video", "Music teaser", "Creator clip"],
-    contentTypes: ["Video"],
-    platforms: ["TikTok", "Instagram Reels", "Facebook Reels", "YouTube Shorts"],
-    actions: ["Repost TikTok video", "Share Instagram Reel", "Upload or repost Facebook Reel", "Share YouTube Short", "Use provided caption"],
-    verification: ["Repost link", "Caption check", "Hashtag check", "Visibility check"],
-    accent: "#F5A623",
-    icon: "/icon-content.svg",
+    id: "short-video",
+    name: "Short-Form Video Boost",
+    description: "TikTok, Instagram Reels, and Facebook Reels participation.",
+    bestFor: "viral momentum, music campaigns, creator growth, promo videos",
+    platforms: ["TikTok", "Instagram Reels", "Facebook Reels"],
+    actionHint: ["Watch or repost video", "Use required caption or sound", "Submit link or screenshot proof"],
   },
   {
-    id: "community-growth",
-    name: "Community Growth Bundle",
-    shortName: "Community Growth",
-    description: "Route contributors into brand communities with proof and retention checks.",
-    bestFor: ["Telegram", "WhatsApp communities", "Groups"],
-    contentTypes: ["Link"],
-    platforms: ["Telegram Groups", "WhatsApp Status"],
-    actions: ["Join Telegram community", "Join WhatsApp community", "Invite friends", "Submit feedback"],
-    verification: ["Membership validation", "Retention duration", "Participation check"],
-    accent: "#F5A623",
-    icon: "/icon-community.svg",
+    id: "community-distribution",
+    name: "Community Distribution",
+    description: "WhatsApp Groups, Telegram Communities, and Facebook Groups.",
+    bestFor: "local visibility, event promotion, community awareness",
+    platforms: ["WhatsApp Groups", "Telegram Communities", "Facebook Groups"],
+    actionHint: ["Share to relevant community", "Respect group rules", "Submit screenshot proof"],
   },
   {
-    id: "guided-engagement",
-    name: "Guided Engagement Bundle",
-    shortName: "Engagement",
-    description: "A flexible campaign pack for links, feedback, app tests, reviews, and broad participation.",
-    bestFor: ["App tests", "Surveys", "Feedback", "Links"],
-    contentTypes: ["Audio", "Link"],
-    platforms: ["X/Twitter", "Telegram Groups", "YouTube Shorts"],
-    actions: ["Submit feedback", "Use provided caption", "Repost on X/Twitter"],
-    verification: ["Text proof", "Screenshot proof", "Manual review"],
-    accent: "#F5A623",
-    icon: "/icon-target.svg",
+    id: "streaming-awareness",
+    name: "Streaming Awareness",
+    description: "Spotify, Audiomack, Boomplay, and Apple Music discovery.",
+    bestFor: "music promotion, streaming awareness, artist visibility",
+    platforms: ["Spotify", "Audiomack", "Boomplay", "Apple Music"],
+    actionHint: ["Open streaming link", "Listen for the required time", "Submit screenshot and reaction"],
+  },
+  {
+    id: "user-feedback",
+    name: "User Feedback",
+    description: "Structured feedback, opinions, testing notes, and review responses.",
+    bestFor: "product testing, customer feedback, audience insights",
+    platforms: ["Feedback Form", "Website", "Product Page"],
+    actionHint: ["Review the context", "Answer feedback questions", "Submit response"],
+  },
+  {
+    id: "app-growth",
+    name: "App Growth",
+    description: "App installs, onboarding, review, and product validation missions.",
+    bestFor: "app installs, onboarding campaigns, startup growth",
+    platforms: ["Android", "iOS", "Web App"],
+    actionHint: ["Install or open app", "Complete onboarding/test steps", "Submit proof and feedback"],
+  },
+  {
+    id: "community-expansion",
+    name: "Community Expansion",
+    description: "Grow online communities with join proof and retention rules.",
+    bestFor: "Telegram growth, WhatsApp communities, audience expansion",
+    platforms: ["Telegram", "WhatsApp", "Discord"],
+    actionHint: ["Join the community", "Stay for required duration", "Submit join/final proof"],
   },
 ];
 
-const packages: Package[] = [
-  { id: "starter", name: "Starter Reach", reach: "Up to 100 contributors", description: "A clean test launch for local visibility.", reward: 1200, contributors: 100, duration: "3 days" },
-  { id: "growth", name: "Growth Reach", reach: "Up to 500 contributors", description: "Balanced reach for offers, launches, and communities.", reward: 1500, contributors: 500, duration: "7 days" },
-  { id: "viral", name: "Viral Push", reach: "Large-scale awareness", description: "Higher reward and pacing for broad participation.", reward: 2000, contributors: 1200, duration: "14 days" },
+const reachPackages: ReachPackage[] = [
+  { id: "starter", name: "Starter", contributors: 50, duration: "3 days" },
+  { id: "growth", name: "Growth", contributors: 100, duration: "5 days" },
+  { id: "momentum", name: "Momentum", contributors: 250, duration: "7 days" },
 ];
 
-const musicPackages: Package[] = [
-  { id: "starter-buzz", name: "Starter Buzz", reach: "Up to 120 contributors", description: "Good for upcoming artists and first release push.", reward: 1200, contributors: 120, duration: "3 days" },
-  { id: "growth-push", name: "Growth Push", reach: "Up to 500 contributors", description: "Mid-level awareness for songs, videos, and snippets.", reward: 1600, contributors: 500, duration: "5 days" },
-  { id: "viral-momentum", name: "Viral Momentum", reach: "Up to 1,200 contributors", description: "Trend-focused distribution for sound and teaser campaigns.", reward: 2200, contributors: 1200, duration: "7 days" },
-  { id: "release-week-blast", name: "Release Week Blast", reach: "High-intensity release week", description: "Fast campaign pacing for launch windows and project drops.", reward: 2600, contributors: 1800, duration: "5 days" },
-];
+const steps = ["Category", "Goal", "Content", "Bundle", "Actions", "Reach", "Preview", "Launch"];
 
-const creatorPackages: Package[] = [
-  { id: "starter-visibility", name: "Starter Visibility", reach: "Up to 120 contributors", description: "Good for small creators testing content visibility.", reward: 1200, contributors: 120, duration: "3 days" },
-  { id: "growth-momentum", name: "Growth Momentum", reach: "Up to 550 contributors", description: "Increase creator discovery and engagement quality.", reward: 1600, contributors: 550, duration: "5 days" },
-  { id: "creator-viral-push", name: "Viral Push", reach: "Up to 1,300 contributors", description: "Aggressive visibility for clips and algorithm momentum.", reward: 2200, contributors: 1300, duration: "7 days" },
-  { id: "community-expansion", name: "Community Expansion", reach: "Fanbase growth focus", description: "Built for communities, livestreams, and audience retention.", reward: 1800, contributors: 800, duration: "10 days" },
-];
-
-const businessPackages: Package[] = [
-  { id: "starter-awareness", name: "Starter Awareness", reach: "Up to 100 contributors", description: "Good for small and local businesses.", reward: 1200, contributors: 100, duration: "3 days" },
-  { id: "growth-visibility", name: "Growth Visibility", reach: "Up to 500 contributors", description: "Expand local and online reach.", reward: 1500, contributors: 500, duration: "7 days" },
-  { id: "community-blast", name: "Community Blast", reach: "Up to 1,000 contributors", description: "High-volume local awareness for offers and events.", reward: 1900, contributors: 1000, duration: "7 days" },
-  { id: "premium-visibility", name: "Premium Visibility Push", reach: "Large-scale multi-platform push", description: "Best for broader product, brand, and traffic campaigns.", reward: 2400, contributors: 1600, duration: "14 days" },
-];
-
-const contentPackages: Package[] = [
-  { id: "starter-distribution", name: "Starter Distribution", reach: "Up to 100 contributors", description: "A clean first push for flyers, posts, and announcements.", reward: 1200, contributors: 100, duration: "3 days" },
-  { id: "growth-distribution", name: "Growth Distribution", reach: "Up to 500 contributors", description: "Balanced distribution across selected platforms and interests.", reward: 1500, contributors: 500, duration: "5 days" },
-  { id: "viral-content-push", name: "Viral Push", reach: "High-volume awareness distribution", description: "Built for mass content exposure and repeated visibility.", reward: 2100, contributors: 1200, duration: "7 days" },
-];
-
-const appTestingPackages: Package[] = [
-  { id: "quick-test", name: "Quick Test", reach: "Up to 60 testers", description: "Light onboarding participation with short structured feedback.", reward: 1800, contributors: 60, duration: "3 days" },
-  { id: "feedback-collection", name: "Feedback Collection", reach: "Up to 150 testers", description: "Focused user insight collection for product, website, or app experience.", reward: 2400, contributors: 150, duration: "5 days" },
-  { id: "product-validation", name: "Product Validation", reach: "Up to 300 testers", description: "Structured testing campaign for onboarding, features, and trust signals.", reward: 3200, contributors: 300, duration: "7 days" },
-  { id: "advanced-testing", name: "Advanced Testing", reach: "Deep product participation", description: "High-detail testing with reports, screenshots, reproduction steps, and review quality checks.", reward: 5000, contributors: 120, duration: "10 days" },
-];
-
-const defaultFlow: CategoryFlow = {
-  id: "default",
-  builderIntro: "Launch a guided growth campaign in minutes.",
-  contentHeadline: "What would you like to promote?",
-  contentHelp: "Choose the closest campaign type. Qeixova will use this to guide rewards, proof, and targeting.",
-  contentTypes: defaultContentTypes,
-  goalsHeadline: "What should contributors help you achieve?",
-  goals,
-  uploadRequirements: {
-    Flyer: ["Campaign flyer or banner", "Campaign link", "Suggested caption"],
-    Video: ["Video link or file", "Thumbnail", "Caption", "Hashtags"],
-    Audio: ["Audio file or link", "Cover image", "Caption"],
-    "Product image": ["Product image", "Description", "CTA link"],
-    Link: ["Campaign link", "Short description", "Proof instructions"],
-  },
-  linkLabel: "Campaign link",
-  linkPlaceholder: "https://your-campaign-link.com",
-  captionLabel: "Suggested caption",
-  captionPlaceholder: "Optional caption contributors can use...",
-  bundlesHeadline: "Choose the campaign bundle",
-  targetHeadline: "Choose target contributors",
-  targetHelp: "Start broad, then add location or platform focus where it helps.",
-  interests: interestOptions,
-  levels: levelOptions,
-  packages,
-  launchHeadline: "Your campaign is queued for growth.",
-  launchSummary: "Qeixova will distribute it to relevant contributors based on interests, platform activity, contributor level, and location relevance.",
-  launchCta: "Launch campaign",
-  previewLabel: "Campaign Preview",
-  defaultContentType: "Flyer",
-  defaultGoal: "Increase visibility",
-  defaultTitle: "Business Awareness Campaign",
-  defaultInterests: ["Business", "Local Communities"],
-  defaultLevels: ["All Contributors"],
-  defaultBundleId: "story-status",
-};
-
-const categoryFlows: Record<string, CategoryFlow> = {
-  content: {
-    ...defaultFlow,
-    id: "content",
-    builderIntro: "Promote flyers, announcements, videos, posts, and awareness content through real human distribution.",
-    contentHeadline: "What would you like to distribute?",
-    contentHelp: "Select the content type first so Qeixova can narrow upload requirements, supported platforms, contributor actions, and proof.",
-    contentTypes: ["Flyer Promotion", "Video Distribution", "Social Media Post", "Announcement Campaign", "Multi-Content Campaign"],
-    goalsHeadline: "What do you want this distribution campaign to achieve?",
-    goals: ["Increase Local Awareness", "Expand Online Reach", "Promote A Launch", "Boost Community Visibility", "Increase Content Exposure", "Drive Traffic To A Link", "Support Viral Momentum"],
-    uploadRequirements: {
-      "Flyer Promotion": ["Flyer image", "Optional caption", "Optional website/social link", "Portrait flyer performs best", "Clear headline", "Strong CTA"],
-      "Video Distribution": ["Video file or video link", "Caption", "Hashtags optional", "Supported: TikTok, Instagram, Facebook, WhatsApp"],
-      "Social Media Post": ["Post URL", "Caption", "Platform source"],
-      "Announcement Campaign": ["Banner/flyer", "Announcement text", "Important details", "CTA link optional"],
-      "Multi-Content Campaign": ["Multiple content assets", "Caption set", "Primary CTA link", "Distribution notes"],
-    },
-    linkLabel: "Content, post, or traffic link",
-    linkPlaceholder: "Paste website, profile, landing page, post, streaming, or campaign link",
-    captionLabel: "Distribution caption",
-    captionPlaceholder: "Example: Please share this update, use the caption, and keep it visible...",
-    bundlesHeadline: "Choose distribution platforms",
-    targetHeadline: "Choose target contributors",
-    targetHelp: "Match your distribution to the right interests, contributor quality, and local audience.",
-    interests: ["Entertainment", "Business", "Fashion", "Students", "Lifestyle", "Music", "Technology", "Local Communities"],
-    levels: ["All Contributors", "Verified Contributors", "Premium Promoters", "Community Influencers"],
-    packages: contentPackages,
-    launchHeadline: "Your Content Distribution Campaign Is Ready",
-    launchSummary: "Qeixova will distribute your campaign based on selected platforms, audience interests, contributor quality, and location targeting.",
-    launchCta: "Launch Campaign",
-    previewLabel: "Distribution Campaign Preview",
-    defaultContentType: "Flyer Promotion",
-    defaultGoal: "Increase Local Awareness",
-    defaultTitle: "Content Distribution Campaign",
-    defaultInterests: ["Business", "Local Communities"],
-    defaultLevels: ["All Contributors"],
-    defaultBundleId: "content-flyer-status",
-  },
-  music: {
-    ...defaultFlow,
-    id: "music",
-    builderIntro: "Build release buzz, trend activity, and community-powered music visibility.",
-    contentHeadline: "What music are you pushing?",
-    contentHelp: "Choose the music campaign type so Qeixova can shape the upload fields, contributor actions, bundles, and verification.",
-    contentTypes: ["Song Release", "Music Video", "Song Snippet / Teaser", "Streaming Campaign", "TikTok Sound Campaign", "Artist Awareness Campaign", "Album / EP Launch"],
-    goalsHeadline: "What would you like this music campaign to achieve?",
-    goals: ["Increase Song Awareness", "Push Viral Momentum", "Grow Artist Visibility", "Increase Streams", "Promote A Music Video", "Boost TikTok Usage", "Build Fan Engagement"],
-    uploadRequirements: {
-      "Song Release": ["Song cover art", "Streaming link", "Audio snippet optional", "Artist name", "Song title"],
-      "Music Video": ["Video link", "Thumbnail", "Caption", "Hashtags optional"],
-      "Song Snippet / Teaser": ["Short clip", "Cover art", "Caption", "Hashtags optional"],
-      "Streaming Campaign": ["Streaming link", "Song cover art", "Artist name", "Song title"],
-      "TikTok Sound Campaign": ["TikTok sound link", "Sample video", "Suggested trend caption", "Challenge instructions optional"],
-      "Artist Awareness Campaign": ["Artist photo or flyer", "Artist bio", "Social profile link", "Campaign caption"],
-      "Album / EP Launch": ["Cover art", "Track list", "Streaming links", "Promo flyer", "Artist bio optional"],
-    },
-    linkLabel: "Music or streaming link",
-    linkPlaceholder: "Paste Audiomack, Spotify, Boomplay, TikTok sound, or video link",
-    captionLabel: "Music promo caption",
-    captionPlaceholder: "Example: New sound out now. Stream, share, and tag the artist...",
-    bundlesHeadline: "Recommended music promotion bundle",
-    targetHeadline: "Choose music-focused contributors",
-    targetHelp: "Music campaigns perform better when contributor interests, creator activity, and local buzz match the sound.",
-    interests: ["Music", "Entertainment", "Dance", "Lifestyle", "Campus Communities", "Creators", "Pop Culture"],
-    levels: ["All Contributors", "Verified Music Promoters", "Trend Creators", "Community Influencers"],
-    packages: musicPackages,
-    launchHeadline: "Your music campaign is ready to go live",
-    launchSummary: "Qeixova will distribute your campaign based on music interests, creator activity, platform relevance, trend behavior, and location targeting.",
-    launchCta: "Launch Music Campaign",
-    previewLabel: "Music Promo Preview",
-    defaultContentType: "Song Release",
-    defaultGoal: "Increase Song Awareness",
-    defaultTitle: "Music Release Promotion",
-    defaultInterests: ["Music", "Entertainment", "Campus Communities"],
-    defaultLevels: ["All Contributors"],
-    defaultBundleId: "music-story-status",
-  },
-  creator: {
-    ...defaultFlow,
-    id: "creator",
-    builderIntro: "Grow creator visibility, social momentum, and audience engagement.",
-    contentHeadline: "What creator campaign are you promoting?",
-    contentHelp: "Choose the content type so the flow can adapt platforms, actions, verification, and the right growth bundle.",
-    contentTypes: ["Short-Form Video Promotion", "Content Awareness Campaign", "Creator Page Growth", "Livestream Promotion", "Community Growth Campaign", "Podcast / Long-Form Content Promotion", "Personal Brand Awareness"],
-    goalsHeadline: "What would you like this creator campaign to achieve?",
-    goals: ["Increase Content Reach", "Boost Engagement", "Grow Creator Visibility", "Push Viral Momentum", "Increase Livestream Attendance", "Grow Community Members", "Strengthen Audience Loyalty", "Increase Profile Traffic"],
-    uploadRequirements: {
-      "Short-Form Video Promotion": ["Video link", "Thumbnail", "Caption", "Hashtags optional"],
-      "Content Awareness Campaign": ["Post URL", "Caption", "Creator handle/page link"],
-      "Creator Page Growth": ["Creator profile link", "Creator bio", "Promo caption"],
-      "Livestream Promotion": ["Livestream flyer/banner", "Stream link", "Stream time/date", "Reminder caption"],
-      "Community Growth Campaign": ["Community invite link", "Community description", "Rules/instructions"],
-      "Podcast / Long-Form Content Promotion": ["Video/podcast link", "Thumbnail", "Episode title", "Short description"],
-      "Personal Brand Awareness": ["Creator profile link", "Brand image", "Short creator bio", "Campaign caption"],
-    },
-    linkLabel: "Creator content link",
-    linkPlaceholder: "Paste TikTok, Instagram, YouTube, livestream, podcast, or community link",
-    captionLabel: "Creator campaign caption",
-    captionPlaceholder: "Example: Check out this creator, engage with the post, and follow for more...",
-    bundlesHeadline: "Recommended creator promotion bundle",
-    targetHeadline: "Choose creator-focused contributors",
-    targetHelp: "Target by content relevance, social interests, community influence, and creator activity.",
-    interests: ["Entertainment", "Lifestyle", "Comedy", "Gaming", "Tech", "Education", "Fashion", "Music", "Sports", "Pop Culture"],
-    levels: ["All Contributors", "Verified Creators", "Community Influencers", "Trend Contributors", "Premium Promoters"],
-    packages: creatorPackages,
-    launchHeadline: "Your creator campaign is ready to go live",
-    launchSummary: "Qeixova will distribute your campaign based on creator content relevance, contributor interests, platform activity, visibility potential, and audience targeting.",
-    launchCta: "Launch Creator Campaign",
-    previewLabel: "Creator Growth Preview",
-    defaultContentType: "Short-Form Video Promotion",
-    defaultGoal: "Increase Content Reach",
-    defaultTitle: "Creator Visibility Campaign",
-    defaultInterests: ["Entertainment", "Lifestyle", "Pop Culture"],
-    defaultLevels: ["All Contributors"],
-    defaultBundleId: "creator-short-form",
-  },
-  business: {
-    ...defaultFlow,
-    id: "business",
-    builderIntro: "Launch simple business visibility campaigns without complex ad-manager setup.",
-    contentHeadline: "What business promotion are you running?",
-    contentHelp: "Choose what you want people to discover so Qeixova can recommend the right awareness bundle.",
-    contentTypes: ["Product Promotion", "Service Awareness", "Store / Brand Awareness", "Offer / Discount Campaign", "Event Awareness", "Website / Online Store Traffic", "Multi-Promotion Campaign"],
-    goalsHeadline: "What would you like this campaign to achieve?",
-    goals: ["Increase Local Awareness", "Promote A Product", "Generate Customer Interest", "Drive Store Visits", "Increase Online Traffic", "Promote A Special Offer", "Build Brand Visibility", "Spread Community Awareness"],
-    uploadRequirements: {
-      "Product Promotion": ["Product images", "Product video optional", "Product description", "Pricing optional", "Website/social link"],
-      "Service Awareness": ["Business flyer/banner", "Service description", "Contact information", "Booking link/contact"],
-      "Store / Brand Awareness": ["Brand flyer", "Store photos", "Brand description", "Location details"],
-      "Offer / Discount Campaign": ["Promo flyer", "Offer details", "Expiry date", "CTA link/contact"],
-      "Event Awareness": ["Event flyer", "Event details", "Date/time/location", "CTA link/contact"],
-      "Website / Online Store Traffic": ["Website/store link", "Promo image", "CTA text", "Offer summary"],
-      "Multi-Promotion Campaign": ["Promo flyer", "Product/service list", "Contact link", "CTA text"],
-    },
-    linkLabel: "Website, page, or contact link",
-    linkPlaceholder: "Paste website, Instagram, WhatsApp, booking, catalog, or store link",
-    captionLabel: "Business promo caption",
-    captionPlaceholder: "Example: Discover our new offer. Message us today or visit our store...",
-    bundlesHeadline: "Recommended business awareness bundle",
-    targetHeadline: "Choose business-focused contributors",
-    targetHelp: "Local relevance matters. Select interests, contributor quality, and location signals that match your customers.",
-    interests: ["Fashion", "Food & Restaurants", "Lifestyle", "Tech", "Beauty", "Local Communities", "Students", "Entertainment", "Shopping"],
-    levels: ["All Contributors", "Verified Contributors", "Community Influencers", "Local Promoters", "Premium Contributors"],
-    packages: businessPackages,
-    launchHeadline: "Your business awareness campaign is ready",
-    launchSummary: "Qeixova will distribute your campaign based on audience interests, local relevance, platform activity, contributor quality, and visibility potential.",
-    launchCta: "Launch Campaign",
-    previewLabel: "Business Growth Preview",
-    defaultContentType: "Product Promotion",
-    defaultGoal: "Increase Local Awareness",
-    defaultTitle: "Business Awareness Campaign",
-    defaultInterests: ["Local Communities", "Shopping"],
-    defaultLevels: ["All Contributors"],
-    defaultBundleId: "business-story-status",
-  },
-  surveys: {
-    ...defaultFlow,
-    id: "surveys",
-    builderIntro: "Answer a few smart questions and Qeixova builds a feedback campaign structure around the insight you need.",
-    contentHeadline: "What kind of feedback do you need?",
-    contentHelp: "Choose the feedback goal first. The setup will adapt to only show fields that help collect useful responses.",
-    contentTypes: feedbackGoals,
-    goalsHeadline: "What kind of feedback do you need?",
-    goals: feedbackGoals,
-    uploadRequirements: {
-      "Product Feedback": ["Product name", "Product description", "Images optional", "Product link optional"],
-      "App Testing Feedback": ["App name", "App link", "Platform", "Required actions", "Testing duration"],
-      "Website Feedback": ["Website link", "Review focus", "Target page or flow"],
-      "Service Experience Feedback": ["Service name", "Service description", "Booking/contact link optional"],
-      "Survey & Opinions": ["Survey method", "Question builder", "Response format"],
-      "Content Feedback": ["Video, flyer, post, article, or audio", "Feedback objectives"],
-      "Feature Validation": ["Feature name", "Description", "Screenshot/video optional", "Validation questions"],
-      "Market Research": ["Research topic", "Audience type", "Opinion questions"],
-      "User Experience Testing": ["Journey to test", "Required actions", "Testing duration"],
-      "Event Feedback": ["Event name", "Event details", "Event link or media optional"],
-    },
-    linkLabel: "Feedback target link",
-    linkPlaceholder: "Paste the product, app, website, content, event, or survey link",
-    captionLabel: "Participant brief",
-    captionPlaceholder: "Explain what contributors should review and what kind of feedback matters.",
-    bundlesHeadline: "Recommended feedback structure",
-    targetHeadline: "Target feedback contributors",
-    targetHelp: "Match the feedback goal to the people most likely to give useful responses.",
-    interests: ["Technology", "Business", "Students", "Lifestyle", "Local Communities", "Shopping", "Entertainment", "Startups", "Education"],
-    levels: ["General audience", "Existing customers", "Tech users", "Students", "Local users", "Verified Contributors"],
-    packages: appTestingPackages,
-    launchHeadline: "Your feedback campaign is ready",
-    launchSummary: "Qeixova will guide contributors through the right actions, questions, response format, and verification checks for this feedback goal.",
-    launchCta: "Launch Feedback Campaign",
-    previewLabel: "Feedback Experience Preview",
-    defaultContentType: "Product Feedback",
-    defaultGoal: "Product Feedback",
-    defaultTitle: "Product Feedback Campaign",
-    defaultInterests: ["Business", "Shopping", "Local Communities"],
-    defaultLevels: ["General audience"],
-    defaultBundleId: "apps-user-feedback",
-  },
-  apps: {
-    ...defaultFlow,
-    id: "apps",
-    builderIntro: "Run structured product testing campaigns with real users, device-aware targeting, and meaningful feedback.",
-    contentHeadline: "What would you like users to test?",
-    contentHelp: "Choose the testing type first so Qeixova can shape the verification method, tester requirements, proof system, and completion flow.",
-    contentTypes: ["App Download & Onboarding", "Feature Testing", "Website Testing", "User Feedback Campaign", "Review & Rating Campaign", "Bug Reporting Campaign", "Multi-Step Testing Campaign"],
-    goalsHeadline: "What would you like this testing campaign to achieve?",
-    goals: ["Test User Experience", "Identify Bugs & Issues", "Improve Onboarding", "Gather Real Feedback", "Increase Product Adoption", "Improve Product Trust", "Test Feature Performance"],
-    uploadRequirements: {
-      "App Download & Onboarding": ["App Store / Play Store link", "App description", "Signup instructions", "Test account optional", "Key onboarding steps"],
-      "Feature Testing": ["Feature explanation", "Access instructions", "Expected user flow", "Feature screenshots optional"],
-      "Website Testing": ["Website URL", "Testing instructions", "Important pages/features", "Goal of test"],
-      "User Feedback Campaign": ["Product/app link", "Questions for users", "Feedback form optional", "Areas needing review"],
-      "Review & Rating Campaign": ["Product/app link", "Review guidance", "Experience requirements", "Honest feedback policy"],
-      "Bug Reporting Campaign": ["Platform access link", "Testing scope", "Known issues optional", "Reporting guidelines"],
-      "Multi-Step Testing Campaign": ["Full user journey", "Step-by-step test script", "Required screenshots/videos", "Feedback questions"],
-    },
-    linkLabel: "App, website, or product access link",
-    linkPlaceholder: "Paste Play Store, App Store, TestFlight, APK, staging, website, or product link",
-    captionLabel: "Testing brief for contributors",
-    captionPlaceholder: "Explain what testers should do, what feedback matters, and any access credentials or limits.",
-    bundlesHeadline: "Recommended testing bundle",
-    targetHeadline: "Choose target testers",
-    targetHelp: "Testing quality depends on device compatibility, product experience, tester reliability, and the depth of feedback you need.",
-    interests: ["Technology", "Startups", "Mobile Apps", "Gaming", "Ecommerce", "Productivity", "Finance", "Education"],
-    levels: ["All Contributors", "Verified Testers", "Premium Contributors", "Experienced Reviewers", "Beta Test Participants"],
-    packages: appTestingPackages,
-    launchHeadline: "Your testing campaign is ready",
-    launchSummary: "Qeixova will distribute your campaign by testing experience, device compatibility, contributor quality, audience interests, and participation reliability.",
-    launchCta: "Launch Testing Campaign",
-    previewLabel: "Product Testing Preview",
-    defaultContentType: "App Download & Onboarding",
-    defaultGoal: "Improve Onboarding",
-    defaultTitle: "App Onboarding Test Campaign",
-    defaultInterests: ["Technology", "Mobile Apps", "Startups"],
-    defaultLevels: ["Verified Testers"],
-    defaultBundleId: "apps-quick-onboarding",
-  },
-};
-
-function MultiSelectDropdown({ options, selected, onChange, placeholder = "Select options" }: { options: string[]; selected: string[]; onChange: (next: string[]) => void; placeholder?: string }) {
-  const toggle = (option: string) => onChange(selected.includes(option) ? selected.filter((item) => item !== option) : [...selected, option]);
-  const preview = selected.length ? selected.slice(0, 3).join(", ") : placeholder;
-
-  return (
-    <details className="multiSelectDropdown">
-      <summary>
-        <span>
-          <strong>{selected.length ? `${selected.length} selected` : "Choose"}</strong>
-          <small>{preview}{selected.length > 3 ? ` +${selected.length - 3} more` : ""}</small>
-        </span>
-        <em>v</em>
-      </summary>
-      {selected.length > 0 && (
-        <div className="selectedPreview">
-          {selected.slice(0, 6).map((item) => <span key={item}>{item}</span>)}
-        </div>
-      )}
-      <div className="multiSelectMenu">
-        {options.map((option) => {
-          const active = selected.includes(option);
-          return (
-            <button key={option} type="button" onClick={() => toggle(option)} className={active ? "selected" : ""}>
-              <span>{active ? "OK" : ""}</span>
-              <strong>{option}</strong>
-            </button>
-          );
-        })}
-      </div>
-    </details>
-  );
-}
-
-function PlatformChoiceGrid({ options, selected, onChange }: { options: string[]; selected: string[]; onChange: (next: string[]) => void }) {
-  const toggle = (option: string) => onChange(selected.includes(option) ? selected.filter((item) => item !== option) : [...selected, option]);
-
-  return (
-    <div className="choicePlatformGrid">
-      {options.map((option) => {
-        const active = selected.includes(option);
-        const meta = platformMeta[option] ?? {
-          icon: option.split(" ").map((word) => word[0]).join("").slice(0, 2),
-          recommendedFor: "Flexible content",
-          visibility: "Platform visibility",
-          audience: "Relevant audiences",
-        };
-        const rate = getPlatformRate(option);
-        return (
-          <button key={option} type="button" onClick={() => toggle(option)} className={active ? "choicePlatformCard selected" : "choicePlatformCard"}>
-            <b>{meta.icon}</b>
-            <span>{option}</span>
-            <strong>{rate.qlt.toLocaleString()} QLT ({formatNaira(rate.naira)})</strong>
-            <small>{meta.recommendedFor}</small>
-            <em>{meta.audience}</em>
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
-function getPlatformRate(platform: string): PlatformRate {
-  const direct = platformPricing[platform];
-  if (direct) return direct;
-  const lower = platform.toLowerCase();
-  if (lower.includes("instagram")) return platformPricing.Instagram;
-  if (lower.includes("facebook")) return platformPricing.Facebook;
-  if (lower.includes("whatsapp")) return platformPricing["WhatsApp Status"];
-  if (lower.includes("telegram")) return platformPricing.Telegram;
-  if (lower.includes("tiktok")) return platformPricing.TikTok;
-  const qlt = DEFAULT_PLATFORM_RATE_QLT;
-  return { qlt, naira: qlt / QLT_PER_NAIRA };
+function toQlt(naira: number) {
+  return Math.round(naira * QLT_PER_NAIRA);
 }
 
 function formatNaira(amount: number) {
   return `₦${Math.round(amount).toLocaleString()}`;
 }
 
-function getPricingBreakdown(platforms: string[], participants: number): PricingBreakdown {
-  const uniquePlatforms = Array.from(new Set(platforms));
-  const platformRates = uniquePlatforms.map((platform) => {
-    const rate = getPlatformRate(platform);
-    return { platform, qlt: rate.qlt, naira: rate.naira };
-  });
-  const rewardPerParticipantQlt = platformRates.reduce((total, item) => total + item.qlt, 0);
-  const rewardPerParticipantNaira = rewardPerParticipantQlt / QLT_PER_NAIRA;
-  const contributorPoolQlt = rewardPerParticipantQlt * participants;
-  const contributorPoolNaira = contributorPoolQlt / QLT_PER_NAIRA;
-  const businessPaymentQlt = contributorPoolQlt > 0 ? Math.ceil(contributorPoolQlt / CONTRIBUTOR_POOL_SHARE) : 0;
-  const businessPaymentNaira = businessPaymentQlt / QLT_PER_NAIRA;
-  const commissionQlt = Math.round(businessPaymentQlt * PLATFORM_COMMISSION_SHARE);
-  const commissionNaira = commissionQlt / QLT_PER_NAIRA;
-  const reserveQlt = Math.max(0, businessPaymentQlt - contributorPoolQlt - commissionQlt);
-  const reserveNaira = reserveQlt / QLT_PER_NAIRA;
+function getRewardRecommendation(categoryId: string, goal: string, bundleId: string, contentType: string) {
+  const combined = `${categoryId} ${goal} ${bundleId} ${contentType}`.toLowerCase();
+
+  if (categoryId === "apps") {
+    if (combined.includes("bug") || combined.includes("feature")) return { label: "High-effort mission", naira: 300, min: 150, max: 500 };
+    if (combined.includes("signup") || combined.includes("onboarding")) return { label: "High-effort mission", naira: 250, min: 150, max: 400 };
+    return { label: "High-effort mission", naira: 150, min: 150, max: 400 };
+  }
+  if (categoryId === "feedback") {
+    if (combined.includes("detailed") || combined.includes("review")) return { label: "Verified engagement mission", naira: 200, min: 80, max: 200 };
+    if (combined.includes("product") || combined.includes("content") || combined.includes("feature")) return { label: "Verified engagement mission", naira: 120, min: 80, max: 150 };
+    return { label: "Verified engagement mission", naira: 80, min: 80, max: 150 };
+  }
+  if (categoryId === "community") {
+    if (combined.includes("retention")) return { label: "Verified engagement mission", naira: 120, min: 80, max: 200 };
+    return { label: "Verified engagement mission", naira: 80, min: 80, max: 150 };
+  }
+  if (categoryId === "music") {
+    if (combined.includes("video") || combined.includes("reels") || combined.includes("tiktok")) return { label: "High-effort mission", naira: 250, min: 150, max: 400 };
+    if (combined.includes("stream") || combined.includes("listen")) return { label: "Verified engagement mission", naira: 100, min: 80, max: 150 };
+    return { label: "Standard participation mission", naira: 50, min: 40, max: 80 };
+  }
+  if (combined.includes("group") || combined.includes("community")) return { label: "Standard participation mission", naira: 70, min: 40, max: 80 };
+  if (combined.includes("24") || combined.includes("story") || combined.includes("status")) return { label: "Standard participation mission", naira: 50, min: 40, max: 80 };
+  return { label: "Simple awareness mission", naira: MIN_REWARD_NAIRA, min: MIN_REWARD_NAIRA, max: 40 };
+}
+
+function buildPricing(rewardNaira: number, contributors: number) {
+  const reward = Math.max(MIN_REWARD_NAIRA, rewardNaira);
+  const contributorRewards = reward * contributors;
+  const commission = Math.round(contributorRewards * COMMISSION_RATE);
+  const verification = Math.round(contributorRewards * VERIFICATION_RATE);
+  const total = contributorRewards + commission + verification;
 
   return {
-    platformRates,
-    rewardPerParticipantQlt,
-    rewardPerParticipantNaira,
-    contributorPoolQlt,
-    contributorPoolNaira,
-    businessPaymentQlt,
-    businessPaymentNaira,
-    commissionQlt,
-    commissionNaira,
-    reserveQlt,
-    reserveNaira,
+    rewardNaira: reward,
+    rewardQlt: toQlt(reward),
+    contributorRewards,
+    contributorRewardsQlt: toQlt(contributorRewards),
+    commission,
+    verification,
+    feeTotal: commission + verification,
+    total,
+    totalQlt: toQlt(total),
   };
 }
 
-function FeedbackAdaptiveFields({
-  config,
-  title,
-  setTitle,
-  contentLink,
-  setContentLink,
-  fileName,
-  setFileName,
-  instructions,
-  setInstructions,
-  objectives,
-  setObjectives,
-  contributorType,
-  setContributorType,
-  responseType,
-  setResponseType,
-  platform,
-  setPlatform,
-  requiredActions,
-  setRequiredActions,
-  duration,
-  setDuration,
-  surveyMethod,
-  setSurveyMethod,
-  contentFormat,
-  setContentFormat,
-  questions,
-  setQuestions,
-}: {
-  config: FeedbackGoalConfig;
-  title: string;
-  setTitle: (value: string) => void;
-  contentLink: string;
-  setContentLink: (value: string) => void;
-  fileName: string;
-  setFileName: (value: string) => void;
-  instructions: string;
-  setInstructions: (value: string) => void;
-  objectives: string[];
-  setObjectives: (value: string[]) => void;
-  contributorType: string;
-  setContributorType: (value: string) => void;
-  responseType: string;
-  setResponseType: (value: string) => void;
-  platform: string;
-  setPlatform: (value: string) => void;
-  requiredActions: string[];
-  setRequiredActions: (value: string[]) => void;
-  duration: string;
-  setDuration: (value: string) => void;
-  surveyMethod: string;
-  setSurveyMethod: (value: string) => void;
-  contentFormat: string;
-  setContentFormat: (value: string) => void;
-  questions: string[];
-  setQuestions: (value: string[]) => void;
-}) {
-  const updateQuestion = (index: number, value: string) => setQuestions(questions.map((question, questionIndex) => questionIndex === index ? value : question));
-
-  return (
-    <div className="feedbackFlow">
-      <details className="feedbackSection" open>
-        <summary>{config.assetHeading}</summary>
-        <div className="splitGrid compact">
-          <label>{config.nameLabel}<input value={title} onChange={(event) => setTitle(event.target.value)} placeholder={config.nameLabel} /></label>
-          <label>{config.linkLabel}<input value={contentLink} onChange={(event) => setContentLink(event.target.value)} placeholder={config.linkPlaceholder} /></label>
-        </div>
-        <label>{config.descriptionLabel}<textarea value={instructions} onChange={(event) => setInstructions(event.target.value)} rows={4} placeholder="Give contributors the context they need before answering." /></label>
-        <label className="fileButton slimFileButton">
-          {fileName || "Upload images, screenshot, video, audio, or PDF"}
-          <input type="file" accept="image/*,video/*,audio/*,.pdf" onChange={(event) => setFileName(event.target.files?.[0]?.name || "")} />
-        </label>
-      </details>
-
-      <details className="feedbackSection" open>
-        <summary>What should contributors help you understand?</summary>
-        <MultiSelectDropdown options={config.objectives} selected={objectives} onChange={setObjectives} placeholder="Choose feedback objectives" />
-      </details>
-
-      <details className="feedbackSection" open>
-        <summary>Audience and response format</summary>
-        <div className="splitGrid compact">
-          <label>Contributor type<select value={contributorType} onChange={(event) => setContributorType(event.target.value)}>{config.contributorTypes.map((item) => <option key={item}>{item}</option>)}</select></label>
-          <label>Response type<select value={responseType} onChange={(event) => setResponseType(event.target.value)}>{config.responseTypes.map((item) => <option key={item}>{item}</option>)}</select></label>
-        </div>
-      </details>
-
-      {(config.platforms || config.requiredActions || config.durations || config.surveyMethods || config.contentFormats) && (
-        <details className="feedbackSection" open>
-          <summary>Goal-specific setup</summary>
-          <div className="splitGrid compact">
-            {config.platforms && <label>Platform<select value={platform} onChange={(event) => setPlatform(event.target.value)}>{config.platforms.map((item) => <option key={item}>{item}</option>)}</select></label>}
-            {config.durations && <label>Testing duration<select value={duration} onChange={(event) => setDuration(event.target.value)}>{config.durations.map((item) => <option key={item}>{item}</option>)}</select></label>}
-            {config.surveyMethods && <label>Survey method<select value={surveyMethod} onChange={(event) => setSurveyMethod(event.target.value)}>{config.surveyMethods.map((item) => <option key={item}>{item}</option>)}</select></label>}
-            {config.contentFormats && <label>Content type<select value={contentFormat} onChange={(event) => setContentFormat(event.target.value)}>{config.contentFormats.map((item) => <option key={item}>{item}</option>)}</select></label>}
-          </div>
-          {config.requiredActions && <div><p className="labelText">Required actions</p><MultiSelectDropdown options={config.requiredActions} selected={requiredActions} onChange={setRequiredActions} placeholder="Choose required actions" /></div>}
-        </details>
-      )}
-
-      <details className="feedbackSection" open>
-        <summary>Questions</summary>
-        <div className="questionBuilder">
-          {questions.map((question, index) => (
-            <label key={`${index}-${question}`}>Question {index + 1}<input value={question} onChange={(event) => updateQuestion(index, event.target.value)} placeholder="Ask a focused feedback question" /></label>
-          ))}
-          <button type="button" className="secondaryButton" onClick={() => setQuestions([...questions, ""])}>Add Question +</button>
-        </div>
-      </details>
-    </div>
-  );
+function requiresContentLink(categoryId: string, contentType: string) {
+  const value = `${categoryId} ${contentType}`.toLowerCase();
+  return ["app", "android", "ios", "web app", "apk", "song", "music", "snippet", "video", "sound"].some((term) => value.includes(term));
 }
 
-function getCategoryFlow(categoryId: string) {
-  return categoryFlows[categoryId] ?? defaultFlow;
-}
-
-function getBundlesForCategory(categoryId: string) {
-  if (categoryId === "content") return campaignBundles.filter((bundle) => bundle.id.startsWith("content-"));
-  if (categoryId === "music") return campaignBundles.filter((bundle) => bundle.id.startsWith("music-"));
-  if (categoryId === "creator") return campaignBundles.filter((bundle) => bundle.id.startsWith("creator-"));
-  if (categoryId === "business") return campaignBundles.filter((bundle) => bundle.id.startsWith("business-"));
-  if (categoryId === "apps") return campaignBundles.filter((bundle) => bundle.id.startsWith("apps-"));
-  if (categoryId === "surveys") return campaignBundles.filter((bundle) => ["apps-user-feedback", "apps-feature-validation", "apps-quick-onboarding", "guided-engagement"].includes(bundle.id));
-  return campaignBundles.filter((bundle) => !bundle.id.startsWith("content-") && !bundle.id.startsWith("music-") && !bundle.id.startsWith("creator-") && !bundle.id.startsWith("business-") && !bundle.id.startsWith("apps-"));
-}
-
-function getRecommendedBundle(contentType: string, categoryId: string, goal = "") {
-  if (categoryId === "content") {
-    if (contentType === "Video Distribution" || goal === "Support Viral Momentum") return campaignBundles.find((bundle) => bundle.id === "content-video-distribution") ?? campaignBundles[0];
-    if (contentType === "Social Media Post" || goal === "Expand Online Reach") return campaignBundles.find((bundle) => bundle.id === "content-social-post") ?? campaignBundles[0];
-    if (contentType === "Announcement Campaign" || goal === "Boost Community Visibility" || goal === "Promote A Launch") return campaignBundles.find((bundle) => bundle.id === "content-community-announcement") ?? campaignBundles[0];
-    if (goal === "Drive Traffic To A Link") return campaignBundles.find((bundle) => bundle.id === "content-traffic-push") ?? campaignBundles[0];
-    return campaignBundles.find((bundle) => bundle.id === "content-flyer-status") ?? campaignBundles[0];
-  }
-  if (categoryId === "music") {
-    if (contentType === "TikTok Sound Campaign" || contentType === "Song Snippet / Teaser" || goal === "Push Viral Momentum" || goal === "Boost TikTok Usage") return campaignBundles.find((bundle) => bundle.id === "music-short-video") ?? campaignBundles[0];
-    if (contentType === "Streaming Campaign" || goal === "Increase Streams") return campaignBundles.find((bundle) => bundle.id === "music-streaming") ?? campaignBundles[0];
-    if (contentType === "Artist Awareness Campaign" || goal === "Build Fan Engagement") return campaignBundles.find((bundle) => bundle.id === "music-fan-engagement") ?? campaignBundles[0];
-    return campaignBundles.find((bundle) => bundle.id === "music-story-status") ?? campaignBundles[0];
-  }
-  if (categoryId === "creator") {
-    if (contentType === "Livestream Promotion" || goal === "Increase Livestream Attendance") return campaignBundles.find((bundle) => bundle.id === "creator-livestream") ?? campaignBundles[0];
-    if (contentType === "Community Growth Campaign" || goal === "Grow Community Members") return campaignBundles.find((bundle) => bundle.id === "creator-community") ?? campaignBundles[0];
-    if (contentType === "Short-Form Video Promotion" || goal === "Push Viral Momentum") return campaignBundles.find((bundle) => bundle.id === "creator-short-form") ?? campaignBundles[0];
-    if (goal === "Boost Engagement" || goal === "Increase Profile Traffic") return campaignBundles.find((bundle) => bundle.id === "creator-engagement") ?? campaignBundles[0];
-    return campaignBundles.find((bundle) => bundle.id === "creator-story-status") ?? campaignBundles[0];
-  }
-  if (categoryId === "business") {
-    if (contentType === "Website / Online Store Traffic" || goal === "Increase Online Traffic") return campaignBundles.find((bundle) => bundle.id === "business-traffic") ?? campaignBundles[0];
-    if (contentType === "Event Awareness" || goal === "Spread Community Awareness" || goal === "Drive Store Visits") return campaignBundles.find((bundle) => bundle.id === "business-community") ?? campaignBundles[0];
-    if (contentType === "Store / Brand Awareness" || goal === "Build Brand Visibility") return campaignBundles.find((bundle) => bundle.id === "business-social-feed") ?? campaignBundles[0];
-    if (contentType === "Product Promotion" && goal === "Promote A Product") return campaignBundles.find((bundle) => bundle.id === "business-short-form") ?? campaignBundles[0];
-    return campaignBundles.find((bundle) => bundle.id === "business-story-status") ?? campaignBundles[0];
-  }
-  if (categoryId === "apps") {
-    if (contentType === "Bug Reporting Campaign" || goal === "Identify Bugs & Issues") return campaignBundles.find((bundle) => bundle.id === "apps-deep-testing") ?? campaignBundles[0];
-    if (contentType === "Feature Testing" || goal === "Test Feature Performance") return campaignBundles.find((bundle) => bundle.id === "apps-feature-validation") ?? campaignBundles[0];
-    if (contentType === "Website Testing" || contentType === "User Feedback Campaign" || goal === "Gather Real Feedback" || goal === "Test User Experience") return campaignBundles.find((bundle) => bundle.id === "apps-user-feedback") ?? campaignBundles[0];
-    if (contentType === "Review & Rating Campaign" || goal === "Improve Product Trust") return campaignBundles.find((bundle) => bundle.id === "apps-review-trust") ?? campaignBundles[0];
-    if (contentType === "Multi-Step Testing Campaign") return campaignBundles.find((bundle) => bundle.id === "apps-deep-testing") ?? campaignBundles[0];
-    return campaignBundles.find((bundle) => bundle.id === "apps-quick-onboarding") ?? campaignBundles[0];
-  }
-  if (categoryId === "surveys") {
-    if (contentType === "App Testing Feedback" || goal === "App Testing Feedback" || contentType === "User Experience Testing") return campaignBundles.find((bundle) => bundle.id === "apps-quick-onboarding") ?? campaignBundles[0];
-    if (contentType === "Feature Validation" || goal === "Feature Validation") return campaignBundles.find((bundle) => bundle.id === "apps-feature-validation") ?? campaignBundles[0];
-    if (contentType === "Survey & Opinions" || goal === "Survey & Opinions" || contentType === "Market Research") return campaignBundles.find((bundle) => bundle.id === "guided-engagement") ?? campaignBundles[0];
-    return campaignBundles.find((bundle) => bundle.id === "apps-user-feedback") ?? campaignBundles[0];
-  }
-  if (categoryId === "community") return campaignBundles.find((bundle) => bundle.id === "community-growth") ?? campaignBundles[0];
-  if (categoryId === "video" || categoryId === "music" || contentType === "Video") return campaignBundles.find((bundle) => bundle.id === "video-distribution") ?? campaignBundles[0];
-  if (contentType === "Link" || categoryId === "apps" || categoryId === "surveys") return campaignBundles.find((bundle) => bundle.id === "guided-engagement") ?? campaignBundles[0];
-  return campaignBundles.find((bundle) => bundle.id === "story-status") ?? campaignBundles[0];
-}
-
-export default function CreateCampaignPage() {
+export default function NewCampaignPage() {
   const router = useRouter();
-  const [business, setBusiness] = useState<{ name: string } | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [business, setBusiness] = useState<Business | null>(null);
+  const [stepIndex, setStepIndex] = useState(0);
+  const [categoryId, setCategoryId] = useState("content");
+  const [goal, setGoal] = useState(missionCategories[0].goals[0]);
+  const [title, setTitle] = useState("");
+  const [objective, setObjective] = useState("");
+  const [contentType, setContentType] = useState(missionCategories[0].contentTypes[0]);
+  const [contentLink, setContentLink] = useState("");
+  const [assetName, setAssetName] = useState("");
+  const [bundleId, setBundleId] = useState("story-status");
+  const [actions, setActions] = useState<string[]>(missionCategories[0].defaultActions);
+  const [audience, setAudience] = useState<string[]>(missionCategories[0].defaultAudience.slice(0, 2));
+  const [reachId, setReachId] = useState("starter");
+  const [customContributors, setCustomContributors] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
-  const [stepIndex, setStepIndex] = useState(0);
 
-  const [categoryId, setCategoryId] = useState("content");
-  const [goal, setGoal] = useState("Increase Local Awareness");
-  const [contentType, setContentType] = useState("Flyer Promotion");
-  const [contentLink, setContentLink] = useState("");
-  const [fileName, setFileName] = useState("");
-  const [caption, setCaption] = useState("");
-  const [title, setTitle] = useState("Content Distribution Campaign");
-  const [bundleId, setBundleId] = useState("content-flyer-status");
-  const [actions, setActions] = useState<string[]>(["Post flyer to WhatsApp status", "Post to Facebook story", "Post to Instagram story", "Use provided caption", "Keep post active for 24 hours"]);
-  const [instructions, setInstructions] = useState("Leave the post visible for at least 24 hours.");
-  const [interests, setInterests] = useState<string[]>(["Local Communities", "Shopping"]);
-  const [platforms, setPlatforms] = useState<string[]>(["WhatsApp Status", "Facebook Story", "Instagram Story"]);
-  const [levels, setLevels] = useState<string[]>(["All Contributors"]);
-  const [states, setStates] = useState<string[]>(["Lagos"]);
-  const [cities, setCities] = useState<string[]>([]);
-  const [campuses, setCampuses] = useState<string[]>([]);
-  const [packageId, setPackageId] = useState("starter-distribution");
-  const [advancedOpen, setAdvancedOpen] = useState(false);
-  const [customContributors, setCustomContributors] = useState("");
-  const [customDuration, setCustomDuration] = useState("");
-  const [customPacing, setCustomPacing] = useState("Steady distribution");
-  const [feedbackObjectives, setFeedbackObjectives] = useState<string[]>(defaultFeedbackObjectives);
-  const [feedbackContributorType, setFeedbackContributorType] = useState("General audience");
-  const [feedbackResponseType, setFeedbackResponseType] = useState("Mixed");
-  const [feedbackPlatform, setFeedbackPlatform] = useState("Android");
-  const [feedbackRequiredActions, setFeedbackRequiredActions] = useState<string[]>(["Access product", "Submit feedback"]);
-  const [feedbackDuration, setFeedbackDuration] = useState("10 mins");
-  const [feedbackSurveyMethod, setFeedbackSurveyMethod] = useState("Mixed");
-  const [feedbackContentFormat, setFeedbackContentFormat] = useState("Video");
-  const [feedbackQuestions, setFeedbackQuestions] = useState<string[]>(feedbackGoalConfigs["Product Feedback"].defaultQuestions);
-
-  const category = campaignCategories.find((item) => item.id === categoryId) ?? campaignCategories[0];
-  const categoryFlow = getCategoryFlow(categoryId);
-  const isFeedbackFlow = categoryId === "surveys";
-  const feedbackConfig = feedbackGoalConfigs[goal] ?? feedbackGoalConfigs[contentType] ?? feedbackGoalConfigs["Product Feedback"];
-  const recommendedBundle = getRecommendedBundle(contentType, categoryId, goal);
-  const selectedBundle = campaignBundles.find((item) => item.id === bundleId) ?? recommendedBundle;
-  const selectedPackage = categoryFlow.packages.find((item) => item.id === packageId) ?? categoryFlow.packages[0];
-  const categoryPlatforms = useMemo(() => Array.from(new Set(getBundlesForCategory(categoryId).flatMap((bundle) => bundle.platforms))), [categoryId]);
-  const isTestingFlow = categoryId === "apps";
-  const flowSteps = isFeedbackFlow ? ["Category", "Feedback Goal", "Smart Details", "Structure", "Audience", "Budget", "Preview", "Launch"] : isTestingFlow ? ["Test Type", "Goal", "Assets", "Bundle", "Testers", "Package", "Preview", "Launch"] : steps;
-  const platformLabel = isFeedbackFlow ? "Feedback access points" : isTestingFlow ? "Testing platforms and devices" : "Distribution platforms";
-  const actionLabel = isFeedbackFlow ? "What should participants do?" : isTestingFlow ? "What should testers do?" : "What should contributors do?";
-  const packageHeadline = isFeedbackFlow ? "Recommended feedback setup" : isTestingFlow ? "Campaign participation package" : "Campaign reach package";
-  const packageHelp = isFeedbackFlow ? "Choose a contributor count and reward level that fits the depth of feedback you need." : isTestingFlow ? "Choose the testing depth. Higher-value product participation needs stronger rewards and clearer review expectations." : "Choose the momentum level. Advanced controls are available when you need exact limits.";
-  const previewHelp = isFeedbackFlow ? "Preview the participant journey before launch so the feedback mission feels clear and focused." : isTestingFlow ? "This product testing preview shows objectives, tester actions, proof, and feedback expectations before launch." : "This is the confidence check before launch. It mirrors what contributors need to understand.";
-  const resolvedContributors = advancedOpen && Number(customContributors) > 0 ? Number(customContributors) : selectedPackage.contributors;
-  const resolvedDuration = advancedOpen && customDuration.trim() ? customDuration.trim() : selectedPackage.duration;
-  const pricingBreakdown = useMemo(() => getPricingBreakdown(platforms, resolvedContributors), [platforms, resolvedContributors]);
-  const resolvedReward = pricingBreakdown.rewardPerParticipantQlt;
-  const estimatedBudget = pricingBreakdown.businessPaymentQlt;
-  const hasCampaignSource = Boolean(contentLink.trim() || fileName || isFeedbackFlow);
+  const category = useMemo(() => missionCategories.find((item) => item.id === categoryId) ?? missionCategories[0], [categoryId]);
+  const bundle = useMemo(() => bundles.find((item) => item.id === bundleId) ?? bundles[0], [bundleId]);
+  const reach = useMemo(() => reachPackages.find((item) => item.id === reachId) ?? reachPackages[0], [reachId]);
+  const contributorCount = Math.max(1, Number(customContributors) || reach.contributors);
+  const reward = useMemo(() => getRewardRecommendation(category.id, goal, bundle.id, contentType), [bundle.id, category.id, contentType, goal]);
+  const pricing = useMemo(() => buildPricing(reward.naira, contributorCount), [contributorCount, reward.naira]);
+  const progress = Math.round(((stepIndex + 1) / steps.length) * 100);
+  const linkOnlyContent = requiresContentLink(category.id, contentType);
+  const hasCampaignAsset = linkOnlyContent ? contentLink.trim().length >= 3 : contentLink.trim().length >= 3 || assetName.trim().length > 0;
+  const canSubmit = title.trim().length >= 4 && objective.trim().length >= 10 && hasCampaignAsset && actions.length > 0 && audience.length > 0;
 
   useEffect(() => {
     fetch("/api/business/me")
@@ -1456,172 +284,93 @@ export default function CreateCampaignPage() {
       .then((data) => {
         if (data?.business) setBusiness(data.business);
       })
-      .finally(() => setLoading(false));
+      .catch(() => router.push("/business/login"));
   }, [router]);
 
-  const previewInstructions = useMemo(() => {
-    return [
-      `Goal: ${goal}.`,
-      selectedBundle ? `Campaign bundle: ${selectedBundle.name}. Verification: ${selectedBundle.verification.join(", ")}.` : "",
-      contentType ? `Campaign content: ${contentType}${contentLink ? ` - ${contentLink}` : fileName ? ` - ${fileName}` : ""}.` : "",
-      isFeedbackFlow ? `Feedback goal: ${goal}. Objectives: ${feedbackObjectives.join(", ")}. Response format: ${feedbackResponseType}. Contributor type: ${feedbackContributorType}.` : "",
-      isFeedbackFlow && feedbackConfig.platforms ? `Platform: ${feedbackPlatform}. Test duration: ${feedbackDuration}. Required actions: ${feedbackRequiredActions.join(", ")}.` : "",
-      isFeedbackFlow && feedbackConfig.surveyMethods ? `Survey method: ${feedbackSurveyMethod}.` : "",
-      isFeedbackFlow && feedbackConfig.contentFormats ? `Content format: ${feedbackContentFormat}.` : "",
-      isFeedbackFlow ? `Feedback questions: ${feedbackQuestions.filter(Boolean).join(" | ")}.` : "",
-      actions.length ? `Contributor actions: ${actions.join(", ")}.` : "",
-      pricingBreakdown.platformRates.length ? `Platform reward rates: ${pricingBreakdown.platformRates.map((item) => `${item.platform}: ${item.qlt.toLocaleString()} QLT (${formatNaira(item.naira)})`).join(", ")}.` : "",
-      pricingBreakdown.rewardPerParticipantQlt ? `Potential earning per participant: ${pricingBreakdown.rewardPerParticipantQlt.toLocaleString()} QLT (${formatNaira(pricingBreakdown.rewardPerParticipantNaira)}).` : "",
-      pricingBreakdown.contributorPoolQlt ? `Contributor pool: ${pricingBreakdown.contributorPoolQlt.toLocaleString()} QLT (${formatNaira(pricingBreakdown.contributorPoolNaira)}). Business payment includes 70% contributor pool, 25% platform commission, and 5% reserve.` : "",
-      caption ? `Suggested caption: ${caption}` : "",
-      instructions ? `Important instructions: ${instructions}` : "",
-      `Audience: ${interests.length ? interests.join(", ") : "All interests"}.`,
-      `${isTestingFlow ? "Testing platforms/devices" : "Platforms"}: ${platforms.length ? platforms.join(", ") : "All platforms"}.`,
-      `Contributor level: ${levels.join(", ")}.`,
-      cities.length || campuses.length ? `Local focus: ${[...cities, ...campuses].join(", ")}.` : "",
-      advancedOpen ? `Campaign pacing: ${customPacing}.` : "",
-    ].filter(Boolean).join("\n");
-  }, [actions, advancedOpen, campuses, caption, cities, contentLink, contentType, customPacing, feedbackConfig.contentFormats, feedbackConfig.platforms, feedbackConfig.surveyMethods, feedbackContentFormat, feedbackContributorType, feedbackDuration, feedbackObjectives, feedbackPlatform, feedbackQuestions, feedbackRequiredActions, feedbackResponseType, feedbackSurveyMethod, fileName, goal, instructions, interests, isFeedbackFlow, isTestingFlow, levels, platforms, pricingBreakdown, selectedBundle]);
+  useEffect(() => {
+    const nextCategory = missionCategories.find((item) => item.id === categoryId) ?? missionCategories[0];
+    setGoal(nextCategory.goals[0]);
+    setContentType(nextCategory.contentTypes[0]);
+    setActions(nextCategory.defaultActions);
+    setAudience(nextCategory.defaultAudience.slice(0, 2));
+    if (nextCategory.id === "music") setBundleId("streaming-awareness");
+    else if (nextCategory.id === "apps") setBundleId("app-growth");
+    else if (nextCategory.id === "feedback") setBundleId("user-feedback");
+    else if (nextCategory.id === "community") setBundleId("community-expansion");
+    else setBundleId("story-status");
+  }, [categoryId]);
 
-  const proofLabel = useMemo(() => {
-    if (actions.some((action) => action.toLowerCase().includes("feedback"))) return "Submit your feedback and attach proof if requested";
-    if (actions.some((action) => action.toLowerCase().includes("download"))) return "Upload a screenshot showing the app installed or opened";
-    return "Upload a screenshot showing your post, share, or completed action";
-  }, [actions]);
-
-  const recommended = useMemo(() => {
-    const recommendedPlatforms = platforms.length ? platforms.slice(0, 3).join(", ") : isFeedbackFlow ? "Feedback form, product link, manual review" : isTestingFlow ? "Android, iPhone/iOS, Desktop Users" : "WhatsApp, Instagram, TikTok";
-    const quality = isFeedbackFlow ? `${feedbackResponseType.toLowerCase()} with ${feedbackObjectives.slice(0, 2).join(" and ").toLowerCase()}` : isTestingFlow ? "structured tester feedback" : category.missionType === "premium" ? "high-touch participation" : category.missionType === "participation" ? "useful feedback quality" : "fast visibility";
-    return { platforms: recommendedPlatforms, quality };
-  }, [category.missionType, feedbackObjectives, feedbackResponseType, isFeedbackFlow, isTestingFlow, platforms]);
-
-  const applyBundle = (bundle: CampaignBundle) => {
-    setBundleId(bundle.id);
-    setPlatforms(bundle.platforms);
-    setActions(bundle.actions);
-    setInstructions(
-      bundle.id.startsWith("apps-")
-        ? "Complete the assigned testing flow carefully. Submit clear proof, honest feedback, issues encountered, and improvement suggestions. Do not submit fake or manipulated reviews."
-        : bundle.id === "story-status"
-        ? "Use the provided caption, keep the story/status visible for 24 hours, and upload screenshots with timestamps."
-        : bundle.id === "video-distribution"
-          ? "Use the provided caption and hashtags, keep the video public during the campaign, and submit repost links or screenshots."
-          : bundle.id === "community-growth"
-            ? "Join the selected community, remain active for the required duration, and submit proof of membership or participation."
-            : "Follow the campaign instruction, submit proof clearly, and keep the action visible until review is complete."
-    );
+  const toggleAction = (action: string) => {
+    setActions((current) => current.includes(action) ? current.filter((item) => item !== action) : [...current, action]);
   };
 
-  const applyFeedbackGoal = (nextGoal: string) => {
-    const config = feedbackGoalConfigs[nextGoal] ?? feedbackGoalConfigs["Product Feedback"];
-    setGoal(nextGoal);
-    setContentType(nextGoal);
-    setTitle(`${nextGoal} Campaign`);
-    setFeedbackObjectives(config.objectives.slice(0, 3));
-    setFeedbackContributorType(config.contributorTypes[0]);
-    setLevels([config.contributorTypes[0]]);
-    setFeedbackResponseType(config.responseTypes[0]);
-    setFeedbackPlatform(config.platforms?.[0] ?? "Android");
-    setFeedbackRequiredActions(config.requiredActions ?? ["Open mission", "Review target", "Submit feedback"]);
-    setFeedbackDuration(config.durations?.[1] ?? "10 mins");
-    setFeedbackSurveyMethod(config.surveyMethods?.[0] ?? config.responseTypes[0]);
-    setFeedbackContentFormat(config.contentFormats?.[0] ?? "Video");
-    setFeedbackQuestions(config.defaultQuestions);
-    setInstructions(`Help us understand: ${config.objectives.slice(0, 3).join(", ")}. Submit honest feedback using the selected response format.`);
-    setCaption(`Review this ${nextGoal.toLowerCase()} mission carefully, complete the required actions, and submit honest feedback based on your real experience.`);
-    applyBundle(getRecommendedBundle(nextGoal, "surveys", nextGoal));
-  };
+  const nextStep = () => setStepIndex((current) => Math.min(steps.length - 1, current + 1));
+  const previousStep = () => setStepIndex((current) => Math.max(0, current - 1));
 
-  const applyFlow = (nextCategoryId: string) => {
-    const flow = getCategoryFlow(nextCategoryId);
-    const bundle = campaignBundles.find((item) => item.id === flow.defaultBundleId) ?? getRecommendedBundle(flow.defaultContentType, nextCategoryId, flow.defaultGoal);
-    setCategoryId(nextCategoryId);
-    setGoal(flow.defaultGoal);
-    setContentType(flow.defaultContentType);
-    setTitle(flow.defaultTitle);
-    setInterests(flow.defaultInterests);
-    setLevels(flow.defaultLevels);
-    setPackageId(flow.packages[0]?.id ?? "starter");
-    setCustomPacing(nextCategoryId === "apps" || nextCategoryId === "surveys" ? "Manual review first" : nextCategoryId === "music" ? "Fast launch burst" : nextCategoryId === "creator" ? "Weekend push" : "Steady distribution");
-    applyBundle(bundle);
-    if (nextCategoryId === "surveys") applyFeedbackGoal(flow.defaultGoal);
-  };
-
-  const applyContentType = (nextContentType: string) => {
-    if (categoryId === "surveys") {
-      applyFeedbackGoal(nextContentType);
-      return;
-    }
-    setContentType(nextContentType);
-    applyBundle(getRecommendedBundle(nextContentType, categoryId, goal));
-  };
-
-  const canLaunch = () => {
-    return Boolean(categoryId) && Boolean(goal) && Boolean(contentType) && hasCampaignSource && Boolean(title.trim()) && actions.length > 0 && platforms.length > 0 && levels.length > 0 && resolvedReward > 0 && resolvedContributors > 0;
-  };
-
-  const nextStep = () => {
-    setError("");
-    setStepIndex((current) => Math.min(current + 1, steps.length - 1));
-  };
-
-  const previousStep = () => {
-    setError("");
-    setStepIndex((current) => Math.max(current - 1, 0));
-  };
-
-  const generateCaption = () => {
-    const platformHint = platforms.length ? `on ${platforms[0]}` : "today";
-    if (categoryId === "music") {
-      setCaption(`New music alert: ${title || "this release"} is out now. Listen, share ${platformHint}, use the sound, and help more people discover the artist.`);
-      return;
-    }
-    if (categoryId === "creator") {
-      setCaption(`Discover ${title || "this creator campaign"}. Watch, engage, share ${platformHint}, and help the content reach the right audience.`);
-      return;
-    }
-    if (isTestingFlow) {
-      setCaption(`Test ${title || "this product"} with care. Complete the assigned flow, note any friction or bugs, and submit honest feedback based on your real experience.`);
-      return;
-    }
-    if (isFeedbackFlow) {
-      setCaption(`Review ${title || "this feedback mission"} with care. Focus on ${feedbackObjectives.slice(0, 3).join(", ").toLowerCase()}, then submit ${feedbackResponseType.toLowerCase()} feedback from your real experience.`);
-      return;
-    }
-    setCaption(`Discover ${title || category.title}. Join the conversation ${platformHint}, share with your circle, and help more people see what is coming from ${business?.name || "this brand"}.`);
-  };
-
-  const handleSubmit = async () => {
-    if (!canLaunch()) {
-      setError("Add a campaign title, content source, platform, audience, reward, and contributor limit before launching.");
+  const submitCampaign = async () => {
+    if (!canSubmit) {
+      setError("Add a campaign title, objective, campaign link or attached asset, contributor action, and target audience before launch.");
       return;
     }
 
     setSaving(true);
     setError("");
+    const instructions = [
+      `Objective: ${objective.trim()}`,
+      assetName ? `Attached asset: ${assetName}` : "",
+      contentLink.trim() ? `Campaign link: ${contentLink.trim()}` : "",
+      `Bundle: ${bundle.name}`,
+      `Platforms: ${bundle.platforms.join(", ")}`,
+      `Contributor actions: ${actions.join(" | ")}`,
+      `Reward: ${pricing.rewardQlt.toLocaleString()} QLT (${formatNaira(pricing.rewardNaira)}) per approved participation.`,
+      `Approval time: within 24-48 hours after proof review.`,
+    ].join("\n");
+
     const payload = {
       title: title.trim(),
-      category: category.category,
-      reward: String(resolvedReward),
-      duration: resolvedDuration,
-      instructions: previewInstructions,
+      category: category.apiCategory,
+      reward: String(pricing.rewardQlt),
+      duration: reach.duration,
+      instructions,
       steps: actions,
-      proof_type: isFeedbackFlow || actions.some((action) => action.toLowerCase().includes("feedback")) ? "text" : "screenshot",
-      proof_label: proofLabel,
+      proof_type: category.id === "feedback" ? "text" : "screenshot",
+      proof_label: category.id === "feedback" ? "Submit your feedback response" : "Upload proof showing you completed the mission",
       max_screenshots: 2,
-      task_link: contentLink.trim(),
-      total_budget: String(estimatedBudget),
-      target_completion_count: String(resolvedContributors),
+      task_link: contentLink.trim() || assetName,
+      total_budget: String(pricing.totalQlt),
+      target_completion_count: String(contributorCount),
       mission_type: category.missionType,
-      verification_type: isFeedbackFlow || actions.some((action) => action.toLowerCase().includes("feedback")) ? "text" : "screenshot",
+      verification_type: category.id === "feedback" ? "text" : "screenshot",
       difficulty: category.missionType === "premium" ? "hard" : category.missionType === "participation" ? "medium" : "easy",
-      min_level: levels.some((level) => ["Premium Promoters", "Community Influencers", "Premium Contributors", "Experienced Reviewers", "Beta Test Participants"].includes(level)) ? 2 : 1,
-      target_professions: levels,
-      target_interests: interests,
-      target_platforms: platforms,
+      min_level: audience.some((item) => item.includes("Premium") || item.includes("Verified")) ? 2 : 1,
+      target_professions: audience,
+      target_interests: [goal, contentType],
+      target_platforms: bundle.platforms,
       target_age_ranges: [],
       target_genders: [],
-      target_states: [...states, ...cities, ...campuses],
+      target_states: [],
+      campaign_goal: goal,
+      campaign_package: reach.name,
+      campaign_metadata: {
+        productBibleVersion: "participation-growth-v1",
+        missionCategoryId: category.id,
+        contentType,
+        assetName,
+        contentLink: contentLink.trim(),
+        bundleId: bundle.id,
+        objective,
+        audience,
+        pricing: {
+          rewardTier: reward.label,
+          rewardPerContributorNaira: pricing.rewardNaira,
+          rewardPerContributorQlt: pricing.rewardQlt,
+          contributorRewardsNaira: pricing.contributorRewards,
+          platformCommissionNaira: pricing.commission,
+          verificationFeeNaira: pricing.verification,
+          totalCampaignCostNaira: pricing.total,
+          totalCampaignCostQlt: pricing.totalQlt,
+        },
+      },
     };
 
     const res = await fetch("/api/business/tasks", {
@@ -1633,18 +382,17 @@ export default function CreateCampaignPage() {
     if (res.ok) {
       setSuccess(true);
     } else {
-      setError(data.error || "Failed to launch campaign");
+      setError(data.error || "Campaign could not be launched.");
     }
     setSaving(false);
   };
 
-  if (loading || !business) {
+  if (!business) {
     return (
-      <div className="loadingScreen">
-        <div className="spinner" />
-        <p>Preparing campaign builder...</p>
+      <main className="loadingShell">
+        <span>Loading campaign builder...</span>
         <style jsx>{pageStyles}</style>
-      </div>
+      </main>
     );
   }
 
@@ -1652,22 +400,14 @@ export default function CreateCampaignPage() {
     return (
       <>
         <BusinessSidebar name={business.name} />
-        <main className="page-body campaignPage business-page-pro">
-          <section className="launchScreen">
-            <div className="launchIcon">
-              <Image src="/icon-check-circle.svg" alt="" width={34} height={34} />
-            </div>
-            <p className="eyebrow">Campaign ready</p>
-            <h1>{categoryFlow.launchHeadline}</h1>
-            <p className="launchCopy">{categoryFlow.launchSummary}</p>
-            <div className="momentumGrid">
-              <div><strong>0</strong><span>early participants</span></div>
-              <div><strong>Pending</strong><span>approval status</span></div>
-              <div><strong>{resolvedContributors.toLocaleString()}</strong><span>estimated reach</span></div>
-            </div>
-            <div className="launchActions">
-              <button type="button" className="secondaryButton" onClick={() => router.push("/business/tasks")}>View dashboard</button>
-              <button type="button" className="primaryButton" onClick={() => router.push("/business/tasks/new")}>Create another</button>
+        <main className="successShell">
+          <section className="successPanel">
+            <p className="eyebrow">Campaign submitted</p>
+            <h1>{title}</h1>
+            <p>Your campaign has been reserved and sent into the Qeixova campaign flow. If review is required, it will go live after approval.</p>
+            <div className="successActions">
+              <button type="button" onClick={() => router.push("/business/tasks")}>View Campaigns</button>
+              <button type="button" className="primary" onClick={() => router.push("/business/tasks/new")}>Create Another</button>
             </div>
           </section>
         </main>
@@ -1680,674 +420,228 @@ export default function CreateCampaignPage() {
   return (
     <>
       <BusinessSidebar name={business.name} />
-      <main className="page-body campaignPage business-page-pro">
-        <header className="campaignHeader">
+      <main className="pageShell">
+        <section className="heroBand">
           <div>
-            <p className="eyebrow">Campaign launch console</p>
-            <h1>Launch a Campaign</h1>
-            <p>Choose a bundle, pick the platforms, set the participant quantity, and Qeixova calculates the contributor pool, platform commission, reserve, and contributor earning automatically.</p>
+            <p className="eyebrow">Qeixova campaign builder</p>
+            <h1>Launch a participation-powered growth campaign</h1>
+            <p>Choose the mission category, attach the campaign content, select a bundle, confirm contributor actions, and set reach. Qeixova calculates pricing clearly before launch.</p>
           </div>
-          <div className="headerStats">
-            <span>Estimated spend</span>
-            <strong>{estimatedBudget.toLocaleString()} QLT</strong>
-            <small>{formatNaira(pricingBreakdown.businessPaymentNaira)}</small>
+          <div className="walletCard">
+            <span>Business wallet</span>
+            <strong>{business.balance.toLocaleString()} QLT</strong>
+            <small>{business.name}</small>
           </div>
-        </header>
+        </section>
 
-        <nav className="stepper" aria-label="Campaign steps">
-          {flowSteps.map((step, index) => (
-            <button key={step} type="button" onClick={() => index <= stepIndex && setStepIndex(index)} className={index === stepIndex ? "step active" : index < stepIndex ? "step done" : "step"}>
-              <span>{index + 1}</span>
-              {step}
-            </button>
-          ))}
-        </nav>
+        <section className="builderLayout">
+          <aside className="stepRail" aria-label="Campaign steps">
+            <div className="progressHeader">
+              <span>Step {stepIndex + 1} of {steps.length}</span>
+              <strong>{progress}%</strong>
+            </div>
+            <div className="progressTrack"><span style={{ width: `${progress}%` }} /></div>
+            {steps.map((step, index) => (
+              <button
+                key={step}
+                type="button"
+                className={index === stepIndex ? "step active" : index < stepIndex ? "step done" : "step"}
+                onClick={() => index <= stepIndex && setStepIndex(index)}
+                disabled={index > stepIndex}
+              >
+                <span>{index + 1}</span>
+                {step}
+              </button>
+            ))}
+          </aside>
 
-        {error && <div className="errorBox">{error}</div>}
-
-        <div className="builderShell">
           <section className="builderPanel">
-            <div className="quickLaunchSurface">
-              <div className="quickLaunchHero">
-                <div>
-                  <p className="eyebrow">Campaign essentials</p>
-                  <h2>Build the mission structure</h2>
-                  <p>{categoryFlow.builderIntro}</p>
-                </div>
-                <div className="boostBadge">
-                  <strong>{resolvedReward.toLocaleString()}</strong>
-                  <span>QLT potential earning</span>
-                </div>
-              </div>
-
-              <div className="boostGrid">
-                <div className="fieldStack">
-                  <label>
-                    Campaign title
-                    <input value={title} onChange={(event) => setTitle(event.target.value)} placeholder="Restaurant Awareness Campaign" />
-                  </label>
-                  <label>
-                    Campaign type
-                    <select value={categoryId} onChange={(event) => applyFlow(event.target.value)}>
-                      {campaignCategories.map((item) => <option key={item.id} value={item.id}>{item.title}</option>)}
-                    </select>
-                  </label>
-                  <label>
-                    Goal
-                    <select
-                      value={goal}
-                      onChange={(event) => {
-                        const nextGoal = event.target.value;
-                        if (isFeedbackFlow) {
-                          applyFeedbackGoal(nextGoal);
-                          return;
-                        }
-                        setGoal(nextGoal);
-                        applyBundle(getRecommendedBundle(contentType, categoryId, nextGoal));
-                      }}
-                    >
-                      {categoryFlow.goals.map((item) => <option key={item}>{item}</option>)}
-                    </select>
-                  </label>
-                </div>
-                <div className="fieldStack">
-                  <label>
-                    Content type
-                    <select value={contentType} onChange={(event) => applyContentType(event.target.value)}>
-                      {categoryFlow.contentTypes.map((item) => <option key={item}>{item}</option>)}
-                    </select>
-                  </label>
-                  <label>
-                    {categoryFlow.linkLabel}
-                    <input value={contentLink} onChange={(event) => setContentLink(event.target.value)} placeholder={categoryFlow.linkPlaceholder} />
-                  </label>
-                  <label className="fileButton slimFileButton">
-                    {fileName || "Attach asset"}
-                    <input type="file" accept="image/*,video/*,audio/*,.pdf" onChange={(event) => setFileName(event.target.files?.[0]?.name || "")} />
-                  </label>
-                </div>
-              </div>
-
-              <div className="recommendBox boostRecommend">
-                <div className="recommendIcon">
-                  <Image src={recommendedBundle.icon} alt="" width={24} height={24} />
-                </div>
-                <div>
-                  <span>Recommended setup</span>
-                  <strong>{recommendedBundle.name}</strong>
-                  <p>{contentType} campaigns are prefilled with {recommendedBundle.shortName.toLowerCase()}, {recommended.platforms}, and {recommended.quality}.</p>
-                </div>
-                <button type="button" onClick={() => applyBundle(recommendedBundle)}>Use setup</button>
-              </div>
-
-              <div className="packageGrid boostPackages">
-                {categoryFlow.packages.map((item) => (
-                  <button key={item.id} type="button" onClick={() => setPackageId(item.id)} className={packageId === item.id ? "packageCard selected" : "packageCard"}>
-                    <span>{item.name}</span>
-                    <strong>{item.reach}</strong>
-                    <small>{item.description}</small>
-                    <em>{item.contributors.toLocaleString()} participants / {item.duration}</em>
-                  </button>
-                ))}
-              </div>
-
-              <div className="pricingPanel">
-                <div className="pricingHeader">
-                  <div>
-                    <p className="eyebrow">V1 pricing engine</p>
-                    <strong>Platform-based contributor pool</strong>
-                    <small>Contributor pool is 70% of the business payment. Qeixova keeps 25%; 5% stays in reserve.</small>
-                  </div>
-                  <span>{resolvedContributors.toLocaleString()} participants</span>
-                </div>
-                <div className="pricingRows">
-                  {pricingBreakdown.platformRates.map((item) => (
-                    <div key={item.platform}>
-                      <span>{item.platform}</span>
-                      <strong>{item.qlt.toLocaleString()} QLT <em>({formatNaira(item.naira)})</em></strong>
-                    </div>
+            {stepIndex === 0 && (
+              <StepSection eyebrow="Step 1" title="Select mission category" note="Start with the type of growth participation this campaign needs.">
+                <div className="categoryGrid">
+                  {missionCategories.map((item) => (
+                    <button key={item.id} type="button" className={item.id === categoryId ? "choiceCard active" : "choiceCard"} onClick={() => setCategoryId(item.id)}>
+                      <strong>{item.name}</strong>
+                      <span>{item.description}</span>
+                    </button>
                   ))}
                 </div>
-                <div className="pricingSplit">
-                  <div><span>Potential earning</span><strong>{pricingBreakdown.rewardPerParticipantQlt.toLocaleString()} QLT</strong><small>{formatNaira(pricingBreakdown.rewardPerParticipantNaira)}</small></div>
-                  <div><span>Contributor pool</span><strong>{pricingBreakdown.contributorPoolQlt.toLocaleString()} QLT</strong><small>{formatNaira(pricingBreakdown.contributorPoolNaira)}</small></div>
-                  <div><span>Business payment</span><strong>{pricingBreakdown.businessPaymentQlt.toLocaleString()} QLT</strong><small>{formatNaira(pricingBreakdown.businessPaymentNaira)}</small></div>
-                </div>
-              </div>
-
-              <div className="disclosureStack">
-                {isFeedbackFlow && (
-                  <details className="boostDisclosure" open>
-                    <summary>
-                      <span><strong>Smart feedback setup</strong><small>{goal} fields are tailored to the response you need.</small></span>
-                      <em>Open</em>
-                    </summary>
-                    <FeedbackAdaptiveFields
-                      config={feedbackConfig}
-                      title={title}
-                      setTitle={setTitle}
-                      contentLink={contentLink}
-                      setContentLink={setContentLink}
-                      fileName={fileName}
-                      setFileName={setFileName}
-                      instructions={instructions}
-                      setInstructions={setInstructions}
-                      objectives={feedbackObjectives}
-                      setObjectives={setFeedbackObjectives}
-                      contributorType={feedbackContributorType}
-                      setContributorType={(value) => {
-                        setFeedbackContributorType(value);
-                        setLevels([value]);
-                      }}
-                      responseType={feedbackResponseType}
-                      setResponseType={setFeedbackResponseType}
-                      platform={feedbackPlatform}
-                      setPlatform={setFeedbackPlatform}
-                      requiredActions={feedbackRequiredActions}
-                      setRequiredActions={setFeedbackRequiredActions}
-                      duration={feedbackDuration}
-                      setDuration={setFeedbackDuration}
-                      surveyMethod={feedbackSurveyMethod}
-                      setSurveyMethod={setFeedbackSurveyMethod}
-                      contentFormat={feedbackContentFormat}
-                      setContentFormat={setFeedbackContentFormat}
-                      questions={feedbackQuestions}
-                      setQuestions={setFeedbackQuestions}
-                    />
-                  </details>
-                )}
-
-                <details className="boostDisclosure">
-                  <summary>
-                    <span><strong>Creative and caption</strong><small>{caption || "Add a contributor-facing caption and asset requirements."}</small></span>
-                    <em>Open</em>
-                  </summary>
-                  <div className="splitGrid">
-                    <div className="uploadBox">
-                      <Image src="/icon-content.svg" alt="" width={30} height={30} />
-                      <strong>{fileName || "Campaign asset"}</strong>
-                      <span>{categoryFlow.contentHelp}</span>
-                      <div className="requirementList">
-                        {(categoryFlow.uploadRequirements[contentType] ?? []).map((requirement) => <small key={requirement}>{requirement}</small>)}
-                      </div>
-                    </div>
-                    <div className="fieldStack">
-                      <div className="assistBox">
-                        <div>
-                          <strong>Need help with your caption?</strong>
-                          <span>Generate a simple promotional caption from your campaign choices.</span>
-                        </div>
-                        <button type="button" onClick={generateCaption}>Generate</button>
-                      </div>
-                      <label>
-                        {categoryFlow.captionLabel}
-                        <textarea value={caption} onChange={(event) => setCaption(event.target.value)} rows={4} placeholder={categoryFlow.captionPlaceholder} />
-                      </label>
-                    </div>
-                  </div>
-                </details>
-
-                <details className="boostDisclosure" open>
-                  <summary>
-                    <span><strong>{categoryFlow.bundlesHeadline}</strong><small>{selectedBundle.shortName} controls platforms, actions, and proof style.</small></span>
-                    <em>Open</em>
-                  </summary>
-                  <div className="fieldStack">
-                    <div className="bundleGrid compactBundles">
-                      {getBundlesForCategory(categoryId).map((bundle) => {
-                        const active = selectedBundle.id === bundle.id;
-                        return (
-                          <button key={bundle.id} type="button" onClick={() => applyBundle(bundle)} className={active ? "bundleCard selected" : "bundleCard"}>
-                            <span className="bundleIcon"><Image src={bundle.icon} alt="" width={22} height={22} /></span>
-                            <strong>{bundle.shortName}</strong>
-                            <small>{bundle.description}</small>
-                            <em>{bundle.verification.slice(0, 2).join(" + ")}</em>
-                          </button>
-                        );
-                      })}
-                    </div>
-                    <div>
-                      <div className="rowLabel">
-                        <div>
-                          <p className="labelText">{platformLabel}</p>
-                          <small>Pick the exact places contributors can complete this mission. Each selected platform adds to the contributor earning.</small>
-                        </div>
-                        <span>{platforms.length} selected</span>
-                      </div>
-                      <PlatformChoiceGrid options={selectedBundle.platforms} selected={platforms} onChange={setPlatforms} />
-                    </div>
-                    <div>
-                      <p className="labelText">{actionLabel}</p>
-                      <MultiSelectDropdown options={actionOptions} selected={actions} onChange={setActions} placeholder={isTestingFlow ? "Choose tester actions" : "Choose contributor actions"} />
-                    </div>
-                    <label>
-                      Important instructions
-                      <textarea value={instructions} onChange={(event) => setInstructions(event.target.value)} rows={4} placeholder="Leave post for 24 hours. Use the hashtag provided. Avoid deleting repost early." />
-                    </label>
-                  </div>
-                </details>
-
-                <details className="boostDisclosure">
-                  <summary>
-                    <span><strong>{categoryFlow.targetHeadline}</strong><small>{interests.length} interests, {levels.length} contributor type, {[...states, ...cities, ...campuses].length} locations.</small></span>
-                    <em>Open</em>
-                  </summary>
-                  <div className="targetStack">
-                    <div><p className="labelText">Audience interests</p><MultiSelectDropdown options={categoryFlow.interests} selected={interests} onChange={setInterests} placeholder="Choose audience interests" /></div>
-                    <div><p className="labelText">{isTestingFlow ? "Device / platform targeting" : "Extra platform focus"}</p><MultiSelectDropdown options={categoryPlatforms.length ? categoryPlatforms : platformOptions} selected={platforms} onChange={setPlatforms} placeholder={isTestingFlow ? "Choose devices and platforms" : "Choose extra platforms"} /></div>
-                    <div><p className="labelText">{isTestingFlow ? "Tester type" : "Contributor type"}</p><MultiSelectDropdown options={categoryFlow.levels} selected={levels} onChange={setLevels} placeholder={isTestingFlow ? "Choose tester types" : "Choose contributor types"} /></div>
-                    <div><p className="labelText">Nigeria state targeting</p><MultiSelectDropdown options={stateOptions} selected={states} onChange={setStates} placeholder="Choose states" /></div>
-                    <div className="splitGrid compact">
-                      <div><p className="labelText">City focus</p><MultiSelectDropdown options={cityOptions} selected={cities} onChange={setCities} placeholder="Choose cities" /></div>
-                      <div><p className="labelText">Campus focus</p><MultiSelectDropdown options={campusOptions} selected={campuses} onChange={setCampuses} placeholder="Choose campuses" /></div>
-                    </div>
-                  </div>
-                </details>
-
-                <details className="boostDisclosure">
-                  <summary>
-                    <span><strong>Advanced budget controls</strong><small>{packageHeadline}. {packageHelp}</small></span>
-                    <em>Open</em>
-                  </summary>
-                  <button type="button" className="advancedToggle" onClick={() => setAdvancedOpen((open) => !open)}>
-                    {advancedOpen ? "Use package defaults" : "Customize quantity, duration, pacing"}
-                  </button>
-                  {advancedOpen && (
-                    <div className="advancedGrid">
-                      <label>Contributor limit<input type="number" min={1} value={customContributors} onChange={(event) => setCustomContributors(event.target.value)} placeholder="500" /></label>
-                      <label>Campaign duration<input value={customDuration} onChange={(event) => setCustomDuration(event.target.value)} placeholder="7 days" /></label>
-                      <label>Campaign pacing<select value={customPacing} onChange={(event) => setCustomPacing(event.target.value)}><option>Steady distribution</option><option>Fast launch burst</option><option>Weekend push</option><option>Manual review first</option></select></label>
-                    </div>
-                  )}
-                </details>
-
-                <details className="boostDisclosure">
-                  <summary>
-                    <span><strong>{categoryFlow.previewLabel}</strong><small>{previewHelp}</small></span>
-                    <em>Open</em>
-                  </summary>
-                  <PreviewCard
-                    category={category}
-                    bundle={selectedBundle}
-                    title={title}
-                    goal={goal}
-                    contributors={resolvedContributors}
-                    duration={resolvedDuration}
-                    platforms={platforms}
-                    interests={interests}
-                    actions={actions}
-                    instructions={previewInstructions}
-                    contentType={contentType}
-                    businessName={business.name}
-                    budget={estimatedBudget}
-                    pricing={pricingBreakdown}
-                    previewLabel={categoryFlow.previewLabel}
-                  />
-                </details>
-              </div>
-
-              <div className="boostActions">
-                <div>
-                  <strong>{categoryFlow.launchHeadline}</strong>
-                  <span>{resolvedContributors.toLocaleString()} contributors / {resolvedReward.toLocaleString()} QLT potential earning / {estimatedBudget.toLocaleString()} QLT total / {resolvedDuration}</span>
-                </div>
-                <button type="button" className="primaryButton" disabled={saving} onClick={handleSubmit}>{saving ? "Launching..." : categoryFlow.launchCta}</button>
-              </div>
-            </div>
-
-            {stepIndex === 0 && (
-              <div className="stepContent">
-                <div className="sectionTitle">
-                  <p className="eyebrow">Step 1</p>
-                  <h2>{categoryFlow.contentHeadline}</h2>
-                  <p>{categoryFlow.contentHelp}</p>
-                </div>
-                <div className="categoryRail">
-                  {campaignCategories.map((item) => {
-                    const active = item.id === categoryId;
-                    return (
-                      <button
-                        key={item.id}
-                        type="button"
-                        onClick={() => applyFlow(item.id)}
-                        className={active ? "categoryChip selected" : "categoryChip"}
-                        style={{ borderColor: active ? item.accent : "#202020" }}
-                      >
-                        <span style={{ background: `${item.accent}18` }}>
-                          <Image src={item.icon} alt="" width={18} height={18} />
-                        </span>
-                        <strong>{item.title}</strong>
-                      </button>
-                    );
-                  })}
-                </div>
-                <div className="contentTypeGrid">
-                  {categoryFlow.contentTypes.map((item) => {
-                    const active = item === contentType;
-                    const requirements = categoryFlow.uploadRequirements[item] ?? [];
-                    return (
-                      <button key={item} type="button" onClick={() => applyContentType(item)} className={active ? "contentTypeCard selected" : "contentTypeCard"}>
-                        <span>{active ? "Selected" : "Content type"}</span>
-                        <strong>{item}</strong>
-                        <small>{requirements.slice(0, 3).join(" • ")}</small>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
+              </StepSection>
             )}
 
             {stepIndex === 1 && (
-              <div className="stepContent">
-                <div className="sectionTitle">
-                  <p className="eyebrow">Step 2</p>
-                  <h2>{categoryFlow.goalsHeadline}</h2>
-                  <p>Pick the main outcome. Keep it focused so contributors understand the mission quickly.</p>
-                </div>
-                <div className="goalGrid">
-                  {categoryFlow.goals.map((item) => (
-                    <button
-                      key={item}
-                      type="button"
-                      onClick={() => {
-                        if (isFeedbackFlow) {
-                          applyFeedbackGoal(item);
-                          return;
-                        }
-                        setGoal(item);
-                        applyBundle(getRecommendedBundle(contentType, categoryId, item));
-                      }}
-                      className={goal === item ? "goalButton active" : "goalButton"}
-                    >
-                      {item}
-                    </button>
+              <StepSection eyebrow="Step 2" title="Select campaign goal" note="The goal controls the recommended reward, actions, and verification path.">
+                <div className="goalChecklist">
+                  {category.goals.map((item) => (
+                    <label key={item} className={goal === item ? "goalOption active" : "goalOption"}>
+                      <input
+                        type="checkbox"
+                        checked={goal === item}
+                        onChange={() => setGoal(item)}
+                      />
+                      <span>{item}</span>
+                    </label>
                   ))}
                 </div>
-              </div>
+                <label className="fieldBlock">
+                  Campaign title
+                  <input value={title} onChange={(event) => setTitle(event.target.value)} placeholder="Promote my new product launch" />
+                </label>
+                <label className="fieldBlock">
+                  Campaign objective
+                  <textarea value={objective} onChange={(event) => setObjective(event.target.value)} placeholder="Describe what contributors should help you achieve." />
+                </label>
+              </StepSection>
             )}
 
             {stepIndex === 2 && (
-              <div className="stepContent">
-                <div className="sectionTitle">
-                  <p className="eyebrow">Step 3</p>
-                  <h2>{isFeedbackFlow ? `${goal} setup` : "Upload campaign content"}</h2>
-                  <p>{isFeedbackFlow ? "Qeixova only shows the details needed for this feedback goal." : "Keep the source material clear. Qeixova adapts the requirements to this campaign type."}</p>
+              <StepSection eyebrow="Step 3" title="Attach campaign content" note="Add the exact content contributors will promote, test, join, review, or respond to.">
+                <div className="pillGrid">
+                  {category.contentTypes.map((item) => (
+                    <button key={item} type="button" className={contentType === item ? "pill active" : "pill"} onClick={() => setContentType(item)}>{item}</button>
+                  ))}
                 </div>
-                {isFeedbackFlow ? (
-                  <FeedbackAdaptiveFields
-                    config={feedbackConfig}
-                    title={title}
-                    setTitle={setTitle}
-                    contentLink={contentLink}
-                    setContentLink={setContentLink}
-                    fileName={fileName}
-                    setFileName={setFileName}
-                    instructions={instructions}
-                    setInstructions={setInstructions}
-                    objectives={feedbackObjectives}
-                    setObjectives={setFeedbackObjectives}
-                    contributorType={feedbackContributorType}
-                    setContributorType={(value) => {
-                      setFeedbackContributorType(value);
-                      setLevels([value]);
-                    }}
-                    responseType={feedbackResponseType}
-                    setResponseType={setFeedbackResponseType}
-                    platform={feedbackPlatform}
-                    setPlatform={setFeedbackPlatform}
-                    requiredActions={feedbackRequiredActions}
-                    setRequiredActions={setFeedbackRequiredActions}
-                    duration={feedbackDuration}
-                    setDuration={setFeedbackDuration}
-                    surveyMethod={feedbackSurveyMethod}
-                    setSurveyMethod={setFeedbackSurveyMethod}
-                    contentFormat={feedbackContentFormat}
-                    setContentFormat={setFeedbackContentFormat}
-                    questions={feedbackQuestions}
-                    setQuestions={setFeedbackQuestions}
-                  />
+                {linkOnlyContent ? (
+                  <div className="assetPanel linkOnlyPanel">
+                    <div>
+                      <p className="eyebrow">Campaign link required</p>
+                      <h3>{contentType}</h3>
+                      <span>For video, app, song, snippet, sound, and streaming campaigns, add a link contributors can open. File upload is not available for this content type.</span>
+                    </div>
+                    <div className="linkBadge">
+                      <strong>Add link</strong>
+                      <small>No file upload</small>
+                    </div>
+                  </div>
                 ) : (
-                <div className="splitGrid">
-                  <div className="uploadBox">
-                    <Image src="/icon-content.svg" alt="" width={30} height={30} />
-                    <strong>{fileName || "Drop your campaign asset here"}</strong>
-                    <span>{categoryFlow.contentHelp}</span>
-                    <div className="requirementList">
-                      {(categoryFlow.uploadRequirements[contentType] ?? []).map((requirement) => <small key={requirement}>{requirement}</small>)}
+                  <div className="assetPanel">
+                    <div>
+                      <p className="eyebrow">Campaign asset</p>
+                      <h3>{contentType}</h3>
+                      <span>Attach a flyer, cover art, screenshot, PDF brief, document, or feedback material based on what this campaign needs. App files and videos are not accepted.</span>
                     </div>
-                    <label className="fileButton">
-                      Choose file
-                      <input type="file" accept="image/*,video/*,audio/*,.pdf" onChange={(event) => setFileName(event.target.files?.[0]?.name || "")} />
+                    <label className="uploadBox">
+                      <input
+                        type="file"
+                        accept="image/*,.pdf,.doc,.docx"
+                        onChange={(event) => setAssetName(event.target.files?.[0]?.name || "")}
+                      />
+                      <strong>{assetName || "Choose campaign asset"}</strong>
+                      <small>Images, PDF, or document only</small>
                     </label>
                   </div>
-                  <div className="fieldStack">
-                    <label>
-                      Content type
-                      <select
-                        value={contentType}
-                        onChange={(event) => {
-                          const nextContentType = event.target.value;
-                          applyContentType(nextContentType);
-                        }}
-                      >
-                        {categoryFlow.contentTypes.map((item) => <option key={item}>{item}</option>)}
-                      </select>
-                    </label>
-                    <label>
-                      {categoryFlow.linkLabel}
-                      <input value={contentLink} onChange={(event) => setContentLink(event.target.value)} placeholder={categoryFlow.linkPlaceholder} />
-                    </label>
-                    <div className="assistBox">
-                      <div>
-                        <strong>Need help with your caption?</strong>
-                        <span>Generate a simple promotional caption from your campaign choices.</span>
-                      </div>
-                      <button type="button" onClick={generateCaption}>Generate</button>
-                    </div>
-                    <label>
-                      {categoryFlow.captionLabel}
-                      <textarea value={caption} onChange={(event) => setCaption(event.target.value)} rows={4} placeholder={categoryFlow.captionPlaceholder} />
-                    </label>
-                  </div>
-                </div>
                 )}
-              </div>
+                <label className="fieldBlock">
+                  {category.contentLabel} <small>{linkOnlyContent ? "Required for this content type" : "Optional if you attached a file"}</small>
+                  <input value={contentLink} onChange={(event) => setContentLink(event.target.value)} placeholder={category.contentPlaceholder} />
+                </label>
+              </StepSection>
             )}
 
             {stepIndex === 3 && (
-              <div className="stepContent">
-                <div className="sectionTitle">
-                  <p className="eyebrow">Step 4</p>
-                  <h2>{categoryFlow.bundlesHeadline}</h2>
-                  <p>{isTestingFlow ? "Qeixova recommends a testing bundle first, then you can customize devices, tester actions, proof checks, and review depth." : "Qeixova recommends a bundle first, then you can customize the exact platforms and actions."}</p>
-                </div>
-                <div className="fieldStack">
-                  <div className="recommendBox">
-                    <div className="recommendIcon">
-                      <Image src={recommendedBundle.icon} alt="" width={24} height={24} />
-                    </div>
-                    <div>
-                      <span>Recommended bundle</span>
-                      <strong>{recommendedBundle.name}</strong>
-                      <p>{contentType} campaigns perform best with {recommendedBundle.shortName.toLowerCase()} because the {isTestingFlow ? "testing depth, proof, and feedback structure" : "platforms, actions, and proof"} match how this audience behaves.</p>
-                    </div>
-                    <button type="button" onClick={() => applyBundle(recommendedBundle)}>Apply</button>
-                  </div>
-                  <div className="bundleGrid">
-                    {getBundlesForCategory(categoryId).map((bundle) => {
-                      const active = selectedBundle.id === bundle.id;
-                      return (
-                        <button
-                          key={bundle.id}
-                          type="button"
-                          onClick={() => applyBundle(bundle)}
-                          className={active ? "bundleCard selected" : "bundleCard"}
-                        >
-                          <span className="bundleIcon">
-                            <Image src={bundle.icon} alt="" width={22} height={22} />
-                          </span>
-                          <strong>{bundle.shortName}</strong>
-                          <small>{bundle.description}</small>
-                          <em>{bundle.verification.slice(0, 2).join(" + ")}</em>
-                        </button>
-                      );
-                    })}
-                  </div>
-                  <label>
-                    Mission title
-                    <input value={title} onChange={(event) => setTitle(event.target.value)} placeholder="Restaurant Awareness Campaign" />
-                  </label>
-                  <div>
-                    <div className="rowLabel">
-                      <p className="labelText">{platformLabel}</p>
-                      <span>{platforms.length} selected</span>
-                    </div>
-                    <PlatformChoiceGrid options={selectedBundle.platforms} selected={platforms} onChange={setPlatforms} />
-                  </div>
-                  <div>
-                    <p className="labelText">{actionLabel}</p>
-                    <MultiSelectDropdown options={actionOptions} selected={actions} onChange={setActions} placeholder={isTestingFlow ? "Choose tester actions" : "Choose contributor actions"} />
-                  </div>
-                  <label>
-                    Important instructions
-                    <textarea value={instructions} onChange={(event) => setInstructions(event.target.value)} rows={5} placeholder="Leave post for 24 hours. Use the hashtag provided. Avoid deleting repost early." />
-                  </label>
-                </div>
-              </div>
-            )}
-
-            {stepIndex === 4 && (
-              <div className="stepContent">
-                <div className="sectionTitle">
-                  <p className="eyebrow">Step 5</p>
-                  <h2>{categoryFlow.targetHeadline}</h2>
-                  <p>{categoryFlow.targetHelp}</p>
-                </div>
-                <div className="targetStack">
-                  <div><p className="labelText">Audience interests</p><MultiSelectDropdown options={categoryFlow.interests} selected={interests} onChange={setInterests} placeholder="Choose audience interests" /></div>
-                  <div><p className="labelText">{isTestingFlow ? "Device / platform targeting" : "Extra platform focus"}</p><MultiSelectDropdown options={categoryPlatforms.length ? categoryPlatforms : platformOptions} selected={platforms} onChange={setPlatforms} placeholder={isTestingFlow ? "Choose devices and platforms" : "Choose extra platforms"} /></div>
-                  <div><p className="labelText">{isTestingFlow ? "Tester type" : "Contributor type"}</p><MultiSelectDropdown options={categoryFlow.levels} selected={levels} onChange={setLevels} placeholder={isTestingFlow ? "Choose tester types" : "Choose contributor types"} /></div>
-                  <div><p className="labelText">Nigeria state targeting</p><MultiSelectDropdown options={stateOptions} selected={states} onChange={setStates} placeholder="Choose states" /></div>
-                  <div className="splitGrid compact">
-                    <div><p className="labelText">City focus</p><MultiSelectDropdown options={cityOptions} selected={cities} onChange={setCities} placeholder="Choose cities" /></div>
-                    <div><p className="labelText">Campus focus</p><MultiSelectDropdown options={campusOptions} selected={campuses} onChange={setCampuses} placeholder="Choose campuses" /></div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {stepIndex === 5 && (
-              <div className="stepContent">
-                <div className="sectionTitle">
-                  <p className="eyebrow">Step 6</p>
-                  <h2>{packageHeadline}</h2>
-                  <p>{packageHelp}</p>
-                </div>
-                <div className="packageGrid">
-                  {categoryFlow.packages.map((item) => (
-                    <button key={item.id} type="button" onClick={() => setPackageId(item.id)} className={packageId === item.id ? "packageCard selected" : "packageCard"}>
-                      <span>{item.name}</span>
-                      <strong>{item.reach}</strong>
-                      <small>{item.description}</small>
-                      <em>{item.contributors.toLocaleString()} participants / {item.duration}</em>
+              <StepSection eyebrow="Step 4" title="Choose recommended bundle" note="Bundles keep actions, platforms, pricing, and moderation structured.">
+                <div className="bundleGrid">
+                  {bundles.map((item) => (
+                    <button key={item.id} type="button" className={item.id === bundleId ? "bundleCard active" : "bundleCard"} onClick={() => setBundleId(item.id)}>
+                      <strong>{item.name}</strong>
+                      <span>{item.description}</span>
+                      <small>{item.platforms.join(" / ")}</small>
                     </button>
                   ))}
                 </div>
-                <button type="button" className="advancedToggle" onClick={() => setAdvancedOpen((open) => !open)}>
-                  {advancedOpen ? "Hide advanced mode" : "Customize quantity, duration, pacing"}
-                </button>
-                {advancedOpen && (
-                  <div className="advancedGrid">
-                    <label>Contributor limit<input type="number" min={1} value={customContributors} onChange={(event) => setCustomContributors(event.target.value)} placeholder="500" /></label>
-                    <label>Campaign duration<input value={customDuration} onChange={(event) => setCustomDuration(event.target.value)} placeholder="7 days" /></label>
-                    <label>Campaign pacing<select value={customPacing} onChange={(event) => setCustomPacing(event.target.value)}><option>Steady distribution</option><option>Fast launch burst</option><option>Weekend push</option><option>Manual review first</option></select></label>
-                  </div>
-                )}
-                <div className="pricingPanel">
-                  <div className="pricingHeader">
-                    <div>
-                      <p className="eyebrow">Budget calculation</p>
-                      <strong>70% contributors / 25% Qeixova / 5% reserve</strong>
-                    </div>
-                    <span>{pricingBreakdown.businessPaymentQlt.toLocaleString()} QLT</span>
-                  </div>
-                  <div className="pricingSplit">
-                    <div><span>Contributor pool</span><strong>{pricingBreakdown.contributorPoolQlt.toLocaleString()} QLT</strong><small>{formatNaira(pricingBreakdown.contributorPoolNaira)}</small></div>
-                    <div><span>Platform commission</span><strong>{pricingBreakdown.commissionQlt.toLocaleString()} QLT</strong><small>{formatNaira(pricingBreakdown.commissionNaira)}</small></div>
-                    <div><span>Reserve</span><strong>{pricingBreakdown.reserveQlt.toLocaleString()} QLT</strong><small>{formatNaira(pricingBreakdown.reserveNaira)}</small></div>
-                  </div>
+              </StepSection>
+            )}
+
+            {stepIndex === 4 && (
+              <StepSection eyebrow="Step 5" title="Confirm contributor actions" note="Every campaign needs clear actions so contributors understand what participation means.">
+                <div className="checkGrid">
+                  {[...new Set([...category.defaultActions, ...bundle.actionHint])].map((item) => (
+                    <label key={item} className={actions.includes(item) ? "checkItem active" : "checkItem"}>
+                      <input type="checkbox" checked={actions.includes(item)} onChange={() => toggleAction(item)} />
+                      <span>{item}</span>
+                    </label>
+                  ))}
                 </div>
-              </div>
+              </StepSection>
+            )}
+
+            {stepIndex === 5 && (
+              <StepSection eyebrow="Step 6" title="Select reach package" note="Pricing uses contributor rewards plus 20% Qeixova commission and 10% verification fee.">
+                <div className="packageGrid">
+                  {reachPackages.map((item) => (
+                    <button key={item.id} type="button" className={item.id === reachId ? "packageCard active" : "packageCard"} onClick={() => setReachId(item.id)}>
+                      <strong>{item.name}</strong>
+                      <span>{item.contributors.toLocaleString()} contributors</span>
+                      <small>{item.duration}</small>
+                    </button>
+                  ))}
+                </div>
+                <label className="fieldBlock compact">
+                  Custom contributor quantity
+                  <input type="number" min="1" value={customContributors} onChange={(event) => setCustomContributors(event.target.value)} placeholder="Use package quantity" />
+                </label>
+                <PricingPanel rewardLabel={reward.label} rewardMin={reward.min} rewardMax={reward.max} contributors={contributorCount} pricing={pricing} />
+              </StepSection>
             )}
 
             {stepIndex === 6 && (
-              <div className="stepContent">
-                <div className="sectionTitle">
-                  <p className="eyebrow">Step 7</p>
-                  <h2>{categoryFlow.previewLabel}</h2>
-                  <p>{previewHelp}</p>
+              <StepSection eyebrow="Step 7" title="Preview campaign" note="This is what the business and contributor experience are built from.">
+                <div className="previewGrid">
+                  <PreviewBlock title="Business Summary" rows={[
+                    ["Category", category.name],
+                    ["Goal", goal],
+                    ["Bundle", bundle.name],
+                    ["Reach", `${contributorCount.toLocaleString()} contributors`],
+                    ["Total cost", `${formatNaira(pricing.total)} (${pricing.totalQlt.toLocaleString()} QLT)`],
+                  ]} />
+                  <PreviewBlock title="Contributor Mission" rows={[
+                    ["Reward", `${pricing.rewardQlt.toLocaleString()} QLT (${formatNaira(pricing.rewardNaira)})`],
+                    ["Platforms", bundle.platforms.join(", ")],
+                    ["Proof", category.id === "feedback" ? "Feedback response" : "Screenshot proof"],
+                    ["Approval", "Within 24-48 hours"],
+                    ["Actions", actions.join(" | ")],
+                  ]} />
                 </div>
-                <PreviewCard
-                  category={category}
-                  bundle={selectedBundle}
-                  title={title}
-                  goal={goal}
-                  contributors={resolvedContributors}
-                  duration={resolvedDuration}
-                  platforms={platforms}
-                  interests={interests}
-                  actions={actions}
-                  instructions={previewInstructions}
-                  contentType={contentType}
-                  businessName={business.name}
-                  budget={estimatedBudget}
-                  pricing={pricingBreakdown}
-                  previewLabel={categoryFlow.previewLabel}
-                />
-              </div>
+              </StepSection>
             )}
 
             {stepIndex === 7 && (
-              <div className="stepContent">
-                <div className="sectionTitle">
-                  <p className="eyebrow">Step 8</p>
-                  <h2>{categoryFlow.launchHeadline}</h2>
-                  <p>{categoryFlow.launchSummary}</p>
+              <StepSection eyebrow="Step 8" title="Launch campaign" note="Review the essentials, fund from wallet, then submit for review or launch.">
+                <div className="launchGrid">
+                  <div className="readinessPanel">
+                    {[
+                      ["Mission category selected", Boolean(categoryId)],
+                      ["Campaign goal selected", Boolean(goal)],
+                      ["Campaign title added", title.trim().length >= 4],
+                      ["Campaign objective added", objective.trim().length >= 10],
+                      ["Campaign content attached", hasCampaignAsset],
+                      ["Contributor actions configured", actions.length > 0],
+                      ["Pricing calculated", pricing.totalQlt > 0],
+                    ].map(([label, ready]) => (
+                      <div key={String(label)} className={ready ? "readyItem good" : "readyItem"}>
+                        <span>{ready ? "OK" : "Add"}</span>
+                        {label}
+                      </div>
+                    ))}
+                  </div>
+                  <PricingPanel rewardLabel={reward.label} rewardMin={reward.min} rewardMax={reward.max} contributors={contributorCount} pricing={pricing} />
                 </div>
-                <div className="readyPanel">
-                  <div className="readyMetric"><span>{isFeedbackFlow ? "Recommended setup" : isTestingFlow ? "Recommended devices" : "Recommended platforms"}</span><strong>{recommended.platforms}</strong></div>
-                  <div className="readyMetric"><span>Potential earning</span><strong>{pricingBreakdown.rewardPerParticipantQlt.toLocaleString()} QLT ({formatNaira(pricingBreakdown.rewardPerParticipantNaira)})</strong></div>
-                  <div className="readyMetric"><span>Estimated participation</span><strong>{resolvedContributors.toLocaleString()} {isFeedbackFlow ? "participants" : "contributors"}</strong></div>
-                </div>
-              </div>
+              </StepSection>
             )}
 
-            <div className="wizardActions">
+            {error && <p className="errorText">{error}</p>}
+
+            <div className="actionsBar">
               <button type="button" className="secondaryButton" onClick={previousStep} disabled={stepIndex === 0}>Back</button>
-              {stepIndex < 7 ? (
+              {stepIndex < steps.length - 1 ? (
                 <button type="button" className="primaryButton" onClick={nextStep}>Continue</button>
               ) : (
-                <button type="button" className="primaryButton" disabled={saving} onClick={handleSubmit}>{saving ? "Launching..." : categoryFlow.launchCta}</button>
+                <button type="button" className="primaryButton" disabled={saving} onClick={submitCampaign}>{saving ? "Submitting..." : "Launch Campaign"}</button>
               )}
             </div>
           </section>
 
-          <aside className="summaryPanel">
-            <p className="eyebrow">Live summary</p>
-            <h3>{title || category.title}</h3>
-            <div className="summaryIcon" style={{ background: `${category.accent}18` }}>
-              <Image src={category.icon} alt="" width={26} height={26} />
-            </div>
-            <dl>
-              <div><dt>Goal</dt><dd>{goal}</dd></div>
-              <div><dt>Platforms</dt><dd>{platforms.length ? platforms.join(", ") : "All platforms"}</dd></div>
-              <div><dt>Audience</dt><dd>{interests.length ? interests.join(", ") : "All interests"}</dd></div>
-              <div><dt>Potential earning</dt><dd>{resolvedReward.toLocaleString()} QLT ({formatNaira(pricingBreakdown.rewardPerParticipantNaira)})</dd></div>
-              <div><dt>Contributor pool</dt><dd>{pricingBreakdown.contributorPoolQlt.toLocaleString()} QLT ({formatNaira(pricingBreakdown.contributorPoolNaira)})</dd></div>
-              <div><dt>Business payment</dt><dd>{estimatedBudget.toLocaleString()} QLT ({formatNaira(pricingBreakdown.businessPaymentNaira)})</dd></div>
-            </dl>
-          </aside>
-        </div>
+        </section>
       </main>
       <BusinessBottomNav />
       <style jsx>{pageStyles}</style>
@@ -2355,1739 +649,809 @@ export default function CreateCampaignPage() {
   );
 }
 
-function PreviewCard({
-  category,
-  bundle,
-  title,
-  goal,
-  contributors,
-  duration,
-  platforms,
-  interests,
-  actions,
-  instructions,
-  contentType,
-  businessName,
-  budget,
-  pricing,
-  previewLabel,
-}: {
-  category: CampaignCategory;
-  bundle: CampaignBundle;
-  title: string;
-  goal: string;
-  contributors: number;
-  duration: string;
-  platforms: string[];
-  interests: string[];
-  actions: string[];
-  instructions: string;
-  contentType: string;
-  businessName: string;
-  budget: number;
-  pricing: PricingBreakdown;
-  previewLabel: string;
-}) {
-  const estimatedReach = `${Math.max(contributors * 50, 5000).toLocaleString()} - ${Math.max(contributors * 160, 12000).toLocaleString()}`;
-  const shownPlatforms = platforms.length ? platforms : bundle.platforms;
-  const isTestingPreview = category.id === "apps";
-  const isFeedbackPreview = category.id === "surveys";
-  const participantJourney = isFeedbackPreview
-    ? ["Open mission", "Read instructions", "Access app/content", "Complete required actions", "Submit feedback", "Verification review", "Receive participation reward"]
-    : [];
-
+function StepSection({ eyebrow, title, note, children }: { eyebrow: string; title: string; note: string; children: React.ReactNode }) {
   return (
-    <article className="previewCard">
-      <div className="previewNav">
-        <button type="button" aria-label="Back to edit">{"<"}</button>
-        <div>
-          <strong>{previewLabel}</strong>
-          <span>Review and launch your campaign</span>
-        </div>
-        <button type="button">Edit</button>
+    <div className="stepSection">
+      <div className="sectionHeader">
+        <p className="eyebrow">{eyebrow}</p>
+        <h2>{title}</h2>
+        <span>{note}</span>
       </div>
+      {children}
+    </div>
+  );
+}
 
-      <div className="readyBanner">
-        <Image src="/icon-check-circle.svg" alt="" width={28} height={28} />
-        <div>
-          <strong>Ready to Launch</strong>
-          <span>{isFeedbackPreview ? "Your feedback workflow is structured and ready." : isTestingPreview ? "Your testing workflow is structured and ready." : "Your campaign bundle is all set."}</span>
-        </div>
+function PricingPanel({
+  rewardLabel,
+  rewardMin,
+  rewardMax,
+  contributors,
+  pricing,
+}: {
+  rewardLabel: string;
+  rewardMin: number;
+  rewardMax: number;
+  contributors: number;
+  pricing: ReturnType<typeof buildPricing>;
+}) {
+  return (
+    <div className="pricingPanel">
+      <div>
+        <p className="eyebrow">Pricing engine</p>
+        <h3>Total Campaign Cost = Contributor Rewards x 1.3</h3>
       </div>
-
-      <div className="previewHero">
-        <div className="campaignBadge">
-          <Image src={category.icon} alt="" width={25} height={25} />
-        </div>
-        <div>
-          <h3>{title}</h3>
-          <p>{category.title} - {bundle.shortName}</p>
-        </div>
+      <div className="pricingRows">
+        <div><span>Reward tier</span><strong>{rewardLabel}</strong></div>
+        <div><span>Contributors</span><strong>{contributors.toLocaleString()}</strong></div>
+        <div><span>Reward each</span><strong>{pricing.rewardQlt.toLocaleString()} QLT <em>{formatNaira(pricing.rewardNaira)}</em></strong></div>
+        <div><span>Allowed range</span><strong>{formatNaira(rewardMin)} - {formatNaira(rewardMax)}</strong></div>
+        <div><span>Total contributor rewards</span><strong>{formatNaira(pricing.contributorRewards)}</strong></div>
+        <div><span>Platform & verification fee</span><strong>{formatNaira(pricing.feeTotal)}</strong></div>
+        <div className="totalRow"><span>Total campaign cost</span><strong>{formatNaira(pricing.total)}</strong></div>
       </div>
+    </div>
+  );
+}
 
-      <div className="goalLine">
-        <span>Goal</span>
-        <p>{goal} for {businessName} using a guided {bundle.shortName.toLowerCase()} {isTestingPreview || isFeedbackPreview ? "workflow" : "campaign"}.</p>
-      </div>
-
-      <section className="flyerPanel">
-        <div className="panelHeader">
-          <strong>{isFeedbackPreview ? "Feedback Objective" : isTestingPreview ? "Testing Objective" : "Campaign"} {contentType}</strong>
-          <span>{bundle.shortName}</span>
-        </div>
-        <div className="mockFlyer">
-          <div>
-            <span>{businessName}</span>
-            <strong>{isFeedbackPreview ? "FEEDBACK FLOW" : isTestingPreview ? "USER TESTING" : contentType === "Video" ? "VIDEO BOOST" : "AWARENESS PUSH"}</strong>
-            <p>{goal}</p>
+function PreviewBlock({ title, rows }: { title: string; rows: [string, string][] }) {
+  return (
+    <div className="previewBlock">
+      <h3>{title}</h3>
+      <dl>
+        {rows.map(([label, value]) => (
+          <div key={label}>
+            <dt>{label}</dt>
+            <dd>{value}</dd>
           </div>
-          <small>{bundle.platforms.slice(0, 3).join(" + ")}</small>
-        </div>
-      </section>
-
-      <section className="previewSection">
-        <div className="panelHeader">
-          <strong>{isFeedbackPreview ? "Feedback Access Points" : isTestingPreview ? "Testing Platforms & Devices" : "Distribution Platforms"}</strong>
-          <span>{shownPlatforms.length} selected</span>
-        </div>
-        <div className="platformCards">
-          {shownPlatforms.slice(0, 4).map((platform, index) => {
-            const meta = platformMeta[platform];
-            const rate = getPlatformRate(platform);
-            return (
-              <div key={platform} className="platformCard">
-                <b>{meta?.icon ?? platform.split(" ").map((word) => word[0]).join("").slice(0, 2)}</b>
-                <div>
-                  <strong>{platform}</strong>
-                  <span>{index === 0 ? "Primary" : meta?.visibility ?? "Optional"} - {rate.qlt.toLocaleString()} QLT ({formatNaira(rate.naira)})</span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      <section className="previewSection">
-        <div className="panelHeader">
-          <strong>Contributor Earnings</strong>
-          <span>Up to {pricing.rewardPerParticipantQlt.toLocaleString()} QLT</span>
-        </div>
-        <div className="audienceRows">
-          <div><span>Potential earning</span><p>{pricing.rewardPerParticipantQlt.toLocaleString()} QLT ({formatNaira(pricing.rewardPerParticipantNaira)})</p></div>
-          <div><span>Contributor pool</span><p>{pricing.contributorPoolQlt.toLocaleString()} QLT ({formatNaira(pricing.contributorPoolNaira)})</p></div>
-          <div><span>Business payment</span><p>{pricing.businessPaymentQlt.toLocaleString()} QLT ({formatNaira(pricing.businessPaymentNaira)})</p></div>
-        </div>
-      </section>
-
-      <section className="previewSection actionSection">
-        <div className="panelHeader">
-          <strong>{isFeedbackPreview ? "Participants Will" : isTestingPreview ? "Testers Will" : "Contributors Will"}</strong>
-          <span>{actions.length} actions</span>
-        </div>
-        <ul>
-          {actions.slice(0, 5).map((action) => (
-            <li key={action}><span>OK</span>{action}</li>
-          ))}
-        </ul>
-      </section>
-
-      {isFeedbackPreview && (
-        <section className="previewSection actionSection">
-          <div className="panelHeader">
-            <strong>Participant Journey</strong>
-            <span>{participantJourney.length} steps</span>
-          </div>
-          <ul>
-            {participantJourney.map((step, index) => (
-              <li key={step}><span>{index + 1}</span>{step}</li>
-            ))}
-          </ul>
-        </section>
-      )}
-
-      <section className="previewSection">
-        <div className="panelHeader">
-          <strong>Target Audience</strong>
-          <span>View Details</span>
-        </div>
-        <div className="audienceRows">
-          <div><span>Interests</span><p>{interests.length ? interests.join(", ") : "All interests"}</p></div>
-          <div><span>Verification</span><p>{bundle.verification.join(", ")}</p></div>
-        </div>
-      </section>
-
-      <div className="previewStats">
-        <div><strong>{contributors.toLocaleString()}</strong><span>{isFeedbackPreview ? "Participants" : isTestingPreview ? "Est. Testers" : "Est. Contributors"}</span></div>
-        <div><strong>{isTestingPreview || isFeedbackPreview ? bundle.verification.length : estimatedReach}</strong><span>{isTestingPreview || isFeedbackPreview ? "Proof Checks" : "Est. Reach"}</span></div>
-        <div><strong>{duration}</strong><span>Duration</span></div>
-        <div><strong>{budget.toLocaleString()} QLT</strong><span>Total Budget ({formatNaira(pricing.businessPaymentNaira)})</span></div>
-      </div>
-
-      <details className="instructionDetails">
-        <summary>Verification and instruction details</summary>
-        <pre>{instructions}</pre>
-      </details>
-    </article>
+        ))}
+      </dl>
+    </div>
   );
 }
 
 const pageStyles = `
-  .campaignPage {
-    max-width: 1180px;
-    margin: 0 auto;
-    color: #f5f5f5;
-    width: 100%;
-    overflow-x: hidden;
+  :global(body) {
+    background: #070808;
+    color: #f7f7f7;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
-  .loadingScreen {
+
+  .loadingShell,
+  .successShell,
+  .pageShell {
     min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 14px;
-    background: #050505;
-    color: #aaa;
-  }
-  .spinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid #171717;
-    border-top-color: #f5a623;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .campaignHeader {
-    display: flex;
-    justify-content: space-between;
-    gap: 16px;
-    align-items: flex-start;
-    margin-bottom: 18px;
-    min-width: 0;
-  }
-  .campaignHeader > div {
-    min-width: 0;
-  }
-  .campaignHeader h1 {
-    font-size: clamp(28px, 5vw, 42px);
-    line-height: 1.05;
-    letter-spacing: 0;
-    margin: 4px 0 8px;
-  }
-  .campaignHeader p, .sectionTitle p, .launchCopy {
-    color: #aaa;
-    font-size: 14px;
-    line-height: 1.6;
-  }
-  .eyebrow {
-    color: #f5a623 !important;
-    font-size: 11px !important;
-    font-weight: 800;
-    letter-spacing: 1.3px;
-    text-transform: uppercase;
-  }
-  .headerStats {
-    min-width: 132px;
-    border: 1px solid #202020;
-    background: #0a0a0a;
-    border-radius: 14px;
-    padding: 12px;
-    text-align: right;
-  }
-  .headerStats span {
-    display: block;
-    color: #777;
-    font-size: 11px;
-    margin-bottom: 6px;
-  }
-  .headerStats strong {
-    display: block;
-    color: #1aef22;
-    font-size: 22px;
-  }
-  .headerStats small {
-    display: block;
-    color: #aaa;
-    font-size: 11px;
-    margin-top: 3px;
-  }
-  .stepper {
-    display: none;
-    gap: 8px;
-    overflow-x: auto;
-    padding: 6px 0 16px;
-    margin-bottom: 8px;
-    max-width: 100%;
-    scrollbar-width: none;
-  }
-  .stepper::-webkit-scrollbar {
-    display: none;
-  }
-  .step {
-    border: 1px solid #202020;
-    background: #0a0a0a;
-    color: #777;
-    border-radius: 999px;
-    padding: 8px 12px 8px 8px;
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    font-size: 12px;
-    font-weight: 700;
-    white-space: nowrap;
-  }
-  .step span {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: #151515;
-    display: grid;
-    place-items: center;
-    color: #999;
-  }
-  .step.active {
-    color: #f5a623;
-    border-color: rgba(245, 166, 35, 0.45);
-    background: rgba(245, 166, 35, 0.08);
-  }
-  .step.done {
-    color: #1aef22;
-    border-color: rgba(26, 239, 34, 0.24);
-  }
-  .builderShell {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 320px;
-    gap: 18px;
-    align-items: start;
-    min-width: 0;
-  }
-  .builderPanel, .summaryPanel, .launchScreen {
-    border: 1px solid #191919;
-    background: #090909;
-    border-radius: 20px;
-  }
-  .builderPanel {
-    min-height: 620px;
-    padding: 22px;
-    min-width: 0;
-    overflow: hidden;
-  }
-  .builderPanel > .stepContent,
-  .builderPanel > .wizardActions {
-    display: none;
-  }
-  .quickLaunchSurface {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    min-width: 0;
-  }
-  .quickLaunchHero {
-    display: flex;
-    justify-content: space-between;
-    gap: 18px;
-    align-items: flex-start;
-    padding-bottom: 4px;
-    min-width: 0;
-  }
-  .quickLaunchHero h2 {
-    font-size: clamp(25px, 4vw, 36px);
-    line-height: 1.08;
-    margin: 5px 0 8px;
-    letter-spacing: 0;
-  }
-  .quickLaunchHero p {
-    color: #aaa;
-    font-size: 14px;
-    line-height: 1.55;
-    max-width: 620px;
-  }
-  .boostBadge {
-    border: 1px solid rgba(26, 239, 34, 0.22);
-    background: rgba(26, 239, 34, 0.08);
-    border-radius: 14px;
-    padding: 12px 14px;
-    text-align: right;
-    min-width: 132px;
-  }
-  .boostBadge strong {
-    display: block;
-    color: #1aef22;
-    font-size: 20px;
-    line-height: 1.1;
-  }
-  .boostBadge span {
-    display: block;
-    color: #9cd99f;
-    font-size: 11px;
-    font-weight: 800;
-    margin-top: 4px;
-  }
-  .boostGrid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
-  }
-  .slimFileButton {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 45px;
-    margin-top: 0;
-  }
-  .boostRecommend {
-    margin-top: 2px;
-  }
-  .boostPackages {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-  .boostPackages .packageCard {
-    min-height: 156px;
-  }
-  .pricingPanel {
-    border: 1px solid rgba(26, 239, 34, 0.24);
-    background: rgba(26, 239, 34, 0.06);
-    border-radius: 16px;
-    padding: 14px;
-    display: grid;
-    gap: 12px;
-  }
-  .pricingHeader {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 12px;
-  }
-  .pricingHeader strong {
-    display: block;
-    color: #f5f5f5;
-    font-size: 16px;
-    line-height: 1.25;
-  }
-  .pricingHeader small {
-    display: block;
-    color: #aaa;
-    font-size: 12px;
-    line-height: 1.4;
-    margin-top: 5px;
-    max-width: 560px;
-  }
-  .pricingHeader span {
-    color: #1aef22;
-    font-size: 12px;
-    font-weight: 900;
-    white-space: nowrap;
-  }
-  .pricingRows {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 8px;
-  }
-  .pricingRows div,
-  .pricingSplit div {
-    border: 1px solid #202020;
-    background: #090909;
-    border-radius: 12px;
-    padding: 11px;
-    min-width: 0;
-  }
-  .pricingRows span,
-  .pricingSplit span {
-    display: block;
-    color: #909090;
-    font-size: 11px;
-    font-weight: 800;
-    line-height: 1.25;
-    overflow-wrap: anywhere;
-  }
-  .pricingRows strong,
-  .pricingSplit strong {
-    display: block;
-    color: #f5f5f5;
-    font-size: 14px;
-    line-height: 1.25;
-    margin-top: 5px;
-    overflow-wrap: anywhere;
-  }
-  .pricingRows em,
-  .pricingSplit small {
-    color: #1aef22;
-    font-size: 11px;
-    font-style: normal;
-  }
-  .pricingSplit {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 8px;
-  }
-  .disclosureStack {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  .boostDisclosure {
-    border: 1px solid #222;
-    background: #0c0c0c;
-    border-radius: 16px;
-    overflow: hidden;
-  }
-  .boostDisclosure[open] {
-    border-color: rgba(245, 166, 35, 0.36);
-  }
-  .boostDisclosure summary {
-    list-style: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 14px;
-    padding: 15px;
-  }
-  .boostDisclosure summary::-webkit-details-marker {
-    display: none;
-  }
-  .boostDisclosure summary span,
-  .boostDisclosure summary strong,
-  .boostDisclosure summary small {
-    display: block;
-    min-width: 0;
-  }
-  .boostDisclosure summary strong {
-    color: #f5f5f5;
-    font-size: 15px;
-    line-height: 1.2;
-    margin-bottom: 4px;
-  }
-  .boostDisclosure summary small {
-    color: #8f8f8f;
-    font-size: 12px;
-    line-height: 1.35;
-    overflow-wrap: anywhere;
-  }
-  .boostDisclosure summary em {
-    border: 1px solid rgba(245, 166, 35, 0.26);
-    background: rgba(245, 166, 35, 0.08);
-    color: #f5a623;
-    border-radius: 999px;
-    padding: 7px 10px;
-    font-size: 11px;
-    font-weight: 900;
-    font-style: normal;
-    flex-shrink: 0;
-  }
-  .boostDisclosure > div,
-  .boostDisclosure > button,
-  .boostDisclosure > .advancedGrid,
-  .boostDisclosure > .previewCard {
-    margin: 0 15px 15px;
-  }
-  .feedbackFlow {
-    display: grid;
-    gap: 12px;
-  }
-  .feedbackSection {
-    border: 1px solid #202020;
-    background: #090909;
-    border-radius: 14px;
-    padding: 13px;
-  }
-  .feedbackSection summary {
-    color: #f5f5f5;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 900;
-    margin-bottom: 12px;
-  }
-  .feedbackSection label + label,
-  .feedbackSection .splitGrid + label,
-  .feedbackSection label + .fileButton,
-  .feedbackSection .splitGrid + .fileButton,
-  .feedbackSection .splitGrid + div {
-    margin-top: 12px;
-  }
-  .questionBuilder {
-    display: grid;
-    gap: 11px;
-  }
-  .questionBuilder .secondaryButton {
-    justify-self: start;
-    min-width: 150px;
-  }
-  .compactBundles {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-  .compactBundles .bundleCard {
-    min-height: 160px;
-  }
-  .boostActions {
-    border-top: 1px solid #181818;
-    padding-top: 18px;
-    display: flex;
-    justify-content: space-between;
-    gap: 14px;
-    align-items: center;
-  }
-  .boostActions strong,
-  .boostActions span {
-    display: block;
-  }
-  .boostActions strong {
-    color: #f5f5f5;
-    font-size: 15px;
-    margin-bottom: 4px;
-  }
-  .boostActions span {
-    color: #999;
-    font-size: 12px;
-    line-height: 1.4;
-  }
-  .summaryPanel {
-    position: sticky;
-    top: 24px;
-    padding: 18px;
-    min-width: 0;
-  }
-  .summaryPanel h3 {
-    font-size: 20px;
-    line-height: 1.2;
-    margin: 8px 0 14px;
-  }
-  .summaryIcon {
-    width: 54px;
-    height: 54px;
-    border-radius: 15px;
-    display: grid;
-    place-items: center;
-    margin-bottom: 14px;
-  }
-  .summaryPanel dl {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  .summaryPanel div {
-    min-width: 0;
-  }
-  .summaryPanel dt {
-    color: #777;
-    font-size: 11px;
-    text-transform: uppercase;
-    font-weight: 800;
-    margin-bottom: 3px;
-  }
-  .summaryPanel dd {
-    color: #ddd;
-    font-size: 13px;
-    line-height: 1.45;
-  }
-  .sectionTitle {
-    max-width: 650px;
-    margin-bottom: 20px;
-    min-width: 0;
-  }
-  .sectionTitle h2 {
-    font-size: clamp(24px, 4vw, 34px);
-    line-height: 1.08;
-    margin: 5px 0 8px;
-    letter-spacing: 0;
-  }
-  .categoryGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-    gap: 12px;
-  }
-  .categoryRail {
-    display: flex;
-    gap: 9px;
-    overflow-x: auto;
-    padding: 2px 0 14px;
-    margin-bottom: 12px;
-    max-width: 100%;
-    min-width: 0;
-    overscroll-behavior-x: contain;
-    scrollbar-width: none;
-  }
-  .categoryRail::-webkit-scrollbar {
-    display: none;
-  }
-  .categoryChip {
-    min-width: 190px;
-    border: 1px solid #202020;
-    background: #0f0f0f;
-    color: #ddd;
-    border-radius: 13px;
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    text-align: left;
-    cursor: pointer;
-  }
-  .categoryChip.selected {
-    background: rgba(245, 166, 35, 0.08);
-    color: #f5a623;
-  }
-  .categoryChip span {
-    width: 34px;
-    height: 34px;
-    border-radius: 10px;
-    display: grid;
-    place-items: center;
-    flex-shrink: 0;
-  }
-  .categoryChip strong {
-    font-size: 13px;
-    line-height: 1.2;
-  }
-  .contentTypeGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-    gap: 12px;
-    min-width: 0;
-  }
-  .contentTypeCard {
-    min-height: 156px;
-    min-width: 0;
-    border: 1px solid #202020;
-    background: #0f0f0f;
-    color: #f5f5f5;
-    border-radius: 14px;
-    padding: 15px;
-    text-align: left;
-    cursor: pointer;
-  }
-  .contentTypeCard.selected {
-    border-color: rgba(245, 166, 35, 0.68);
-    background: rgba(245, 166, 35, 0.09);
-  }
-  .contentTypeCard span {
-    color: #f5a623;
-    font-size: 11px;
-    font-weight: 900;
-    text-transform: uppercase;
-  }
-  .contentTypeCard strong {
-    display: block;
-    margin: 10px 0 8px;
-    font-size: 18px;
-    line-height: 1.15;
-    overflow-wrap: anywhere;
-  }
-  .contentTypeCard small {
-    display: block;
-    color: #aaa;
-    font-size: 12px;
-    line-height: 1.45;
-    overflow-wrap: anywhere;
-  }
-  .categoryCard, .packageCard {
-    text-align: left;
-    border: 1px solid #202020;
-    background: #0f0f0f;
-    color: #f5f5f5;
-    border-radius: 14px;
-    padding: 15px;
-    cursor: pointer;
-    min-height: 228px;
-    transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
-  }
-  .categoryCard:hover, .packageCard:hover {
-    transform: translateY(-2px);
-    background: #121212;
-  }
-  .categoryCard.selected, .packageCard.selected {
-    background: rgba(245, 166, 35, 0.07);
-    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.24);
-  }
-  .iconBox {
-    width: 42px;
-    height: 42px;
-    border-radius: 12px;
-    display: grid;
-    place-items: center;
-    margin-bottom: 12px;
-  }
-  .categoryCard strong, .packageCard strong {
-    display: block;
-    font-size: 15px;
-    line-height: 1.25;
-    margin-bottom: 7px;
-  }
-  .categoryCard span, .categoryCard small, .packageCard small, .packageCard em, .assistBox span {
-    display: block;
-    color: #aaa;
-    font-size: 12px;
-    line-height: 1.45;
-    font-style: normal;
-  }
-  .categoryCard small {
-    color: #777;
-    margin-top: 10px;
-    overflow-wrap: anywhere;
-  }
-  .goalGrid, .previewTags {
-    display: flex;
-    gap: 9px;
-    flex-wrap: wrap;
-  }
-  .goalButton {
-    border: 1px solid #282828;
-    background: #101010;
-    color: #ccc;
-    border-radius: 999px;
-    padding: 10px 14px;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-  }
-  .goalButton.active {
-    border-color: rgba(26, 239, 34, 0.55);
-    background: rgba(26, 239, 34, 0.1);
-    color: #1aef22;
-  }
-  .multiSelectDropdown {
-    border: 1px solid #292929;
-    background: #101010;
-    border-radius: 14px;
-    overflow: hidden;
-  }
-  .multiSelectDropdown[open] {
-    border-color: rgba(245, 166, 35, 0.5);
-    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.2);
-  }
-  .multiSelectDropdown summary {
-    list-style: none;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 14px;
-    padding: 13px 14px;
-  }
-  .multiSelectDropdown summary::-webkit-details-marker {
-    display: none;
-  }
-  .multiSelectDropdown summary span,
-  .multiSelectDropdown summary strong,
-  .multiSelectDropdown summary small {
-    display: block;
-    min-width: 0;
-  }
-  .multiSelectDropdown summary strong {
-    color: #f5f5f5;
-    font-size: 13px;
-    font-weight: 900;
-    margin-bottom: 3px;
-  }
-  .multiSelectDropdown summary small {
-    color: #8d8d8d;
-    font-size: 12px;
-    line-height: 1.35;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .multiSelectDropdown summary em {
-    width: 30px;
-    height: 30px;
-    border-radius: 9px;
-    background: rgba(245, 166, 35, 0.1);
-    color: #f5a623;
-    display: grid;
-    place-items: center;
-    font-style: normal;
-    font-size: 12px;
-    font-weight: 950;
-    flex-shrink: 0;
-  }
-  .selectedPreview {
-    border-top: 1px solid #1f1f1f;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 7px;
-    padding: 10px 12px;
-  }
-  .selectedPreview span {
-    border: 1px solid rgba(26, 239, 34, 0.3);
-    background: rgba(26, 239, 34, 0.09);
-    color: #1aef22;
-    border-radius: 999px;
-    padding: 6px 9px;
-    font-size: 11px;
-    font-weight: 900;
-  }
-  .multiSelectMenu {
-    border-top: 1px solid #1f1f1f;
-    max-height: 310px;
-    overflow-y: auto;
-    padding: 8px;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 7px;
-  }
-  .multiSelectMenu button {
-    border: 1px solid #242424;
-    background: #0b0b0b;
-    color: #d7d7d7;
-    border-radius: 11px;
-    min-height: 44px;
-    padding: 9px 10px;
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    text-align: left;
-    cursor: pointer;
-  }
-  .multiSelectMenu button.selected {
-    border-color: rgba(26, 239, 34, 0.48);
-    background: rgba(26, 239, 34, 0.09);
-    color: #1aef22;
-  }
-  .multiSelectMenu button span {
-    width: 22px;
-    height: 22px;
-    border: 1px solid #363636;
-    border-radius: 7px;
-    display: grid;
-    place-items: center;
-    color: #1aef22;
-    font-size: 9px;
-    font-weight: 950;
-    flex-shrink: 0;
-  }
-  .multiSelectMenu button.selected span {
-    border-color: #1aef22;
-    background: rgba(26, 239, 34, 0.1);
-  }
-  .multiSelectMenu button strong {
-    color: inherit;
-    font-size: 12px;
-    line-height: 1.25;
-    overflow-wrap: anywhere;
-  }
-  .splitGrid {
-    display: grid;
-    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
-    gap: 16px;
-  }
-  .splitGrid.compact {
-    grid-template-columns: 1fr 1fr;
-  }
-  .uploadBox {
-    border: 1px dashed #333;
-    background: #0f0f0f;
-    border-radius: 18px;
-    min-height: 320px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    gap: 12px;
-    padding: 26px;
-  }
-  .uploadBox strong {
-    font-size: 17px;
-  }
-  .uploadBox span {
-    color: #888;
-    font-size: 13px;
-    line-height: 1.55;
-    max-width: 320px;
-  }
-  .requirementList {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 7px;
-    width: 100%;
-    max-width: 360px;
-    margin: 2px auto 4px;
-  }
-  .requirementList small {
-    border: 1px solid rgba(245, 166, 35, 0.2);
-    background: rgba(245, 166, 35, 0.08);
-    color: #f5a623;
-    border-radius: 9px;
-    padding: 7px 8px;
-    font-size: 11px;
-    font-weight: 800;
-    line-height: 1.25;
-  }
-  .fileButton {
-    position: relative;
-    overflow: hidden;
-    border-radius: 11px;
-    background: #f5a623;
-    color: #000;
-    padding: 10px 16px;
-    font-weight: 900;
-    font-size: 13px;
-    cursor: pointer;
-  }
-  .fileButton input {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    cursor: pointer;
-  }
-  .fieldStack, .targetStack {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-  label, .labelText {
-    display: block;
-    color: #ccc;
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 0.4px;
-  }
-  input, select, textarea {
-    width: 100%;
-    margin-top: 7px;
-    border: 1px solid #303030;
-    background: #121212;
-    color: #f5f5f5;
-    border-radius: 12px;
-    padding: 12px 13px;
-    font-size: 14px;
-    outline: none;
-  }
-  textarea {
-    resize: vertical;
-    line-height: 1.55;
-  }
-  input:focus, select:focus, textarea:focus {
-    border-color: #f5a623;
-  }
-  .assistBox {
-    border: 1px solid rgba(74, 158, 255, 0.22);
-    background: rgba(74, 158, 255, 0.07);
-    border-radius: 14px;
-    padding: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-  }
-  .assistBox button, .advancedToggle {
-    border: 1px solid rgba(74, 158, 255, 0.36);
-    background: rgba(74, 158, 255, 0.1);
-    color: #7dbaff;
-    border-radius: 10px;
-    padding: 9px 12px;
-    font-weight: 800;
-    cursor: pointer;
-    white-space: nowrap;
-  }
-  .recommendBox {
-    border: 1px solid rgba(245, 166, 35, 0.26);
-    background: linear-gradient(135deg, rgba(245, 166, 35, 0.14), rgba(245, 166, 35, 0.04));
-    border-radius: 16px;
-    padding: 14px;
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    gap: 12px;
-    align-items: center;
-  }
-  .recommendIcon, .bundleIcon {
-    width: 46px;
-    height: 46px;
-    border-radius: 13px;
-    background: rgba(245, 166, 35, 0.14);
-    display: grid;
-    place-items: center;
-  }
-  .recommendBox span, .rowLabel span {
-    color: #f5a623;
-    font-size: 11px;
-    font-weight: 900;
-    text-transform: uppercase;
-  }
-  .recommendBox strong {
-    display: block;
-    color: #fff;
-    font-size: 17px;
-    margin: 3px 0;
-  }
-  .recommendBox p {
-    color: #aaa;
-    font-size: 12px;
-    line-height: 1.45;
-  }
-  .recommendBox button {
-    border: 0;
-    background: #f5a623;
-    color: #050505;
-    border-radius: 11px;
-    padding: 10px 13px;
-    font-weight: 900;
-    cursor: pointer;
-  }
-  .bundleGrid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 10px;
-  }
-  .choicePlatformGrid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 10px;
-  }
-  .choicePlatformCard {
-    border: 1px solid #242424;
-    background: #101010;
-    color: #f5f5f5;
-    border-radius: 14px;
-    padding: 12px;
-    text-align: left;
-    cursor: pointer;
-    min-height: 154px;
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-  }
-  .choicePlatformCard.selected {
-    border-color: rgba(245, 166, 35, 0.62);
-    background: rgba(245, 166, 35, 0.08);
-  }
-  .choicePlatformCard b {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    background: #f5a623;
-    color: #050505;
-    display: grid;
-    place-items: center;
-    font-size: 11px;
-  }
-  .choicePlatformCard span {
-    color: #fff;
-    font-size: 13px;
-    font-weight: 900;
-    line-height: 1.2;
-  }
-  .choicePlatformCard strong, .choicePlatformCard small, .choicePlatformCard em {
-    display: block;
-    color: #aaa;
-    font-size: 11px;
-    line-height: 1.35;
-    font-style: normal;
-  }
-  .choicePlatformCard strong {
-    color: #f5a623;
-  }
-  .bundleCard {
-    border: 1px solid #242424;
-    background: #101010;
-    color: #f5f5f5;
-    border-radius: 14px;
-    padding: 13px;
-    text-align: left;
-    cursor: pointer;
-    min-height: 190px;
-  }
-  .bundleCard.selected {
-    border-color: rgba(245, 166, 35, 0.62);
-    background: rgba(245, 166, 35, 0.08);
-  }
-  .bundleCard strong {
-    display: block;
-    margin: 11px 0 7px;
-    font-size: 14px;
-    line-height: 1.2;
-  }
-  .bundleCard small, .bundleCard em {
-    display: block;
-    color: #999;
-    font-size: 11px;
-    line-height: 1.45;
-    font-style: normal;
-  }
-  .bundleCard em {
-    color: #f5a623;
-    margin-top: 10px;
-    font-weight: 800;
-  }
-  .rowLabel {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 8px;
-  }
-  .rowLabel small {
-    display: block;
-    color: #8d8d8d;
-    font-size: 12px;
-    line-height: 1.4;
-    margin-top: 4px;
-  }
-  .packageGrid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-  }
-  .packageCard {
-    min-height: 180px;
-  }
-  .packageCard span {
-    display: inline-flex;
-    color: #f5a623;
-    font-size: 12px;
-    font-weight: 900;
-    margin-bottom: 14px;
-  }
-  .packageCard strong {
-    font-size: 20px;
-  }
-  .packageCard em {
-    color: #1aef22;
-    margin-top: 16px;
-    font-weight: 800;
-  }
-  .advancedToggle {
-    margin-top: 14px;
-  }
-  .advancedGrid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-    margin-top: 14px;
-    border-top: 1px solid #181818;
-    padding-top: 14px;
-  }
-  .previewCard {
-    border: 1px solid #202020;
+    padding: 24px 24px 104px;
     background:
-      radial-gradient(circle at 78% 0%, rgba(245, 166, 35, 0.14), transparent 28%),
-      linear-gradient(180deg, #090b14 0%, #080808 100%);
-    border-radius: 24px;
-    padding: 16px;
-    max-width: 560px;
-    margin: 0 auto;
-    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.32);
+      linear-gradient(180deg, rgba(255, 255, 255, .025), transparent 340px),
+      #070808;
   }
-  .previewNav {
-    display: grid;
-    grid-template-columns: 48px 1fr 74px;
-    gap: 10px;
-    align-items: center;
-    margin-bottom: 13px;
-  }
-  .previewNav button {
-    border: 1px solid rgba(245, 166, 35, 0.22);
-    background: rgba(255, 255, 255, 0.04);
-    color: #f5a623;
-    border-radius: 12px;
-    height: 38px;
-    font-weight: 900;
-    cursor: pointer;
-  }
-  .previewNav div {
-    text-align: center;
-    min-width: 0;
-  }
-  .previewNav strong {
-    display: block;
-    font-size: 16px;
-    line-height: 1.2;
-  }
-  .previewNav span {
-    display: block;
-    color: #8e8e8e;
-    font-size: 12px;
-    margin-top: 2px;
-  }
-  .readyBanner {
-    border: 1px solid rgba(26, 239, 34, 0.22);
-    background: rgba(26, 239, 34, 0.08);
-    border-radius: 10px;
-    padding: 10px 12px;
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    margin-bottom: 16px;
-  }
-  .readyBanner strong {
-    display: block;
-    color: #8dfb93;
-    font-size: 13px;
-  }
-  .readyBanner span {
-    color: #93d798;
-    font-size: 12px;
-  }
-  .previewHero {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  .campaignBadge {
-    width: 34px;
-    height: 34px;
-    border-radius: 10px;
+
+  .loadingShell {
     display: grid;
     place-items: center;
-    background: rgba(245, 166, 35, 0.14);
-    flex-shrink: 0;
+    color: #b8b8b8;
   }
-  .previewHero h3 {
-    font-size: clamp(22px, 4vw, 30px);
-    line-height: 1.08;
-    margin: 0;
-  }
-  .previewHero p {
-    color: #f5a623;
-    font-size: 13px;
-    margin-top: 3px;
-  }
-  .goalLine {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 10px;
-    align-items: start;
-    margin-bottom: 14px;
-  }
-  .goalLine span {
-    background: #f5a623;
-    color: #050505;
-    border-radius: 7px;
-    padding: 4px 7px;
-    font-size: 11px;
-    font-weight: 900;
-  }
-  .goalLine p {
-    color: #c9c9c9;
-    font-size: 13px;
-    line-height: 1.45;
-  }
-  .flyerPanel, .previewSection {
-    border: 1px solid #202333;
-    background: rgba(255, 255, 255, 0.035);
-    border-radius: 12px;
-    padding: 12px;
-    margin-bottom: 12px;
-  }
-  .panelHeader {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  .panelHeader strong {
-    font-size: 13px;
-  }
-  .panelHeader span {
-    color: #f5a623;
-    font-size: 12px;
-    font-weight: 900;
-  }
-  .mockFlyer {
-    min-height: 210px;
-    border-radius: 11px;
-    overflow: hidden;
-    padding: 18px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    background:
-      linear-gradient(135deg, rgba(0, 0, 0, 0.22), rgba(0, 0, 0, 0.68)),
-      radial-gradient(circle at 18% 22%, #f5a623 0 8%, transparent 9%),
-      radial-gradient(circle at 88% 28%, #1aef22 0 7%, transparent 8%),
-      linear-gradient(135deg, #7a1d11, #141414 48%, #3c2104);
-  }
-  .mockFlyer span {
-    color: #f5a623;
-    font-size: 12px;
-    font-weight: 900;
-    text-transform: uppercase;
-  }
-  .mockFlyer strong {
-    display: block;
-    max-width: 320px;
-    color: #fff;
-    font-size: clamp(28px, 9vw, 56px);
-    line-height: 0.95;
-    margin: 8px 0;
-  }
-  .mockFlyer p {
-    color: #f4f4f4;
-    font-size: 13px;
-    max-width: 280px;
-  }
-  .mockFlyer small {
-    align-self: flex-start;
-    background: rgba(0, 0, 0, 0.55);
-    border: 1px solid rgba(245, 166, 35, 0.45);
-    color: #f5a623;
-    border-radius: 999px;
-    padding: 7px 10px;
-    font-size: 11px;
-    font-weight: 900;
-  }
-  .platformCards {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 9px;
-  }
-  .platformCard {
-    border: 1px solid #24283a;
-    background: rgba(0, 0, 0, 0.24);
-    border-radius: 10px;
-    padding: 9px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    min-width: 0;
-  }
-  .platformCard b {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
+
+  .successShell {
     display: grid;
     place-items: center;
-    background: #f5a623;
-    color: #050505;
-    font-size: 12px;
-    flex-shrink: 0;
   }
-  .platformCard strong {
-    display: block;
-    font-size: 12px;
-    line-height: 1.2;
-    overflow-wrap: anywhere;
+
+  .successPanel {
+    width: min(620px, 100%);
+    border: 1px solid #1b1b1b;
+    background: #101111;
+    border-radius: 8px;
+    padding: 28px;
+    box-shadow: 0 18px 60px rgba(0, 0, 0, .34);
   }
-  .platformCard span {
-    color: #f5a623;
-    font-size: 10px;
+
+  .successPanel h1 {
+    margin: 0 0 10px;
+    font-size: 30px;
   }
-  .actionSection ul {
-    list-style: none;
-    display: grid;
-    gap: 7px;
+
+  .successPanel p {
+    color: #bdbdbd;
+    line-height: 1.7;
   }
-  .actionSection li {
+
+  .successActions {
     display: flex;
-    gap: 8px;
-    color: #e8e8e8;
-    font-size: 13px;
-    line-height: 1.3;
-  }
-  .actionSection li span {
-    width: 24px;
-    height: 18px;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    flex-shrink: 0;
-    background: #1aef22;
-    color: #050505;
-    font-size: 9px;
-    font-weight: 900;
-  }
-  .audienceRows {
-    display: grid;
-    gap: 8px;
-  }
-  .audienceRows div {
-    display: grid;
-    grid-template-columns: 92px 1fr;
     gap: 10px;
-    border-top: 1px solid #1e2230;
-    padding-top: 8px;
+    flex-wrap: wrap;
+    margin-top: 22px;
   }
-  .audienceRows span {
-    color: #aaa;
-    font-size: 12px;
-    font-weight: 800;
-  }
-  .audienceRows p {
-    color: #f5a623;
-    font-size: 12px;
-    line-height: 1.45;
-  }
-  .previewTop {
-    display: flex;
-    gap: 14px;
-    align-items: center;
-    margin-bottom: 16px;
-  }
-  .previewThumb {
-    width: 72px;
-    height: 72px;
-    border-radius: 18px;
-    display: grid;
-    place-items: center;
-    flex-shrink: 0;
-  }
-  .previewTop span {
-    color: #f5a623;
-    font-size: 12px;
-    font-weight: 900;
-  }
-  .previewTop h3 {
-    margin: 4px 0;
-    font-size: 22px;
-  }
-  .previewTop p {
-    color: #aaa;
-    font-size: 13px;
-  }
-  .previewStats, .momentumGrid, .readyPanel {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-bottom: 14px;
-  }
-  .previewStats {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-  .previewStats div, .momentumGrid div, .readyMetric {
-    border: 1px solid #1f1f1f;
-    background: #090909;
-    border-radius: 13px;
-    padding: 12px;
-  }
-  .previewStats strong, .momentumGrid strong, .readyMetric strong {
-    display: block;
-    color: #f5f5f5;
-    font-size: 18px;
-    line-height: 1.15;
-  }
-  .previewStats span, .momentumGrid span, .readyMetric span {
-    display: block;
-    color: #888;
-    font-size: 11px;
-    margin-top: 4px;
-  }
-  .previewTags span {
-    border-radius: 999px;
-    background: rgba(245, 166, 35, 0.1);
-    color: #f5a623;
-    padding: 6px 9px;
-    font-size: 11px;
-    font-weight: 800;
-  }
-  .previewCard pre {
-    margin-top: 16px;
-    white-space: pre-wrap;
-    color: #ccc;
-    background: #080808;
-    border: 1px solid #1a1a1a;
-    border-radius: 14px;
-    padding: 14px;
-    font-family: inherit;
-    font-size: 13px;
-    line-height: 1.6;
-  }
-  .instructionDetails {
-    border-top: 1px solid #1d2130;
-    padding-top: 4px;
-  }
-  .instructionDetails summary {
-    color: #f5a623;
-    cursor: pointer;
-    font-size: 12px;
-    font-weight: 900;
-  }
-  .readyPanel {
-    margin-bottom: 0;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-  .wizardActions {
-    border-top: 1px solid #181818;
-    margin-top: 24px;
-    padding-top: 18px;
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-  }
-  .primaryButton, .secondaryButton {
-    border: 0;
-    border-radius: 12px;
-    padding: 13px 18px;
-    font-weight: 900;
-    cursor: pointer;
-    min-width: 130px;
-  }
-  .primaryButton {
-    background: linear-gradient(135deg, #f5a623, #d89420);
-    color: #000;
-    box-shadow: 0 8px 24px rgba(245, 166, 35, 0.24);
-  }
+
+  .successActions button,
+  .primaryButton,
   .secondaryButton {
-    background: #121212;
-    border: 1px solid #292929;
-    color: #ddd;
+    border: 0;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-weight: 900;
+    cursor: pointer;
   }
-  .primaryButton:disabled, .secondaryButton:disabled {
-    opacity: 0.45;
+
+  .successActions .primary,
+  .primaryButton {
+    background: #f5a623;
+    color: #050505;
+  }
+
+  .successActions button,
+  .secondaryButton {
+    background: #161616;
+    color: #f8f8f8;
+    border: 1px solid #252525;
+  }
+
+  .primaryButton:disabled,
+  .secondaryButton:disabled {
+    opacity: .45;
     cursor: not-allowed;
   }
-  .errorBox {
-    border: 1px solid rgba(229, 62, 62, 0.3);
-    background: rgba(229, 62, 62, 0.1);
-    color: #ff8b8b;
-    border-radius: 12px;
-    padding: 12px 14px;
-    margin-bottom: 14px;
-    font-size: 13px;
-    font-weight: 700;
+
+  .heroBand {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 260px;
+    gap: 16px;
+    align-items: start;
+    margin-bottom: 18px;
+    max-width: 1360px;
   }
-  .launchScreen {
-    min-height: 70vh;
+
+  .heroBand > div:first-child,
+  .walletCard,
+  .builderPanel,
+  .stepRail {
+    background: #101111;
+    border: 1px solid #202322;
+    border-radius: 8px;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, .24);
+  }
+
+  .heroBand > div:first-child {
+    padding: 28px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .heroBand h1 {
+    margin: 6px 0 12px;
+    max-width: 760px;
+    font-size: clamp(34px, 3.1vw, 48px);
+    line-height: 1.08;
+    letter-spacing: 0;
+  }
+
+  .heroBand p:not(.eyebrow) {
+    max-width: 740px;
+    color: #bdbdbd;
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  .walletCard {
+    padding: 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 36px 24px;
+    gap: 8px;
+    border-color: rgba(245, 166, 35, .28);
+    background: #12100c;
+    min-height: 156px;
   }
-  .launchIcon {
-    width: 76px;
-    height: 76px;
-    border-radius: 22px;
-    background: rgba(26, 239, 34, 0.12);
+
+  .walletCard span,
+  .walletCard small,
+  .sectionHeader span,
+  .choiceCard span,
+  .bundleCard span,
+  .bundleCard small,
+  .packageCard span,
+  .packageCard small {
+    color: #a8a8a8;
+  }
+
+  .walletCard strong {
+    font-size: 28px;
+    letter-spacing: 0;
+  }
+
+  .builderLayout {
+    display: grid;
+    grid-template-columns: 240px minmax(560px, 1fr);
+    gap: 16px;
+    align-items: start;
+    max-width: 1360px;
+  }
+
+  .stepRail {
+    padding: 14px;
+    position: sticky;
+    top: 20px;
+  }
+
+  .progressHeader {
+    display: flex;
+    justify-content: space-between;
+    color: #bdbdbd;
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .progressTrack {
+    height: 7px;
+    background: #171717;
+    border-radius: 99px;
+    overflow: hidden;
+    margin: 12px 0 16px;
+  }
+
+  .progressTrack span {
+    display: block;
+    height: 100%;
+    background: #f5a623;
+  }
+
+  .step {
+    width: 100%;
+    border: 1px solid transparent;
+    background: transparent;
+    color: #a8a8a8;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 11px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 800;
+    text-align: left;
+  }
+
+  .step:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+  }
+
+  .step span {
+    width: 24px;
+    height: 24px;
+    display: inline-grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #171717;
+    color: #d8d8d8;
+    font-size: 12px;
+  }
+
+  .step.active {
+    border-color: #f5a623;
+    color: #fff;
+    background: rgba(245, 166, 35, .11);
+  }
+
+  .step.done span {
+    background: #1aef22;
+    color: #041004;
+  }
+
+  .builderPanel {
+    min-height: 660px;
+    padding: 24px;
+    overflow: hidden;
+  }
+
+  .stepSection {
+    display: grid;
+    gap: 18px;
+  }
+
+  .sectionHeader h2 {
+    margin: 4px 0 8px;
+    font-size: 30px;
+    line-height: 1.12;
+    letter-spacing: 0;
+  }
+
+  .eyebrow {
+    margin: 0;
+    color: #f5a623;
+    font-size: 11px;
+    font-weight: 950;
+    text-transform: uppercase;
+    letter-spacing: 0;
+  }
+
+  .categoryGrid,
+  .bundleGrid,
+  .packageGrid,
+  .previewGrid,
+  .launchGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .choiceCard,
+  .bundleCard,
+  .packageCard {
+    text-align: left;
+    background: #0c0d0d;
+    color: #f5f5f5;
+    border: 1px solid #222625;
+    border-radius: 8px;
+    padding: 17px;
+    display: grid;
+    gap: 8px;
+    cursor: pointer;
+    min-height: 124px;
+    transition: border-color .16s ease, background .16s ease, transform .16s ease;
+  }
+
+  .choiceCard strong,
+  .bundleCard strong,
+  .packageCard strong {
+    line-height: 1.25;
+  }
+
+  .choiceCard span,
+  .bundleCard span,
+  .bundleCard small,
+  .packageCard span,
+  .packageCard small {
+    line-height: 1.45;
+  }
+
+  .choiceCard:hover,
+  .bundleCard:hover,
+  .packageCard:hover,
+  .pill:hover,
+  .checkItem:hover {
+    border-color: #3b3f3d;
+    background: #121414;
+  }
+
+  .choiceCard.active,
+  .bundleCard.active,
+  .packageCard.active,
+  .pill.active,
+  .checkItem.active {
+    border-color: #f5a623;
+    background: rgba(245, 166, 35, .11);
+    box-shadow: inset 0 0 0 1px rgba(245, 166, 35, .18);
+  }
+
+  .pillGrid,
+  .checkGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .pill {
+    border: 1px solid #222625;
+    background: #0c0d0d;
+    color: #f5f5f5;
+    border-radius: 999px;
+    padding: 10px 14px;
+    font-weight: 850;
+    cursor: pointer;
+  }
+
+  .fieldBlock {
+    display: grid;
+    gap: 8px;
+    color: #e8e8e8;
+    font-weight: 850;
+  }
+
+  .goalChecklist {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .goalOption {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 52px;
+    padding: 12px 13px;
+    border: 1px solid #252a28;
+    border-radius: 8px;
+    background: #0c0d0d;
+    color: #d9d9d9;
+    cursor: pointer;
+    font-weight: 850;
+  }
+
+  .goalOption:hover,
+  .goalOption.active {
+    background: rgba(245, 166, 35, .11);
+    border-color: #f5a623;
+    color: #fff;
+  }
+
+  .goalOption input {
+    width: 16px;
+    height: 16px;
+    accent-color: #f5a623;
+  }
+
+  .goalOption span {
+    overflow-wrap: anywhere;
+  }
+
+  .fieldBlock small {
+    color: #8f8f8f;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .fieldBlock.compact {
+    max-width: 320px;
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    border: 1px solid #252a28;
+    border-radius: 8px;
+    background: #090a0a;
+    color: #f7f7f7;
+    padding: 13px 14px;
+    font: inherit;
+    outline: none;
+  }
+
+  input:focus,
+  textarea:focus {
+    border-color: rgba(245, 166, 35, .75);
+    box-shadow: 0 0 0 3px rgba(245, 166, 35, .12);
+  }
+
+  textarea {
+    min-height: 112px;
+    resize: vertical;
+  }
+
+  .checkItem {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    border: 1px solid #222625;
+    background: #0c0d0d;
+    border-radius: 8px;
+    padding: 12px 13px;
+    cursor: pointer;
+    font-weight: 800;
+  }
+
+  .checkItem input {
+    width: 16px;
+    height: 16px;
+    accent-color: #f5a623;
+  }
+
+  .assetPanel {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 260px;
+    gap: 14px;
+    align-items: stretch;
+    background: #0b0c0c;
+    border: 1px solid #222625;
+    border-radius: 8px;
+    padding: 16px;
+  }
+
+  .assetPanel h3 {
+    margin: 4px 0 8px;
+    font-size: 22px;
+  }
+
+  .assetPanel span {
+    display: block;
+    color: #a8a8a8;
+    line-height: 1.6;
+  }
+
+  .uploadBox {
+    min-height: 138px;
+    border: 1px dashed #4a4d49;
+    border-radius: 8px;
+    background: #111313;
     display: grid;
     place-items: center;
-    margin-bottom: 18px;
+    align-content: center;
+    gap: 6px;
+    padding: 16px;
+    cursor: pointer;
+    text-align: center;
   }
-  .launchScreen h1 {
-    font-size: clamp(28px, 6vw, 44px);
-    line-height: 1.05;
-    max-width: 620px;
-    margin: 8px auto 12px;
+
+  .uploadBox input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
   }
-  .launchCopy {
-    max-width: 560px;
-    margin-bottom: 22px;
+
+  .uploadBox strong {
+    color: #f5f5f5;
+    max-width: 100%;
+    overflow-wrap: anywhere;
   }
-  .momentumGrid {
-    width: min(100%, 620px);
+
+  .uploadBox small {
+    color: #a8a8a8;
+    font-weight: 700;
   }
-  .launchActions {
+
+  .linkOnlyPanel {
+    grid-template-columns: minmax(0, 1fr) 180px;
+  }
+
+  .linkBadge {
+    border: 1px solid #2d312f;
+    border-radius: 8px;
+    background: #111313;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 6px;
+    padding: 16px;
+    text-align: center;
+  }
+
+  .linkBadge strong {
+    color: #f5a623;
+    font-size: 20px;
+  }
+
+  .linkBadge small {
+    color: #a8a8a8;
+    font-weight: 800;
+  }
+
+  .pricingPanel,
+  .previewBlock,
+  .readinessPanel {
+    background: #0b0c0c;
+    border: 1px solid #222625;
+    border-radius: 8px;
+    padding: 18px;
+  }
+
+  .pricingPanel h3 {
+    margin: 4px 0 16px;
+    font-size: 18px;
+  }
+
+  .pricingRows {
+    display: grid;
+    gap: 10px;
+  }
+
+  .pricingRows div,
+  .previewBlock dl div,
+  .readyItem {
     display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 10px 0;
+    border-bottom: 1px solid #1b1f1d;
+  }
+
+  .pricingRows span,
+  dt {
+    color: #a8a8a8;
+  }
+
+  dd {
+    margin: 0;
+    text-align: right;
+    color: #f5f5f5;
+    font-weight: 800;
+  }
+
+  .pricingRows strong {
+    text-align: right;
+  }
+
+  .pricingRows em {
+    color: #a8a8a8;
+    font-style: normal;
+    margin-left: 5px;
+  }
+
+  .totalRow strong {
+    color: #f5a623;
+    font-size: 20px;
+  }
+
+  .previewBlock h3 {
+    margin: 0 0 12px;
+  }
+
+  .readyItem {
+    align-items: center;
+    justify-content: flex-start;
+    color: #d8d8d8;
+    font-weight: 850;
+  }
+
+  .readyItem span {
+    width: 42px;
+    color: #f5a623;
+    font-size: 12px;
+  }
+
+  .readyItem.good span {
+    color: #1aef22;
+  }
+
+  .actionsBar {
+    display: flex;
+    justify-content: space-between;
     gap: 12px;
-    margin-top: 8px;
+    margin-top: 24px;
+    border-top: 1px solid #1b1b1b;
+    padding-top: 16px;
   }
-  @media (max-width: 980px) {
-    .builderShell {
-      grid-template-columns: 1fr;
-    }
-    .summaryPanel {
-      position: static;
-      order: -1;
-    }
-    .packageGrid, .momentumGrid, .readyPanel, .pricingRows, .pricingSplit {
-      grid-template-columns: 1fr;
-    }
-    .bundleGrid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-    .boostGrid, .boostPackages, .compactBundles {
-      grid-template-columns: 1fr;
-    }
-    .platformCards, .choicePlatformGrid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-    .multiSelectMenu {
-      grid-template-columns: 1fr;
+
+  @media (min-width: 1720px) {
+    .builderLayout {
+      grid-template-columns: 240px minmax(620px, 1fr);
     }
   }
-  @media (max-width: 720px) {
-    .campaignPage {
-      padding-left: 12px !important;
-      padding-right: 12px !important;
-      padding-bottom: 116px !important;
+
+  @media (max-width: 1400px) {
+    .pageShell,
+    .successShell,
+    .loadingShell {
+      padding-left: 18px;
+      padding-right: 18px;
     }
-    .campaignHeader {
-      display: block;
-    }
-    .quickLaunchHero, .boostActions {
-      flex-direction: column;
-      align-items: stretch;
-    }
-    .boostBadge {
-      text-align: left;
-    }
-    .headerStats {
-      margin-top: 14px;
-      text-align: left;
-    }
-    .builderPanel {
-      padding: 14px;
-      border-radius: 16px;
-      min-height: auto;
-    }
-    .summaryPanel {
-      border-radius: 16px;
-      padding: 14px;
-    }
-    .stepContent {
-      min-width: 0;
-    }
-    .categoryGrid, .contentTypeGrid, .splitGrid, .splitGrid.compact, .advancedGrid, .bundleGrid, .boostGrid, .boostPackages, .compactBundles {
+
+    .heroBand {
       grid-template-columns: 1fr;
     }
-    .categoryRail {
+
+    .walletCard {
+      min-height: 0;
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      overflow-x: visible;
-      padding-bottom: 12px;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
     }
-    .categoryChip {
-      min-width: 0;
-      max-width: none;
-      width: 100%;
-      flex: initial;
-      align-items: flex-start;
-      min-height: 58px;
+  }
+
+  .errorText {
+    margin: 16px 0 0;
+    border: 1px solid rgba(229, 62, 62, .4);
+    background: rgba(229, 62, 62, .08);
+    color: #ffb8b8;
+    border-radius: 8px;
+    padding: 12px;
+    font-weight: 800;
+  }
+
+  @media (max-width: 1180px) {
+    .pageShell,
+    .successShell,
+    .loadingShell {
+      padding-left: 24px;
     }
-    .categoryChip strong {
-      overflow-wrap: anywhere;
+
+    .builderLayout {
+      grid-template-columns: 190px minmax(0, 1fr);
     }
-    .contentTypeCard {
-      min-height: 136px;
-      padding: 14px;
+
+  }
+
+  @media (max-width: 820px) {
+    .pageShell,
+    .successShell,
+    .loadingShell {
+      padding: 14px 14px 104px;
     }
-    .recommendBox {
+
+    .heroBand,
+    .builderLayout,
+    .assetPanel,
+    .goalChecklist,
+    .categoryGrid,
+    .bundleGrid,
+    .packageGrid,
+    .previewGrid,
+    .launchGrid {
       grid-template-columns: 1fr;
     }
-    .recommendIcon {
-      display: none;
+
+    .heroBand {
+      gap: 10px;
+      margin-bottom: 10px;
     }
-    .previewCard {
-      border-radius: 18px;
+
+    .heroBand > div:first-child,
+    .walletCard,
+    .builderPanel,
+    .stepRail {
+      box-shadow: none;
+    }
+
+    .heroBand > div:first-child {
+      padding: 16px;
+    }
+
+    .heroBand h1 {
+      font-size: 25px;
+      line-height: 1.08;
+      margin-bottom: 8px;
+    }
+
+    .heroBand p:not(.eyebrow) {
+      font-size: 13px;
+      line-height: 1.48;
+    }
+
+    .walletCard {
+      padding: 13px 14px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 4px 12px;
+    }
+
+    .walletCard strong {
+      font-size: 22px;
+      grid-row: span 2;
+    }
+
+    .walletCard small {
+      grid-column: 1;
+    }
+
+    .stepRail {
+      position: static;
+      display: block;
       padding: 12px;
     }
-    .previewNav {
-      grid-template-columns: 40px 1fr 62px;
+
+    .stepRail .step {
+      display: none;
     }
-    .platformCards, .choicePlatformGrid {
-      grid-template-columns: 1fr;
+
+    .builderPanel {
+      min-height: auto;
+      padding: 14px;
     }
-    .multiSelectMenu {
-      max-height: 260px;
+
+    .sectionHeader h2 {
+      font-size: 22px;
     }
-    .previewStats {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    .choiceCard,
+    .bundleCard,
+    .packageCard {
+      min-height: 0;
     }
-    .audienceRows div {
-      grid-template-columns: 1fr;
-      gap: 4px;
+
+    .actionsBar {
+      position: static;
+      background: #0d0d0d;
+      border: 1px solid #1b1b1b;
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 18px;
     }
-    .uploadBox {
-      min-height: 240px;
-    }
-    .wizardActions, .launchActions {
-      flex-direction: column;
-    }
-    .primaryButton, .secondaryButton {
-      width: 100%;
+
+    .primaryButton,
+    .secondaryButton {
+      flex: 1;
     }
   }
 `;
